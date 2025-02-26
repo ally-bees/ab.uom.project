@@ -8,6 +8,7 @@ import { StatsCard } from '../../models/stats.model';
 import { Product } from '../../models/product.model';
 import { Member } from '../../models/member.model';
 import { SalesData } from '../../models/sales-data.model';
+import { NavbarComponent } from '../../navbar/navbar.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,7 @@ import { SalesData } from '../../models/sales-data.model';
   imports: [
     CommonModule,
     StatsCardComponent,
+    NavbarComponent,
     TopSellingComponent,
     SalesHeatmapComponent,
     MembersListComponent
