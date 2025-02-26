@@ -8,7 +8,7 @@
   .orders-card {
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.19);
     margin-bottom: 20px;
     overflow: hidden;
   }
@@ -162,13 +162,14 @@
   }
   
   /* Table styles */
-  .table-container {
+.table-container {
     overflow-x: auto;
   }
   
   .orders-table {
-    width: 100%;
+    width: 96%;
     border-collapse: collapse;
+    margin: 0px 20px 20px 20px;
   }
   
   .orders-table th, .orders-table td {
@@ -184,8 +185,20 @@
     top: 0;
   }
   
-  .orders-table tr:nth-child(even) {
+  .orders-table tr:nth-child(even) td:nth-child(odd) {
+    background-color: #17a3b85a;
+  }
+  
+  .orders-table tr:nth-child(odd) td:nth-child(even) {
     background-color: #f9f9f9;
+  }
+  
+  .orders-table tr:nth-child(even) td:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .orders-table tr:nth-child(odd) td:nth-child(odd) {
+    background-color: #17a3b85a;
   }
   
   .orders-table tr:hover {
@@ -198,19 +211,23 @@
     font-size: 0.9em;
     color: white;
     display: inline-block;
+    width: 55%;
   }
   
   .badge-completed {
     background-color: #4CAF50;
+    text-align: center;
   }
   
   .badge-pending {
     background-color: #FFC107;
     color: #333;
+    text-align: center;
   }
   
   .badge-rejected {
     background-color: #F44336;
+    text-align: center;
   }
   
   /* Print section */
