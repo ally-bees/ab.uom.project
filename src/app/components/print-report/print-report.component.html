@@ -1,0 +1,28 @@
+<div class="print-dialog">
+    <div class="print-header">
+      <h2>Print Report</h2>
+      <button class="close-btn" (click)="close()">×</button>
+    </div>
+    <div class="print-content">
+      <div class="report-content">
+        <h3>Order Summary Report</h3>
+        <p><strong>Date Range:</strong> 2024/12/05 - 2024/12/12</p>
+        <p><strong>Total Orders:</strong> 650</p>
+        <p><strong>Pending Orders:</strong> 430</p>
+        <p><strong>Completed Orders:</strong> 200</p>
+        <p><strong>Rejected Orders:</strong> 20</p>
+        
+        <hr>
+        
+        <p>This report provides a summary of all orders processed during the specified period. 
+           The completion rate is approximately 31% with a rejection rate of 3%. 
+           Most orders are coming from the Colombo region (42%), followed by Galle (28%).</p>
+        
+        <p>For detailed analytics and performance metrics, please refer to the quarterly business report.</p>
+      </div>
+    </div>
+    <div class="print-actions">
+      <button class="btn btn-secondary" (click)="close()">Cancel</button>
+      <button class="btn btn-primary" (click)="printReport()">Print</button>
+    </div>
+  </div>
