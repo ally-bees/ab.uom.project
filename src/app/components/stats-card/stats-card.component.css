@@ -1,0 +1,36 @@
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  
+  .stats-icon {
+    background: #e8f5f0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+  }
+  
+  .stats-count {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+  }
+  
+  .stats-title {
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .stats-trend {
+    color: #4caf50;
+    font-size: 14px;
+  }

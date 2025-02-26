@@ -1,0 +1,13 @@
+<div class="stats-card">
+    <div class="stats-icon">
+      <img [src]="stats.icon" alt="icon">
+    </div>
+    <div class="stats-content">
+      <h2 class="stats-count">{{ stats.count }}</h2>
+      <p class="stats-title">{{ stats.title }}</p>
+      <p class="stats-trend">
+        <span class="trend-arrow">↑</span> 
+        {{ stats.trend }}% ({{ stats.trendLabel }})
+      </p>
+    </div>
+  </div>

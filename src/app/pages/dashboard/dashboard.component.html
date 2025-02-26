@@ -1,0 +1,39 @@
+<div class="dashboard-container">
+    <div class="dashboard-grid">
+      <!-- Stats Cards Row -->
+      <div class="stats-row">
+        <app-stats-card 
+          *ngFor="let card of statsCards" 
+          [stats]="card">
+        </app-stats-card>
+      </div>
+      
+      <!-- Main Content Row -->
+      <div class="main-content">
+        <!-- Top Selling Products Column -->
+        <div class="products-column">
+          <app-top-selling 
+            [products]="topSellingProducts">
+          </app-top-selling>
+        </div>
+        
+        <!-- Sales Heatmap Column -->
+        <div class="sales-column">
+          <app-sales-heatmap 
+            [salesData]="salesData"
+            [yearOptions]="yearOptions"
+            [selectedYear]="selectedYear"
+            (yearChange)="onYearChange($event)">
+          </app-sales-heatmap>
+        </div>
+        
+        <!-- Members Column -->
+        <div class="members-column">
+          <app-members-list 
+            [members]="members">
+          </app-members-list>
+        </div>
+      </div>
+    </div>
+  </div>
+  
