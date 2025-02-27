@@ -1,0 +1,116 @@
+<div class="finance-container">
+    <!-- Main content area -->
+    <div class="finance-content">
+      <div class="finance-section">
+        <div class="section-header">
+          <h2>Finance Summary</h2>
+          <div class="filters">
+            <div class="search-box">
+              <input type="text" placeholder="Search" [(ngModel)]="searchTerm">
+              <i class="search-icon"></i>
+            </div>
+            <div class="date-filter">
+              <div class="date-input">
+                <span>From:</span>
+                <input type="date" [(ngModel)]="fromDate">
+              </div>
+              <div class="date-input">
+                <span>To:</span>
+                <input type="date" [(ngModel)]="toDate">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-stats">
+          <div class="stats-row">
+            <div class="stat-item main">
+              <div class="stat-label">Total Profit</div>
+              <div class="stat-value">Rs. 500,000</div>
+            </div>
+          </div>
+          <div class="stats-row secondary-stats">
+            <div class="stat-item">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-value">Rs. 700,000</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Total Expenses</div>
+              <div class="stat-value">Rs. 200,000</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">On Hold Amount</div>
+              <div class="stat-value">Rs. 50,000</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <!-- Pie chart will be inserted here -->
+          <div #pieChartContainer class="pie-chart"></div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="color-box yellow"></div>
+              <span>On Hold amount</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-box red"></div>
+              <span>Net Income</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-box green"></div>
+              <span>Total Expenses</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="finance-section">
+        <div class="section-header">
+          <h2>Recent Months Summary</h2>
+        </div>
+        
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Invoice ID</th>
+                <th>Date</th>
+                <th>Order Date</th>
+                <th>Shipment Date</th>
+                <th>City</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let invoice of filteredInvoices">
+                <td>{{ invoice.id }}</td>
+                <td>{{ invoice.date | date:'dd/MM/yyyy' }}</td>
+                <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ invoice.shipmentDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ invoice.city }}</td>
+                <td><span class="status-badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <div class="report-button-container">
+        <button class="print-report-btn" (click)="printReport()">
+          Print Report
+          <i class="print-icon"></i>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <footer class="finance-footer">
+      <div class="footer-content">
+        <a href="#">Privacy Policy</a>
+        <span class="divider">|</span>
+        <a href="#">Terms of Use</a>
+        <span class="copyright">Copy Rights 2024 InstaGraph Analytics All Rights Reserved</span>
+      </div>
+    </footer>
+  </div>
