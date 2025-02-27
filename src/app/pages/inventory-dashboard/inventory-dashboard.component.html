@@ -1,0 +1,79 @@
+<div class="inventory-container">
+    <h1 class="page-title">Products Summary</h1>
+    
+    <!-- Search and date filters -->
+    <div class="filters-container">
+      <div class="search-container">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search product" class="search-input">
+        <button class="search-button">
+          <i class="search-icon">⌕</i>
+        </button>
+      </div>
+      
+      <div class="date-filters">
+        <div class="date-filter">
+          <label>From : </label>
+          <input type="date" [(ngModel)]="fromDate" class="date-input">
+        </div>
+        
+        <div class="date-filter">
+          <label>To : </label>
+          <input type="date" [(ngModel)]="toDate" class="date-input">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stock cards summary -->
+    <div class="stock-cards-container">
+      <div class="stock-card in-stock">
+        <h2 class="card-title">In Stock</h2>
+        <p class="stock-number">{{ stockSummary.inStock }}</p>
+        <p class="items-label">Items</p>
+      </div>
+      
+      <div class="stock-card low-stock">
+        <h2 class="card-title">Low Stock</h2>
+        <p class="stock-number">{{ stockSummary.lowStock }}</p>
+        <p class="items-label">Items</p>
+      </div>
+      
+      <div class="stock-card out-of-stock">
+        <h2 class="card-title">Out of Stock</h2>
+        <p class="stock-number">{{ stockSummary.outOfStock }}</p>
+        <p class="items-label">Items</p>
+      </div>
+    </div>
+    
+    <!-- Stock alerts table -->
+    <div class="stock-alerts-container">
+      <h2 class="section-title">Stock Alert</h2>
+      
+      <table class="stock-alerts-table">
+        <thead>
+          <tr>
+            <th>order ID</th>
+            <th>Date</th>
+            <th>Quantity</th>
+            <th>Alert amt.</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alert of filterStockAlerts()">
+            <td>{{ alert.orderId }}</td>
+            <td>{{ alert.date }}</td>
+            <td>{{ alert.quantity }}</td>
+            <td>{{ alert.alertAmount }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'in-stock': alert.status === 'In Stock',
+                'low-stock': alert.status === 'Low Stock',
+                'out-of-stock': alert.status === 'Out of Stock'
+              }">{{ alert.status }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
