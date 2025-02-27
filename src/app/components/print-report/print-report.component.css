@@ -1,105 +1,158 @@
-.print-dialog {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    height: 100%;
+/* print-report.component.css */
+.print-report-container {
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: center; /* Center horizontally */
+    background: rgb(246, 246, 246);
+    padding: 20px;
+    font-family: sans-serif; /* Use a clean font */
   }
   
-  .print-header {
-    display: flex;
-    justify-content: space-between;
+  h2 {
+    margin-bottom: 20px;
+    
+  }
+  h3{
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .preview-container{
+    background: white;
+    border-radius: 12px;
+    padding:  5px 20px 20px 20px;
     align-items: center;
-    padding: 15px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .form-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for form elements */
+    gap: 20px;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    padding:  20px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column; /* Labels on top of inputs */
+  }
+  
+  label {
+    margin-bottom: 5px;
+    
+  }
+  
+  select,
+  input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    
+    width: 300px;
+  }
+  
+  .radio-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .preview-container {
+    width: 100%;
+    margin-bottom: 20px;
+    overflow-x: auto; /* Add horizontal scrollbar if needed */
+  }
+  
+
+/* Table styles */
+.table-container {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 96%;
+    border-collapse: collapse;
+    margin: 20px 20px 20px 20px;
+  }
+  
+  table th,table td {
+    padding: 12px 15px;
+    text-align: left;
     border-bottom: 1px solid #eee;
   }
   
-  .print-header h2 {
-    margin: 0;
-    font-size: 20px;
+  table th {
+    background-color: #17a2b8;
+    color: white;
+    position: sticky;
+    top: 0;
   }
   
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #999;
+  table tr:nth-child(even) td:nth-child(odd) {
+    background-color: #17a3b85a;
   }
   
-  .close-btn:hover {
-    color: #333;
-  }
-  
-  .print-content {
-    padding: 20px;
-    overflow-y: auto;
-    flex-grow: 1;
-  }
-  
-  .report-content {
+  table tr:nth-child(odd) td:nth-child(even) {
     background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 5px;
   }
   
-  .report-content h3 {
-    margin-top: 0;
-    color: #333;
+  table tr:nth-child(even) td:nth-child(even) {
+    background-color: #f9f9f9;
   }
   
-  hr {
-    border-top: 1px solid #ddd;
-    margin: 20px 0;
+  table tr:nth-child(odd) td:nth-child(odd) {
+    background-color: #17a3b85a;
   }
   
-  .print-actions {
+  table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .button-group {
     display: flex;
-    justify-content: flex-end;
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
+    gap: 10px;
   }
   
-  .btn {
-    margin-left: 10px;
-    padding: 8px 16px;
+  button {
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
   
-  .btn-secondary {
-    background-color: #6c757d;
-    color: white;
-  }
-  
-  .btn-primary {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .btn-secondary:hover {
-    background-color: #5a6268;
-  }
-  
-  .btn-primary:hover {
-    background-color: #0069d9;
-  }
-  
-  @media print {
-    .print-header, .print-actions {
-      display: none;
-    }
+  button:first-child { /* Style for the Cancel button */
     
-    .print-content {
-      padding: 0;
-    }
-    
-    .report-content {
-      background-color: white;
-      padding: 0;
-    }
+    background-color: #ffffff;
+    color: 333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+  }
+  
+  button:last-child { /* Style for the Generate Report button */
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    font-size: 16px;
+  }
+ 
+  
+  button:last-child :hover {
+    background-color: #138496;
   }

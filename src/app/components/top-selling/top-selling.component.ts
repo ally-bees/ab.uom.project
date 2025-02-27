@@ -12,8 +12,22 @@ import { CommonModule } from '@angular/common';
 export class TopSellingComponent {
   @Input() products: Product[] = [];
 
+ 
   getBarWidth(value: number): number {
-    const maxValue = Math.max(...this.products.map(p => p.value));
-    return (value / maxValue) * 100;
-  }
+      return (value / 100) * 100;
+     }
+    
+     getBarColor(index: number): string {
+      const colors = [
+       '#02518A',
+       '#0077B6',
+       '#0096C7',
+       '#00B4D8',
+       '#48CAE4',
+       '#90E0EF',
+       '#ADE8F4',
+       '#CAF0F8'
+      ];
+      return colors[index % colors.length];
+     }
 }

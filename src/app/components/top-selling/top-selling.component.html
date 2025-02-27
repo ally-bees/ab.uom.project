@@ -1,11 +1,12 @@
 <div class="top-selling-card">
-    <h2 class="card-title">Top Selling Products</h2>
-    <div class="product-list">
-      <div class="product-item" *ngFor="let product of products">
-        <div class="product-name">{{ product.name }}</div>
-        <div class="product-bar-container">
-          <div class="product-bar" [style.width.%]="getBarWidth(product.value)"></div>
+        <h2 class="card-title">Top Selling Products</h2>
+        <div class="product-list">
+          <div class="product-item" *ngFor="let product of products; let i = index">
+            <div class="product-bar-container">
+              <div class="product-bar" [style.width.%]="getBarWidth(product.value)" [ngStyle]="{'background': getBarColor(i)}">
+                <span class="product-name">{{ product.name }}</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
-  </div>

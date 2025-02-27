@@ -8,7 +8,8 @@ import { StatsCard } from '../../models/stats.model';
 import { Product } from '../../models/product.model';
 import { Member } from '../../models/member.model';
 import { SalesData } from '../../models/sales-data.model';
-import { NavbarComponent } from '../../navbar/navbar.component';
+// import { NavbarComponent } from '../../navbar/navbar.component';
+import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,8 @@ import { NavbarComponent } from '../../navbar/navbar.component';
   imports: [
     CommonModule,
     StatsCardComponent,
-    NavbarComponent,
+    // NavbarComponent,
+    FooterComponent,
     TopSellingComponent,
     SalesHeatmapComponent,
     MembersListComponent

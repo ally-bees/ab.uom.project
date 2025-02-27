@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PrintReportComponent } from '../../components/print-report/print-report.component';
+// import { PrintReportComponent } from '../../components/print-report/print-report.component';
 import { CommonModule } from '@angular/common';
+// import { DashboardComponent } from "../dashboard/dashboard.component";
+import { FooterComponent } from "../../footer/footer.component";
 
 interface Order {
   orderId: string;
@@ -15,9 +17,12 @@ interface Order {
   selector: 'app-order-summary',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
     //PrintReportComponent (didn't use this component)
-  ],
+    FooterComponent,
+    // DashboardComponent,
+    FooterComponent
+],
   templateUrl: './order-summary.component.html',
   styleUrl: './order-summary.component.css'
 })
