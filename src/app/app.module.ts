@@ -16,7 +16,6 @@ import { Component, OnInit } from '@angular/core';
     AppComponent,      
     ReactiveFormsModule,
     FormsModule,
-    
   ],
   providers: [
     DatePipe
