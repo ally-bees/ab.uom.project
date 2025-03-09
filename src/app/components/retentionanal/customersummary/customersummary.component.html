@@ -1,0 +1,25 @@
+<div class="container">
+    <h1>Customer Summary</h1>
+    <div class="content">
+        <div class="list">
+            <div class="color">
+                <div class="box1">
+    
+                </div>
+                <p>Active customer-{{cus?.active}}</p>
+            </div>
+            <div class="color">
+                <div class="box2">
+    
+                </div>
+                <p>In-Active customer-{{cus?.inactive}}</p>
+            </div>
+        </div>
+        <div class="table">
+            <ag-charts
+            [options]="options"
+        ></ag-charts>
+        </div>
+    </div>
+</div>
+    

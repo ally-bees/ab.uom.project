@@ -1,0 +1,13 @@
+<div class="container">
+
+    <div class="button-group">
+      <button [routerLink]="['/customerinsight/demographic']" routerLinkActive="active">Demographic</button>
+      <button [routerLink]="['/customerinsight/purchase-behavior']" routerLinkActive="active">Phurchase behaviour</button>
+      <button [routerLink]="['/customerinsight/retention-analysis']" routerLinkActive="active">Retention Analysis</button>
+    </div>
+    
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+    
+</div>
