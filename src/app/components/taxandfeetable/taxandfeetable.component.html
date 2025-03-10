@@ -1,0 +1,36 @@
+<div class="table">
+    <div class="tax-summary-container">
+        <h2>Tax and fees Summary</h2>
+        
+        <div class="table-container">
+          <table class="tax-table">
+            <thead>
+              <tr>
+                <th>Audit ID</th>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Tax</th>
+                <th>Net value</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let record of taxRecords">
+                <td>{{ record.auditId }}</td>
+                <td>{{ record.name }}</td>
+                <td>{{ record.value }}</td>
+                <td>{{ record.tax }}</td>
+                <td>{{ record.netValue }}</td>
+                <td>{{ record.status }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="button-container">
+          <button class="print-button" (click)="printReport()">
+            Print Report <i class="print-icon"></i>
+          </button>
+        </div>
+      </div>
+</div>

@@ -1,0 +1,14 @@
+.up{
+    margin-top: 40px;
+    margin-left: 400px;
+}
+
+.content{
+    margin-left: 400px;
+    display: flex;
+}
+
+app-pastaudit{
+    margin-left: 20px;
+    margin-top: 80px;
+}
