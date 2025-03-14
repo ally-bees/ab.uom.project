@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './stats-card.component.html',
-  styleUrls: ['./stats-card.component.scss']
+  styleUrls: ['./stats-card.component.css']
 })
 export class StatsCardComponent {
   @Input() stats!: StatsCard;

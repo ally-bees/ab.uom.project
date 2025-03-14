@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [ FormsModule ],
   templateUrl: './sales.component.html',
-  styleUrls: ['./sales.component.scss']
+  styleUrls: ['./sales.component.css']
 })
 export class SalesComponent implements OnInit, AfterViewInit {
   @ViewChild('salesChartContainer') salesChartContainer!: ElementRef;

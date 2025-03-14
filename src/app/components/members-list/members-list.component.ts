@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './members-list.component.html',
-  styleUrls: ['./members-list.component.scss']
+  styleUrls: ['./members-list.component.css']
 })
 export class MembersListComponent {
   @Input() members: Member[] = [];
