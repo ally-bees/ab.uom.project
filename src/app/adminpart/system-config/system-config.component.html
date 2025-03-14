@@ -1,0 +1,52 @@
+
+<div class="system-config">
+    <div class="header">
+      <h2>System Configuration</h2>
+      <p class="subtitle">Manage system-wide settings and authentication</p>
+    </div>
+    
+    <div class="config-section">
+      <h3>Authentication Method</h3>
+      
+      <div class="config-item">
+        <div class="config-info">
+          <h4>Two-Factor Authentication (2FA)</h4>
+          <p>Require 2FA for all admin users</p>
+        </div>
+        <div class="config-actions">
+          <span class="toggle" [class.enabled]="twoFactorEnabled" (click)="toggleTwoFactor()">
+            {{twoFactorEnabled ? 'Enabled' : 'Disabled'}}
+          </span>
+          <button class="settings-btn">
+            <i class="icon settings-icon"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="config-item">
+        <div class="config-info">
+          <h4>Role-Based Access Control (RBAC)</h4>
+          <p>Manage role-based permissions</p>
+        </div>
+        <div class="config-actions">
+          <button class="settings-btn">
+            <i class="icon settings-icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="config-section">
+      <h3>API Configuration</h3>
+      
+      <div class="api-key-container">
+        <label>API Key</label>
+        <div class="key-input-group">
+          <input type="password" [value]="apiKey" readonly>
+          <button class="regenerate-btn" (click)="regenerateApiKey()">
+            Regenerate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -6,6 +6,9 @@ import { PrintReportComponent } from './components/print-report/print-report.com
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { UserProfileComponent } from './userprofile/userprofile.component';
+import { SystemConfigComponent } from './adminpart/system-config/system-config.component';
+import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
+import { UserManagementComponent } from './adminpart/user-management/user-management.component';
 
 
 export const routes: Routes = [
@@ -18,5 +21,8 @@ export const routes: Routes = [
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
   {path:'userprofile',component:UserProfileComponent},
+  {path:'systemconfig',component:SystemConfigComponent},
+  {path:'auditlogs',component:AuditLogsComponent},
+  {path:'usermanagement',component:UserManagementComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
