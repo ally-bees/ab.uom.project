@@ -5,6 +5,7 @@ import { InventoryDashboardComponent } from './pages/inventory-dashboard/invento
 import { PrintReportComponent } from './components/print-report/print-report.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { UserProfileComponent } from './userprofile/userprofile.component';
 
 
 export const routes: Routes = [
@@ -16,5 +17,6 @@ export const routes: Routes = [
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
+  {path:'userprofile',component:UserProfileComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];

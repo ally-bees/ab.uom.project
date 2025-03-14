@@ -1,0 +1,175 @@
+<div class="settings-container">
+    <h1 class="settings-title">Settings</h1>
+    
+    <div class="profile-container">
+      <div class="sidebar">
+        <div class="profile-image-container">
+          <img src="assets/profile-placeholder.jpg" alt="Profile Image" class="profile-image" />
+          <button class="camera-button">
+            <i class="camera-icon">📷</i>
+          </button>
+        </div>
+        
+        <div class="profile-info">
+          <h2 class="profile-name">Mobina Mirbagheri</h2>
+          <p class="profile-status">Your account is ready, you can now update your profile with more details.</p>
+        </div>
+        
+        <div class="navigation-container">
+          <button 
+            *ngFor="let item of navigationItems" 
+            class="nav-button" 
+            [class.active]="item.active"
+            (click)="setActiveSection(item.name)">
+            {{ item.name }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="main-content">
+        <div class="content-header">
+          <h2 class="section-title">{{ activeSection }}</h2>
+          <p class="last-update" *ngIf="activeSection === 'Edit Profile'">last update: {{ lastUpdate }}</p>
+        </div>
+        
+        <div class="profile-form-container" *ngIf="activeSection === 'Edit Profile'">
+          <form [formGroup]="profileForm" (ngSubmit)="onSave()">
+            <div class="form-sections">
+              <div class="personal-section">
+                <h3 class="section-subtitle">Personal</h3>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input 
+                      type="text" 
+                      id="firstName" 
+                      formControlName="firstName" 
+                      class="form-control" 
+                      placeholder="Enter First Name"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="lastName">Second Name</label>
+                    <input 
+                      type="text" 
+                      id="lastName" 
+                      formControlName="lastName" 
+                      class="form-control" 
+                      placeholder="Enter Last Name"
+                    />
+                  </div>
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="userName">User Name</label>
+                  <input 
+                    type="text" 
+                    id="userName" 
+                    formControlName="userName" 
+                    class="form-control" 
+                    placeholder="User Name"
+                  />
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="dateOfBirth">Date of birth</label>
+                  <div class="date-input-container">
+                    <input 
+                      type="text" 
+                      id="dateOfBirth" 
+                      formControlName="dateOfBirth" 
+                      class="form-control" 
+                      placeholder="Enter Value"
+                    />
+                    <button type="button" class="calendar-button">📅</button>
+                  </div>
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="address">Address</label>
+                  <input 
+                    type="text" 
+                    id="address" 
+                    formControlName="address" 
+                    class="form-control" 
+                    placeholder="Address"
+                  />
+                </div>
+              </div>
+              
+              <div class="contact-section">
+                <h3 class="section-subtitle">Contact</h3>
+                
+                <div class="form-group full-width">
+                  <label for="email">Email</label>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    formControlName="email" 
+                    class="form-control" 
+                    placeholder="Enter valid email"
+                  />
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="phoneNumber">Phone Number</label>
+                  <div class="phone-input-container">
+                    <input 
+                      type="text" 
+                      id="phoneCountryCode" 
+                      formControlName="phoneCountryCode" 
+                      class="form-control country-code"
+                    />
+                    <input 
+                      type="text" 
+                      id="phoneNumber" 
+                      formControlName="phoneNumber" 
+                      class="form-control" 
+                      placeholder="751234567"
+                    />
+                  </div>
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="country">Country</label>
+                  <select 
+                    id="country" 
+                    formControlName="country" 
+                    class="form-control"
+                  >
+                    <option value="" disabled selected>Select</option>
+                    <option value="us">United States</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="ca">Canada</option>
+                    <option value="au">Australia</option>
+                  </select>
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="city">City</label>
+                  <input 
+                    type="text" 
+                    id="city" 
+                    formControlName="city" 
+                    class="form-control" 
+                    placeholder="City"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="save-button">Save</button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Placeholder for other sections -->
+        <div *ngIf="activeSection !== 'Edit Profile'" class="placeholder-content">
+          <p>{{ activeSection }} content goes here</p>
+        </div>
+      </div>
+    </div>
+  </div>
