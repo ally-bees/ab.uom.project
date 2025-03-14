@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './top-selling.component.html',
-  styleUrls: ['./top-selling.component.scss']
+  styleUrls: ['./top-selling.component.css']
 })
 export class TopSellingComponent {
   @Input() products: Product[] = [];
