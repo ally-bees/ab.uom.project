@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
+import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +22,7 @@ import { MatDividerModule } from '@angular/material/divider';
   declarations: [
     CourierDashboardComponent,
     MarketingDashboardComponent,
+    ShippingDashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +41,6 @@ import { MatDividerModule } from '@angular/material/divider';
   providers: [
     DatePipe
   ],
-  
+
 })
 export class AppModule { }
