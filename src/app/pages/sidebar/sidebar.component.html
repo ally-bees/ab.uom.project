@@ -1,37 +1,46 @@
-<nav class="sidebar">
-    <!-- <div class="logo-container">
-      <img src="assets/instadash-logo.png" alt="InstaDash" class="logo">
-      <span class="logo-text">InstaDash</span>
-    </div> -->
-  
-    <div class="nav-section">
-      <h3 class="nav-section-title">Reports And Analysis</h3>
-      <ul class="nav-items">
-        <li><a routerLink="/sales" routerLinkActive="active">
-          <i class="fas fa-chart-line"></i>Sales
-        </a></li>
-        <li><a routerLink="/orders" routerLinkActive="active">
-          <i class="fas fa-shopping-cart"></i>Orders
-        </a></li>
-        <li><a routerLink="/shipping" routerLinkActive="active">
-          <i class="fas fa-truck"></i>Shipping
-        </a></li>
-        <li><a routerLink="/products" routerLinkActive="active">
-          <i class="fas fa-box"></i>Products
-        </a></li>
-        <li><a routerLink="/courier" routerLinkActive="active">
-          <i class="fas fa-truck-loading"></i>Courier
-        </a></li>
-        <li><a routerLink="/finance" routerLinkActive="active">
-          <i class="fas fa-dollar-sign"></i>Finance
-        </a></li>
-        <li><a routerLink="/customer-insights" routerLinkActive="active">
-          <i class="fas fa-users"></i>Customer Insights
-        </a></li>
-        <li><a routerLink="/marketing-analytics" routerLinkActive="active">
-          <i class="fas fa-bullhorn"></i>Marketing Analytics
-        </a></li>
-      </ul>
+<!-- sidebar.component.html -->
+<div class="sidebar">
+  <div class="sidebar-content">
+    <div class="menu-items">
+      <div *ngFor="let menuItem of menuItems" class="menu-item">
+        <div 
+          [class.active]="activeMenuItem === menuItem.id"
+          [class.expanded]="menuItem.expanded"
+          class="menu-header" 
+          (click)="toggleExpand(menuItem)"
+        >
+          <i class="fa" [ngClass]="menuItem.icon"></i>
+          <span>{{ menuItem.label }}</span>
+          <i *ngIf="menuItem.children" class="fa fa-chevron-down expand-icon"></i>
+        </div>
+        
+        <div *ngIf="menuItem.children && menuItem.expanded" class="submenu">
+          <div 
+            *ngFor="let child of menuItem.children" 
+            [class.active]="activeMenuItem === child.id"
+            class="submenu-item"
+            (click)="setActive(child.id)"
+          >
+            <i class="fa" [ngClass]="child.icon"></i>
+            <span>{{ child.label }}</span>
+          </div>
+        </div>
+      </div>
     </div>
-  </nav>
-  
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="sidebar-btn schedule-btn" (click)="scheduleReport()">
+      <i class="fa fa-calendar"></i>
+      Schedule Report
+    </button>
+    <button class="sidebar-btn pending-btn" (click)="pendingRequest()">
+      <i class="fa fa-clock"></i>
+      Pending Request
+    </button>
+    <button class="sidebar-btn logout-btn" (click)="logout()">
+      <i class="fa fa-sign-out-alt"></i>
+      Logout
+    </button>
+  </div>
+</div>
