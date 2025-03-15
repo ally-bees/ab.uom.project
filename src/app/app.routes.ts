@@ -10,6 +10,7 @@ import { SystemConfigComponent } from './adminpart/system-config/system-config.c
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
 import { SalesComponent } from './pages/sales/sales.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
 
 
 export const routes: Routes = [
@@ -18,7 +19,9 @@ export const routes: Routes = [
   { path: 'sales-dashboard', component: SalesDashboardComponent },
   {path: 'sales', component: SalesComponent},
   { path: 'order-summary', component: OrderSummaryComponent},
-  { path: 'inventory', component: InventoryDashboardComponent },
+
+  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
+  { path: 'inventory', component: InventoryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
