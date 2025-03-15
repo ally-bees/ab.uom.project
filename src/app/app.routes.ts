@@ -9,12 +9,14 @@ import { UserProfileComponent } from './userprofile/userprofile.component';
 import { SystemConfigComponent } from './adminpart/system-config/system-config.component';
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
+import { SalesComponent } from './pages/sales/sales.component';
 
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
+  {path: 'sales', component: SalesComponent},
   { path: 'order-summary', component: OrderSummaryComponent},
   { path: 'inventory', component: InventoryDashboardComponent },
   {path: 'printreport', component:PrintReportComponent},
