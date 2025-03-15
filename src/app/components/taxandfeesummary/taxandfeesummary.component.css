@@ -4,8 +4,8 @@
 }
 
 .summary{
-    margin-top: 20px;
-    margin-left: 250px;
+    margin-top: 40px;
+    margin-left: 100px;
     width: 1000px;
     background: white;
     border-radius: 20px;
@@ -13,8 +13,8 @@
     flex-direction: column;
     margin-bottom: 10px;
 }
-.summary h2 {
-    margin-bottom: 20px;
+h2 {
+    margin-top: 500px;
     font-weight: 400;
     font-size: 24px;
     color: #000000;
