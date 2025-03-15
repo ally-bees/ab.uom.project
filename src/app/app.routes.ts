@@ -9,6 +9,7 @@ import { UserProfileComponent } from './userprofile/userprofile.component';
 import { SystemConfigComponent } from './adminpart/system-config/system-config.component';
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
+//import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 
 
 export const routes: Routes = [

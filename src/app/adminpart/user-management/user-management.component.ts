@@ -2,6 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 interface User {
   name: string;
@@ -14,7 +15,7 @@ interface User {
 @Component({
   selector: 'app-user-management',
   standalone:true,
-  imports:[CommonModule,FormsModule],
+  imports:[CommonModule,FormsModule,DashboardComponent],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']
 })
