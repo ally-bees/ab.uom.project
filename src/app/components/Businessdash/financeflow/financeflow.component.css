@@ -1,0 +1,57 @@
+/* finance-flow.component.scss */
+.finance-flow {
+    width: 100%;
+    
+    .finance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      
+      h3 {
+        margin: 0;
+        color: #333;
+      }
+      
+      .finance-info {
+        .amount {
+          font-size: 20px;
+          font-weight: bold;
+          color: #333;
+        }
+        
+        .month {
+          color: #777;
+          font-size: 14px;
+        }
+      }
+    }
+    
+    .chart-area {
+      height: 100px;
+      width: 100%;
+      overflow: hidden;
+      
+      .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        height: 100%;
+        gap: 2px;
+        
+        .chart-bar {
+          flex: 1;
+          background-color: #ddd;
+          min-width: 4px;
+          border-radius: 2px 2px 0 0;
+          
+          &:nth-child(3n+1) {
+            background-color: #00b8d4;
+          }
+          
+          &:nth-child(5n+1) {
+            background-color: purple;
+          }
+        }
+      }
+    }
+  }

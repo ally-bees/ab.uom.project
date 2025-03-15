@@ -1,0 +1,21 @@
+<!-- finance-flow.component.html -->
+<div class="finance-flow">
+    <div class="finance-header">
+      <h3>Finance Flow</h3>
+      <div class="finance-info">
+        <div class="amount">${{ amount | number }}</div>
+        <div class="month">{{ month }}</div>
+      </div>
+    </div>
+    
+    <div class="chart-area">
+      <!-- This div will be used to render the chart -->
+      <div class="chart-bars">
+        <div 
+          *ngFor="let value of chartData" 
+          class="chart-bar" 
+          [style.height.px]="value"
+        ></div>
+      </div>
+    </div>
+  </div>
