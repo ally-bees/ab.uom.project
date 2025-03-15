@@ -28,8 +28,12 @@ h2{
     font-weight: 400;
 }
 
+.para{
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
 p{
     color: #A2AEB4;
     font-weight: 500;
-    margin-left:30px;
 }

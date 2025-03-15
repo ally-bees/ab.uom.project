@@ -7,7 +7,7 @@
     box-shadow: 10px 20px 20px rgba(0,0,0,0.05);
     display: block;
     margin-top: 20px;
-    margin-left: 30px;
+    margin-left: 10px;
     width: 700px;
 }
 
@@ -41,10 +41,10 @@ h1{
   text-align: left;
   color: black;
   background-color: white;
-
+  padding-left: 10px;
   align-items: center;
   font-size: 15px;
-  border: 1px #3398FF solid;
+  border: 2px #d1d7d76d solid;
 }
 
 .dropdown {
@@ -88,6 +88,7 @@ h1{
 }
 
 input{
+  padding-left: 10px;
   height: 30px;
   width: 200px;
   border-radius: 10px;
@@ -96,7 +97,7 @@ input{
   background-color: white;
   align-items: center;
   font-size: 15px;
-  border: 1px #3398FF solid;
+  border: 2px #d1d7d76d solid;
 }
 
 
