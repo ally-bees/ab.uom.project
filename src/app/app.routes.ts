@@ -11,7 +11,8 @@ import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component'
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
 import { SalesComponent } from './pages/sales/sales.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
-
+import { AuditpageComponent } from './pages/auditpage/auditpage.component'
+import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -19,7 +20,6 @@ export const routes: Routes = [
   { path: 'sales-dashboard', component: SalesDashboardComponent },
   {path: 'sales', component: SalesComponent},
   { path: 'order-summary', component: OrderSummaryComponent},
-
   { path: 'inventory-dashboard', component: InventoryDashboardComponent },
   { path: 'inventory', component: InventoryComponent},
   {path: 'printreport', component:PrintReportComponent},
@@ -29,5 +29,10 @@ export const routes: Routes = [
   {path:'systemconfig',component:SystemConfigComponent},
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},
-  { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
+  { path: 'inventory', component: InventoryDashboardComponent },
+   {path: 'printreport', component:PrintReportComponent},
+   {path: 'auditdashboard', component:AuditdashboardComponent},
+   {path: 'audit', component:AuditpageComponent},
+
+   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
