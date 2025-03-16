@@ -1,0 +1,42 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="logo">
+      <img src="assets/images/instadash-logo.svg" alt="InstaDash">
+      <span>InstaDash</span>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search here...">
+      <i class="fa fa-search"></i>
+    </div>
+    <div class="header-icons">
+      <span class="icon"><i class="fa fa-bell"></i></span>
+      <span class="icon"><i class="fa fa-comment"></i></span>
+      <span class="icon"><i class="fa fa-cog"></i></span>
+      <span class="profile-icon"><img src="assets/images/profile.jpg" alt="Profile"></span>
+    </div>
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-header">
+        <span>Available to withdraw</span>
+        <span class="percentage-up">↑ {{availableToWithdraw.percentage}}%</span>
+      </div>
+      <div class="metric-value">${{availableToWithdraw.amount.toLocaleString()}}</div>
+      <div class="metric-footer">Week: {{availableToWithdraw.weeklyChange}}%</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-header">
+        <span>Today Revenue</span>
+        <span class="percentage-up">↑ {{todayRevenue.percentage}}%</span>
+      </div>
+      <div class="metric-value">${{todayRevenue.amount.toLocaleString()}}</div>
+      <div class="metric-footer">{{todayRevenue.orders}} Orders</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-header">
+        <span>Today Sessions</span>
+        <span class="percentage-up">↑ {{todaySessions.percentage}}%</span>
