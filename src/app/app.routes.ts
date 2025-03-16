@@ -13,6 +13,12 @@ import { SalesComponent } from './pages/sales/sales.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AuditpageComponent } from './pages/auditpage/auditpage.component'
 import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
+import { DemographicComponent } from './components/demographic/demographic.component';
+import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
+import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
+import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
+
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -33,6 +39,18 @@ export const routes: Routes = [
    {path: 'printreport', component:PrintReportComponent},
    {path: 'auditdashboard', component:AuditdashboardComponent},
    {path: 'audit', component:AuditpageComponent},
-
-   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
+  {path: 'printreport', component:PrintReportComponent},
+  { 
+    path: 'customerinsight', 
+    component: customerinsightComponent, 
+    children: [
+      { path: '', redirectTo: 'demographic', pathMatch: 'full' }, // Default redirect
+      { path: 'demographic', component: DemographicComponent },
+      { path: 'purchase-behavior', component: PurchasebehaveComponent },
+      { path: 'retention-analysis', component: RetentionanalComponent }
+    ] 
+  },
+  { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
+  
+  
