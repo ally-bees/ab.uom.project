@@ -17,6 +17,7 @@ import { DemographicComponent } from './components/demographic/demographic.compo
 import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
+import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 
 
 
@@ -50,6 +51,7 @@ export const routes: Routes = [
       { path: 'retention-analysis', component: RetentionanalComponent }
     ] 
   },
+  {path:'admindashboard',component:DashboardComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
   
