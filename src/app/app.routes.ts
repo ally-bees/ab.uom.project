@@ -7,8 +7,6 @@ import { DemographicComponent } from './components/demographic/demographic.compo
 import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
-import { AuditorspageComponent } from './auditorspage/auditorspage.component';
-import { AuditdashboardcomponentComponent } from './auditdashboardcomponent/auditdashboardcomponent.component';
 
 
 
@@ -16,15 +14,12 @@ export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'Auditor', component: AuditorspageComponent },
   { path: 'order-summary', component: OrderSummaryComponent},
   { path: 'inventory', component: InventoryDashboardComponent },
   {path: 'printreport', component:PrintReportComponent},
   { 
     path: 'auditpage', 
-    component: AuditorspageComponent, // The parent container
     children: [
-      { path: '', component: AuditdashboardcomponentComponent },
       { path: 'customerinsight', 
         component: customerinsightComponent, 
         children: [

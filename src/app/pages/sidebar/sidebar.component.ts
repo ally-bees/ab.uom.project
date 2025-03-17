@@ -12,7 +12,8 @@ import { RouterModule,Route } from '@angular/router'; // Import RouterModule
 })
 export class SidebarComponent {
   menuItems = [
-      { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
+      { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, 
+      children: [
       { id: 'sales', label: 'Sales', icon: 'fa-chart-line' },
       { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart' },
       { id: 'shipping', label: 'Shipping', icon: 'fa-truck' },
