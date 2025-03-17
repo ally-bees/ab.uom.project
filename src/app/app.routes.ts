@@ -5,6 +5,8 @@ import { InventoryDashboardComponent } from './pages/inventory-dashboard/invento
 import { PrintReportComponent } from './components/print-report/print-report.component';
 import { AuditpageComponent } from './pages/auditpage/auditpage.component'
 import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
+import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
@@ -14,5 +16,12 @@ export const routes: Routes = [
    {path: 'printreport', component:PrintReportComponent},
    {path: 'auditdashboard', component:AuditdashboardComponent},
    {path: 'audit', component:AuditpageComponent},
+   { 
+    path: 'auditpage', 
+    component: AuditorpageComponent, // The parent container
+    children: [
+      { path: '', component: AuditdashboardComponent }
+    ]
+   },
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
