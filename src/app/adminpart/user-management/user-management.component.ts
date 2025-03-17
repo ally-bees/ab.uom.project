@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from "../../pages/header/header.component";
+import { SidebarComponent } from '../../pages/sidebar/sidebar.component';
+import { FooterComponent } from '../../footer/footer.component';
 
 interface User {
   name: string;
@@ -15,7 +17,7 @@ interface User {
 @Component({
   selector: 'app-user-management',
   standalone:true,
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent,SidebarComponent,FooterComponent],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']
 })
