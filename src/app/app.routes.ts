@@ -12,7 +12,6 @@ import { UserManagementComponent } from './adminpart/user-management/user-manage
 import { SalesComponent } from './pages/sales/sales.component';
 import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component';
 
-
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
@@ -27,6 +26,6 @@ export const routes: Routes = [
   {path:'systemconfig',component:SystemConfigComponent},
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},
-  {path: 'analytics',component:MarketingAnalyticsDashboardComponent},
+  {path: 'analytics' ,component:MarketingAnalyticsDashboardComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
