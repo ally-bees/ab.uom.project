@@ -10,6 +10,7 @@ import { SystemConfigComponent } from './adminpart/system-config/system-config.c
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
 import { SalesComponent } from './pages/sales/sales.component';
+import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component';
 
 
 export const routes: Routes = [
@@ -26,5 +27,6 @@ export const routes: Routes = [
   {path:'systemconfig',component:SystemConfigComponent},
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},
+  {path: 'analytics',component:MarketingAnalyticsDashboardComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
