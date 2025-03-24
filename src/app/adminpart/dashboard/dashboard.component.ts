@@ -5,8 +5,8 @@ import { UserManagementComponent } from '../user-management/user-management.comp
 import { SystemConfigComponent } from '../system-config/system-config.component';
 import { AuditLogsComponent } from '../audit-logs/audit-logs.component';
 import { HeaderComponent } from '../../pages/header/header.component';
-import { SidebarComponent } from '../../pages/sidebar/sidebar.component';
 import { FooterComponent } from '../../footer/footer.component';
+import { AdminsidebarComponent } from '../../pages/sidebar/adminsidebar/adminsidebar.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +18,7 @@ import { FooterComponent } from '../../footer/footer.component';
     SystemConfigComponent,
     AuditLogsComponent,
     HeaderComponent,
-    SidebarComponent,
+    AdminsidebarComponent,
     FooterComponent
   ],
   templateUrl: './dashboard.component.html',
