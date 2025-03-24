@@ -10,7 +10,7 @@ import { SystemConfigComponent } from './adminpart/system-config/system-config.c
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
 import { SalesComponent } from './pages/sales/sales.component';
-
+import { InventoryComponent } from './pages/inventory/inventory.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
