@@ -5,6 +5,7 @@ import Chart from 'chart.js/auto';
 import { ChartConfiguration } from 'chart.js';
 import { HeaderComponent } from "../header/header.component";
 import { FooterComponent } from "../../footer/footer.component";
+import { AnalyticssidebarComponent } from '../sidebar/analyticssidebar/analyticssidebar.component';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { FooterComponent } from "../../footer/footer.component";
   templateUrl: './marketing-analytics-dashboard.component.html',
   styleUrls: ['./marketing-analytics-dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent,]
+  imports: [CommonModule, HeaderComponent, FooterComponent,AnalyticssidebarComponent]
 })
 export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('salesFunnelChart') salesFunnelChart!: ElementRef;

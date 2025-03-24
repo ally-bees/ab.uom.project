@@ -9,6 +9,24 @@
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+}
+
+/* Sidebar */
+app-sidebar {
+  width: 250px; /* Fixed width for the sidebar */
+  background-color: white;
+  border-right: 1px solid #eee;
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  height: auto;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  flex: 1; /* Take up remaining space */
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  background-color: #f5f5f7; /* Background color for the content area */
 }
 
 /* Top Stats Row */
