@@ -1,38 +1,46 @@
-
+<app-header></app-header>
 <div class="dashboard-container">
+  <!-- Sidebar -->
+  <app-adminsidebar></app-adminsidebar>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard-content">
     <!-- Status Cards Row -->
     <div class="status-cards-row">
-      <app-status-card 
+      <app-status-card
         *ngFor="let card of statusCards"
         [title]="card.title"
         [value]="card.value"
         [subtitle]="card.subtitle"
-        [icon]="card.icon">
-      </app-status-card>
+        [icon]="card.icon"
+      ></app-status-card>
     </div>
-  
+
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
-      <button 
-        class="tab-button" 
+      <button
+        class="tab-button"
         [class.active]="activeTab === 'users'"
-        (click)="setActiveTab('users')">
+        (click)="setActiveTab('users')"
+      >
         <i class="icon user-icon"></i> User Management
       </button>
-      <button 
-        class="tab-button" 
+      <button
+        class="tab-button"
         [class.active]="activeTab === 'config'"
-        (click)="setActiveTab('config')">
+        (click)="setActiveTab('config')"
+      >
         <i class="icon settings-icon"></i> System Configuration
       </button>
-      <button 
-        class="tab-button" 
+      <button
+        class="tab-button"
         [class.active]="activeTab === 'logs'"
-        (click)="setActiveTab('logs')">
+        (click)="setActiveTab('logs')"
+      >
         <i class="icon logs-icon"></i> Audit Logs
       </button>
     </div>
-  
+
     <!-- Content Panel -->
     <div class="content-panel">
       <app-user-management *ngIf="activeTab === 'users'"></app-user-management>
@@ -40,3 +48,5 @@
       <app-audit-logs *ngIf="activeTab === 'logs'"></app-audit-logs>
     </div>
   </div>
+</div>
+<app-footer></app-footer>

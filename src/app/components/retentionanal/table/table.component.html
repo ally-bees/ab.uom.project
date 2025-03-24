@@ -1,0 +1,60 @@
+<div class="container">
+    <h1>Customer summary details</h1>
+    <div class="form">
+        <div class="dropdown">
+            <button class="dropbtn">Category</button>
+            <div class="dropdown-content">
+              <a href="#">Link 1</a>
+              <a href="#">Link 2</a>
+              <a href="#">Link 3</a>
+            </div>
+        </div>
+        <div class="datepicker">
+        
+          <form>
+              <input type="date" id="birthday" name=>
+          </form>
+  
+          <form>
+              <input type="date" id="birthday" name="birthday">
+          </form>
+
+          <form>
+            <input type="search" id="birthday" name="birthday" placeholder="Search">
+        </form>
+          
+      </div>
+    </div>
+    <div class="table">
+        <div class="table-container">
+            <table class="tax-table">
+              <thead>
+                <tr>
+                  <th>Audit ID</th>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Tax</th>
+                  <th>Net value</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let record of tableRecords">
+                  <td>{{ record.auditId }}</td>
+                  <td>{{ record.name }}</td>
+                  <td>{{ record.value }}</td>
+                  <td>{{ record.tax }}</td>
+                  <td>{{ record.netValue }}</td>
+                  <td>{{ record.status }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    </div>
+    <div class="button-container">
+      <button class="print-button" (click)="printReport()">
+        Print Report <i class="print-icon"></i>
+      </button>
+    </div>
+    </div>
+    

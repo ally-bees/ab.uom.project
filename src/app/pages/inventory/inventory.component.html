@@ -1,0 +1,116 @@
+<div class="page-container">
+
+
+    <div class="inventory-container">
+        <h1 class="page-title">Inventory Summary</h1>
+        
+        <!-- Search and date filters -->
+        <div class="filters-container">
+        <div class="search-container">
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search product" class="search-input">
+            <button class="search-button">
+                <i class="search-icon">⌕</i>
+            </button>
+        </div>
+        
+        <div class="date-filters">
+            <div class="date-filter">
+            <label>From : </label>
+            <input type="date" [(ngModel)]="fromDate" class="date-input">
+            </div>
+            
+            <div class="date-filter">
+            <label>To : </label>
+            <input type="date" [(ngModel)]="toDate" class="date-input">
+            </div>
+        </div>
+        </div>
+      
+        <!-- Stock cards summary -->
+        <div class="stock-cards-container">
+            <div class="stock-card in-stock">
+            <h2 class="card-title">In Stock</h2>
+            <p class="stock-number">{{ stockSummary.inStock }}</p>
+            <p class="items-label">Items</p>
+            </div>
+            
+            <div class="stock-card low-stock">
+            <h2 class="card-title">Low Stock</h2>
+            <p class="stock-number">{{ stockSummary.lowStock }}</p>
+            <p class="items-label">Items</p>
+            </div>
+            
+            <div class="stock-card out-of-stock">
+            <h2 class="card-title">Out of Stock</h2>
+            <p class="stock-number">{{ stockSummary.outOfStock }}</p>
+            <p class="items-label">Items</p>
+            </div>
+        </div>
+    </div> 
+        
+
+
+    <!-- PIE CHART -->
+        <div class="data-display">
+        <div class="pie-chart-container">
+            <div class="pie-chart">
+            <!-- SVG Pie Chart representation based on stock data -->
+            <svg width="100%" height="100%" viewBox="0 0 100 100">
+                <!-- Blue segment for In Stock -->
+                <path d="M50,50 L50,0 A50,50 0 0,1 97,67 Z" fill="#78A7FF"></path>
+                <!-- Yellow segment for Low Stock -->
+                <path d="M50,50 L97,67 A50,50 0 0,1 23,67 Z" fill="#F9F06A"></path>
+                <!-- Red segment for Out of Stock -->
+                <path d="M50,50 L23,67 A50,50 0 0,1 50,0 Z" fill="#FF4B4B"></path>
+            </svg>
+            </div>
+            
+            
+            <div class="chart-legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #78A7FF;"></span>
+                <span>In Stock</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #F9F06A;"></span>
+                <span>Low Stock</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #FF4B4B;"></span>
+                <span>Out of Stock</span>
+            </div>
+            </div>
+        </div>
+        
+        <div class="products-table-container">
+            <h2 class="title">Best Selling Products</h2>
+            <table class="products-table">
+            <thead>
+                <tr>
+                <th>Product ID</th>
+                <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of filterProducts()">
+                <td>{{ product.productId }}</td>
+                <td>
+                    <span class="status-badge" 
+                        [ngClass]="{'in-stock': product.status === 'In Stock', 
+                                    'low-stock': product.status === 'Low Stock', 
+                                    'out-of-stock': product.status === 'Out of Stock'}">
+                    {{ product.status }}
+                    </span>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+
+        <div class="report-actions">
+        <button class="print-button" (click)="printReport()">
+            Print Report
+        </button>
+        </div>
+</div>

@@ -2,6 +2,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from '../../pages/header/header.component';
+import { SidebarComponent } from '../../pages/sidebar/sidebar.component';
+import { FooterComponent } from "../../footer/footer.component";
 
 interface LogEntry {
   action: string;
@@ -13,7 +16,7 @@ interface LogEntry {
 @Component({
   selector: 'app-audit-logs',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent, SidebarComponent, FooterComponent],
   templateUrl: './audit-logs.component.html',
   styleUrls: ['./audit-logs.component.css']
 })

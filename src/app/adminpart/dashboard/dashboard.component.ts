@@ -4,6 +4,9 @@ import { StatusCardComponent } from '../status-card/status-card.component';
 import { UserManagementComponent } from '../user-management/user-management.component';
 import { SystemConfigComponent } from '../system-config/system-config.component';
 import { AuditLogsComponent } from '../audit-logs/audit-logs.component';
+import { HeaderComponent } from '../../pages/header/header.component';
+import { FooterComponent } from '../../footer/footer.component';
+import { AdminsidebarComponent } from '../../pages/sidebar/adminsidebar/adminsidebar.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +16,10 @@ import { AuditLogsComponent } from '../audit-logs/audit-logs.component';
     StatusCardComponent,
     UserManagementComponent,
     SystemConfigComponent,
-    AuditLogsComponent
+    AuditLogsComponent,
+    HeaderComponent,
+    AdminsidebarComponent,
+    FooterComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']

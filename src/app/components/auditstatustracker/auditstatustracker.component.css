@@ -1,0 +1,143 @@
+
+.audit_status  h1{
+      margin-top: 20px;
+      margin-bottom: 0;
+      left: 290px;
+      font-weight: 600;
+      font-size: 30px;
+      line-height: 100%;
+      letter-spacing: -1%;
+      color: #285F83;
+  }
+  
+  
+  .viewaudit{
+      width: 1175px;
+      height: 224px;
+  }
+  
+  .subtitle{
+      display: flex;
+  }
+  
+  h4{
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: 400;
+      color: #272727;
+  }
+  
+  .dropbtn {
+      margin-top: 5px;
+      background-color: #DBE5F0;
+      color: #05BBC9;
+      padding: 10px;
+      font-size: 10px;
+      border: none;
+      border-radius: 20px;
+    }
+    
+    .dropdown {
+      padding-top: 15px;
+      padding-left: 15px;
+      width: 100px;
+      height: 40px;
+      border-radius: 20px;
+      gap: 2px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-content {
+      border-radius: 20px;
+      width: 100px;
+      height: 140px;
+      font-weight: 400;
+      font-size: 8px;
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+    
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    .dropdown-content a:hover {background-color: #ddd;border-radius: 20px;}
+    
+    .dropdown:hover .dropdown-content {display: block;}
+    
+    .dropdown:hover .dropbtn {background-color: #05BBC9;color: #DBE5F0;}
+  
+    .cards{
+      margin-top: 20px;
+      display: flex;
+    }
+  
+    .stats-card{
+  
+      margin: 5px;
+      background: white;
+      border-radius: 12px;
+      padding:  10px 10px 10px 10px;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      width: 250px;
+      display: block;
+  }
+    .stats-card:hover { 
+      height: 150;
+      border-radius: 10px;
+      gap: 16px;
+      border-width: 2px;
+      padding: 10px;
+      background: #FFFFFF;
+      border: 2px solid #285F83;
+      box-shadow: 0px 3px 5px 0px #0A0E110A;
+      box-shadow: 0px 1px 18px 0px #0A0E1105;
+      box-shadow: 0px 6px 10px 0px #0A0E1108;
+  }
+  
+  .stats-card h6{
+      margin: 5px;
+      padding: 1px;
+      width: 288;
+      height: 25;
+      font-weight: 600;
+      font-size: 21px;
+      letter-spacing: -2%;
+      color: #272727;
+  }
+  
+  .stats-card p{
+    margin-top: 10px;
+    color: #777777;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  
+  .stats-card span{
+    color: #272727;
+    font-weight: 600;
+  }
+  
+  .stats-card button{
+      background: #05BBC9;
+      color: white;
+      font-weight: bold;
+      width: 230px;
+      height: 33px;
+      border-radius: 6px;
+      padding-top: 8px;
+      padding-right: 12px;
+      padding-bottom: 8px;
+      padding-left: 12px;
+      margin-top: 10px;
+      gap: 4px;
+      border: white;
+  
+  }
