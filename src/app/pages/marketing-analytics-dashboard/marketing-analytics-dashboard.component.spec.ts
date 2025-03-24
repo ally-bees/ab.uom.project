@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MarketingAnalyticsDashboardComponent } from './marketing-analytics-dashboard.component';
 
 describe('MarketingAnalyticsDashboardComponent', () => {
@@ -8,7 +7,8 @@ describe('MarketingAnalyticsDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MarketingAnalyticsDashboardComponent]
+      declarations: [MarketingAnalyticsDashboardComponent],  // Use declarations, not imports
+      // Add any necessary modules here in the imports array, like CommonModule, FormsModule, etc., if needed
     })
     .compileComponents();
 

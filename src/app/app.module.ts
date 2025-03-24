@@ -18,11 +18,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
+
 @NgModule({
   declarations: [
     CourierDashboardComponent,
     MarketingDashboardComponent,
     ShippingDashboardComponent,
+
   ],
   imports: [
     BrowserModule,

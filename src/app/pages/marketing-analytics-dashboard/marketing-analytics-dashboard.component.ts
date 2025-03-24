@@ -1,73 +1,183 @@
-import { Component, OnInit } from '@angular/core';
+// marketing-dashboard.component.ts
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import Chart from 'chart.js/auto';
+import { ChartConfiguration } from 'chart.js';
+import { HeaderComponent } from "../header/header.component";
+import { FooterComponent } from "../../footer/footer.component";
+import { AnalyticssidebarComponent } from '../sidebar/analyticssidebar/analyticssidebar.component';
+
 
 @Component({
   selector: 'app-marketing-analytics-dashboard',
   templateUrl: './marketing-analytics-dashboard.component.html',
-  styleUrls: ['./marketing-analytics-dashboard.component.css']
+  styleUrls: ['./marketing-analytics-dashboard.component.css'],
+  standalone: true,
+  imports: [CommonModule, HeaderComponent, FooterComponent,AnalyticssidebarComponent]
 })
-export class MarketingAnalyticsDashboardComponent implements OnInit {
-  // Dashboard data
-  availableToWithdraw = {
-    amount: 1567.99,
-    percentage: 8.8,
-    weeklyChange: -4.2
-  };
+export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewInit {
+  @ViewChild('salesFunnelChart') salesFunnelChart!: ElementRef;
 
-  todayRevenue = {
-    amount: 2868.99,
-    percentage: 1.2,
-    orders: 145
-  };
+  // Statistics
+  revenue: number = 1567.99;
+  revenueGrowth: number = 8.5;
+  weekDate: string = 'Jul 14, 20';
 
-  todaySessions = {
-    count: 156,
-    percentage: 3.2,
-    visitors: 53
-  };
+  todayRevenue: number = 2868.99;
+  todayRevenueChange: number = 5.59;
+  todayOrders: number = 143;
 
-  subscribers = {
-    count: 3422,
-    percentage: 8.2,
-    averageOrder: 16.4
-  };
+  todaySessions: number = 156;
+  todaySessionsChange: number = 3.12;
+  todayVisitors: number = 524;
 
-  deviceCategories = [
-    { name: 'Mobile', percentage: 96.42 },
-    { name: 'Desktop', percentage: 2.76 },
-    { name: 'Tablet', percentage: 0.82 }
+  subscribers: number = 3422;
+  subscribersChange: number = 8.5;
+  averageOrder: number = 36.18;
+
+  // Device Category
+  mobilePercentage: number = 96.42;
+  desktopPercentage: number = 2.76;
+  tabletPercentage: number = 0.82;
+
+  // Campaign Performance
+  campaigns = [
+    {
+      name: 'Google Ads',
+      icon: 'G',
+      color: '#34A853',
+      impressions: '109k',
+      clicks: '9',
+      cpc: '10.12',
+      spend: '566,033.12'
+    },
+    {
+      name: 'Tik Tok',
+      icon: 'T',
+      color: '#00F2EA',
+      impressions: '287k',
+      clicks: '13',
+      cpc: '12.12',
+      spend: '845,123.12'
+    },
+    {
+      name: 'Instagram',
+      icon: 'I',
+      color: '#C13584',
+      impressions: '156k',
+      clicks: '12',
+      cpc: '11.12',
+      spend: '378,121.12'
+    }
   ];
 
+  // Top Countries
   topCountries = [
-    { name: 'Switzerland', percentage: 9, flagCode: 'ch' },
-    { name: 'United State', percentage: 48, flagCode: 'us' },
-    { name: 'United Kingdom', percentage: 12, flagCode: 'gb' }
+    {
+      name: 'Switzerland',
+      code: 'CH',
+      percentage: 40
+    },
+    {
+      name: 'United States',
+      code: 'US',
+      percentage: 48
+    },
+    {
+      name: 'United Kingdom',
+      code: 'GB',
+      percentage: 12
+    }
   ];
 
-  campaignPerformance = [
-    { name: 'Google Ads', impressions: '189k', clicks: '9k', cpc: 8.12, spend: 56123.12 },
-    { name: 'Tik Tok', impressions: '287k', clicks: '15k', cpc: 12.12, spend: 140123.12 },
-    { name: 'Instagram', impressions: '154k', clicks: '12k', cpc: 5.12, spend: 39123.12 }
-  ];
+  constructor() {}
 
-  // Sales funnel chart data (simplified for this example)
-  salesData = [
-    { date: '1', value: 100 },
-    { date: '5', value: 120 },
-    { date: '10', value: 90 },
-    { date: '15', value: 210 },
-    { date: '20', value: 160 },
-    { date: '25', value: 140 },
-    { date: '30', value: 150 }
-  ];
+  ngOnInit(): void {}
 
-  constructor() { }
+  ngAfterViewInit(): void {
+    this.initSalesFunnelChart();
+  }
 
-  ngOnInit(): void {
-    // Initialize chart or fetch data from API if needed
+  initSalesFunnelChart(): void {
+    const ctx = this.salesFunnelChart.nativeElement.getContext('2d');
+
+    // Sample data - adjust according to your needs
+    const data = {
+      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
+               '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'],
+      datasets: [{
+        label: 'Sales',
+        data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 110, 120, 130, 145, 160, 180,
+                210, 185, 195, 170, 155, 140, 150, 145, 160, 170, 180, 190, 185, 180, 175],
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+        tension: 0.4,
+        borderWidth: 2,
+        fill: true,
+        pointBackgroundColor: '#FFFFFF',
+        pointBorderColor: '#3B82F6',
+        pointBorderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+      }]
+    };
+
+    const config: ChartConfiguration<'line', number[], string> = {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              display: true,
+              maxTicksLimit: 10
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: false,
+              color: '#E5E7EB',  // Use `color` for grid lines
+
+            },
+            ticks: {
+              maxTicksLimit: 5
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: true,
+            backgroundColor: '#FFFFFF',
+            titleColor: '#1F2937',
+            bodyColor: '#1F2937',
+            borderColor: '#E5E7EB',
+            borderWidth: 1,
+            padding: 12,
+            displayColors: false,
+            callbacks: {
+              label: function(context: any) {
+                return `Sales: ${context.raw}`;
+              }
+            }
+          }
+        }
+      }
+    };
+
+
+    new Chart(ctx, config);
   }
 
   printReport(): void {
-    console.log('Printing report...');
-    // Implement print functionality
+    window.print();
   }
 }
