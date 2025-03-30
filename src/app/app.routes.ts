@@ -18,6 +18,10 @@ import { PurchasebehaveComponent } from './components/purchasebehave/purchasebeh
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
+import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
+import { ResetPasswordComponent } from './adminpart/reset-password/reset-password.component';
+import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
 
 
 
@@ -52,6 +56,10 @@ export const routes: Routes = [
     ] 
   },
   {path:'admindashboard',component:DashboardComponent},
+  {path:'forget-password',component:ForgetPasswordComponent},
+  {path:'reset-password',component:ResetPasswordComponent},
+  {path:'privacy-policy',component:PrivacyPolicyComponent},
+  {path:'terms-of-service',component:TermsOfServiceComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
   
