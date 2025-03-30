@@ -14,8 +14,11 @@ export class SignupComponent {
 
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group({
-      userEmail: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      username: ['', [Validators.required]],
+      userEmail:['',[Validators.required,Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      role:['',[Validators.required]],
+      honeycombId:['',Validators.required]
     });
   }
 

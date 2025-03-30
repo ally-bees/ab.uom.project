@@ -20,8 +20,17 @@
           <div class="form-group">
             <input 
               type="text" 
+              formControlName="username"
+              placeholder="User Name"
+              [ngClass]="{'invalid': signupForm.get('username')?.invalid && signupForm.get('username')?.touched}"
+            >
+          </div>
+
+          <div class="form-group">
+            <input 
+              type="email" 
               formControlName="userEmail"
-              placeholder="User name / Email"
+              placeholder="Email"
               [ngClass]="{'invalid': signupForm.get('userEmail')?.invalid && signupForm.get('userEmail')?.touched}"
             >
           </div>
@@ -32,6 +41,24 @@
               formControlName="password"
               placeholder="Password"
               [ngClass]="{'invalid': signupForm.get('password')?.invalid && signupForm.get('password')?.touched}"
+            >
+          </div>
+
+          <div class="form-group">
+            <input 
+              type="text" 
+              formControlName="role"
+              placeholder="Role"
+              [ngClass]="{'invalid': signupForm.get('role')?.invalid && signupForm.get('role')?.touched}"
+            >
+          </div>
+
+          <div class="form-group">
+            <input 
+              type="text" 
+              formControlName="honeycombId"
+              placeholder="Honeycomb ID"
+              [ngClass]="{'invalid': signupForm.get('honeycombId')?.invalid && signupForm.get('honeycombId')?.touched}"
             >
           </div>
           
