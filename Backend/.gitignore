@@ -1,0 +1,48 @@
+# Ignore Visual Studio temporary files, build results, and OS-generated files
+
+## Ignore build outputs
+bin/
+obj/
+out/
+
+## Ignore user-specific settings
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Ignore NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+!packages/repositories.config
+
+## Ignore project-specific files
+project.lock.json
+project.assets.json
+*.csproj.user
+appsettings.*.json
+
+## Ignore logs, database, and temp files
+logs/
+*.log
+coverage/
+TestResults/
+*.db
+*.sqlite
+*.sqlite3
+.env
+
+## Ignore IDE and editor settings
+.idea/
+*.swp
+*.sln.ide
+Thumbs.db
+.DS_Store
+
+## Ignore Publish and Deployment
+.publish/
+.Dockerfile.swp
+**/node_modules/
+wwwroot/node_modules/
