@@ -12,6 +12,7 @@ import { UserManagementComponent } from './adminpart/user-management/user-manage
 import { SalesComponent } from './pages/sales/sales.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component';
+import { SalesMainpageComponent } from './mainpage/sales-mainpage/sales-mainpage.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -29,5 +30,8 @@ export const routes: Routes = [
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},
   {path:'analytics',component:MarketingAnalyticsDashboardComponent},
+  //add salesmainpage
+  {path:'salespage',component:SalesMainpageComponent},
+
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
