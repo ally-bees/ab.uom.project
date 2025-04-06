@@ -21,9 +21,9 @@ import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
-    CourierDashboardComponent,
-    MarketingDashboardComponent,
-    ShippingDashboardComponent,
+  //   CourierDashboardComponent,
+  //   MarketingDashboardComponent,
+  //   ShippingDashboardComponent,
 
   ],
   imports: [
