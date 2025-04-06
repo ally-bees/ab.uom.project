@@ -1,0 +1,50 @@
+<div class="audit-logs-container">
+  <!-- Sidebar -->
+
+  <!-- Audit Logs Content -->
+  <div class="audit-logs-content">
+    <div class="header">
+      <h2>Audit Logs</h2>
+      <p class="subtitle">View system activity and error logs</p>
+      
+      <div class="actions">
+        <button class="export-btn" (click)="exportLogs()">
+          <i class="icon download-icon"></i> Export Logs
+        </button>
+      </div>
+    </div>
+    
+    <div class="search-container">
+      <div class="search-box">
+        <i class="icon search-icon"></i>
+        <input type="text" placeholder="Search logs" [(ngModel)]="searchText">
+      </div>
+      <button class="filter-btn">
+        <i class="icon filter-icon"></i>
+      </button>
+    </div>
+    
+    <table class="logs-table">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>User</th>
+          <th>TimeStamp</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs">
+          <td>{{log.action}}</td>
+          <td>{{log.user}}</td>
+          <td>{{log.timestamp}}</td>
+          <td>
+            <span class="status-badge" [ngClass]="log.status.toLowerCase()">
+              {{log.status}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

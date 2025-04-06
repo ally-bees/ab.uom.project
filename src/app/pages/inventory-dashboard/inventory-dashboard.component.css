@@ -1,0 +1,289 @@
+.inventory-container {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  /* Filters section */
+  .filters-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .search-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .search-button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .date-filters {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .date-filter {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .date-filter label {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .date-input {
+    padding: 0.6rem 0.6rem 0.6rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 140px;
+    font-size: 0.9rem;
+  }
+  
+  .calendar-icon {
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+  }
+  
+  /* Stock cards section */
+  .stock-cards-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .stock-card {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-left: 20px;
+    text-align: center;
+  }
+  
+  .in-stock {
+    background-color: #cce1ff;
+  }
+  
+  .low-stock {
+    background-color: #fff9d8;
+  }
+  
+  .out-of-stock {
+    background-color: #fedfdf;
+    margin-right: 20px;
+
+  }
+  
+  .card-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+    color: #555;
+  }
+  
+  .stock-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.2rem 0;
+  }
+  
+  .items-label {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 0;
+  }
+  
+  /* Stock alerts section */
+  .stock-alerts-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.19);
+    padding: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #eee;
+  }
+/*   
+  .stock-alerts-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .stock-alerts-table th {
+    background-color: #5ecbc4;
+    color: white;
+    text-align: left;
+    padding: 0.8rem 1rem;
+  }
+  
+  .stock-alerts-table th:first-child {
+    border-top-left-radius: 4px;
+  }
+  
+  .stock-alerts-table th:last-child {
+    border-top-right-radius: 4px;
+  }
+  
+  .stock-alerts-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #eee;
+  }
+   */
+
+   
+  /* Table styles */
+.table-container {
+    overflow-x: auto;
+  }
+  
+  .stock-alerts-table {
+    width: 96%;
+    border-collapse: collapse;
+    margin: 0px 20px 20px 20px;
+  }
+  
+  .stock-alerts-table th, .stock-alerts-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .stock-alerts-table th {
+    background-color: #17a2b8;
+    color: white;
+    position: sticky;
+    top: 0;
+  }
+  
+  .stock-alerts-table tr:nth-child(even) td:nth-child(odd) {
+    background-color: #17a3b85a;
+  }
+  
+  .stock-alerts-table tr:nth-child(odd) td:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .stock-alerts-table tr:nth-child(even) td:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .stock-alerts-table tr:nth-child(odd) td:nth-child(odd) {
+    background-color: #17a3b85a;
+  }
+  
+  .stock-alerts-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    color: white;
+    display: inline-block;
+    width: 55%;
+  }
+  
+  .badge-completed {
+    background-color: #4CAF50;
+    text-align: center;
+  }
+  
+  .badge-pending {
+    background-color: #FFC107;
+    color: #333;
+    text-align: center;
+  }
+  
+  .badge-rejected {
+    background-color: #F44336;
+    text-align: center;
+  }
+
+
+  /*//////////////////////*/
+  .status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .status-badge.in-stock {
+    background-color: #e1f5fe;
+    color: #0288d1;
+  }
+  
+  .status-badge.low-stock {
+    background-color: #fff8e1;
+    color: #ffa000;
+  }
+  
+  .status-badge.out-of-stock {
+    background-color: #ffebee;
+    color: #e53935;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .filters-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .search-container {
+      max-width: 100%;
+    }
+    
+    .date-filters {
+      flex-direction: column;
+    }
+    
+    .stock-cards-container {
+      flex-direction: column;
+    }
+    
+    .stock-card {
+      width: 100%;
+    }
+  }

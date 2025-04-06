@@ -1,0 +1,80 @@
+/* Container for the sidebar and audit logs content */
+.audit-logs-container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust height based on header height */
+  }
+  
+  /* Sidebar */
+  app-sidebar {
+    width: 250px; /* Fixed width for the sidebar */
+    border-right: 1px solid #eee; /* Optional: Adjust or remove if not needed */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+  }
+  
+  /* Audit Logs Content */
+  .audit-logs-content {
+    flex: 1; /* Take up remaining space */
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling if content overflows */
+  }
+  
+  /* Header */
+  .header {
+    margin-bottom: 20px;
+  }
+  
+  /* Actions */
+  .actions {
+    margin-top: 10px;
+  }
+  
+  /* Search Container */
+  .search-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  .search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    margin-left: 8px;
+    outline: none;
+  }
+  
+  .filter-btn {
+    background-color: transparent;
+    border: none;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  /* Logs Table */
+  .logs-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .logs-table th,
+  .logs-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee; /* Optional: Adjust or remove if not needed */
+  }
+  
+  /* Status Badge */
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }

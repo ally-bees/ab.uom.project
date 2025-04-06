@@ -1,0 +1,30 @@
+<!-- recent-orders.component.html -->
+<div class="recent-orders">
+    <div class="recent-orders-header">
+      <h2>Recent Orders</h2>
+      <a href="#" class="see-all">SEE ALL</a>
+    </div>
+    
+    <div class="orders-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Product</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders">
+            <td>{{ order.id }}</td>
+            <td>{{ order.product }}</td>
+            <td>{{ order.date }}</td>
+            <td>${{ order.amount }}</td>
+            <td [ngClass]="order.status.toLowerCase()">{{ order.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

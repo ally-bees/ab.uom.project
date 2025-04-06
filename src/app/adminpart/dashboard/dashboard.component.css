@@ -1,0 +1,67 @@
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+  height: calc(100vh - 60px); /* Adjust height based on header height */
+}
+
+/* Sidebar */
+app-sidebar {
+  width: 250px; /* Fixed width for the sidebar */
+  background-color: white;
+  border-right: 1px solid #eee;
+  overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  flex: 1; /* Take up remaining space */
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  background-color: #f5f5f7; /* Background color for the content area */
+}
+
+/* Status Cards Row */
+.status-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Tab Button */
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-button.active {
+  background-color: #00bcd4;
+  color: white;
+}
+
+.tab-button:hover:not(.active) {
+  background-color: #f0f0f0;
+}
+
+/* Content Panel */
+.content-panel {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}

@@ -1,0 +1,94 @@
+<div class="dashboard-container">
+    <!-- Main content area -->
+    <div class="dashboard-content">
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2>Sales Summary</h2>
+          <div class="filters">
+            <div class="search-box">
+              <input type="text" placeholder="Search">
+              <i class="search-icon"></i>
+            </div>
+            <div class="date-filter">
+              <div class="date-input">
+                <span>From:</span>
+                <input type="date" [(ngModel)]="fromDate">
+              </div>
+              <div class="date-input">
+                <span>To:</span>
+                <input type="date" [(ngModel)]="toDate">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container sales-chart">
+          <!-- Sales chart will be inserted here -->
+          <div #salesChartContainer></div>
+        </div>
+      </div>
+  
+      <div class="dashboard-row">
+        <div class="dashboard-section half-width">
+          <div class="section-header">
+            <h2>Financial Metrics</h2>
+          </div>
+          <div class="chart-container pie-chart">
+            <!-- Pie chart will be inserted here -->
+            <div #pieChartContainer></div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="color-box blue"></div>
+              <span>Revenue</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-box yellow"></div>
+              <span>Net Profit</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-box red"></div>
+              <span>Operating Costs</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-box orange"></div>
+              <span>Others</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="dashboard-section half-width">
+          <div class="section-header">
+            <h2>Average</h2>
+          </div>
+          <div class="chart-container gauge-chart">
+            <!-- Gauge chart will be inserted here -->
+            <div #gaugeChartContainer></div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2>Compare with competitors</h2>
+        </div>
+        <div class="chart-container comparison-chart">
+          <!-- Comparison chart will be inserted here -->
+          <div #comparisonChartContainer></div>
+        </div>
+      </div>
+  
+      <div class="report-button-container">
+        <button class="print-report-btn" (click)="printReport()">Print Report</button>
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-content">
+        <a href="#">Privacy Policy</a>
+        <span class="divider">|</span>
+        <a href="#">Terms of Use</a>
+        <span class="copyright">Copy Rights 2024 InstaGraph Analytics All Rights Reserved</span>
+      </div>
+    </footer>
+  </div>

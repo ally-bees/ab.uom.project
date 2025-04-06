@@ -1,0 +1,63 @@
+<div class="dashboard-container">
+  <div class="main-content">
+    <!-- Campaign Stats Cards -->
+    <div class="stats-container">
+      <div *ngFor="let stat of campaignStats" class="stat-card" [ngStyle]="{'background': stat.color}">
+        <div class="card-content">
+          <div class="icon-container" [ngClass]="{'white-icon': stat.title === 'Campaigns'}">
+            <mat-icon>{{stat.icon}}</mat-icon>
+          </div>
+          <div [ngClass]="{'white-text': stat.title === 'Campaigns'}">
+            <h3>{{stat.title}}</h3>
+            <span class="value">{{stat.value}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="results-container">
+      <div class="results-header">
+        <h2>Campaigns Results</h2>
+        <div class="controls">
+          <mat-checkbox [(ngModel)]="showChart">Chart</mat-checkbox>
+          <mat-checkbox [(ngModel)]="showValue" color="primary" [checked]="true">Show Value</mat-checkbox>
+          <button mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="charts-container">
+        <div *ngFor="let result of campaignResults" class="chart-item">
+          <div class="progress-circle" [ngStyle]="{'--progress': result.value, '--color': result.color}">
+            <div class="percentage">{{result.value}}%</div>
+          </div>
+          <div class="chart-label">{{result.label}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="members-section">
+    <div class="members-header">
+      <h2>Members</h2>
+      <a href="#" class="view-all">View all</a>
+    </div>
+
+    <div class="members-list">
+      <div *ngFor="let member of members" class="member-item">
+        <img [src]="member.avatar" alt="{{member.name}}" class="member-avatar">
+        <div class="member-info">
+          <div class="member-name">{{member.name}}</div>
+          <div class="member-access">{{member.accessLevel}}</div>
+        </div>
+      </div>
+    </div>
+
+    <button mat-flat-button color="primary" class="add-member-btn">
+      Add member
+    </button>
+  </div>
+</div>

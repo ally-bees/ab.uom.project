@@ -7,3 +7,255 @@
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+/* You can add global styles to this file, and also import other style files */
+/* Common styles that can be used across components */
+
+/* Status Card styles */
+.status-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.status-card .card-header {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.status-card .card-value {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.status-card .card-subtitle {
+  color: #666;
+  font-size: 12px;
+}
+
+.status-card .card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shared table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  text-align: left;
+  padding: 12px 16px;
+  color: #666;
+  font-weight: 500;
+  border-bottom: 1px solid #eee;
+}
+
+table td {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Status badge styles */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.status-badge.active, .status-badge.success {
+  background-color: rgba(46, 213, 115, 0.2);
+  color: #2ed573;
+}
+
+.status-badge.pending, .status-badge.warning {
+  background-color: rgba(255, 204, 0, 0.2);
+  color: #ffcc00;
+}
+
+.status-badge.error, .status-badge.failed {
+  background-color: rgba(255, 71, 87, 0.2);
+  color: #ff4757;
+}
+
+/* Search box styles */
+.search-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-container .search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f7;
+  border-radius: 8px;
+  padding: 0 16px;
+}
+
+.search-container .search-box input {
+  border: none;
+  background: transparent;
+  padding: 12px;
+  width: 100%;
+  outline: none;
+}
+
+.search-container .filter-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #f5f5f7;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Button styles */
+.add-user-btn, .export-btn, .regenerate-btn {
+  background-color: #00bcd4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-user-btn:hover, .export-btn:hover, .regenerate-btn:hover {
+  background-color: #00acc1;
+}
+
+.action-btn, .settings-btn {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.action-btn:hover, .settings-btn:hover {
+  background-color: #f5f5f7;
+}
+
+/* Toggle switch */
+.toggle {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.toggle.enabled {
+  background-color: rgba(46, 213, 115, 0.2);
+  color: #2ed573;
+}
+
+.toggle:not(.enabled) {
+  background-color: #f5f5f7;
+  color: #666;
+}
+
+/* Section headers */
+.header {
+  margin-bottom: 24px;
+}
+
+.header h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+}
+
+.header .subtitle {
+  color: #666;
+  margin: 0 0 16px 0;
+}
+
+.header .actions {
+  margin-top: 16px;
+}
+
+/* Config sections */
+.config-section {
+  margin-bottom: 24px;
+}
+
+.config-section h3 {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.config-section .config-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.config-section .config-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+}
+
+.config-section .config-info p {
+  margin: 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.config-section .config-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.config-section .api-key-container label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.config-section .api-key-container .key-input-group {
+  display: flex;
+  gap: 12px;
+}
+
+.config-section .api-key-container .key-input-group input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;    background-color: #d9d9d932; 
+}
