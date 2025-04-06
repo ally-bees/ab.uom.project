@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { SalesDashboardComponent } from './pages/sales-dashboard/sales-dashboard.component';
 import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
+import { PrintReportComponent } from './pages/print-report/print-report.component'
 import { InventoryDashboardComponent } from './pages/inventory-dashboard/inventory-dashboard.component';
-import { PrintReportComponent } from './components/print-report/print-report.component';
+import { PrintReportComponent } from './pages/print-report/print-report.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { UserProfileComponent } from './userprofile/userprofile.component';
