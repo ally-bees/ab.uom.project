@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
-import { PrintReportComponent } from './components/print-report/print-report.component';
+import { PrintReportComponent } from './pages/print-report/print-report.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
