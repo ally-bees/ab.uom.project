@@ -3,7 +3,7 @@ import { SalesDashboardComponent } from './pages/sales-dashboard/sales-dashboard
 import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
 import { PrintReportComponent } from './pages/print-report/print-report.component'
 import { InventoryDashboardComponent } from './pages/inventory-dashboard/inventory-dashboard.component';
-import { PrintReportComponent } from './pages/print-report/print-report.component';
+import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { UserProfileComponent } from './userprofile/userprofile.component';
@@ -13,6 +13,9 @@ import { UserManagementComponent } from './adminpart/user-management/user-manage
 import { SalesComponent } from './pages/sales/sales.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component';
+import { FinanceComponent } from './pages/finance/finance.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
+import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -30,5 +33,9 @@ export const routes: Routes = [
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},
   {path:'analytics',component:MarketingAnalyticsDashboardComponent},
+  {path: 'bussinessownerdash', component: BusinessDashComponent}, 
+  {path: 'finance', component: FinanceComponent},
+  {path: 'schedule', component: ScheduleComponent},
+  {path: 'shipping', component: ShippingDashboardComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
