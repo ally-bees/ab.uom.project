@@ -19,7 +19,7 @@
             *ngFor="let child of menuItem.children" 
             [class.active]="activeMenuItem === child.id"
             class="submenu-item"
-            (click)="setActive(child.id)"
+            (click)="setActive(child.id, child.route)"
           >
             <i class="fa" [ngClass]="child.icon"></i>
             <span>{{ child.label }}</span>
