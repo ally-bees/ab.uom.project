@@ -16,12 +16,23 @@ import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytic
 import { FinanceComponent } from './pages/finance/finance.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
+import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-  { path: 'sales-dashboard', component: SalesDashboardComponent },
   {path: 'sales', component: SalesComponent},
+  {
+    path: 'salesmanager',
+    component: SalesMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+      { path: 'salesdashboard', component: SalesDashboardComponent },
+      { path: 'sales', component: SalesComponent },
+      { path: 'order', component: OrderSummaryComponent }
+    ]
+  },
   { path: 'order-summary', component: OrderSummaryComponent},
   { path: 'inventory-dashboard', component: InventoryDashboardComponent },
   { path: 'inventory', component: InventoryComponent},

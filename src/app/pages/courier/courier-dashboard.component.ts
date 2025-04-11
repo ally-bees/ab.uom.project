@@ -1,10 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-courier',
+  standalone: true,
   templateUrl: './courier-dashboard.component.html',
-  styleUrls: ['./courier-dashboard.component.css']
+  styleUrls: ['./courier-dashboard.component.css'],
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class CourierDashboardComponent {
   deliveries = [

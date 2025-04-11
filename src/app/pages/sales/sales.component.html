@@ -1,94 +1,127 @@
-<div class="dashboard-container">
-    <!-- Main content area -->
-    <div class="dashboard-content">
-      <div class="dashboard-section">
-        <div class="section-header">
-          <h2>Sales Summary</h2>
-          <div class="filters">
-            <div class="search-box">
-              <input type="text" placeholder="Search">
-              <i class="search-icon"></i>
-            </div>
-            <div class="date-filter">
-              <div class="date-input">
-                <span>From:</span>
-                <input type="date" [(ngModel)]="fromDate">
-              </div>
-              <div class="date-input">
-                <span>To:</span>
-                <input type="date" [(ngModel)]="toDate">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="chart-container sales-chart">
-          <!-- Sales chart will be inserted here -->
-          <div #salesChartContainer></div>
-        </div>
-      </div>
-  
-      <div class="dashboard-row">
-        <div class="dashboard-section half-width">
-          <div class="section-header">
-            <h2>Financial Metrics</h2>
-          </div>
-          <div class="chart-container pie-chart">
-            <!-- Pie chart will be inserted here -->
-            <div #pieChartContainer></div>
-          </div>
-          <div class="chart-legend">
-            <div class="legend-item">
-              <div class="color-box blue"></div>
-              <span>Revenue</span>
-            </div>
-            <div class="legend-item">
-              <div class="color-box yellow"></div>
-              <span>Net Profit</span>
-            </div>
-            <div class="legend-item">
-              <div class="color-box red"></div>
-              <span>Operating Costs</span>
-            </div>
-            <div class="legend-item">
-              <div class="color-box orange"></div>
-              <span>Others</span>
-            </div>
-          </div>
-        </div>
-  
-        <div class="dashboard-section half-width">
-          <div class="section-header">
-            <h2>Average</h2>
-          </div>
-          <div class="chart-container gauge-chart">
-            <!-- Gauge chart will be inserted here -->
-            <div #gaugeChartContainer></div>
-          </div>
-        </div>
-      </div>
-  
-      <div class="dashboard-section">
-        <div class="section-header">
-          <h2>Compare with competitors</h2>
-        </div>
-        <div class="chart-container comparison-chart">
-          <!-- Comparison chart will be inserted here -->
-          <div #comparisonChartContainer></div>
-        </div>
-      </div>
-  
-      <div class="report-button-container">
-        <button class="print-report-btn" (click)="printReport()">Print Report</button>
-      </div>
-    </div>
-  
-    <!-- Footer -->
-    <footer class="dashboard-footer">
-      <div class="footer-content">
-        <a href="#">Privacy Policy</a>
-        <span class="divider">|</span>
-        <a href="#">Terms of Use</a>
-        <span class="copyright">Copy Rights 2024 InstaGraph Analytics All Rights Reserved</span>
-      </div>
-    </footer>
+<div class="sales-container">
+  <h2>Sales Dashboard</h2>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <p>Loading sales data...</p>
   </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>Error loading data. Please try again later.</p>
+  </div>
+
+  <div *ngIf="!loading && !error" class="filter-controls">
+    <div class="filter-group">
+      <label for="vendorFilter">Filter by Vendor:</label>
+      <select id="vendorFilter" [(ngModel)]="selectedVendorId" (change)="onVendorChange()">
+        <option value="">All Vendors</option>
+        <option *ngFor="let vendor of vendorList" [value]="vendor">{{ vendor }}</option>
+      </select>
+    </div>
+
+    <button (click)="resetFilters()" class="reset-button">Reset Filters</button>
+  </div>
+
+  <div *ngIf="salesData && !loading && !error" class="dashboard-overview">
+    <div class="stats-card">
+      <h3>Total Revenue</h3>
+      <p class="stat-value">${{ salesData.totalRevenue.toFixed(2) }}</p>
+    </div>
+    <div class="stats-card">
+      <h3>Total Orders</h3>
+      <p class="stat-value">{{ salesData.totalOrders }}</p>
+    </div>
+    <div class="stats-card">
+      <h3>Total Items Sold</h3>
+      <p class="stat-value">{{ salesData.totalItems }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="salesData && !loading && !error" class="sales-tables">
+    <div class="table-section">
+      <h3>Sales</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Sale ID</th>
+            <th>Vendor ID</th>
+            <th>Date</th>
+            <th>Total Amount</th>
+            <th>Orders Count</th>
+            <th>Items Sold</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sale of salesData.sales">
+            <td>{{ sale.saleId }}</td>
+            <td>{{ sale.vendorId }}</td>
+            <td>{{ sale.date }}</td>
+            <td>${{ sale.totalSales.toFixed(2) }}</td>
+            <td>{{ sale.totalOrdersCount }}</td>
+            <td>{{ sale.totalItemsSold }}</td>
+          </tr>
+          <tr *ngIf="salesData.sales.length === 0">
+            <td colspan="6" class="no-data">No sales data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-section">
+      <h3>Related Orders</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer ID</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of salesData.relatedOrders">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.customerId }}</td>
+            <td>{{ order.orderDate }}</td>
+            <td>${{ order.totalAmount.toFixed(2) }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+          <tr *ngIf="salesData.relatedOrders.length === 0">
+            <td colspan="5" class="no-data">No order data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-section">
+      <h3>Inventory Status</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Available</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of salesData.relatedInventory">
+            <td>{{ item.productId }}</td>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.category }}</td>
+            <td>${{ item.price.toFixed(2) }}</td>
+            <td>{{ item.quantityAvailable }}</td>
+            <td [ngClass]="{'in-stock': item.availabilityStatus, 'out-of-stock': !item.availabilityStatus}">
+              {{ item.availabilityStatus ? 'Available' : 'Out of Stock' }}
+            </td>
+          </tr>
+          <tr *ngIf="salesData.relatedInventory.length === 0">
+            <td colspan="6" class="no-data">No inventory data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

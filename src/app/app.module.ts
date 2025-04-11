@@ -11,23 +11,21 @@ import { Component, OnInit } from '@angular/core';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
-
+import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-
+import { SalesComponent } from './pages/sales/sales.component';
 
 @NgModule({
   declarations: [
-    CourierDashboardComponent,
     MarketingDashboardComponent,
-    ShippingDashboardComponent,
-
   ],
   imports: [
     BrowserModule,
+    SalesComponent,
     BrowserAnimationsModule,
     CommonModule,
     FormComponent,
@@ -38,7 +36,11 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    ShippingDashboardComponent,
+    CourierDashboardComponent,
+    HttpClientModule,
+    
   ],
   providers: [
     DatePipe
