@@ -22,10 +22,10 @@ import { SalesComponent } from './pages/sales/sales.component';
 @NgModule({
   declarations: [
     MarketingDashboardComponent,
-    SalesComponent,
   ],
   imports: [
     BrowserModule,
+    SalesComponent,
     BrowserAnimationsModule,
     CommonModule,
     FormComponent,

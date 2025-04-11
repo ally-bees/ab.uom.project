@@ -15,16 +15,15 @@
         </div>
         
         <div *ngIf="menuItem.children && menuItem.expanded" class="submenu">
-          <a 
+          <div 
             *ngFor="let child of menuItem.children" 
-            [routerLink]="child.route"
-            routerLinkActive="active"
+            [class.active]="activeMenuItem === child.id"
             class="submenu-item"
             (click)="setActive(child.id, child.route)"
           >
             <i class="fa" [ngClass]="child.icon"></i>
             <span>{{ child.label }}</span>
-          </a>
+          </div>
         </div>
       </div>
     </div>

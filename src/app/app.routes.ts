@@ -1,51 +1,52 @@
 import { Routes } from '@angular/router';
-import { AuditLogsComponent } from "./adminpart/audit-logs/audit-logs.component";
-import { SystemConfigComponent } from "./adminpart/system-config/system-config.component";
-import { UserManagementComponent } from "./adminpart/user-management/user-management.component";
-import { PrintReportComponent } from "./components/print-report/print-report.component";
-import { LoginComponent } from "./login/login.component";
+import { SalesDashboardComponent } from './pages/sales-dashboard/sales-dashboard.component';
+import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
+import { PrintReportComponent } from './pages/print-report/print-report.component'
+import { InventoryDashboardComponent } from './pages/inventory-dashboard/inventory-dashboard.component';
+import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
+import { UserProfileComponent } from './userprofile/userprofile.component';
+import { SystemConfigComponent } from './adminpart/system-config/system-config.component';
+import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
+import { UserManagementComponent } from './adminpart/user-management/user-management.component';
+import { SalesComponent } from './pages/sales/sales.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
+import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component';
+import { FinanceComponent } from './pages/finance/finance.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
+import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
-import { CourierDashboardComponent } from "./pages/courier/courier-dashboard.component";
-import { customerinsightComponent } from "./pages/customer-insight/customer-insight.component";
-import { FinanceComponent } from "./pages/finance/finance.component";
-import { InventoryComponent } from "./pages/inventory/inventory.component";
-import { MarketingAnalyticsDashboardComponent } from "./pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component";
-import { OrderSummaryComponent } from "./pages/order-summary/order-summary.component";
-import { SalesDashboardComponent } from "./pages/sales-dashboard/sales-dashboard.component";
-import { SalesComponent } from "./pages/sales/sales.component";
-import { ShippingDashboardComponent } from "./pages/shipping-dashboard/shipping-dashboard.component";
-import { SignupComponent } from "./signup/signup.component";
-import { UserProfileComponent } from "./userprofile/userprofile.component";
+
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'salespage', pathMatch: 'full' },
-
-  // Standalone routes
-  { path:'login', component:LoginComponent },
-  { path:'signup', component:SignupComponent },
-  { path:'userprofile', component:UserProfileComponent },
-  { path:'systemconfig', component:SystemConfigComponent },
-  { path:'auditlogs', component:AuditLogsComponent },
-  { path:'usermanagement', component:UserManagementComponent },
-  { path:'printreport', component:PrintReportComponent },
-
-  // Salespage layout with child routes
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+//   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
+  {path: 'sales', component: SalesComponent},
   {
-    path: 'salespage',
+    path: 'salesmanager',
     component: SalesMainpageComponent,
     children: [
-      { path: '', redirectTo: 'sales-dashboard', pathMatch: 'full' },
-      { path: 'sales-dashboard', component: SalesDashboardComponent },
-      { path: 'sales', component: SalesComponent},
-      { path: 'order-summary', component: OrderSummaryComponent },
-      { path: 'shipping-dashboard', component: ShippingDashboardComponent },
-      { path: 'inventory', component: InventoryComponent },
-      { path: 'courier', component: CourierDashboardComponent },
-      { path: 'finance', component: FinanceComponent},
-      { path: 'customer-insights', component: customerinsightComponent },
-      { path: 'analytics', component: MarketingAnalyticsDashboardComponent}
+      { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+      { path: 'salesdashboard', component: SalesDashboardComponent },
+      { path: 'sales', component: SalesComponent },
+      { path: 'order', component: OrderSummaryComponent }
     ]
   },
-
-  { path: '**', redirectTo: 'salespage' }
+  { path: 'order-summary', component: OrderSummaryComponent},
+  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
+  { path: 'inventory', component: InventoryComponent},
+  {path: 'printreport', component:PrintReportComponent},
+  { path:'login', component:LoginComponent},
+  {path:'signup',component:SignupComponent},
+  {path:'userprofile',component:UserProfileComponent},
+  {path:'systemconfig',component:SystemConfigComponent},
+  {path:'auditlogs',component:AuditLogsComponent},
+  {path:'usermanagement',component:UserManagementComponent},
+  {path:'analytics',component:MarketingAnalyticsDashboardComponent},
+  {path: 'bussinessownerdash', component: BusinessDashComponent}, 
+  {path: 'finance', component: FinanceComponent},
+  {path: 'schedule', component: ScheduleComponent},
+  {path: 'shipping', component: ShippingDashboardComponent},
+  { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];

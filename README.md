@@ -1,4 +1,19 @@
-# Peojectinnosoft
+# ab.uom.project
+
+## Project Description
+**ab.uom.project** is a **report analysis system** designed for the **HoneyCom e-commerce platform**, providing insights into sales, orders, products, couriers, and customers for business owners with multiple shops. The system uses **AI-powered future predictions** and visualizes data through interactive charts (line, pie, and gauge) to enhance data-driven decision-making.
+
+### Technologies Used:
+- **Frontend**: Angular
+- **Backend**: .NET
+- **Database**: MongoDB
+- **Additional Features**: AI for future predictions, interactive chart visualizations
+
+## Features
+- Sales, orders, and product insights
+- Courier and customer data visualization
+- AI-based future predictions for decision-making
+- Interactive charting (line, pie, gauge)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.14.
 

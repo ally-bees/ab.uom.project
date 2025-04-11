@@ -1,14 +1,14 @@
 <div class="sales-container">
   <h2>Sales Dashboard</h2>
-  
+
   <div *ngIf="loading" class="loading-spinner">
     <p>Loading sales data...</p>
   </div>
-  
+
   <div *ngIf="error" class="error-message">
     <p>Error loading data. Please try again later.</p>
   </div>
-  
+
   <div *ngIf="!loading && !error" class="filter-controls">
     <div class="filter-group">
       <label for="vendorFilter">Filter by Vendor:</label>
@@ -17,10 +17,10 @@
         <option *ngFor="let vendor of vendorList" [value]="vendor">{{ vendor }}</option>
       </select>
     </div>
-    
+
     <button (click)="resetFilters()" class="reset-button">Reset Filters</button>
   </div>
-  
+
   <div *ngIf="salesData && !loading && !error" class="dashboard-overview">
     <div class="stats-card">
       <h3>Total Revenue</h3>
@@ -35,7 +35,7 @@
       <p class="stat-value">{{ salesData.totalItems }}</p>
     </div>
   </div>
-  
+
   <div *ngIf="salesData && !loading && !error" class="sales-tables">
     <div class="table-section">
       <h3>Sales</h3>
@@ -65,7 +65,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <div class="table-section">
       <h3>Related Orders</h3>
       <table>
@@ -92,7 +92,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <div class="table-section">
       <h3>Inventory Status</h3>
       <table>

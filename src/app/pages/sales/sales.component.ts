@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
 import { HttpClient } from '@angular/common/http';
 import { Sale, Order, Inventory, SalesViewModel } from '../../models/sale.model';
 import { SalesService } from '../../services/sales.service';
-
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; 
 
 @Component({
-  selector: 'app-sales',
+  selector: 'app-sales', 
+  standalone: true,
+  imports: [FormsModule,CommonModule],  // Standalone component uses FormsModule here
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.css']
 })
