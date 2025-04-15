@@ -1070,19 +1070,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Thilinika\\.nuget\\packages\\": {}
+    "C:\\Users\\lakshan roshana\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\Backend.csproj",
+      "projectUniqueName": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
       "projectName": "Backend",
-      "projectPath": "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\Backend.csproj",
-      "packagesPath": "C:\\Users\\Thilinika\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\obj\\",
+      "projectPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
+      "packagesPath": "C:\\Users\\lakshan roshana\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Thilinika\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\lakshan roshana\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
