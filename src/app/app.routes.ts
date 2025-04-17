@@ -21,7 +21,7 @@ import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
   {path: 'sales', component: SalesComponent},
   {

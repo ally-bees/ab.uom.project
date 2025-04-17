@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj": {}
+    "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj": {
+    "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
+        "projectUniqueName": "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
-        "packagesPath": "C:\\Users\\lakshan roshana\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\obj\\",
+        "projectPath": "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\Backend.csproj",
+        "packagesPath": "C:\\Users\\Thilinika\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Thilinika\\Desktop\\Me\\New folder\\Project new\\project new\\ab.uom.project\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\lakshan roshana\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Thilinika\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,10 +43,6 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Authentication.JwtBearer": {
-              "target": "Package",
-              "version": "[8.0.13, )"
-            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.13, )"
@@ -58,10 +54,6 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
-            },
-            "System.IdentityModel.Tokens.Jwt": {
-              "target": "Package",
-              "version": "[8.8.0, )"
             }
           },
           "imports": [

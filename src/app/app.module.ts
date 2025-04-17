@@ -18,6 +18,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { SalesComponent } from './pages/sales/sales.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { ModuleRegistry } from '@ag-grid-community/core';
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
   declarations: [
@@ -40,7 +44,7 @@ import { SalesComponent } from './pages/sales/sales.component';
     ShippingDashboardComponent,
     CourierDashboardComponent,
     HttpClientModule,
-    
+    AgGridModule
   ],
   providers: [
     DatePipe
