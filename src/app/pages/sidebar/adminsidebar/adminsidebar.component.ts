@@ -13,13 +13,13 @@ export class AdminsidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
       { id: 'sales', label: 'Sales', icon: 'fa-chart-line' },
-      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart' },
-      { id: 'shipping', label: 'Shipping', icon: 'fa-truck' },
-      { id: 'products', label: 'Products', icon: 'fa-box' },
-      { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast' },
-      { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave' },
-      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users' },
-      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn' }
+      // { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart' },
+      // { id: 'shipping', label: 'Shipping', icon: 'fa-truck' },
+      // { id: 'products', label: 'Products', icon: 'fa-box' },
+      // { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast' },
+      // { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave' },
+      // { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users' },
+      // { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn' }
     ]}
   ];
   
