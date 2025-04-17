@@ -1,20 +1,22 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj": {}
+    "C:\\Users\\pramu\\OneDrive\\Desktop\\ab.uom.project\\Backend\\Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj": {
+    "C:\\Users\\pramu\\OneDrive\\Desktop\\ab.uom.project\\Backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
+        "projectUniqueName": "C:\\Users\\pramu\\OneDrive\\Desktop\\ab.uom.project\\Backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
-        "packagesPath": "C:\\Users\\lakshan roshana\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\obj\\",
+        "projectPath": "C:\\Users\\pramu\\OneDrive\\Desktop\\ab.uom.project\\Backend\\Backend.csproj",
+        "packagesPath": "C:\\Users\\pramu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\pramu\\OneDrive\\Desktop\\ab.uom.project\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\lakshan roshana\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\pramu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
