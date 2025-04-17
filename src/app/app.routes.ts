@@ -18,6 +18,7 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
+import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
@@ -40,7 +41,7 @@ export const routes: Routes = [
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
-  {path:'userprofile',component:UserProfileComponent},
+  {path:'userprofile',component:UserProfileComponent, canActivate:[authGuard]},
   {path:'systemconfig',component:SystemConfigComponent},
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},

@@ -1,28 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterLink],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginForm: FormGroup;
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  loading = false;
+  error = '';
+  returnUrl!: string;
 
-  constructor(private fb: FormBuilder) {
-    this.loginForm = this.fb.group({
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+
+
+  ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
       userEmail: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  
+    // Update the default returnUrl to use the auth service
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate([this.authService.getRedirectUrl()]);
+    }
   }
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      console.log('Login successful:',this.loginForm.value);
-      // Handle form submission logic here
+
+  get f() {
+    return this.loginForm.controls;
+  }
+
+  onSubmit(): void {
+    if (this.loginForm.invalid) {
+      return;
     }
+  
+    this.loading = true;
+    this.error = '';
+  
+    this.authService.login({
+      email: this.f['userEmail'].value,
+      password: this.f['password'].value
+    }).subscribe({
+      next: () => {
+        // Use the redirect function instead of hardcoded route
+        this.router.navigate([this.authService.getRedirectUrl()]);
+      },
+      error: error => {
+        this.error = error?.error?.message || 'Login failed. Please check your credentials.';
+        this.loading = false;
+      }
+    });
+  
   }
 }

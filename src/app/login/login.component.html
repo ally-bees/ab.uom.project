@@ -1,53 +1,62 @@
 <div class="signup-container">
-    <div class="left-panel">
-      <div class="brand-content">
-        <h3>Effortless reporting and data insights?</h3>
-        <h2>InstaDash Reporting</h2>
-        <p>empowers your business.</p>
-        
-        <div class="logo">
-          <img src="assets/instadash-logo.svg" alt="InstaDash Logo">
-          <div class="logo-text">InstaDash</div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="right-panel">
-      <div class="form-container">
-        <h2>Welcome back</h2>
-        
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <input 
-              type="text" 
-              formControlName="userEmail"
-              placeholder="User name / Email"
-              [ngClass]="{'invalid': loginForm.get('userEmail')?.invalid && loginForm.get('userEmail')?.touched}"
-            >
-          </div>
-          
-          <div class="form-group">
-            <input 
-              type="password" 
-              formControlName="password"
-              placeholder="Password"
-              [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-            >
-          </div>
-          
-          <div class="terms-section">
-            <p>
-            
-              <a href="#" class="terms-link">Forgot Password ? </a>
-            </p>
-          </div>
-          
-          <button type="submit" class="signup-btn" [disabled]="loginForm.invalid">Sign in</button>
-        </form>
-        
-        <div class="login-link">
-          Don't have an account? <a href="signup" class="signin-link">Sign-up here</a>
-        </div>
+  <div class="left-panel">
+    <div class="brand-content">
+      <h3>Effortless reporting and data insights?</h3>
+      <h2>InstaDash Reporting</h2>
+      <p>empowers your business.</p>
+      <div class="logo">
+        <img src="assets/instadash-logo.svg" alt="InstaDash Logo">
+        <div class="logo-text">InstaDash</div>
       </div>
     </div>
   </div>
+
+  <div class="right-panel">
+    <div class="form-container">
+      <h2>Welcome back</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+        <div class="form-group">
+          <input 
+            type="text" 
+            formControlName="userEmail"
+            placeholder="Email"
+            [ngClass]="{'invalid': f['userEmail'].touched && f['userEmail'].invalid}"
+          />
+          <div *ngIf="f['userEmail'].touched && f['userEmail'].invalid" class="invalid-feedback">
+            <div *ngIf="f['userEmail'].errors?.['required']">Email is required</div>
+            <div *ngIf="f['userEmail'].errors?.['email']">Enter a valid email</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input 
+            type="password" 
+            formControlName="password"
+            placeholder="Password"
+            [ngClass]="{'invalid': f['password'].touched && f['password'].invalid}"
+          />
+          <div *ngIf="f['password'].touched && f['password'].invalid" class="invalid-feedback">
+            <div *ngIf="f['password'].errors?.['required']">Password is required</div>
+            <div *ngIf="f['password'].errors?.['minlength']">Min 6 characters required</div>
+          </div>
+        </div>
+
+        <div class="terms-section">
+          <p><a href="#" class="terms-link">Forgot Password?</a></p>
+        </div>
+
+        <button type="submit" class="signup-btn" [disabled]="loginForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          Sign in
+        </button>
+      </form>
+
+      <div class="login-link">
+        Don't have an account? <a routerLink="/signup" routerLinkActive="active" class="signin-link">Sign-up here</a>
+      </div>
+    </div>
+  </div>
+</div>
