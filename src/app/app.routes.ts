@@ -20,7 +20,7 @@ import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage
 
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
 //   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
   {path: 'sales', component: SalesComponent},
   {
