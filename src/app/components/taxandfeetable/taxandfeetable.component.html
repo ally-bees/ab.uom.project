@@ -6,7 +6,9 @@
           <table class="tax-table">
             <thead>
               <tr>
+                <th>Date</th>
                 <th>Audit ID</th>
+                <th>Sales ID</th>
                 <th>Name</th>
                 <th>Value</th>
                 <th>Tax</th>
@@ -16,12 +18,14 @@
             </thead>
             <tbody>
               <tr *ngFor="let record of taxRecords">
+                <td>{{ record.date }}</td>
                 <td>{{ record.auditId }}</td>
+                <td>{{  record.salesId }}</td>
                 <td>{{ record.name }}</td>
                 <td>{{ record.value }}</td>
                 <td>{{ record.tax }}</td>
                 <td>{{ record.netValue }}</td>
-                <td>{{ record.status }}</td>
+                <td>{{ record.status ? record.status : 'N/A' }}</td>
               </tr>
             </tbody>
           </table>

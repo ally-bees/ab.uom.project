@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "47cA0QvdZB5QQMmiNwpFsYplEGX2B7J3nKW7p//NWKM=",
+  "Source": "auditpagebackend",
+  "BasePath": "_content/auditpagebackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
