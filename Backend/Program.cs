@@ -15,6 +15,9 @@ builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
 
+//  Register OrderService
+builder.Services.AddSingleton<OrderService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
