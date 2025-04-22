@@ -42,3 +42,12 @@ testem.log
 Thumbs.db
 
 .fake
+
+# .NET backend
+/Backend/bin/
+/Backend/obj/
+/Backend/.vs/
+/Backend/publish/
+/Backend/*.user
+/Backend/*.suo
+/Backend/appsettings.Development.json
