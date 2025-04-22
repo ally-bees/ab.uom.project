@@ -1,81 +1,37 @@
-using AuthAPI.Models.DTOs;
-using AuthAPI.Services;
-using AuthAPI.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using System.Net;
+using Backend.Models;
+using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Enforce TLS 1.2 for secure connection
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+// Register MongoDB settings and services
+builder.Services.Configure<MongoDBSettings>(
+    builder.Configuration.GetSection("MongoDBSettings"));
+
+builder.Services.AddSingleton<MongoDBService>();
+builder.Services.AddSingleton<SalesService>();
+builder.Services.AddSingleton<CustomerCountService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register MongoDB settings
-builder.Services.Configure<MongoDbSetings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
-
-// Register JWT settings
-builder.Services.Configure<JwtSettings>(
-    builder.Configuration.GetSection("JwtSettings"));
-
-// Register services
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddScoped<AuthService>();
-
-// Configure CORS
+// Configure CORS for Angular frontend
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+    options.AddPolicy("AllowAngularApp",
+        builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
-
-// Configure JWT authentication
-var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
-if (jwtSettings == null)
-{
-    throw new InvalidOperationException("JWT settings are not configured properly.");
-}
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
-    };
-});
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdminRole", policy => 
-        policy.RequireRole("Admin"));
-    
-    options.AddPolicy("RequireUserRole", policy => 
-        policy.RequireRole("User"));
-});
-
-// Add authorization
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// Use Swagger in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -83,9 +39,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseCors("AllowAngularApp");
-app.UseAuthentication();
+
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
