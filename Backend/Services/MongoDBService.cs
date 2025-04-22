@@ -98,5 +98,10 @@ namespace Backend.Services
             
         public async Task DeleteInventoryAsync(string id) => 
             await _inventoryCollection.DeleteOneAsync(i => i.Id == id);
+
+            public IMongoCollection<Order> GetOrdersCollection()
+        {
+            return _ordersCollection;
+        }
     }
 }
