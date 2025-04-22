@@ -19,8 +19,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { SalesComponent } from './pages/sales/sales.component';
 import { AgGridModule } from 'ag-grid-angular';
+
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ModuleRegistry } from '@ag-grid-community/core';
+
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
@@ -47,7 +53,8 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     AgGridModule
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    
   ],
 
 })

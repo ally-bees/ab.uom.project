@@ -28,7 +28,6 @@
   padding: 20px;
 }
 
-/* Search and filters */
 .search-filters {
   display: flex;
   flex-wrap: wrap;
@@ -107,6 +106,10 @@
   color: #555;
 }
 
+.value {
+  color: #333;
+}
+
 .chart-container {
   flex-grow: 2;
   min-width: 300px;
@@ -164,6 +167,7 @@
   --ag-odd-row-background-color: #e3f2fd; /* Light blue background */
   --ag-row-hover-color: rgba(0, 188, 212, 0.1);
   --ag-selected-row-background-color: rgba(0, 188, 212, 0.2);
+
 }
 
 /* Table styles for when ag-Grid is not used */
@@ -202,6 +206,14 @@
   background-color: rgba(0, 188, 212, 0.1);
 }
 
+
+  --ag-background-color: #f7f8f8;
+  height: 400px;
+  width: 100%;
+}
+
+/* Status badge styles that would be used in cell renderers */
+
 .status-badge {
   padding: 5px 10px;
   border-radius: 15px;
@@ -209,24 +221,33 @@
   color: white;
   display: inline-block;
   text-align: center;
+
   width: auto;
+
   min-width: 80px;
 }
 
 .badge-completed {
   background-color: #4CAF50; /* Green from image */
+
   text-align: center;
+
 }
 
 .badge-pending {
   background-color: #FFC107; /* Yellow/amber from image */
   color: #333;
+
   text-align: center;
+
+
 }
 
 .badge-rejected {
   background-color: #F44336; /* Red from image */
+
   text-align: center;
+
 }
 
 /* Print section */
@@ -359,6 +380,7 @@
   .print-overlay {
     position: static;
     background: white;
+
   }
   
   .print-dialog {
@@ -394,4 +416,58 @@
   .date-filter {
     flex-direction: column;
   }
+=======
+  }
+  
+  .print-dialog {
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .print-dialog-header, .print-dialog-footer {
+    display: none;
+  }
+  
+  .print-dialog-body {
+    padding: 0;
+  }
+  
+  .report-content {
+    background-color: white;
+    padding: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .order-stats-container {
+    flex-direction: column;
+  }
+  
+  .chart-container {
+    width: 100%;
+  }
+  
+  .date-filter {
+    flex-direction: column;
+  }
+}
+
+/* Font awesome icon styles */
+.fa {
+  display: inline-block;
+  font-family: "FontAwesome";
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.fa-search:before {
+  content: "\f002";
+}
+
+.fa-print:before {
+  content: "\f02f";
+
 }
