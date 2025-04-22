@@ -26,7 +26,7 @@ namespace Backend.Services
 
     // Group orders by status and count the occurrences
     var grouped = orders
-        .GroupBy(o => o.Status.ToLower())  // Ensure case-insensitive grouping
+        .GroupBy(o => o.Status.ToLower())  
         .Select(g => new StatusCountDto
         {
             Status = g.Key,  // Status from grouping (already in lowercase)

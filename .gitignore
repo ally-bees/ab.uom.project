@@ -42,3 +42,17 @@ testem.log
 Thumbs.db
 
 .fake
+
+# ===== .NET backend ignore rules =====
+/Backend/bin/
+/Backend/obj/
+/Backend/.vs/
+/Backend/.vscode/
+/Backend/publish/
+/Backend/*.user
+/Backend/*.suo
+/Backend/*.log
+/Backend/*.tmp
+/Backend/*.mdf
+/Backend/*.ldf
+/Backend/appsettings.Development.json
