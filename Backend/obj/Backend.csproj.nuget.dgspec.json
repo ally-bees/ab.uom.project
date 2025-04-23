@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj": {}
+    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\ab.uom.project\\Backend\\Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj": {
+    "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\ab.uom.project\\Backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
+        "projectUniqueName": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\ab.uom.project\\Backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\Backend.csproj",
+        "projectPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\ab.uom.project\\Backend\\Backend.csproj",
         "packagesPath": "C:\\Users\\lakshan roshana\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\currentproject\\ab.uom.project\\Backend\\obj\\",
+        "outputPath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\ab.uom.project\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lakshan roshana\\AppData\\Roaming\\NuGet\\NuGet.Config"
