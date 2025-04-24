@@ -5,74 +5,32 @@ import { SalesService } from '../../services/sales.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 
-@Component({
-  selector: 'app-sales', 
-  standalone: true,
-  imports: [FormsModule,CommonModule],  // Standalone component uses FormsModule here
-  templateUrl: './sales.component.html',
-  styleUrls: ['./sales.component.css']
-})
-export class SalesComponent implements OnInit {
-  salesData: SalesViewModel | null = null;
-  loading = true;
-  error = false;
-  selectedVendorId: string = '';
-  vendorList: string[] = [];
 
-  constructor(private salesService: SalesService) { }
+@Component({
+  standalone: true,
+  selector: 'app-sales',
+  templateUrl: './sales.component.html',
+  styleUrls: ['./sales.component.css'],
+  imports: [CommonModule]
+})
+
+export class SalesComponent implements OnInit {
+  sales: Sale[] = [];
+
+  constructor(private salesService: SalesService) {}
 
   ngOnInit(): void {
-    this.loadSalesData();
+    this.loadSales();
   }
 
-  loadSalesData(): void {
-    this.loading = true;
-    this.salesService.getDashboardData().subscribe({
+  loadSales(): void {
+    this.salesService.getAllSales().subscribe({
       next: (data) => {
-        this.salesData = data;
-        this.extractVendorList();
-        this.loading = false;
+        this.sales = data;
       },
-      error: (error) => {
-        console.error('Error loading sales data:', error);
-        this.error = true;
-        this.loading = false;
+      error: (err) => {
+        console.error('Error loading sales:', err);
       }
     });
-  }
-
-  loadVendorSalesData(): void {
-    if (!this.selectedVendorId) {
-      this.loadSalesData();
-      return;
-    }
-    
-    this.loading = true;
-    this.salesService.getDashboardDataByVendor(this.selectedVendorId).subscribe({
-      next: (data) => {
-        this.salesData = data;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading vendor sales data:', error);
-        this.error = true;
-        this.loading = false;
-      }
-    });
-  }
-
-  extractVendorList(): void {
-    if (this.salesData && this.salesData.sales) {
-      this.vendorList = [...new Set(this.salesData.sales.map(sale => sale.vendorId))];
-    }
-  }
-
-  onVendorChange(): void {
-    this.loadVendorSalesData();
-  }
-
-  resetFilters(): void {
-    this.selectedVendorId = '';
-    this.loadSalesData();
   }
 }

@@ -7,9 +7,9 @@ import { Sale, SalesViewModel } from '../models/sale.model';
   providedIn: 'root'
 })
 export class SalesService {
-  private apiUrl = 'https://localhost:7143/api';
+  private apiUrl = 'http://localhost:5241/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Sales endpoints
   getAllSales(): Observable<Sale[]> {
