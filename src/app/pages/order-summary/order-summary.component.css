@@ -28,6 +28,7 @@
   padding: 20px;
 }
 
+/* Search and filters - keeping existing structure but can be removed if needed */
 .search-filters {
   display: flex;
   flex-wrap: wrap;
@@ -167,53 +168,12 @@
   --ag-odd-row-background-color: #e3f2fd; /* Light blue background */
   --ag-row-hover-color: rgba(0, 188, 212, 0.1);
   --ag-selected-row-background-color: rgba(0, 188, 212, 0.2);
-
-}
-
-/* Table styles for when ag-Grid is not used */
-.table-container {
-  overflow-x: auto;
-}
-
-.orders-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.orders-table th, .orders-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.orders-table th {
-  background-color: #00BCD4; /* Teal color from the image */
-  color: white;
-  position: sticky;
-  top: 0;
-}
-
-.orders-table tbody tr {
-  background-color: #e3f2fd; /* Light blue background */
-}
-
-.orders-table tbody tr:nth-child(even) {
-  background-color: #f3f3f3; /* Alternate row color */
-}
-
-.orders-table tr:hover {
-  background-color: rgba(0, 188, 212, 0.1);
-}
-
-
   --ag-background-color: #f7f8f8;
   height: 400px;
   width: 100%;
 }
 
 /* Status badge styles that would be used in cell renderers */
-
 .status-badge {
   padding: 5px 10px;
   border-radius: 15px;
@@ -221,33 +181,20 @@
   color: white;
   display: inline-block;
   text-align: center;
-
-  width: auto;
-
   min-width: 80px;
 }
 
 .badge-completed {
   background-color: #4CAF50; /* Green from image */
-
-  text-align: center;
-
 }
 
 .badge-pending {
   background-color: #FFC107; /* Yellow/amber from image */
   color: #333;
-
-  text-align: center;
-
-
 }
 
 .badge-rejected {
   background-color: #F44336; /* Red from image */
-
-  text-align: center;
-
 }
 
 /* Print section */
@@ -380,43 +327,6 @@
   .print-overlay {
     position: static;
     background: white;
-
-  }
-  
-  .print-dialog {
-    box-shadow: none;
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  .print-dialog-header, .print-dialog-footer {
-    display: none;
-  }
-  
-  .print-dialog-body {
-    padding: 0;
-  }
-  
-  .report-content {
-    background-color: white;
-    padding: 0;
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .order-stats-container {
-    flex-direction: column;
-  }
-  
-  .chart-container {
-    width: 100%;
-  }
-  
-  .date-filter {
-    flex-direction: column;
-  }
-=======
   }
   
   .print-dialog {
@@ -469,5 +379,4 @@
 
 .fa-print:before {
   content: "\f02f";
-
 }

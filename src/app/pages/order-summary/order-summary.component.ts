@@ -35,23 +35,13 @@ export class OrderSummaryComponent implements OnInit {
     flex: 1,
   };
 
-
-  // Remove rowSelection to disable checkboxes
   gridOptions: GridOptions<Order> = {
-    // No rowSelection configuration
-=======
-  // Properly typed GridOptions
-  gridOptions: GridOptions<Order> = {
-  
-    // Other optional properties can be added if needed
-
+    // Options can be added here if needed
   };
 
   showPrintDialog = false;
-
-
+  
   private gridApi!: GridApi<Order>;
-  private gridColumnApi: any;
 
   constructor(private http: HttpClient) {}
 
@@ -68,16 +58,10 @@ export class OrderSummaryComponent implements OnInit {
   }
 
   onGridReady(params: GridReadyEvent<Order>): void {
-
     console.log('Grid Ready Params:', params);
     this.gridApi = params.api;
-    this.gridColumnApi = (params as any).columnApi;
-    if (this.gridColumnApi) {
-      params.api.sizeColumnsToFit();
-
-    } else {
-      console.warn('columnApi is not available, skipping sizeColumnsToFit');
-    }
+    // Modern AG Grid versions don't need separate column API management
+    params.api.sizeColumnsToFit();
   }
 
   openPrintReport(): void {
