@@ -42,3 +42,14 @@ testem.log
 Thumbs.db
 
 .fake
+
+
+# .NET build artifacts
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.mdb
+*.log
