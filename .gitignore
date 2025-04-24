@@ -41,17 +41,20 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.fake
-
 # ===== .NET backend ignore rules =====
-/Backend/bin/
-/Backend/obj/
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.mdb
+*.log
 /Backend/.vs/
 /Backend/.vscode/
 /Backend/publish/
 /Backend/*.user
 /Backend/*.suo
-/Backend/*.log
 /Backend/*.tmp
 /Backend/*.mdf
 /Backend/*.ldf
