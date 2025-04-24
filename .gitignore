@@ -41,10 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.fake
-
-
-# .NET build artifacts
+# ===== .NET backend ignore rules =====
 **/bin/
 **/obj/
 *.dll
@@ -53,3 +50,12 @@ Thumbs.db
 *.cache
 *.mdb
 *.log
+/Backend/.vs/
+/Backend/.vscode/
+/Backend/publish/
+/Backend/*.user
+/Backend/*.suo
+/Backend/*.tmp
+/Backend/*.mdf
+/Backend/*.ldf
+/Backend/appsettings.Development.json
