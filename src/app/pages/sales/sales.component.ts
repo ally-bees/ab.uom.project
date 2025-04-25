@@ -4,6 +4,7 @@ import { SalesService } from '../../services/sales.service';
 import { SalesViewModel } from '../../models/sale.model';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
+import { Order } from '../../models/order.model';  // Importing the correct Order model
 
 @Component({
   selector: 'app-sales',
@@ -33,31 +34,41 @@ export class SalesComponent implements OnInit {
   loadSalesData(): void {
     this.salesService.getDashboardData().subscribe((data: SalesViewModel) => {
       const transformedData: any[] = [];
-  
+
+      // Log the data to inspect the structure
+      console.log(data.relatedOrders);
+
       data.relatedOrders.forEach(order => {
-        const matchingSale = data.sales.find(sale =>
-          new Date(sale.date).toDateString() === new Date(order.orderDate).toDateString()
-        );
-  
-        const saleId = matchingSale?.saleId || '';
-        const salesDate = new Date(order.orderDate).toLocaleDateString();
-        const amount = order.totalAmount;
-  
-        order.productIds.forEach((productId, index) => {
-          const product = data.relatedInventory.find(p => p.productId === productId);
-          const quantity = order.quantities?.[index] || 0;
-  
-          transformedData.push({
-            saleId: saleId,
-            salesDate: salesDate,
-            orderId: order.orderId,
-            quantity: quantity,
-            amount: amount.toFixed(2),
-            productName: product?.productName || 'Unknown'
+        // Ensure that order has productIds and quantities
+        if (order.productIds && order.quantities && order.productIds.length === order.quantities.length) {
+          const matchingSale = data.sales.find(sale =>
+            new Date(sale.date).toDateString() === new Date(order.orderDate).toDateString()
+          );
+
+          const saleId = matchingSale?.saleId || '';
+          const salesDate = new Date(order.orderDate).toLocaleDateString();
+          const amount = order.totalAmount;
+
+          // Iterate through the productIds and quantities arrays
+          order.productIds.forEach((productId, index) => {
+            const product = data.relatedInventory.find(p => p.productId === productId);
+            const quantity = order.quantities[index] || 0;
+
+            // Push the transformed data into the rowData
+            transformedData.push({
+              saleId: saleId,
+              salesDate: salesDate,
+              orderId: order.orderId,
+              quantity: quantity,
+              amount: amount.toFixed(2),
+              productName: product?.productName || 'Unknown'
+            });
           });
-        });
+        } else {
+          console.error(`Order ${order.orderId} does not have matching productIds and quantities`);
+        }
       });
-  
+
       this.rowData = transformedData;
     });
   }

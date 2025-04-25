@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
-
 
 namespace Backend.Models
 {
@@ -10,28 +10,37 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [BsonElement("order_id")]
-        public string OrderId { get; set; }
+        public string OrderId { get; set; } = string.Empty;
 
-        [BsonElement("customer_id")]
-        public string CustomerId { get; set; }
+        [BsonElement("customerId")]
+        public string CustomerId { get; set; } = string.Empty;
 
-        [BsonElement("product_id")]
-        public List<string> ProductIds { get; set; }
+        [BsonElement("orderDetails")]
+        public List<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-        [BsonElement("quantity")]
-        public List<int> Quantities { get; set; }
-
-        [BsonElement("total_amount")]
+        [BsonElement("totalAmount")]
         public double TotalAmount { get; set; }
 
-        [BsonElement("order_date")]
+        [BsonElement("orderDate")]
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-        public DateTime OrderDate { get; set; }
+        public DateTime? OrderDate { get; set; }
 
         [BsonElement("status")]
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
+    }
+
+    public class OrderDetail
+    {
+        [BsonElement("productId")]
+        public string ProductId { get; set; } = string.Empty;
+
+        [BsonElement("quantity")]
+        public int Quantity { get; set; }
+
+        [BsonElement("price")]
+        public double Price { get; set; }
     }
 }

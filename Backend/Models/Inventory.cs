@@ -3,29 +3,29 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Backend.Models
 {
-    [BsonIgnoreExtraElements] // <- VERY IMPORTANT!
+    [BsonIgnoreExtraElements]
     public class Inventory
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [BsonElement("product_id")]
-        public string ProductId { get; set; }
+        public string ProductId { get; set; } = string.Empty;
 
-        [BsonElement("product_name")]
-        public string ProductName { get; set; }
+        [BsonElement("name")]
+        public string Name { get; set; } = string.Empty;
 
-        [BsonElement("quantity_available")]
-        public int QuantityAvailable { get; set; }
-
-        [BsonElement("availability_status")]
-        public bool AvailabilityStatus { get; set; }
+        [BsonElement("category")]
+        public string Category { get; set; } = string.Empty;
 
         [BsonElement("price")]
         public double Price { get; set; }
 
-        [BsonElement("category")]
-        public string Category { get; set; }
+        [BsonElement("stockQuantity")]
+        public int StockQuantity { get; set; }
+
+        [BsonElement("description")]
+        public string Description { get; set; } = string.Empty;
     }
 }

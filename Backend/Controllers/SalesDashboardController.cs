@@ -1,6 +1,8 @@
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -15,6 +17,7 @@ namespace Backend.Controllers
             _mongoDBService = mongoDBService;
         }
 
+        // Get all sales, orders, and inventory data
         [HttpGet]
         public async Task<IActionResult> GetDashboardData()
         {
@@ -23,7 +26,7 @@ namespace Backend.Controllers
             var orders = await _mongoDBService.GetAllOrdersAsync();
             var inventory = await _mongoDBService.GetAllInventoryAsync();
 
-            // Create a view model
+            // Create a view model with total revenue, total items, and total orders
             var viewModel = new SalesViewModel
             {
                 Sales = sales,
@@ -37,23 +40,30 @@ namespace Backend.Controllers
             return Ok(viewModel);
         }
 
+        // Get sales, orders, and inventory data filtered by vendor
         [HttpGet("vendor/{vendorId}")]
         public async Task<IActionResult> GetDashboardDataByVendor(string vendorId)
         {
-            // Get vendor-specific data
+            // Get all sales and filter by vendorId
             var sales = await _mongoDBService.GetAllSalesAsync();
             var vendorSales = sales.Where(s => s.VendorId == vendorId).ToList();
-            
-            // Get related orders based on sales data
+
+            // Get all orders
             var orders = await _mongoDBService.GetAllOrdersAsync();
+            
+            // Get productIds from vendor sales
             var productIds = vendorSales.SelectMany(s => s.ProductIds).Distinct().ToList();
-            var relatedOrders = orders.Where(o => o.ProductIds.Any(p => productIds.Contains(p))).ToList();
             
-            // Get related inventory
+            // Filter orders to find those with matching productIds in orderDetails
+            var relatedOrders = orders.Where(o => o.OrderDetails.Any(od => productIds.Contains(od.ProductId))).ToList();
+
+            // Get all inventory
             var inventory = await _mongoDBService.GetAllInventoryAsync();
-            var relatedInventory = inventory.Where(i => productIds.Contains(i.ProductId)).ToList();
             
-            // Create a view model
+            // Filter inventory to match the productIds
+            var relatedInventory = inventory.Where(i => productIds.Contains(i.ProductId)).ToList();
+
+            // Create a view model for vendor-specific data
             var viewModel = new SalesViewModel
             {
                 Sales = vendorSales,

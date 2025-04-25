@@ -1,5 +1,8 @@
 using Backend.Models;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Backend.Services
 {
@@ -22,18 +25,17 @@ namespace Backend.Services
             return await _mongoDBService.GetSaleByIdAsync(id);
         }
 
-        public async Task<List<Sale>> GetSalesByVendorIdAsync(string vendorId)
-        {
-            // Implement this functionality with MongoDB service
-            var sales = await _mongoDBService.GetAllSalesAsync();
-            return sales.Where(s => s.VendorId == vendorId).ToList();
-        }
-
         public async Task<List<Sale>> GetSalesByDateRangeAsync(string startDate, string endDate)
         {
-            // Implement this functionality with MongoDB service
+            // Fetch all sales from the MongoDB service
             var sales = await _mongoDBService.GetAllSalesAsync();
-            return sales.Where(s => string.Compare(s.Date, startDate) >= 0 && string.Compare(s.Date, endDate) <= 0).ToList();
+
+            // Convert startDate and endDate to DateTime for comparison
+            DateTime startDateTime = DateTime.Parse(startDate);
+            DateTime endDateTime = DateTime.Parse(endDate);
+
+            // Filter sales based on the provided date range
+            return sales.Where(s => s.SaleDate >= startDateTime && s.SaleDate <= endDateTime).ToList();
         }
 
         public async Task<object> GetSalesSummaryAsync()
@@ -41,9 +43,9 @@ namespace Backend.Services
             var sales = await _mongoDBService.GetAllSalesAsync();
             return new
             {
-                TotalSales = sales.Sum(s => s.TotalSales),
-                TotalOrders = sales.Sum(s => s.TotalOrdersCount),
-                TotalItemsSold = sales.Sum(s => s.TotalItemsSold)
+                TotalSales = sales.Sum(s => s.Amount),
+                TotalOrders = sales.Sum(s => s.OrderIds.Count),
+                TotalItemsSold = sales.Sum(s => s.OrderIds.Count)  // Adjust if item count is needed from elsewhere
             };
         }
 
