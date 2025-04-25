@@ -1,30 +1,11 @@
-<h2>Sales List</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Sale ID</th>
-      <th>Vendor ID</th>
-      <th>Product IDs</th>
-      <th>Date</th>
-      <th>Total Sales</th>
-      <th>Total Orders</th>
-      <th>Total Items Sold</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let sale of sales">
-      <td>{{ sale.saleId }}</td>
-      <td>{{ sale.vendorId }}</td>
-      <td>
-        <ul>
-          <li *ngFor="let pid of sale.productIds">{{ pid }}</li>
-        </ul>
-      </td>
-      <td>{{ sale.date }}</td>
-      <td>{{ sale.totalSales | number:'1.2-2' }}</td>
-      <td>{{ sale.totalOrdersCount }}</td>
-      <td>{{ sale.totalItemsSold }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="sales-container">
+  <h2>Sales Details</h2>
+  <ag-grid-angular
+    style="width: 100%; height: 400px;"
+    class="ag-theme-alpine"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [animateRows]="true"
+    [defaultColDef]="{ sortable: true, filter: true, resizable: true }"
+  ></ag-grid-angular>
+</div>
