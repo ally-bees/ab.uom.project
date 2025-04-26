@@ -21,57 +21,65 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDashboardData()
         {
-            // Get all data from collections
             var sales = await _mongoDBService.GetAllSalesAsync();
             var orders = await _mongoDBService.GetAllOrdersAsync();
             var inventory = await _mongoDBService.GetAllInventoryAsync();
 
-            // Create a view model with total revenue, total items, and total orders
+            var totalRevenue = sales.Sum(s => s.Amount);
+            var totalItems = orders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+            var totalOrders = orders.Count;
+
             var viewModel = new SalesViewModel
             {
                 Sales = sales,
                 RelatedOrders = orders,
                 RelatedInventory = inventory,
-                TotalRevenue = sales.Sum(s => s.TotalSales),
-                TotalItems = sales.Sum(s => s.TotalItemsSold),
-                TotalOrders = sales.Sum(s => s.TotalOrdersCount)
+                TotalRevenue = totalRevenue,
+                TotalItems = totalItems,
+                TotalOrders = totalOrders
             };
 
             return Ok(viewModel);
         }
 
-        // Get sales, orders, and inventory data filtered by vendor
-        [HttpGet("vendor/{vendorId}")]
-        public async Task<IActionResult> GetDashboardDataByVendor(string vendorId)
+        // Get sales, orders, and inventory data filtered by saleId
+        [HttpGet("sale/{saleId}")]
+        public async Task<IActionResult> GetDashboardDataBySaleId(string saleId)
         {
-            // Get all sales and filter by vendorId
             var sales = await _mongoDBService.GetAllSalesAsync();
-            var vendorSales = sales.Where(s => s.VendorId == vendorId).ToList();
+            var targetSale = sales.FirstOrDefault(s => s.SaleId == saleId);
 
-            // Get all orders
-            var orders = await _mongoDBService.GetAllOrdersAsync();
-            
-            // Get productIds from vendor sales
-            var productIds = vendorSales.SelectMany(s => s.ProductIds).Distinct().ToList();
-            
-            // Filter orders to find those with matching productIds in orderDetails
-            var relatedOrders = orders.Where(o => o.OrderDetails.Any(od => productIds.Contains(od.ProductId))).ToList();
+            if (targetSale == null)
+                return NotFound($"Sale with SaleId {saleId} not found.");
 
-            // Get all inventory
+            var allOrders = await _mongoDBService.GetAllOrdersAsync();
+
+            var relatedOrders = allOrders
+                .Where(o => targetSale.OrderIds.Contains(o.OrderId))
+                .ToList();
+
+            var productIds = relatedOrders
+                .SelectMany(o => o.OrderDetails.Select(od => od.ProductId))
+                .Distinct()
+                .ToList();
+
             var inventory = await _mongoDBService.GetAllInventoryAsync();
-            
-            // Filter inventory to match the productIds
-            var relatedInventory = inventory.Where(i => productIds.Contains(i.ProductId)).ToList();
+            var relatedInventory = inventory
+                .Where(i => productIds.Contains(i.ProductId))
+                .ToList();
 
-            // Create a view model for vendor-specific data
+            var totalRevenue = targetSale.Amount;
+            var totalItems = relatedOrders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+            var totalOrders = relatedOrders.Count;
+
             var viewModel = new SalesViewModel
             {
-                Sales = vendorSales,
+                Sales = new List<Sale> { targetSale },
                 RelatedOrders = relatedOrders,
                 RelatedInventory = relatedInventory,
-                TotalRevenue = vendorSales.Sum(s => s.TotalSales),
-                TotalItems = vendorSales.Sum(s => s.TotalItemsSold),
-                TotalOrders = vendorSales.Sum(s => s.TotalOrdersCount)
+                TotalRevenue = totalRevenue,
+                TotalItems = totalItems,
+                TotalOrders = totalOrders
             };
 
             return Ok(viewModel);
