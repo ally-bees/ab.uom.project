@@ -17,6 +17,7 @@ import { FinanceComponent } from './pages/finance/finance.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
+import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 
 
@@ -50,5 +51,6 @@ export const routes: Routes = [
   {path: 'schedule', component: ScheduleComponent},
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
+  {path: 'expense-form', component: ExpenseFormComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
