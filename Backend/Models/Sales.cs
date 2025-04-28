@@ -10,16 +10,16 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }  // Optional MongoDB _id
+        public string? Id { get; set; }
 
-        [BsonElement("sale_id")]
+        [BsonElement("sales_id")] 
         public string SaleId { get; set; } = string.Empty;
 
         [BsonElement("orderIds")]
         public List<string> OrderIds { get; set; } = new();
 
         [BsonElement("saledate")]
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)] // Ensures local time zone during serialization
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime SaleDate { get; set; }
 
         [BsonElement("amount")]
