@@ -1,4 +1,3 @@
-
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -58,4 +57,6 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { Success = false, Message = "An internal server error occurred." });
         }
     }
+
+    
 }

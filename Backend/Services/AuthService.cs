@@ -12,6 +12,8 @@ public class AuthService
 {
     private readonly UserService _userService;
     private readonly JwtSettings _jwtSettings;
+    
+
 
     public AuthService(UserService userService, IOptions<JwtSettings> jwtSettings)
     {
@@ -149,4 +151,60 @@ public class AuthService
             throw new Exception("Error generating authentication token", ex);
         }
     }
+
+    public async Task<string> GeneratePasswordResetTokenAsync(User user)
+    {
+        // Create a JWT token valid for short time
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim("UserId", user.Id.ToString())
+            }),
+            Expires = DateTime.UtcNow.AddMinutes(30), // Token valid for 30 mins
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<bool> ResetPasswordAsync(string token, string newPassword)
+{
+    var tokenHandler = new JwtSecurityTokenHandler();
+    var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
+
+    try
+    {
+        tokenHandler.ValidateToken(token, new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
+        }, out SecurityToken validatedToken);
+
+        var jwtToken = (JwtSecurityToken)validatedToken;
+        var userId = jwtToken.Claims.First(x => x.Type == "UserId").Value;
+
+        var user = await _userService.GetByIdAsync(userId);
+        if (user == null)
+            return false;
+
+        // Hash the new password
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        await _userService.UpdateUserAsync(user);
+
+        return true;
+    }
+    catch
+    {
+        return false;
+    }
+}
+
 }

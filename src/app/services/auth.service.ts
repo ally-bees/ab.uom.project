@@ -131,4 +131,14 @@ export class AuthService {
     return '/userprofile';
   }
 
+  forgetPassword(email: string) {
+    return this.http.post(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(data: any) {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
+  }
+  
+  
+
 }

@@ -42,3 +42,51 @@ testem.log
 Thumbs.db
 
 .fake
+
+# ---- Backend (ASP.NET Core) ----
+
+# Build output
+bin/
+obj/
+
+# Publish output
+publish/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vcxproj.user
+
+# VS Code folders (already handled above)
+# .vscode/
+
+# ASP.NET Core secrets
+**/secrets.json
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+
+# Code coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Rider IDE files
+.idea/
+*.DotSettings.user
+
+# Local environment files
+.env
+.env.*
+
+# SQLite database files (if used)
+*.db
+
+# IIS Express folders
+.vs/

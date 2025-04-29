@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "pUb5fuWgFbU=",
+  "dgSpecHash": "1G1tUVFqaQ4=",
   "success": true,
   "projectFilePath": "C:\\Users\\lakshan roshana\\Desktop\\Allybees\\ab.uom.project\\Backend\\Backend.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\lakshan roshana\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\lakshan roshana\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\lakshan roshana\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.13\\microsoft.aspnetcore.authentication.jwtbearer.8.0.13.nupkg.sha512",
     "C:\\Users\\lakshan roshana\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.13\\microsoft.aspnetcore.openapi.8.0.13.nupkg.sha512",

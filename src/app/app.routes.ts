@@ -19,6 +19,10 @@ import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-
 import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
+import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
+import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
+import { ResetPasswordComponent } from './adminpart/reset-password/reset-password.component';
 
 
 export const routes: Routes = [
@@ -51,5 +55,10 @@ export const routes: Routes = [
   {path: 'schedule', component: ScheduleComponent},
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
+
+  {path: 'forget-password',component:ForgetPasswordComponent},
+  {path: 'privacy-policy', component: PrivacyPolicyComponent},
+  {path: 'terms-of-service', component: TermsOfServiceComponent},
+  {path: 'reset-password', component: ResetPasswordComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];

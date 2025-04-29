@@ -1,5 +1,5 @@
 <div class="settings-container">
-    <h1 class="settings-title">Settings</h1>
+    <h1 class="settings-title">{{profileForm.value.userName+"\'s "}}Profile</h1>
     
     <div class="profile-container">
       <div class="sidebar">
@@ -11,7 +11,7 @@
         </div>
         
         <div class="profile-info">
-          <h2 class="profile-name">Mobina Mirbagheri</h2>
+          <h2 class="profile-name">{{profileForm.value.firstName+" "}}{{profileForm.value.lastName}}</h2>
           <p class="profile-status">Your account is ready, you can now update your profile with more details.</p>
         </div>
         
@@ -53,7 +53,7 @@
                   </div>
                   
                   <div class="form-group">
-                    <label for="lastName">Second Name</label>
+                    <label for="lastName">Last Name</label>
                     <input 
                       type="text" 
                       id="lastName" 
@@ -72,21 +72,24 @@
                     formControlName="userName" 
                     class="form-control" 
                     placeholder="User Name"
+                    readonly
                   />
                 </div>
                 
                 <div class="form-group full-width">
-                  <label for="dateOfBirth">Date of birth</label>
+                  <label for="dateOfBirth">Date of Birth</label>
                   <div class="date-input-container">
                     <input 
-                      type="text" 
+                      type="date" 
                       id="dateOfBirth" 
                       formControlName="dateOfBirth" 
-                      class="form-control" 
-                      placeholder="Enter Value"
+                      class="form-control"
+                      [max]="maxDate"
+                      [min]="minDate"
                     />
-                    <button type="button" class="calendar-button">📅</button>
+                    <!-- <button type="button" class="calendar-button" (click)="openDatePicker()">📅</button> -->
                   </div>
+                  
                 </div>
                 
                 <div class="form-group full-width">
@@ -112,6 +115,7 @@
                     formControlName="email" 
                     class="form-control" 
                     placeholder="Enter valid email"
+                    readonly
                   />
                 </div>
                 
@@ -136,17 +140,13 @@
                 
                 <div class="form-group full-width">
                   <label for="country">Country</label>
-                  <select 
+                  <input 
+                    type="text" 
                     id="country" 
                     formControlName="country" 
-                    class="form-control"
-                  >
-                    <option value="" disabled selected>Select</option>
-                    <option value="us">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="ca">Canada</option>
-                    <option value="au">Australia</option>
-                  </select>
+                    class="form-control" 
+                    placeholder="Sri Lanka"
+                  />
                 </div>
                 
                 <div class="form-group full-width">

@@ -10,7 +10,7 @@ namespace AuthAPI.Controllers;
 [Authorize(Roles = "Admin")]
 public class RolesController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly UserService _userService;   
 
     public RolesController(UserService userService)
     {

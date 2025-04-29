@@ -1,3 +1,4 @@
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 // import { Component, OnInit } from '@angular/core';
 // import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -100,16 +101,19 @@ import { AuthService } from '../services/auth.service';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,MatFormFieldModule],
   templateUrl: './userprofile.component.html',
   styleUrls: ['./userprofile.component.css']
 })
 export class UserProfileComponent implements OnInit {
   profileForm: FormGroup;
-  lastUpdate: string = 'August 1';
+  maxDate!: string;
+  minDate!: string;
+  lastUpdate: string = new Date().toUTCString();
   activeSection: string = 'Edit Profile';
   currentUser: User | null = null;
  
@@ -138,8 +142,18 @@ export class UserProfileComponent implements OnInit {
       city: ['']
     });
   }
+  
 
   ngOnInit() {
+    
+    // Set max date to today
+    this.maxDate = new Date().toISOString().split('T')[0];
+    
+    // Set min date (e.g., 100 years ago)
+    const minDate = new Date();
+    minDate.setFullYear(minDate.getFullYear() - 100);
+    this.minDate = minDate.toISOString().split('T')[0];
+  
     // Subscribe to the current user observable
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
@@ -159,6 +173,12 @@ export class UserProfileComponent implements OnInit {
         });
       }
     });
+  }
+
+
+   openDatePicker() {
+    // This will trigger the native date picker
+    document.getElementById('dateOfBirth')?.click();
   }
 
   onSave() {
