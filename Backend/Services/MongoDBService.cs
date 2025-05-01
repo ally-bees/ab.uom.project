@@ -9,6 +9,7 @@ namespace Backend.Services
         private readonly IMongoCollection<Sale> _salesCollection;
         private readonly IMongoCollection<Order> _ordersCollection;
         private readonly IMongoCollection<Inventory> _inventoryCollection;
+        private readonly IMongoCollection<Expense> _expensesCollection;
 
         public MongoDBService(IOptions<MongoDBSettings> mongoDBSettings)
         {
@@ -18,6 +19,7 @@ namespace Backend.Services
             _salesCollection = mongoDatabase.GetCollection<Sale>("sales");
             _ordersCollection = mongoDatabase.GetCollection<Order>("orders");
             _inventoryCollection = mongoDatabase.GetCollection<Inventory>("inventory");
+             _expensesCollection = mongoDatabase.GetCollection<Expense>("expenses");
 
 
             // Create indexes for better query performance
@@ -45,8 +47,11 @@ namespace Backend.Services
             
             var categoryIndexKeysDefinition = Builders<Inventory>.IndexKeys.Ascending(i => i.Category);
             _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(categoryIndexKeysDefinition));
-        }
         
+            var expenseDateIndexKeysDefinition = Builders<Expense>.IndexKeys.Ascending(e => e.Date);
+            _expensesCollection.Indexes.CreateOne(new CreateIndexModel<Expense>(expenseDateIndexKeysDefinition));
+        }
+
 
         // Sales methods
         public async Task<List<Sale>> GetAllSalesAsync() => 
@@ -103,5 +108,20 @@ namespace Backend.Services
         {
             return _ordersCollection;
         }
+        // Expense methods
+        public async Task<List<Expense>> GetAllExpensesAsync() => 
+            await _expensesCollection.Find(_ => true).Sort(Builders<Expense>.Sort.Descending(e => e.Date)).Limit(10).ToListAsync();
+    
+        public async Task<Expense> GetExpenseByIdAsync(string id) => 
+            await _expensesCollection.Find(e => e.Id == id).FirstOrDefaultAsync();
+    
+        public async Task CreateExpenseAsync(Expense expense) => 
+            await _expensesCollection.InsertOneAsync(expense);
+    
+        public async Task UpdateExpenseAsync(string id, Expense expense) => 
+            await _expensesCollection.ReplaceOneAsync(e => e.Id == id, expense);
+    
+        public async Task DeleteExpenseAsync(string id) => 
+            await _expensesCollection.DeleteOneAsync(e => e.Id == id);
     }
 }

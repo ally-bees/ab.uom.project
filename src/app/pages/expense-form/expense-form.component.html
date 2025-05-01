@@ -117,48 +117,35 @@
     <!-- Recent Expenses Section -->
     
     
-    <div class="recent-expenses">
-      <h3>Recent Expenses</h3>
-      <table class="expenses-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Employee</th>
-            <th>Position</th>
-            <th>Type</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>03/20/2025</td>
-            <td>Jane Smith</td>
-            <td>Marketing Manager</td>
-            <td>Campaign</td>
-            <td>Rs. 5000.00</td>
-          </tr>
-          <tr>
-            <td>03/20/2025</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <!-- Add more empty rows to match the design in the photo -->
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Inside the recent-expenses section in your HTML template -->
+<div class="recent-expenses">
+  <h3>Recent Expenses</h3>
+  <table class="expenses-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Employee</th>
+        <th>Position</th>
+        <th>Type</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of recentExpenses">
+        <td>{{ expense.date | date:'MM/dd/yyyy' }}</td>
+        <td>{{ expense.employeeName }}</td>
+        <td>{{ expense.position }}</td>
+        <td>{{ expense.expenseType}}</td>
+        <td>Rs. {{ expense.amount.toFixed(2) }}</td>
+      </tr>
+      <!-- Add empty rows when there are fewer items -->
+      <tr *ngFor="let _ of [].constructor(5 - recentExpenses.length); let i = index" [hidden]="recentExpenses.length >= 5">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

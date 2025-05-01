@@ -52,5 +52,6 @@ export const routes: Routes = [
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
+  {path: 'salesmainpage', component: SalesMainpageComponent},
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
 ];
