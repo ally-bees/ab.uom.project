@@ -51,6 +51,16 @@
         </div>
       </div>
 
+      <!-- PIE CHART SECTION -->
+      <div class="chart-container" style="margin-top: 40px;">
+        <h3>Product Distribution by Products</h3>
+        <canvas baseChart
+          [data]="categoryChartData"
+          [options]="categoryChartOptions"
+          [type]="'pie'">
+        </canvas>
+      </div>
+
       <!-- AG Grid Table -->
       <div class="sales-table">
         <ag-grid-angular

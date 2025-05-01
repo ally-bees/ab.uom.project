@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { SalesViewModel } from '../../models/sale.model';
-import { FooterComponent } from '../../footer/footer.component';
 import { SalesService } from '../../services/sales.service';
+import { ChartData, ChartOptions } from 'chart.js';
+import { NgChartsModule } from 'ng2-charts';
 
 interface Sale {
   saleId: string;
@@ -20,7 +20,7 @@ interface Sale {
 @Component({
   selector: 'app-sales',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgGridModule, FooterComponent],
+  imports: [CommonModule, FormsModule, AgGridModule, NgChartsModule],
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.css'],
 })
@@ -50,6 +50,21 @@ export class SalesComponent implements OnInit {
   fromDate: string = '';
   toDate: string = '';
   searchQuery: string = '';
+
+  // Pie Chart
+  categoryChartData: ChartData<'pie', number[], string | string[]> = {
+    labels: [],
+    datasets: [{ data: [] }],
+  };
+
+  categoryChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+    },
+  };
 
   constructor(private salesService: SalesService) {}
 
@@ -86,7 +101,8 @@ export class SalesComponent implements OnInit {
         });
 
         this.rowData = transformedData;
-        this.filteredData = [...this.rowData]; // initially show all
+        this.filteredData = [...this.rowData];
+        this.updatePieChart();
       },
       error: (err) => {
         console.error('Error fetching sales data:', err);
@@ -124,6 +140,8 @@ export class SalesComponent implements OnInit {
 
       return matchesDate && matchesSearch;
     });
+
+    this.updatePieChart();
   }
 
   onSearchChange(event: Event): void {
@@ -134,5 +152,19 @@ export class SalesComponent implements OnInit {
 
   onDateChange(): void {
     this.applyFilters();
+  }
+
+  updatePieChart(): void {
+    const categoryMap: { [key: string]: number } = {};
+
+    this.filteredData.forEach((sale) => {
+      const name = sale.productName;
+      categoryMap[name] = (categoryMap[name] || 0) + sale.quantity;
+    });
+
+    this.categoryChartData = {
+      labels: Object.keys(categoryMap),
+      datasets: [{ data: Object.values(categoryMap) }],
+    };
   }
 }

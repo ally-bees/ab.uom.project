@@ -58,17 +58,18 @@ namespace Backend.Controllers
             return CreatedAtAction(nameof(Get), new { saleId = sale.SaleId }, sale);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Sale sale)
+        [HttpPut("{saleId}")]
+        public async Task<IActionResult> Update(string saleId, [FromBody] Sale sale)
         {
-            var existingSale = await _salesService.GetSaleByIdAsync(id);
+            var existingSale = await _salesService.GetSaleByIdAsync(saleId);
             if (existingSale == null)
                 return NotFound();
 
-            sale.Id = id;
-            await _salesService.UpdateSaleAsync(id, sale);
+            sale.Id = saleId;
+            await _salesService.UpdateSaleAsync(saleId, sale);
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
