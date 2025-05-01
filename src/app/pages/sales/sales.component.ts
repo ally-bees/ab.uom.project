@@ -13,6 +13,7 @@ interface Sale {
   salesDate: string;
   orderId: string;
   productName: string;
+  category: string;
   quantity: number;
   price: number;
 }
@@ -33,6 +34,7 @@ export class SalesComponent implements OnInit {
     { field: 'salesDate', headerName: 'Sales Date', sortable: true },
     { field: 'orderId', headerName: 'Order ID', sortable: true },
     { field: 'productName', headerName: 'Product Name', sortable: true },
+    { field: 'category', headerName: 'Category', sortable: true },
     { field: 'quantity', headerName: 'Quantity', sortable: true },
     { field: 'price', headerName: 'Price', sortable: true },
   ];
@@ -46,25 +48,31 @@ export class SalesComponent implements OnInit {
   private gridApi!: GridApi<Sale>;
 
   showPrintDialog = false;
-
   fromDate: string = '';
   toDate: string = '';
   searchQuery: string = '';
 
-  // Pie Chart
+  // Pie chart 1: Product Name Distribution
+  productChartData: ChartData<'pie', number[], string | string[]> = {
+    labels: [],
+    datasets: [{ data: [] }],
+  };
+
+  // Pie chart 2: Category Distribution
   categoryChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [],
     datasets: [{ data: [] }],
   };
 
-  categoryChartOptions: ChartOptions<'pie'> = {
+  pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
     plugins: {
-      legend: {
-        position: 'bottom',
-      },
+      legend: { position: 'bottom' },
     },
   };
+
+  // 👇 New property to toggle pie chart view
+  activeChart: 'product' | 'category' = 'product';
 
   constructor(private salesService: SalesService) {}
 
@@ -84,6 +92,7 @@ export class SalesComponent implements OnInit {
               order.orderDetails.forEach((orderDetail) => {
                 const product = data.relatedInventory.find((p) => p.productId === orderDetail.productId);
                 const productName = product?.name || 'Unknown';
+                const category = product?.category || 'Unknown';
                 const quantity = orderDetail.quantity;
                 const price = orderDetail.price;
 
@@ -91,8 +100,9 @@ export class SalesComponent implements OnInit {
                   saleId: sale.saleId,
                   salesDate: sale.saleDate ? new Date(sale.saleDate).toISOString().split('T')[0] : 'N/A',
                   orderId: order.orderId,
-                  productName: productName,
-                  quantity: quantity,
+                  productName,
+                  category,
+                  quantity,
                   price: parseFloat(price.toFixed(2)),
                 });
               });
@@ -102,11 +112,9 @@ export class SalesComponent implements OnInit {
 
         this.rowData = transformedData;
         this.filteredData = [...this.rowData];
-        this.updatePieChart();
+        this.updatePieCharts();
       },
-      error: (err) => {
-        console.error('Error fetching sales data:', err);
-      },
+      error: (err) => console.error('Error fetching sales data:', err),
     });
   }
 
@@ -131,22 +139,15 @@ export class SalesComponent implements OnInit {
   applyFilters(): void {
     this.filteredData = this.rowData.filter((sale) => {
       const saleDate = sale.salesDate;
-      const matchesDate =
-        (!this.fromDate || saleDate >= this.fromDate) &&
-        (!this.toDate || saleDate <= this.toDate);
-      const matchesSearch =
-        !this.searchQuery ||
-        sale.productName.toLowerCase().includes(this.searchQuery.toLowerCase());
-
+      const matchesDate = (!this.fromDate || saleDate >= this.fromDate) && (!this.toDate || saleDate <= this.toDate);
+      const matchesSearch = !this.searchQuery || sale.productName.toLowerCase().includes(this.searchQuery.toLowerCase());
       return matchesDate && matchesSearch;
     });
-
-    this.updatePieChart();
+    this.updatePieCharts();
   }
 
   onSearchChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.searchQuery = inputElement.value;
+    this.searchQuery = (event.target as HTMLInputElement).value;
     this.applyFilters();
   }
 
@@ -154,13 +155,19 @@ export class SalesComponent implements OnInit {
     this.applyFilters();
   }
 
-  updatePieChart(): void {
-    const categoryMap: { [key: string]: number } = {};
+  updatePieCharts(): void {
+    const productMap: { [name: string]: number } = {};
+    const categoryMap: { [category: string]: number } = {};
 
     this.filteredData.forEach((sale) => {
-      const name = sale.productName;
-      categoryMap[name] = (categoryMap[name] || 0) + sale.quantity;
+      productMap[sale.productName] = (productMap[sale.productName] || 0) + sale.quantity;
+      categoryMap[sale.category] = (categoryMap[sale.category] || 0) + sale.quantity;
     });
+
+    this.productChartData = {
+      labels: Object.keys(productMap),
+      datasets: [{ data: Object.values(productMap) }],
+    };
 
     this.categoryChartData = {
       labels: Object.keys(categoryMap),

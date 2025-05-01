@@ -51,15 +51,49 @@
         </div>
       </div>
 
-      <!-- PIE CHART SECTION -->
-      <div class="chart-container" style="margin-top: 40px;">
-        <h3>Product Distribution by Products</h3>
-        <canvas baseChart
-          [data]="categoryChartData"
-          [options]="categoryChartOptions"
-          [type]="'pie'">
-        </canvas>
-      </div>
+      <!-- PIE CHART SLIDESHOW STYLE -->
+<div style="margin-top: 40px;">
+  <!-- Toggle Headings -->
+  <div class="chart-toggle-headings">
+    
+    <h3
+      [class.active]="activeChart === 'category'"
+      (click)="activeChart = 'category'"
+    >
+      Sales by Category
+    </h3>
+    <h3
+      [class.active]="activeChart === 'product'"
+      (click)="activeChart = 'product'"
+    >
+      Sales by Product
+    </h3>
+  </div>
+
+  <!-- Chart Display Box -->
+  <div class="chart-slide-container">
+    <!-- Product Pie Chart -->
+    <div *ngIf="activeChart === 'product'" class="chart-box">
+      <canvas
+        baseChart
+        [data]="productChartData"
+        [options]="pieChartOptions"
+        [type]="'pie'"
+      ></canvas>
+    </div>
+
+    <!-- Category Pie Chart -->
+    <div *ngIf="activeChart === 'category'" class="chart-box">
+      <canvas
+        baseChart
+        [data]="categoryChartData"
+        [options]="pieChartOptions"
+        [type]="'pie'"
+      ></canvas>
+    </div>
+  </div>
+</div>
+
 
       <!-- AG Grid Table -->
       <div class="sales-table">
