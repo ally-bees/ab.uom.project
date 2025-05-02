@@ -17,11 +17,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { HeaderComponent } from "./pages/header/header.component";
+import { FooterComponent } from "./footer/footer.component";
 
 
 @NgModule({
   declarations: [
-    CourierDashboardComponent,
     MarketingDashboardComponent,
     ShippingDashboardComponent,
 
@@ -38,8 +39,10 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
-    MatDividerModule
-  ],
+    MatDividerModule,
+    HeaderComponent,
+    FooterComponent
+],
   providers: [
     DatePipe
   ],
