@@ -1,6 +1,4 @@
-<!-- Main container similar to orders-container -->
 <div class="sales-container">
-  <!-- Card like orders-card -->
   <div class="sales-card">
     <div class="card-header">
       <h2>Sales Report</h2>
@@ -51,49 +49,73 @@
         </div>
       </div>
 
-      <!-- PIE CHART SLIDESHOW STYLE -->
-<div style="margin-top: 40px;">
-  <!-- Toggle Headings -->
-  <div class="chart-toggle-headings">
-    
-    <h3
-      [class.active]="activeChart === 'category'"
-      (click)="activeChart = 'category'"
-    >
-      Sales by Category
-    </h3>
-    <h3
-      [class.active]="activeChart === 'product'"
-      (click)="activeChart = 'product'"
-    >
-      Sales by Product
-    </h3>
-  </div>
+      <!-- Charts Container -->
+      <div class="charts-container">
+        <!-- Left Side - Pie Charts -->
+        <div class="pie-charts-container">
+          <div style="margin-top: 40px;">
+            <div class="chart-toggle-headings">
+              <h3
+                [class.active]="activeChart === 'category'"
+                (click)="activeChart = 'category'"
+              >
+                Sales by Category
+              </h3>
+              <h3
+                [class.active]="activeChart === 'product'"
+                (click)="activeChart = 'product'"
+              >
+                Sales by Product
+              </h3>
+            </div>
 
-  <!-- Chart Display Box -->
-  <div class="chart-slide-container">
-    <!-- Product Pie Chart -->
-    <div *ngIf="activeChart === 'product'" class="chart-box">
-      <canvas
-        baseChart
-        [data]="productChartData"
-        [options]="pieChartOptions"
-        [type]="'pie'"
-      ></canvas>
-    </div>
+            <div class="chart-slide-container">
+              <!-- Product Pie Chart -->
+              <div *ngIf="activeChart === 'product'" class="chart-box">
+                <canvas
+                  baseChart
+                  [data]="productChartData"
+                  [options]="pieChartOptions"
+                  [type]="'pie'"
+                ></canvas>
+              </div>
 
-    <!-- Category Pie Chart -->
-    <div *ngIf="activeChart === 'category'" class="chart-box">
-      <canvas
-        baseChart
-        [data]="categoryChartData"
-        [options]="pieChartOptions"
-        [type]="'pie'"
-      ></canvas>
-    </div>
-  </div>
-</div>
+              <!-- Category Pie Chart -->
+              <div *ngIf="activeChart === 'category'" class="chart-box">
+                <canvas
+                  baseChart
+                  [data]="categoryChartData"
+                  [options]="pieChartOptions"
+                  [type]="'pie'"
+                ></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Right Side - Comparison Donut Chart -->
+        <div class="comparison-chart-container">
+          <div class="chart-box">
+            <h3>Monthly Sales Comparison</h3>
+            <canvas
+              baseChart
+              [data]="comparisonChartData"
+              [options]="donutChartOptions"
+              [type]="'doughnut'"
+            ></canvas>
+            <div class="profit-info">
+              <p *ngIf="isProfitIncreased()">
+                <i class="fa fa-arrow-up" style="color: #4CAF50;"></i>
+                Profit increased by {{ calculateMonthlyProfitPercentage() }}% compared to last month
+              </p>
+              <p *ngIf="!isProfitIncreased()">
+                <i class="fa fa-arrow-down" style="color: #F44336;"></i>
+                Profit decreased by {{ calculateMonthlyProfitPercentage() }}% compared to last month
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- AG Grid Table -->
       <div class="sales-table">

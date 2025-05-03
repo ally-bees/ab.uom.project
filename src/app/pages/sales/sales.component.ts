@@ -52,16 +52,23 @@ export class SalesComponent implements OnInit {
   toDate: string = '';
   searchQuery: string = '';
 
-  // Pie chart 1: Product Name Distribution
   productChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [],
     datasets: [{ data: [] }],
   };
 
-  // Pie chart 2: Category Distribution
   categoryChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [],
     datasets: [{ data: [] }],
+  };
+
+  comparisonChartData: ChartData<'doughnut', number[], string | string[]> = {
+    labels: ['Current Period', 'Previous Period'],
+    datasets: [{
+      data: [0, 0],
+      backgroundColor: ['#4CAF50', '#F44336'],
+      borderWidth: 1
+    }]
   };
 
   pieChartOptions: ChartOptions<'pie'> = {
@@ -71,12 +78,41 @@ export class SalesComponent implements OnInit {
     },
   };
 
-  // 👇 New property to toggle pie chart view
+  donutChartOptions: ChartOptions<'doughnut'> = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom' },
+      title: {
+        display: true,
+        text: 'Monthly Sales Comparison',
+        font: { size: 16 }
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const label = context.label || '';
+            const value = Number(context.raw) || 0;
+            const total = (context.dataset.data as number[]).reduce((a, b) => a + b, 0);
+            const percentage = Math.round((value / total) * 100);
+            return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+          }
+        }
+      }
+    }
+  };
+
   activeChart: 'product' | 'category' = 'product';
 
   constructor(private salesService: SalesService) {}
 
   ngOnInit(): void {
+    const today = new Date();
+    const from = new Date();
+    from.setDate(today.getDate() - 30);
+
+    this.fromDate = from.toISOString().split('T')[0];
+    this.toDate = today.toISOString().split('T')[0];
+
     this.loadSalesData();
   }
 
@@ -111,11 +147,79 @@ export class SalesComponent implements OnInit {
         });
 
         this.rowData = transformedData;
-        this.filteredData = [...this.rowData];
-        this.updatePieCharts();
+        this.applyFilters();
       },
       error: (err) => console.error('Error fetching sales data:', err),
     });
+  }
+  updateComparisonChart(): void {
+    if (!this.fromDate || !this.toDate) return;
+  
+    const from = new Date(this.fromDate);
+    const to = new Date(this.toDate);
+  
+    // Calculate duration in days
+    const rangeDuration = Math.floor((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  
+    // Previous date range
+    const previousTo = new Date(from);
+    previousTo.setDate(previousTo.getDate() - 1);
+  
+    const previousFrom = new Date(previousTo);
+    previousFrom.setDate(previousFrom.getDate() - (rangeDuration - 1));
+  
+    let currentTotal = 0;
+    let previousTotal = 0;
+  
+    this.rowData.forEach((sale) => {
+      const saleDate = new Date(sale.salesDate);
+      if (saleDate >= from && saleDate <= to) {
+        currentTotal += sale.price;
+      } else if (saleDate >= previousFrom && saleDate <= previousTo) {
+        previousTotal += sale.price;
+      }
+    });
+  
+    this.comparisonChartData = {
+      labels: [
+        'Current Period',
+        'Previous Period'
+      ],
+      datasets: [{
+        data: [currentTotal, previousTotal],
+        backgroundColor: ['#4CAF50', '#F44336'],
+        borderWidth: 1
+      }]
+    };
+  
+    this.donutChartOptions = {
+      ...this.donutChartOptions,
+      plugins: {
+        ...this.donutChartOptions.plugins,
+        title: {
+          ...this.donutChartOptions.plugins?.title,
+          text: `Sales Comparison: ${from.toISOString().split('T')[0]} - ${to.toISOString().split('T')[0]} vs Previous`
+        },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const label = context.label || '';
+              const value = Number(context.raw) || 0;
+              const total = (context.dataset.data as number[]).reduce((a, b) => a + b, 0);
+              const percentage = Math.round((value / total) * 100);
+              return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+            },
+            afterLabel: (context) => {
+              if (context.dataIndex === 0) {
+                return `${from.toISOString().split('T')[0]} to ${to.toISOString().split('T')[0]}`;
+              } else {
+                return `${previousFrom.toISOString().split('T')[0]} to ${previousTo.toISOString().split('T')[0]}`;
+              }
+            }
+          }
+        }
+      }
+    };
   }
 
   onGridReady(params: GridReadyEvent<Sale>): void {
@@ -139,11 +243,14 @@ export class SalesComponent implements OnInit {
   applyFilters(): void {
     this.filteredData = this.rowData.filter((sale) => {
       const saleDate = sale.salesDate;
-      const matchesDate = (!this.fromDate || saleDate >= this.fromDate) && (!this.toDate || saleDate <= this.toDate);
+      const matchesDate = (!this.fromDate || saleDate >= this.fromDate) &&
+                         (!this.toDate || saleDate <= this.toDate);
       const matchesSearch = !this.searchQuery || sale.productName.toLowerCase().includes(this.searchQuery.toLowerCase());
       return matchesDate && matchesSearch;
     });
+
     this.updatePieCharts();
+    this.updateComparisonChart();
   }
 
   onSearchChange(event: Event): void {
@@ -173,5 +280,28 @@ export class SalesComponent implements OnInit {
       labels: Object.keys(categoryMap),
       datasets: [{ data: Object.values(categoryMap) }],
     };
+  }
+
+  calculateMonthlyProfitPercentage(): number {
+    const data = this.comparisonChartData?.datasets?.[0]?.data;
+
+    if (!data || data.length < 2) {
+      return 0;
+    }
+
+    const current = data[0] as number;
+    const previous = data[1] as number;
+
+    if (previous === 0) return 0;
+
+    const percentageChange = ((current - previous) / previous) * 100;
+    return Math.round(percentageChange * 10) / 10;
+  }
+
+  isProfitIncreased(): boolean {
+    const data = this.comparisonChartData?.datasets?.[0]?.data;
+    if (!data || data.length < 2) return false;
+
+    return data[0] > data[1];
   }
 }
