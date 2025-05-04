@@ -23,8 +23,7 @@ import { SalesComponent } from './pages/sales/sales.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 
-
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
   declarations: [
