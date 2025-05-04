@@ -9,6 +9,8 @@ namespace Backend.Services
         private readonly IMongoCollection<Sale> _salesCollection;
         private readonly IMongoCollection<Order> _ordersCollection;
         private readonly IMongoCollection<Inventory> _inventoryCollection;
+        private readonly IMongoCollection<Expense> _expensesCollection;
+        private readonly IMongoCollection<Automation> _automationCollection;
 
         public MongoDBService(IOptions<MongoDBSettings> mongoDBSettings)
         {
@@ -18,6 +20,8 @@ namespace Backend.Services
             _salesCollection = mongoDatabase.GetCollection<Sale>("sales");
             _ordersCollection = mongoDatabase.GetCollection<Order>("orders");
             _inventoryCollection = mongoDatabase.GetCollection<Inventory>("inventory");
+             _expensesCollection = mongoDatabase.GetCollection<Expense>("expenses");
+             _automationCollection = mongoDatabase.GetCollection<Automation>("automation");
 
             // Create indexes for better query performance
 
@@ -44,7 +48,17 @@ namespace Backend.Services
 
             var categoryIndex = Builders<Inventory>.IndexKeys.Ascending(i => i.Category);
             _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(categoryIndex));
+        
+            var productIdIndexKeysDefinition = Builders<Inventory>.IndexKeys.Ascending(i => i.ProductId);
+            _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(productIdIndexKeysDefinition));
+            
+            var categoryIndexKeysDefinition = Builders<Inventory>.IndexKeys.Ascending(i => i.Category);
+            _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(categoryIndexKeysDefinition));
+        
+            var expenseDateIndexKeysDefinition = Builders<Expense>.IndexKeys.Ascending(e => e.Date);
+            _expensesCollection.Indexes.CreateOne(new CreateIndexModel<Expense>(expenseDateIndexKeysDefinition));
         }
+
 
         // Sales methods
         public async Task<List<Sale>> GetAllSalesAsync() =>
@@ -101,5 +115,42 @@ namespace Backend.Services
         {
             return _ordersCollection;
         }
+        // Expense methods
+        public async Task<List<Expense>> GetAllExpensesAsync() => 
+            await _expensesCollection.Find(_ => true).Sort(Builders<Expense>.Sort.Descending(e => e.Date)).Limit(10).ToListAsync();
+    
+        public async Task<Expense> GetExpenseByIdAsync(string id) => 
+            await _expensesCollection.Find(e => e.Id == id).FirstOrDefaultAsync();
+    
+        public async Task CreateExpenseAsync(Expense expense) => 
+            await _expensesCollection.InsertOneAsync(expense);
+    
+        public async Task UpdateExpenseAsync(string id, Expense expense) => 
+            await _expensesCollection.ReplaceOneAsync(e => e.Id == id, expense);
+    
+        public async Task DeleteExpenseAsync(string id) => 
+            await _expensesCollection.DeleteOneAsync(e => e.Id == id);
+
+            // Automation methods
+public async Task<List<Automation>> GetAllAutomationsAsync() =>
+    await _automationCollection.Find(_ => true).ToListAsync();
+
+public async Task<Automation?> GetAutomationByIdAsync(string id) =>
+    await _automationCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
+
+public async Task CreateAutomationAsync(Automation automation) =>
+    await _automationCollection.InsertOneAsync(automation);
+
+public async Task UpdateAutomationAsync(string id, Automation automation) =>
+    await _automationCollection.ReplaceOneAsync(a => a.Id == id, automation);
+
+public async Task DeleteAutomationAsync(string id) =>
+    await _automationCollection.DeleteOneAsync(a => a.Id == id);
+
+    public IMongoCollection<Automation> GetAutomationCollection()
+    {
+        return _automationCollection;
     }
 }
+}
+

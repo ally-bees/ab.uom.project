@@ -17,6 +17,7 @@ import { FinanceComponent } from './pages/finance/finance.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
+import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
 
@@ -53,6 +54,9 @@ export const routes: Routes = [
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path:'customerinsight',component:customerinsightComponent},
-  { path: '**', redirectTo: 'dashboard' } 
+  { path: '**', redirectTo: 'dashboard' },
+  {path: 'expense-form', component: ExpenseFormComponent},
+  {path: 'salesmainpage', component: SalesMainpageComponent}
+
 ];
 
