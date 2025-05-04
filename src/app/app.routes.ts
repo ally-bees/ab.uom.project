@@ -18,6 +18,7 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
+import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
 
 
 export const routes: Routes = [
@@ -31,7 +32,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
-      { path: 'order', component: OrderSummaryComponent }
+      { path: 'order', component: OrderSummaryComponent },
+      {path:'customerinsight',component:customerinsightComponent}
     ]
   },
   { path: 'order-summary', component: OrderSummaryComponent},
@@ -50,5 +52,7 @@ export const routes: Routes = [
   {path: 'schedule', component: ScheduleComponent},
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
-  { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
+  {path:'customerinsight',component:customerinsightComponent},
+  { path: '**', redirectTo: 'dashboard' } 
 ];
+

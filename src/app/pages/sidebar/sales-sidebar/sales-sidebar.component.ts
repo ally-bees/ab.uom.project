@@ -13,14 +13,9 @@ import { Router } from '@angular/router';
 export class SMSidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
-      { id: 'sales', label: 'Sales', icon: 'fa-chart-line', route: 'sales' },
-      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart', route: 'order-summary' },
-      { id: 'shipping', label: 'Shipping', icon: 'fa-truck', route: 'shipping' },
-      { id: 'inventry', label: 'Inventry', icon: 'fa-box', route: 'inventory' },
-      { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast', route: '/reports/courier' },
-      { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave', route: 'finance' },
-      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'customerinsight' },
-      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'analytics' }
+      { id: 'sales', label: 'Sales', icon: 'fa-chart-line', route: 'salesmanager/sales' },
+      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart', route: 'salesmanager/order' },
+      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'salesmanager/customerinsight' }
     ]}
   ];
   
