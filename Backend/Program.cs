@@ -22,6 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ExpenseService>();
+builder.Services.AddSingleton<AutomationService>();
 
 // Configure CORS for Angular frontend
 builder.Services.AddCors(options =>

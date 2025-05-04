@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AutomationService, Automation } from '../../services/automation.service';
 
 @Component({
   selector: 'app-schedule',
@@ -11,86 +12,133 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent implements OnInit {
-  currentStep: number = 1;
-  reportForm: FormGroup;
-  scheduleForm: FormGroup;
-  recipientForm: FormGroup;
-  daysOfMonth = Array.from({ length: 31 }, (_, i) => i + 1);
-  
-  activeAutomations = [
-    { id: 1, reportType: 'Sales Report', frequency: 'Daily', time: '09:00' },
-    { id: 2, reportType: 'Inventory Report', frequency: 'Daily', time: '08:00' }
-  ];
+  form: FormGroup;
+  activeAutomations: Automation[] = [];
+  editingAutomationId: number | null = null;
+  daysOfMonth: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
-  constructor(private fb: FormBuilder) {
-    this.reportForm = this.fb.group({
-      reportType: ['', Validators.required],
-      format: ['pdf']
-    });
-
-    this.scheduleForm = this.fb.group({
-      frequency: ['daily', Validators.required],
-      time: ['', Validators.required],
-      dayOfWeek: ['1'],
-      dayOfMonth: ['1']
-    });
-
-    this.recipientForm = this.fb.group({
-      emails: ['', [Validators.required, Validators.email]],
-      subject: ['', Validators.required],
-      message: [''],
-      notifyOnSuccess: [true],
-      notifyOnFailure: [true]
+  constructor(
+    private fb: FormBuilder,
+    private automationService: AutomationService
+  ) {
+    this.form = this.fb.group({
+      report: this.fb.group({
+        reportType: ['', Validators.required],
+        format: ['pdf', Validators.required]
+      }),
+      schedule: this.fb.group({
+        frequency: ['', Validators.required],
+        time: ['', Validators.required],
+        dayOfWeek: [''],
+        dayOfMonth: ['']
+      }),
+      recipient: this.fb.group({
+        emails: ['', [Validators.required, Validators.email]],
+        subject: ['', Validators.required],
+        message: [''],
+        notifyOnSuccess: [false],
+        notifyOnFailure: [false]
+      })
     });
   }
 
-  ngOnInit(): void {}
-
-  nextStep(): void {
-    if (this.currentStep < 3) {
-      this.currentStep++;
-    }
+  ngOnInit(): void {
+    this.loadAutomations();
   }
 
-  previousStep(): void {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
-  }
-
-  isFormsValid(): boolean {
-    switch(this.currentStep) {
-      case 1:
-        return this.reportForm.valid;
-      case 2:
-        return this.scheduleForm.valid;
-      case 3:
-        return this.recipientForm.valid;
-      default:
-        return false;
-    }
+  loadAutomations(): void {
+    this.automationService.getAutomations().subscribe(data => {
+      this.activeAutomations = data;
+    });
   }
 
   onSubmit(): void {
-    if (this.reportForm.valid && this.scheduleForm.valid && this.recipientForm.valid) {
-      // Add new automation
-      const newAutomation = {
-        id: this.activeAutomations.length + 1,
-        reportType: this.reportForm.get('reportType')?.value,
-        frequency: this.scheduleForm.get('frequency')?.value,
-        time: this.scheduleForm.get('time')?.value
+    if (this.form.valid) {
+      const formValue = this.form.value;
+
+      const automationData = {
+        ...formValue.report,
+        ...formValue.schedule,
+        ...formValue.recipient,
+        dayOfWeek: formValue.schedule.dayOfWeek || null,
+        dayOfMonth: formValue.schedule.dayOfMonth
+          ? parseInt(formValue.schedule.dayOfMonth, 10)
+          : null
       };
-      this.activeAutomations.push(newAutomation);
-      
-      // Reset forms
-      this.reportForm.reset();
-      this.scheduleForm.reset();
-      this.recipientForm.reset();
-      this.currentStep = 1;
+
+      const request$ = this.editingAutomationId !== null
+        ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
+        : this.automationService.addAutomation(automationData);
+
+      request$.subscribe({
+        next: () => {
+          this.loadAutomations();
+          this.resetForm();
+        },
+        error: err => {
+          console.error('Automation error:', err);
+        }
+      });
     }
   }
 
+  editAutomation(automation: Automation): void {
+    this.editingAutomationId = automation.id;
+
+    this.form.patchValue({
+      report: {
+        reportType: automation.reportType,
+        format: automation.format
+      },
+      schedule: {
+        frequency: automation.frequency,
+        time: automation.time,
+        dayOfWeek: automation.dayOfWeek || '',
+        dayOfMonth: automation.dayOfMonth?.toString() || ''
+      },
+      recipient: {
+        emails: automation.emails,
+        subject: automation.subject,
+        message: automation.message,
+        notifyOnSuccess: automation.notifyOnSuccess,
+        notifyOnFailure: automation.notifyOnFailure
+      }
+    });
+  }
+
   deleteAutomation(id: number): void {
-    this.activeAutomations = this.activeAutomations.filter(a => a.id !== id);
+    this.automationService.deleteAutomation(id).subscribe(() => {
+      this.loadAutomations();
+      if (this.editingAutomationId === id) {
+        this.resetForm();
+      }
+    });
+  }
+
+  resetForm(): void {
+    this.form.reset({
+      report: {
+        reportType: '',
+        format: 'pdf'
+      },
+      schedule: {
+        frequency: '',
+        time: '',
+        dayOfWeek: '',
+        dayOfMonth: ''
+      },
+      recipient: {
+        emails: '',
+        subject: '',
+        message: '',
+        notifyOnSuccess: false,
+        notifyOnFailure: false
+      }
+    });
+    this.editingAutomationId = null;
+  }
+
+  cancel(): void {
+    this.resetForm();
   }
 }
