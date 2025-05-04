@@ -5,7 +5,7 @@ import { TopSellingComponent } from '../../components/top-selling/top-selling.co
 import { SalesHeatmapComponent } from '../../components/sales-heatmap/sales-heatmap.component';
 import { MembersListComponent } from '../../components/members-list/members-list.component';
 import { StatsCard } from '../../models/stats.model';
-import { Product } from '../../models/product.model';
+// import { Product } from '../../models/product.model';
 import { Member } from '../../models/member.model';
 import { SalesData } from '../../models/sales-data.model';
 // import { NavbarComponent } from '../../navbar/navbar.component';
@@ -44,16 +44,16 @@ export class SalesDashboardComponent  {
     }
   ];
 
-  topSellingProducts: Product[] = [
-    { name: 'iPhone', value: 100 },
-    { name: 'HP Intel 7', value: 85 },
-    { name: 'ChromeBook', value: 70 },
-    { name: 'Mac Book', value: 65 },
-    { name: 'Asus ZenBook', value: 55 },
-    { name: 'Alemania', value: 45 },
-    { name: 'MSI', value: 35 },
-    { name: 'Acer', value: 25 }
-  ];
+  // topSellingProducts: Product[] = [
+  //   { name: 'iPhone', value: 100 },
+  //   { name: 'HP Intel 7', value: 85 },
+  //   { name: 'ChromeBook', value: 70 },
+  //   { name: 'Mac Book', value: 65 },
+  //   { name: 'Asus ZenBook', value: 55 },
+  //   { name: 'Alemania', value: 45 },
+  //   { name: 'MSI', value: 35 },
+  //   { name: 'Acer', value: 25 }
+  // ];
 
   salesData: SalesData = {
     totalContributions: 263,

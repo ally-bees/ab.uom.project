@@ -1,6 +1,8 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
+
 namespace Backend.Models
 {
     [BsonIgnoreExtraElements]
@@ -8,27 +10,19 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        [BsonElement("sale_id")]
-        public string SaleId { get; set; }
+        [BsonElement("sales_id")] 
+        public string SaleId { get; set; } = string.Empty;
 
-        [BsonElement("vendor_id")]
-        public string VendorId { get; set; }
+        [BsonElement("orderIds")]
+        public List<string> OrderIds { get; set; } = new();
 
-        [BsonElement("product_id")]
-        public List<string> ProductIds { get; set; }
+        [BsonElement("saledate")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        public DateTime SaleDate { get; set; }
 
-        [BsonElement("date")]
-        public string Date { get; set; }
-
-        [BsonElement("total_sales")]
-        public double TotalSales { get; set; }
-
-        [BsonElement("total_orders_count")]
-        public int TotalOrdersCount { get; set; }
-
-        [BsonElement("total_items_sold")]
-        public int TotalItemsSold { get; set; }
+        [BsonElement("amount")]
+        public double Amount { get; set; }
     }
 }

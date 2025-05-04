@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../models/product.model';
+import { product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./top-selling.component.css']
 })
 export class TopSellingComponent {
-  @Input() products: Product[] = [];
+  @Input() products: product[] = [];
 
  
   getBarWidth(value: number): number {

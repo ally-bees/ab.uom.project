@@ -23,9 +23,6 @@ import { SalesComponent } from './pages/sales/sales.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 
-import { ModuleRegistry } from '@ag-grid-community/core';
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
-
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
