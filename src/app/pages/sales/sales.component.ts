@@ -8,6 +8,7 @@ import { SalesService } from '../../services/sales.service';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 
+// Sale interface for AG Grid and internal processing
 interface Sale {
   saleId: string;
   salesDate: string;
@@ -26,9 +27,13 @@ interface Sale {
   styleUrls: ['./sales.component.css'],
 })
 export class SalesComponent implements OnInit {
+  // Full data from backend
   rowData: Sale[] = [];
+
+  // Filtered data used in charts and table
   filteredData: Sale[] = [];
 
+  // Column definitions for AG Grid
   columnDefs: ColDef<Sale>[] = [
     { field: 'saleId', headerName: 'Sale ID', sortable: true },
     { field: 'salesDate', headerName: 'Sales Date', sortable: true },
@@ -44,24 +49,31 @@ export class SalesComponent implements OnInit {
     flex: 1,
   };
 
+  // AG Grid instance reference
   gridOptions: GridOptions<Sale> = {};
   private gridApi!: GridApi<Sale>;
 
+  // State variables for filters and dialog
   showPrintDialog = false;
   fromDate: string = '';
   toDate: string = '';
   searchQuery: string = '';
 
+  // ---------------- Chart Data Definitions ---------------- //
+
+  // Pie chart for sales by product
   productChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [],
     datasets: [{ data: [] }],
   };
 
+  // Pie chart for sales by category
   categoryChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [],
     datasets: [{ data: [] }],
   };
 
+  // Donut chart comparing current vs previous period sales totals
   comparisonChartData: ChartData<'doughnut', number[], string | string[]> = {
     labels: ['Current Period', 'Previous Period'],
     datasets: [{
@@ -71,6 +83,20 @@ export class SalesComponent implements OnInit {
     }]
   };
 
+  // Line chart of daily sales amount
+  dailySalesChartData: ChartData<'line', number[], string> = {
+    labels: [],
+    datasets: [{
+      data: [],
+      label: 'Sales Amount',
+      borderColor: '#3e95cd',
+      backgroundColor: '#7bb6dd',
+      fill: false,
+      tension: 0.1
+    }]
+  };
+
+  // Common chart options for pie
   pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
     plugins: {
@@ -78,6 +104,7 @@ export class SalesComponent implements OnInit {
     },
   };
 
+  // Donut chart options with tooltip customization
   donutChartOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     plugins: {
@@ -101,10 +128,39 @@ export class SalesComponent implements OnInit {
     }
   };
 
-  activeChart: 'product' | 'category' = 'product';
+  // Line chart Y-axis scaling and tooltip formatting
+  dailySalesChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return `$${context.raw}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: false,
+        ticks: {
+          callback: (value) => {
+            return '$' + value;
+          }
+        }
+      }
+    }
+  };
+
+  // Track which pie chart is visible in slideshow
+  activeChart: 'product' | 'category' = 'category';
 
   constructor(private salesService: SalesService) {}
 
+  // Initialize with last 30 days by default
   ngOnInit(): void {
     const today = new Date();
     const from = new Date();
@@ -116,6 +172,7 @@ export class SalesComponent implements OnInit {
     this.loadSalesData();
   }
 
+  // Fetch dashboard data and transform it to flat Sale[] structure
   loadSalesData(): void {
     this.salesService.getDashboardData().subscribe({
       next: (data: SalesViewModel) => {
@@ -147,30 +204,33 @@ export class SalesComponent implements OnInit {
         });
 
         this.rowData = transformedData;
-        this.applyFilters();
+        this.applyFilters(); // triggers chart/table updates
       },
       error: (err) => console.error('Error fetching sales data:', err),
     });
   }
+
+  // Update donut chart comparing current vs previous period total sales
   updateComparisonChart(): void {
     if (!this.fromDate || !this.toDate) return;
-  
+
     const from = new Date(this.fromDate);
     const to = new Date(this.toDate);
-  
-    // Calculate duration in days
+
+    // Determine length of selected period
     const rangeDuration = Math.floor((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-  
-    // Previous date range
+
+    // Calculate previous period date range
     const previousTo = new Date(from);
     previousTo.setDate(previousTo.getDate() - 1);
-  
+
     const previousFrom = new Date(previousTo);
     previousFrom.setDate(previousFrom.getDate() - (rangeDuration - 1));
-  
+
     let currentTotal = 0;
     let previousTotal = 0;
-  
+
+    // Sum sales for current and previous date ranges
     this.rowData.forEach((sale) => {
       const saleDate = new Date(sale.salesDate);
       if (saleDate >= from && saleDate <= to) {
@@ -179,19 +239,18 @@ export class SalesComponent implements OnInit {
         previousTotal += sale.price;
       }
     });
-  
+
+    // Update chart data
     this.comparisonChartData = {
-      labels: [
-        'Current Period',
-        'Previous Period'
-      ],
+      labels: ['Current Period', 'Previous Period'],
       datasets: [{
         data: [currentTotal, previousTotal],
         backgroundColor: ['#4CAF50', '#F44336'],
         borderWidth: 1
       }]
     };
-  
+
+    // Update tooltip and title
     this.donutChartOptions = {
       ...this.donutChartOptions,
       plugins: {
@@ -222,11 +281,70 @@ export class SalesComponent implements OnInit {
     };
   }
 
+  // Update daily line chart of sales per day
+  updateDailySalesChart(): void {
+    if (!this.fromDate || !this.toDate) return;
+
+    const from = new Date(this.fromDate);
+    const to = new Date(this.toDate);
+
+    const dateMap: { [date: string]: number } = {};
+
+    // Initialize every day with 0
+    const currentDate = new Date(from);
+    while (currentDate <= to) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      dateMap[dateStr] = 0;
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Sum by date
+    this.filteredData.forEach(sale => {
+      const saleDate = sale.salesDate;
+      if (dateMap.hasOwnProperty(saleDate)) {
+        dateMap[saleDate] += sale.price;
+      }
+    });
+
+    // Convert to MM/DD format
+    const formatDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+    };
+
+    // Update chart
+    this.dailySalesChartData = {
+      labels: Object.keys(dateMap).map(formatDate),
+      datasets: [{
+        ...this.dailySalesChartData.datasets[0],
+        data: Object.values(dateMap)
+      }]
+    };
+
+    // Set Y axis bounds
+    const maxValue = Math.max(...Object.values(dateMap));
+    const minValue = Math.min(...Object.values(dateMap));
+    const padding = (maxValue - minValue) * 0.1;
+
+    this.dailySalesChartOptions = {
+      ...this.dailySalesChartOptions,
+      scales: {
+        y: {
+          ...this.dailySalesChartOptions.scales?.['y'],
+          min: Math.max(0, minValue - padding),
+          max: maxValue + padding
+        }
+      }
+    };
+  }
+
+  // Save AG Grid instance
   onGridReady(params: GridReadyEvent<Sale>): void {
     this.gridApi = params.api;
     params.api.sizeColumnsToFit();
   }
 
+  // Toggle print report modal
   openPrintReport(): void {
     this.showPrintDialog = true;
   }
@@ -240,6 +358,7 @@ export class SalesComponent implements OnInit {
     this.showPrintDialog = false;
   }
 
+  // Apply both date and search filters
   applyFilters(): void {
     this.filteredData = this.rowData.filter((sale) => {
       const saleDate = sale.salesDate;
@@ -249,8 +368,10 @@ export class SalesComponent implements OnInit {
       return matchesDate && matchesSearch;
     });
 
+    // Update all charts after filtering
     this.updatePieCharts();
     this.updateComparisonChart();
+    this.updateDailySalesChart();
   }
 
   onSearchChange(event: Event): void {
@@ -262,6 +383,7 @@ export class SalesComponent implements OnInit {
     this.applyFilters();
   }
 
+  // Generate pie chart data for product and category
   updatePieCharts(): void {
     const productMap: { [name: string]: number } = {};
     const categoryMap: { [category: string]: number } = {};
@@ -282,12 +404,11 @@ export class SalesComponent implements OnInit {
     };
   }
 
+  // Get % increase/decrease between current and previous period
   calculateMonthlyProfitPercentage(): number {
     const data = this.comparisonChartData?.datasets?.[0]?.data;
 
-    if (!data || data.length < 2) {
-      return 0;
-    }
+    if (!data || data.length < 2) return 0;
 
     const current = data[0] as number;
     const previous = data[1] as number;
@@ -298,6 +419,7 @@ export class SalesComponent implements OnInit {
     return Math.round(percentageChange * 10) / 10;
   }
 
+  // Check if profit increased
   isProfitIncreased(): boolean {
     const data = this.comparisonChartData?.datasets?.[0]?.data;
     if (!data || data.length < 2) return false;

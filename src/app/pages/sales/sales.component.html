@@ -1,7 +1,7 @@
 <div class="sales-container">
   <div class="sales-card">
     <div class="card-header">
-      <h2>Sales Report</h2>
+      <h3>Sales Summary</h3>
     </div>
 
     <div class="card-body">
@@ -15,9 +15,7 @@
             (input)="onSearchChange($event)"
             placeholder="Search Product Name"
           />
-          <button class="search-btn">
-            <i class="fa fa-search"></i>
-          </button>
+          
         </div>
 
         <div class="date-filter">
@@ -42,13 +40,20 @@
           </div>
         </div>
 
-        <div class="print-section">
-          <button class="print-btn" (click)="openPrintReport()">
-            <i class="fa fa-print"></i> Print Report
-          </button>
-        </div>
+        
       </div>
 
+            <!-- Add this after the search-filters div and before the charts-container div -->
+      <div class="daily-sales-chart">
+        <div class="chart-box">
+          <canvas
+            baseChart
+            [data]="dailySalesChartData"
+            [options]="dailySalesChartOptions"
+            [type]="'line'"
+          ></canvas>
+        </div>
+      </div>
       <!-- Charts Container -->
       <div class="charts-container">
         <!-- Left Side - Pie Charts -->
@@ -96,7 +101,7 @@
         <!-- Right Side - Comparison Donut Chart -->
         <div class="comparison-chart-container">
           <div class="chart-box">
-            <h3>Monthly Sales Comparison</h3>
+            <h4>Monthly Sales Comparison</h4>
             <canvas
               baseChart
               [data]="comparisonChartData"
@@ -118,7 +123,9 @@
       </div>
 
       <!-- AG Grid Table -->
+      <div class="table-box">
       <div class="sales-table">
+        <h4>Sortable Sales Overview</h4>
         <ag-grid-angular
           style="width: 100%; height: 600px;"
           class="ag-theme-alpine"
@@ -130,12 +137,19 @@
         >
         </ag-grid-angular>
       </div>
+      </div>
+
+      <div class="print-section">
+        <button class="print-btn" (click)="openPrintReport()">
+          <i class="fa fa-print"></i> Print Report
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Print Dialog Modal -->
-<div *ngIf="showPrintDialog" class="print-overlay">
+<!-- <div *ngIf="showPrintDialog" class="print-overlay">
   <div class="print-dialog">
     <div class="print-dialog-header">
       <h2>Print Sales Report</h2>
@@ -154,4 +168,4 @@
       <button class="print-action-btn" (click)="printReport()">Print</button>
     </div>
   </div>
-</div>
+</div> -->
