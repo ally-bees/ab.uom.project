@@ -15,17 +15,16 @@
         <div class="date-filter">
           <div class="date-group">
             <span>From :</span>
-            <input type="date" [(ngModel)]="fromDate" (change)="filterOrders()" />
+            <input type="date" [(ngModel)]="fromDate" (change)="applyDateFilter()" />
           </div>
           <div class="date-group">
             <span>To :</span>
-            <input type="date" [(ngModel)]="toDate" (change)="filterOrders()" />
+            <input type="date" [(ngModel)]="toDate" (change)="applyDateFilter()" />
           </div>
         </div>
       </div>
 
       <div class="stats-chart-wrapper">
-        <!-- Order Counts Section (Left) -->
         <div class="order-stats">
           <div class="stat-item">
             <span class="label">Total Orders</span>
@@ -40,8 +39,7 @@
             <span class="value">: {{ completedOrders }}</span>
           </div>
         </div>
-      
-        <!-- Pie Chart Section (Right) -->
+
         <div class="chart-container">
           <div class="chart-placeholder">
             <canvas id="orderStatusPieChart" width="400" height="400"></canvas>
@@ -56,13 +54,13 @@
               <span>Completed Orders</span>
             </div>
             <div class="legend-item">
-              <span class="color-box blue"></span> <!-- Updated to reflect new color -->
+              <span class="color-box blue"></span>
               <span>New Orders</span>
             </div>
           </div>
         </div>
       </div>
-      
+    </div>
   </div>
 
   <!-- Recent Order Details Card with ag-Grid -->
@@ -75,8 +73,7 @@
         <ag-grid-angular
           style="width: 100%; height: 400px;"
           class="ag-theme-alpine"
-          [rowData]="filteredRowData" 
-          [rowData]="rowData"
+          [rowData]="filteredRowData.length ? filteredRowData : rowData"
           [columnDefs]="columnDefs"
           [defaultColDef]="defaultColDef"
           [gridOptions]="gridOptions"
@@ -92,5 +89,5 @@
     </div>
   </div>
 
-
-<app-footer></app-footer>
+  <app-footer></app-footer>
+</div>
