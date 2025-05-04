@@ -13,6 +13,8 @@ import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketi
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
 import { SalesComponent } from './pages/sales/sales.component';
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
+import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
+import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
 
 // Material Modules
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,6 +27,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
 // AG Grid
 import { AgGridModule } from 'ag-grid-angular';
+import { NgChartsModule } from 'ng2-charts';
 
 // ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -50,9 +53,12 @@ import { AgGridModule } from 'ag-grid-angular';
     MatDividerModule,
     ShippingDashboardComponent,
     CourierDashboardComponent,
+    BusinessMainpageComponent,
     HttpClientModule,
     AgGridModule,
-    ExpenseFormComponent
+    ExpenseFormComponent,
+    BusinessDashComponent,
+    NgChartsModule
   ],
   providers: [
     DatePipe
