@@ -15,7 +15,7 @@ namespace Backend.Models
         [BsonElement("order_id")]
         public string OrderId { get; set; }
 
-        [BsonElement("customer_id")]
+        [BsonElement("customerId")]
         public string CustomerId { get; set; }
 
         [BsonElement("product_id")]
