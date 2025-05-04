@@ -199,8 +199,4 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     this.showPrintDialog = false;
   }
 
-  printReport(): void {
-    window.print();
-    this.showPrintDialog = false;
-  }
 }
