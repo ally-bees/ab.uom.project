@@ -27,7 +27,7 @@ namespace Backend.Models
         [BsonElement("total_amount")]
         public double TotalAmount { get; set; }
 
-        [BsonElement("order_date")]
+        [BsonElement("orderDate")]
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime OrderDate { get; set; }
 

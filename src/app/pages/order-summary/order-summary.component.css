@@ -86,29 +86,27 @@
   border-radius: 4px;
 }
 
-/* Order stats and chart */
-.order-stats-container {
+/* Order stats and chart - Flex container */
+.stats-chart-wrapper {
   display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 2rem;
   flex-wrap: wrap;
-  gap: 20px;
 }
 
 .order-stats {
-  min-width: 200px;
+  min-width: 250px;
   flex-grow: 1;
 }
 
 .stat-item {
-  margin-bottom: 15px;
-}
-
-.label {
-  font-weight: bold;
-  color: #555;
+  margin-bottom: 1rem;
+  font-size: 16px;
 }
 
 .chart-container {
-  flex-grow: 2;
+  flex: 1;
   min-width: 300px;
   display: flex;
   flex-direction: column;
@@ -145,16 +143,16 @@
   border-radius: 3px;
 }
 
-.yellow {
-  background-color: #FFC107; /* Match with badge-pending */
+.color-box.yellow {
+  background-color: #f9c74f; /* Yellow for pending */
 }
 
-.green {
-  background-color: #4CAF50; /* Match with badge-completed */
+.color-box.green {
+  background-color: #90be6d; /* Green for completed */
 }
 
-.red {
-  background-color: #F44336; /* Match with badge-rejected */
+.color-box.blue {
+  background-color: #577590; /* Blue for new */
 }
 
 /* AG Grid styles */
@@ -383,20 +381,15 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .order-stats-container {
+  .stats-chart-wrapper {
     flex-direction: column;
   }
-  
+
   .chart-container {
     width: 100%;
   }
-  
+
   .date-filter {
     flex-direction: column;
   }
-}
-canvas {
-  display: block;
-  margin: auto;
-  max-width: 100%;
 }
