@@ -1,41 +1,69 @@
-using Backend.Models;
-using Backend.Models.DTOs;
 using MongoDB.Driver;
+using Backend.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Backend.Services
 {
     public class OrderService
-{
-    private readonly IMongoCollection<Order> _orders;
-
-    public OrderService(MongoDBService mongoDBService)
     {
-        _orders = mongoDBService.GetOrdersCollection();
-    }
+        private readonly IMongoCollection<Order> _ordersCollection;
 
-   public async Task<List<StatusCountDto>> GetOrderCountsByStatusesAsync(List<string> statuses)
-{
-    // Case-insensitive filter for statuses
-    var filter = Builders<Order>.Filter.In(o => o.Status, statuses.Select(s => s.ToLower()));  // Ensure we convert the list of statuses to lowercase
-
-    // Perform the query
-    var orders = await _orders.Find(filter).ToListAsync();
-
-    // Log the number of orders found (optional)
-    Console.WriteLine($"Found {orders.Count} orders with statuses {string.Join(", ", statuses)}");
-
-    // Group orders by status and count the occurrences
-    var grouped = orders
-        .GroupBy(o => o.Status.ToLower())  
-        .Select(g => new StatusCountDto
+        public OrderService(IMongoDatabase database)
         {
-            Status = g.Key,  // Status from grouping (already in lowercase)
-            Count = g.Count()
-        })
-        .ToList();
+            _ordersCollection = database.GetCollection<Order>("orders");
+        }
 
-    return grouped;
-}
+        // Get all orders
+        public async Task<List<Order>> GetAllOrdersAsync()
+        {
+            return await _ordersCollection.Find(order => true).ToListAsync();
+        }
 
-}
+        // Get an order by OrderId
+        public async Task<Order> GetOrderByOrderIdAsync(string orderId)
+        {
+            return await _ordersCollection
+                .Find(order => order.OrderId == orderId)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<Dictionary<string, int>> GetOrderCountsByStatusesAsync(List<string> statuses)
+        {
+            var filter = Builders<Order>.Filter.In(o => o.Status, statuses);
+
+            var group = await _ordersCollection
+                .Aggregate()
+                .Match(filter)
+                .Group(
+                    o => o.Status,
+                    g => new { Status = g.Key, Count = g.Count() }
+                )
+                .ToListAsync();
+
+            return group.ToDictionary(x => x.Status, x => x.Count);
+        }
+
+
+        // Create a new order
+        public async Task CreateOrderAsync(Order newOrder)
+        {
+            await _ordersCollection.InsertOneAsync(newOrder);
+        }
+
+        // Update an existing order
+        public async Task UpdateOrderAsync(string orderId, Order updatedOrder)
+        {
+            await _ordersCollection.ReplaceOneAsync(
+                order => order.OrderId == orderId,
+                updatedOrder
+            );
+        }
+
+        // Delete an order by OrderId
+        public async Task DeleteOrderAsync(string orderId)
+        {
+            await _ordersCollection.DeleteOneAsync(order => order.OrderId == orderId);
+        }
+    }
 }

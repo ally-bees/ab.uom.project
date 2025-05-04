@@ -3,7 +3,7 @@
         <div class="product-list">
           <div class="product-item" *ngFor="let product of products; let i = index">
             <div class="product-bar-container">
-              <div class="product-bar" [style.width.%]="getBarWidth(product.value)" [ngStyle]="{'background': getBarColor(i)}">
+              <div class="product-bar" [style.width.%]="getBarWidth(product.stockQuantity)" [ngStyle]="{'background': getBarColor(i)}">
                 <span class="product-name">{{ product.name }}</span>
               </div>
             </div>
