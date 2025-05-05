@@ -48,7 +48,7 @@ namespace Backend.Controllers
                     Price = d.Price
                 }),
                 TotalAmount = dto.TotalAmount,
-                OrderDate = dto.OrderDate,
+               OrderDate = dto.OrderDate ?? DateTime.Now,
                 Status = dto.Status
             };
 
@@ -75,7 +75,7 @@ namespace Backend.Controllers
                     Price = d.Price
                 }),
                 TotalAmount = dto.TotalAmount,
-                OrderDate = dto.OrderDate,
+                OrderDate = dto.OrderDate ?? DateTime.Now,
                 Status = dto.Status
             };
 

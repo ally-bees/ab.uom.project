@@ -91,28 +91,32 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   }
 
   private loadOrderStatusSummary(): void {
-    this.http.get<OrderStatus[]>(this.STATUS_API).subscribe({
+    this.http.get<{ [key: string]: number }>(this.STATUS_API).subscribe({
       next: (data) => {
-        this.orderStatusData = data;
-        this.pendingOrders = 0;
-        this.completedOrders = 0;
-
-        data.forEach(status => {
-          const normalized = status.status.toLowerCase();
-          if (normalized === 'pending') {
-            this.pendingOrders = status.count;
-          } else if (normalized === 'completed') {
-            this.completedOrders = status.count;
-          }
-        });
-
-        this.totalOrders = this.pendingOrders + this.completedOrders;
-        this.createPieChart(data);
+        if (!data || typeof data !== 'object') {
+          console.error('Invalid order status format:', data);
+          return;
+        }
+  
+        this.pendingOrders = data['pending'] || 0;
+        this.completedOrders = data['completed'] || 0;
+        const newOrders = data['new'] || 0;
+        this.totalOrders = this.pendingOrders + this.completedOrders + newOrders;
+  
+        // Convert to array format for chart
+        const statusArray: OrderStatus[] = Object.entries(data).map(([status, count]) => ({
+          status,
+          count,
+        }));
+  
+        this.orderStatusData = statusArray;
+        this.createPieChart(statusArray);
       },
       error: (err) => console.error('Order status fetch error:', err),
     });
   }
-
+  
+  
   applyDateFilter(): void {
     if (this.fromDate && this.toDate) {
       const from = new Date(this.fromDate);
