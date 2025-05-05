@@ -20,6 +20,8 @@ import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
+import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
+import { inventorySidebarComponent } from './pages/sidebar/inventory-sidebar/inventory-sidebar.component';
 
 
 export const routes: Routes = [
@@ -37,9 +39,18 @@ export const routes: Routes = [
       {path:'customerinsight',component:customerinsightComponent}
     ]
   },
+  {
+    path: 'inventoryManager',
+    component: InventoryMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
+      { path: 'inventoryDashboard', component: InventoryDashboardComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'order', component: OrderSummaryComponent }
+    ]
+  },
+  { path: 'inventorySidebarComponent', component: inventorySidebarComponent},
   { path: 'order-summary', component: OrderSummaryComponent},
-  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
-  { path: 'inventory', component: InventoryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
@@ -56,7 +67,6 @@ export const routes: Routes = [
   {path:'customerinsight',component:customerinsightComponent},
   { path: '**', redirectTo: 'dashboard' },
   {path: 'expense-form', component: ExpenseFormComponent},
-  {path: 'salesmainpage', component: SalesMainpageComponent}
 
 ];
 
