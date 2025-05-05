@@ -69,26 +69,28 @@
     
     .dropdown-content a:hover {background-color: #ddd;border-radius: 20px;}
     
+    .dropdown-content a:active {background-color: #05BBC9;border-radius: 20px;}
+
     .dropdown:hover .dropdown-content {display: block;}
     
     .dropdown:hover .dropbtn {background-color: #05BBC9;color: #DBE5F0;}
   
-    .cards{
-      margin-top: 20px;
-      display: flex;
+    .cards {
+      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 280px); /* Display 3 cards per row */
+      max-height: none; /* Ensure the container is not limited in height */
     }
-  
-    .stats-card{
-  
+    
+    .stats-card {
+      width: 280px;
       margin: 5px;
-      background: white;
-      border-radius: 12px;
-      padding:  10px 10px 10px 10px;
-      align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      width: 250px;
-      display: block;
-  }
+      padding: 1rem;
+      background-color: #f3f3f3;
+      border-radius: 8px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+    
     .stats-card:hover { 
       height: 150;
       border-radius: 10px;

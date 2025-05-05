@@ -12,7 +12,7 @@ namespace auditpagebackend.Collection
         public string? Id { get; set; }
 
         [BsonElement("date")]
-        public DateTime? Date { get; set; }
+        public string?  Date { get; set; }
 
         [BsonElement("audit_id")]
         public string? AuditId { get; set; }

@@ -1,4 +1,10 @@
-
+.contents{
+    display: flex;
+    padding-left: 20px;
+}
+.past{
+    padding: 20px;
+}
 .past h2{
     font-weight: 400;
     color: #000000;
@@ -7,10 +13,10 @@
 .detail{
     margin-top: 10px;
     width: 368;
-height: 223;
-top: 564px;
-left: 1023px;
-background: white;
+    height: 223;
+    top: 564px;
+    left: 1023px;
+    background: white;
     border-radius: 12px;
     padding:  1px 10px 10px 10px;
     align-items: center;

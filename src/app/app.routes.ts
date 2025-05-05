@@ -14,13 +14,12 @@ export const routes: Routes = [
   { path: 'order-summary', component: OrderSummaryComponent},
   { path: 'inventory', component: InventoryDashboardComponent },
    {path: 'printreport', component:PrintReportComponent},
-   {path: 'auditdashboard', component:AuditdashboardComponent},
-   {path: 'audit', component:AuditpageComponent},
    { 
     path: 'auditpage', 
     component: AuditorpageComponent, // The parent container
     children: [
-      { path: '', component: AuditdashboardComponent }
+      { path: '', component: AuditdashboardComponent },
+      {path: 'audit', component:AuditpageComponent}
     ]
    },
   { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
