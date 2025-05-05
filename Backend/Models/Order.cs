@@ -24,6 +24,9 @@ namespace Backend.Models
         [BsonElement("quantity")]
         public List<int> Quantities { get; set; }
 
+        [BsonElement("orderDetails")]
+        public List<OrderDetail> OrderDetails { get; set; }
+
         [BsonElement("total_amount")]
         public double TotalAmount { get; set; }
 
