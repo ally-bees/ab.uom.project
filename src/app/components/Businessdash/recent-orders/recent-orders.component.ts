@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -16,12 +16,12 @@ interface Order {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './recent-orders.component.html',
-  styleUrls: ['./recent-orders.component.scss']
+  styleUrls: ['./recent-orders.component.scss'],
+  providers: [DatePipe]
 })
 export class RecentOrdersComponent implements OnInit {
   recentOrders: Order[] = [];
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.fetchOrders();
@@ -31,7 +31,10 @@ export class RecentOrdersComponent implements OnInit {
     this.http.get<Order[]>('http://localhost:5241/api/orders')
       .subscribe({
         next: (orders) => {
-          this.recentOrders = orders.slice(0, 5);
+          this.recentOrders = orders.slice(0, 5).map(order => ({
+            ...order,
+            orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
+          }));
         },
         error: (err) => {
           console.error('Error fetching orders:', err);

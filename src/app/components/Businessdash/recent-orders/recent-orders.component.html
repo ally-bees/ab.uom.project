@@ -21,7 +21,7 @@
             <td>{{ order.orderId }}</td>
             <td>{{ order.customerId }}</td>
             <td>{{ order.orderDate }}</td>
-            <td>${{ order.totalAmount }}</td>
+            <td>Rs.{{ order.totalAmount }}</td>
             <td [ngClass]="order.status.toLowerCase()">{{ order.status }}</td>
           </tr>
         </tbody>
