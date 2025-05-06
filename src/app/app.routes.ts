@@ -20,13 +20,13 @@ import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
+import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
+import { inventorySidebarComponent } from './pages/sidebar/inventory-sidebar/inventory-sidebar.component';
 import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 
 
+
 export const routes: Routes = [
-  { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-//   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-  {path: 'sales', component: SalesComponent},
   {
     path: 'salesmanager',
     component: SalesMainpageComponent,
@@ -35,7 +35,17 @@ export const routes: Routes = [
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {path:'customerinsight',component:customerinsightComponent}
+      { path:'customerinsight',component:customerinsightComponent}
+    ]
+  },
+  {
+    path: 'inventoryManager',
+    component: InventoryMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
+      { path: 'inventoryDashboard', component: InventoryDashboardComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'order', component: OrderSummaryComponent }
     ]
   },
   {
@@ -56,8 +66,6 @@ export const routes: Routes = [
     ]
   },
   { path: 'order-summary', component: OrderSummaryComponent},
-  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
-  { path: 'inventory', component: InventoryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},

@@ -1,81 +1,111 @@
-// src/app/pages/inventory/inventory.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface StockAlert {
-  orderId: string;
-  date: string;
-  quantity: number;
-  alertAmount: number;
-  status: 'In Stock' | 'Low Stock' | 'Out of Stock';
-}
-
-interface BestSellingProduct {
-  productId: string;
-  status: 'In Stock' | 'Low Stock' | 'Out of Stock';
-}
+import { product } from '../../models/product.model';
+import { InventoryService } from '../../services/inventory.service';
+import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.css']
 })
-export class InventoryComponent implements OnInit {
-  // Date range filter
-  fromDate: string = '2024/12/05';
-  toDate: string = '2024/12/12';
- 
-  // Stock summary data
-  stockSummary = {
-    inStock: 500,
-    lowStock: 220,
-    outOfStock: 225
-  };
+export class InventoryComponent implements OnInit, AfterViewInit {
+  @ViewChild('stockChart') stockChartRef!: ElementRef<HTMLCanvasElement>;
+  stockChart!: Chart;
 
-  // Best selling products data
-  bestSellingProducts: BestSellingProduct[] = [
-    { productId: '00001A', status: 'Low Stock' },
-    { productId: '00002B', status: 'In Stock' },
-    { productId: '00003C', status: 'Out of Stock' },
-    { productId: '00004D', status: 'Low Stock' },
-    { productId: '00005E', status: 'In Stock' },
-    { productId: '00006E', status: 'Out of Stock' }
-  ];
- 
-  // Search functionality
+  products: product[] = [];
   searchTerm: string = '';
- 
-  constructor() { }
- 
+
+  inStockCount = 0;
+  lowStockCount = 0;
+  outOfStockCount = 0;
+
+  constructor(private inventoryService: InventoryService) {}
+
   ngOnInit(): void {
-    // Initialize the component with data
-    // In a real application, this would likely fetch data from a service
+    this.loadProducts();
   }
- 
-  // Method to filter best selling products based on search term
-  filterProducts(): BestSellingProduct[] {
-    if (!this.searchTerm) {
-      return this.bestSellingProducts;
+
+  ngAfterViewInit(): void {
+    this.initializeChart();
+  }
+
+  loadProducts(): void {
+    this.inventoryService.getAllProducts().subscribe({
+      next: (data: product[]) => {
+        this.products = data;
+        this.calculateStockCounts();
+      },
+      error: err => console.error('Error loading products:', err)
+    });
+  }
+
+  calculateStockCounts(): void {
+    this.inStockCount = this.products.filter(p => p.stockQuantity > 20).length;
+    this.lowStockCount = this.products.filter(p => p.stockQuantity > 0 && p.stockQuantity <= 20).length;
+    this.outOfStockCount = this.products.filter(p => p.stockQuantity === 0).length;
+
+    if (this.stockChart) {
+      this.stockChart.data.datasets[0].data = [
+        this.inStockCount,
+        this.lowStockCount,
+        this.outOfStockCount
+      ];
+      this.stockChart.update();
     }
-   
-    return this.bestSellingProducts.filter(product =>
-      product.productId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      product.status.toLowerCase().includes(this.searchTerm.toLowerCase())
+  }
+
+  getStockStatus(product: product): string {
+    if (product.stockQuantity === 0) return 'Out of stock';
+    if (product.stockQuantity <= 20) return 'Low Stock';
+    return 'In Stock';
+  }
+
+  getStockStatusClass(product: product): string {
+    if (product.stockQuantity === 0) return 'out-of-stock';
+    if (product.stockQuantity <= 20) return 'low-stock';
+    return 'in-stock';
+  }
+
+  filteredProducts(): product[] {
+    const term = this.searchTerm.toLowerCase();
+    if (!term) return this.products; // If no search term, return all products
+    return this.products.filter(product =>
+      product.name.toLowerCase().includes(term) ||
+      product.category.toLowerCase().includes(term)
     );
   }
- 
-  // Method to update date range
-  updateDateRange(): void {
-    // In a real application, this would trigger a data refresh based on the new date range
-    console.log('Date range updated:', this.fromDate, 'to', this.toDate);
-    // You would call a service to fetch new data here
-  }
 
-  // Method to print the report
-  printReport(): void {
-    window.print();
+  initializeChart(): void {
+    const ctx = this.stockChartRef.nativeElement.getContext('2d');
+    if (!ctx) {
+      console.error('Chart context not found');
+      return;
+    }
+
+    this.stockChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+        datasets: [{
+          data: [this.inStockCount, this.lowStockCount, this.outOfStockCount],
+          backgroundColor: ['#3366cc', '#ffd700', '#ff3333'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
   }
 }
