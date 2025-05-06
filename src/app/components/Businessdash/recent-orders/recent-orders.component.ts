@@ -1,13 +1,14 @@
-// recent-orders.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 interface Order {
-  id: string;
-  product: string;
-  date: string;
-  amount: number;
-  status: 'Delivered' | 'Canceled' | 'Pending' | 'Processing';
+  orderId: string;
+  customerId: string;
+  orderDate: string;
+  totalAmount: number;
+  status: string;
 }
 
 @Component({
@@ -18,26 +19,23 @@ interface Order {
   styleUrls: ['./recent-orders.component.scss']
 })
 export class RecentOrdersComponent implements OnInit {
-  recentOrders: Order[] = [
-    {
-      id: '#968659684',
-      product: 'Ipad pro 456gb',
-      date: 'Aug 30, 2023',
-      amount: 4345,
-      status: 'Delivered'
-    },
-    {
-      id: '#968659684',
-      product: 'Ipad pro mini 512gb',
-      date: 'Sep 01, 2023',
-      amount: 236,
-      status: 'Canceled'
-    }
-  ];
-  
-  constructor() { }
-  
+  recentOrders: Order[] = [];
+
+  constructor(private http: HttpClient) { }
+
   ngOnInit(): void {
-    // This will be populated from your API when ready
+    this.fetchOrders();
+  }
+
+  fetchOrders(): void {
+    this.http.get<Order[]>('http://localhost:5241/api/orders')
+      .subscribe({
+        next: (orders) => {
+          this.recentOrders = orders.slice(0, 5);
+        },
+        error: (err) => {
+          console.error('Error fetching orders:', err);
+        }
+      });
   }
 }

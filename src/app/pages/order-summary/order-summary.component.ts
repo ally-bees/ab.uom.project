@@ -25,7 +25,7 @@ interface OrderStatus {
 @Component({
   selector: 'app-order-summary',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgGridModule, FooterComponent],
+  imports: [CommonModule, FormsModule, AgGridModule],
   providers: [DatePipe],
   templateUrl: './order-summary.component.html',
   styleUrl: './order-summary.component.css',
