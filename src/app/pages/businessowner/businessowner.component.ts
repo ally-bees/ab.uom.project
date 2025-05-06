@@ -10,7 +10,7 @@ import { RecentOrdersComponent } from '../../components/Businessdash/recent-orde
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, BusinessStatsCardComponent, FinanceFlowComponent, SalesInsightComponent, RecentOrdersComponent],
+  imports: [ BusinessStatsCardComponent, FinanceFlowComponent, SalesInsightComponent, RecentOrdersComponent],
   templateUrl: './businessowner.component.html',
   styleUrls: ['./businessowner.component.scss']
 })
