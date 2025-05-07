@@ -52,6 +52,7 @@ export const routes: Routes = [
       { path: 'customerinsight', component: customerinsightComponent },
       { path: 'order', component: OrderSummaryComponent },
       { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+      { path: 'printreport', component: PrintReportComponent },
       // Add more pages for the business owner here
     ]
   },

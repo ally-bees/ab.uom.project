@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -58,8 +59,8 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
 
   private readonly ORDERS_API = 'http://localhost:5241/api/orders';
   private readonly STATUS_API = 'http://localhost:5241/api/orderstatus/summary';
+  constructor(private http: HttpClient, private datePipe: DatePipe, private router: Router) {}
 
-  constructor(private http: HttpClient, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -195,8 +196,9 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openPrintReport(): void {
-    this.showPrintDialog = true;
+  printReport(): void {
+    console.log('Print Report button clicked');
+    this.router.navigate(['/businessowner/printreport']);
   }
 
   closePrintDialog(): void {

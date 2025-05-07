@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -93,8 +94,7 @@ export class FinanceComponent implements OnInit, AfterViewInit {
       }
     }
   };
-
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.fromDate = this.formatDate(new Date(new Date().setMonth(new Date().getMonth() - 3)));
@@ -157,5 +157,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
 
   printReport(): void {
     console.log('Print Report button clicked');
+    this.router.navigate(['/businessowner/printreport']);
   }
 }
