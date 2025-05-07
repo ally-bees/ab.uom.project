@@ -61,5 +61,13 @@ namespace Backend.Controllers
             await _inventoryService.DeleteAsync(id);
             return NoContent();
         }
+        [HttpGet("bestselling")]
+        public async Task<IActionResult> GetBestSellingProducts([FromQuery] int limit = 10)
+        {
+            var topProducts = await _inventoryService.GetBestSellingProductsAsync(limit);
+            return Ok(topProducts);
+        }
+
+
     }
 }
