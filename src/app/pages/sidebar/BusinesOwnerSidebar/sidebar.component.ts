@@ -38,11 +38,16 @@ export class BOSidebarComponent {
       this.router.navigate([route]);
     }
   }
+
+  goToDashboard(): void {
+    this.activeMenuItem = 'dashboard';
+    this.router.navigate(['businessowner/businessownerdashboard']);
+  }  
   
   scheduleReport(): void {
     // Logic for schedule report
     console.log('Schedule report clicked');
-    this.router.navigate(['bussinessowner/schedule']);
+    this.router.navigate(['businessowner/schedule']);
   }
   
   pendingRequest(): void {
