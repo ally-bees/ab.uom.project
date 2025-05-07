@@ -62,15 +62,15 @@ canvas {
 }
 
 .in-stock-color {
-  background-color: #3366cc;
+  background-color: #559bfe;
 }
 
 .low-stock-color {
-  background-color: #ffd700;
+  background-color: #fee767;
 }
 
 .out-of-stock-color {
-  background-color: #ff3333;
+  background-color: #ff5967;
 }
 
 /* Right Side Cards */
@@ -197,4 +197,33 @@ canvas {
 /* Optional: mimic row selection */
 .product-list tr.selected {
   background-color: rgba(0, 188, 212, 0.2);
+}
+/* Pill-style stock status */
+.stock-status {
+  width: 120px;
+  padding: 5px 0;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  cursor: default;
+  border: none;
+  margin: 0 auto; 
+}
+
+/* Color styles */
+.in-stock {
+  background-color: #94baff;
+  color: #002d74;
+}
+
+.low-stock {
+  background-color: #fff59b;
+  color: rgb(197, 145, 0);
+}
+
+.out-of-stock {
+  background-color: #ffa3ab;
+  color: rgb(116, 0, 0);
 }

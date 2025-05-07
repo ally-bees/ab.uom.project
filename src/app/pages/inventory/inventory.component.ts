@@ -95,7 +95,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
         labels: ['In Stock', 'Low Stock', 'Out of Stock'],
         datasets: [{
           data: [this.inStockCount, this.lowStockCount, this.outOfStockCount],
-          backgroundColor: ['#3366cc', '#ffd700', '#ff3333'],
+          backgroundColor: ['#559bfe', '#fee767', '#ff5967'],
           borderWidth: 1
         }]
       },

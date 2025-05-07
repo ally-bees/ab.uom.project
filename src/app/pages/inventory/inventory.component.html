@@ -79,8 +79,10 @@
               <td>{{ product.category }}</td>
               <td>{{ product.price | currency }}</td>
               <td>{{ product.stockQuantity }}</td>
-              <td [ngClass]="getStockStatusClass(product)">
-                {{ getStockStatus(product) }}
+              <td>
+                <span [ngClass]="['stock-status', getStockStatusClass(product)]">
+                  {{ getStockStatus(product) }}
+                </span>
               </td>
             </tr>
           </tbody>
