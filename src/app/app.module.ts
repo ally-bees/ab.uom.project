@@ -22,14 +22,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import { SalesComponent } from './pages/sales/sales.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
+import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
 
 // ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
   declarations: [
-    MarketingDashboardComponent,
+    MarketingDashboardComponent
   ],
   imports: [
+    SalesHeatmapComponent,
     BrowserModule,
     SalesComponent,
     BrowserAnimationsModule,

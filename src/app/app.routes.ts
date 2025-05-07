@@ -20,6 +20,7 @@ import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
+import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
 
 
 export const routes: Routes = [
@@ -56,7 +57,8 @@ export const routes: Routes = [
   {path:'customerinsight',component:customerinsightComponent},
   { path: '**', redirectTo: 'dashboard' },
   {path: 'expense-form', component: ExpenseFormComponent},
-  {path: 'salesmainpage', component: SalesMainpageComponent}
+  {path: 'salesmainpage', component: SalesMainpageComponent},
+  {path: 'sales-heatmap', component: SalesHeatmapComponent},
 
 ];
 

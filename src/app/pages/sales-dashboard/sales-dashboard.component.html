@@ -1,9 +1,7 @@
+<!--
 <div class="dashboard-page">
-    <!-- Include Navbar -->
-    <!-- <app-navbar></app-navbar> -->
   <div class="dashboard-container">
     <div class="dashboard-grid">
-      <!-- Stats Cards Row -->
       <div class="stats-row">
         <app-stats-card 
           *ngFor="let card of statsCards" 
@@ -11,14 +9,11 @@
         </app-stats-card>
       </div>
       
-      <!-- Main Content Row -->
       <div class="main-content">
-        <!-- Top Selling Products Column -->
         <div class="products-column">
-          <app-top-selling ></app-top-selling>
+          <app-top-selling></app-top-selling>
         </div>
         
-        <!-- Sales Heatmap Column -->
         <div class="sales-column">
           <app-sales-heatmap 
             [salesData]="salesData"
@@ -28,7 +23,6 @@
           </app-sales-heatmap>
         </div>
         
-        <!-- Members Column -->
         <div class="members-column">
           <app-members-list 
             [members]="members">
@@ -39,3 +33,4 @@
   </div>
 </div>
 <app-footer></app-footer>
+-->

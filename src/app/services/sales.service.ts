@@ -28,6 +28,11 @@ export class SalesService {
     return this.http.get<Sale[]>(`${this.apiUrl}/Sales/daterange?startDate=${startDate}&endDate=${endDate}`);
   }
 
+  getSalesByYear(year: number): Observable<Sale[]> {
+    // Assuming you have an API endpoint to fetch sales for a specific year.
+    return this.http.get<Sale[]>(`${this.apiUrl}/Sales/year/${year}`);
+  }
+
   getSalesSummary(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/Sales/summary`);
   }
