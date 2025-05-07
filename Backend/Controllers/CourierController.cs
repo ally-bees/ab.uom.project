@@ -1,98 +1,70 @@
-using CourierSystem.Models;
-using CourierSystem.Services;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Backend.Models;
+using Backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CourierSystem.Controllers
+namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DeliveriesController : ControllerBase
+    public class CourierController : ControllerBase
     {
-        private readonly DeliveryService _deliveryService;
+        private readonly CourierService _courierService;
 
-        public DeliveriesController(DeliveryService deliveryService)
+        public CourierController(CourierService courierService)
         {
-            _deliveryService = deliveryService;
+            _courierService = courierService;
         }
 
         [HttpGet]
-        public async Task<List<Delivery>> Get() =>
-            await _deliveryService.GetAsync();
-
-        [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<Delivery>> Get(string id)
+        public async Task<ActionResult<List<Courier>>> GetAll()
         {
-            var delivery = await _deliveryService.GetAsync(id);
-
-            if (delivery is null)
-            {
-                return NotFound();
-            }
-
-            return delivery;
+            return await _courierService.GetAllAsync();
         }
 
-        [HttpGet("byDeliveryId/{deliveryId}")]
-        public async Task<ActionResult<Delivery>> GetByDeliveryId(string deliveryId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Courier>> GetById(string id)
         {
-            var delivery = await _deliveryService.GetByDeliveryIdAsync(deliveryId);
-
-            if (delivery is null)
+            var courier = await _courierService.GetByIdAsync(id);
+            if (courier == null)
             {
                 return NotFound();
             }
-
-            return delivery;
+            return courier;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Delivery newDelivery)
+        public async Task<IActionResult> Create(Courier courier)
         {
-            await _deliveryService.CreateAsync(newDelivery);
-
-            return CreatedAtAction(nameof(Get), new { id = newDelivery.Id }, newDelivery);
+            await _courierService.CreateAsync(courier);
+            return CreatedAtAction(nameof(GetById), new { id = courier.Id }, courier);
         }
 
-        [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, Delivery updatedDelivery)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, Courier updatedCourier)
         {
-            var delivery = await _deliveryService.GetAsync(id);
-
-            if (delivery is null)
+            var courier = await _courierService.GetByIdAsync(id);
+            if (courier == null)
             {
                 return NotFound();
             }
 
-            updatedDelivery.Id = delivery.Id;
-            updatedDelivery.UpdatedAt = DateTime.Now;
-
-            await _deliveryService.UpdateAsync(id, updatedDelivery);
-
+            await _courierService.UpdateAsync(id, updatedCourier);
             return NoContent();
         }
 
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var delivery = await _deliveryService.GetAsync(id);
-
-            if (delivery is null)
+            var courier = await _courierService.GetByIdAsync(id);
+            if (courier == null)
             {
                 return NotFound();
             }
 
-            await _deliveryService.RemoveAsync(id);
-
+            await _courierService.DeleteAsync(id);
             return NoContent();
-        }
-
-        [HttpGet("summary")]
-        public async Task<ActionResult<DeliverySummary>> GetSummary([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            return await _deliveryService.GetDeliverySummaryAsync(startDate, endDate);
         }
     }
 }

@@ -59,3 +59,5 @@ Thumbs.db
 /Backend/*.mdf
 /Backend/*.ldf
 /Backend/appsettings.Development.json
+
+.fake
