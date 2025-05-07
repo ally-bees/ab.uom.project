@@ -1,6 +1,5 @@
 .top-selling-container {
     max-width: 600px;
-    margin: 40px auto;
     padding: 24px;
     border-radius: 12px;
     background-color: #ffffff;
@@ -10,8 +9,9 @@
   }
   
   h4 {
-    color: #333;
-    margin-bottom: 24px;
+      font-size: 28px;
+      font-weight: 700;
+      color: #222;
   }
   
   label {
