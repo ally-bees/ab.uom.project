@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface Order {
   orderId: string;
@@ -21,11 +22,16 @@ interface Order {
 })
 export class RecentOrdersComponent implements OnInit {
   recentOrders: Order[] = [];
-  constructor(private http: HttpClient, private datePipe: DatePipe) { }
+  constructor(private http: HttpClient, private datePipe: DatePipe, private router: Router) { }
+
+  goToOrderSummary(): void {
+    this.router.navigate(['businessowner/order']);
+  }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
+
 
   fetchOrders(): void {
     this.http.get<Order[]>('http://localhost:5241/api/orders')
