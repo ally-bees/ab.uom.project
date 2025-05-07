@@ -24,6 +24,7 @@ import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.
 import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
 import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
+import { StatsCardComponent } from './components/stats-card/stats-card.component';
 
 export const routes: Routes = [
   {
@@ -65,6 +66,7 @@ export const routes: Routes = [
       // Add more pages for the business owner here
     ]
   },
+  { path: 'salesdashboard', component: SalesDashboardComponent },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
@@ -80,11 +82,14 @@ export const routes: Routes = [
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path:'customerinsight',component:customerinsightComponent},
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'salesdashboard' },
   {path: 'expense-form', component: ExpenseFormComponent},
   {path: 'salesmainpage', component: SalesMainpageComponent},
   {path: 'sales-heatmap', component: SalesHeatmapComponent},
   {path: 'top-selling', component: TopSellingComponent},
+  {path: 'stats', component: StatsCardComponent},
+   
+
   {path: 'expense-form', component: ExpenseFormComponent}
 ];
 

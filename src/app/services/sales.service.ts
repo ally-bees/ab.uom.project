@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Sale, SalesViewModel } from '../models/sale.model';
+import { Sale, SalesViewModel, SalesSummary } from '../models/sale.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SalesService {
   private apiUrl = 'http://localhost:5241/api';
+  private apiUrl2 = 'https://localhost:5241/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -19,22 +20,20 @@ export class SalesService {
   getSaleById(id: string): Observable<Sale> {
     return this.http.get<Sale>(`${this.apiUrl}/Sales/${id}`);
   }
-
-  getSalesByVendorId(vendorId: string): Observable<Sale[]> {
-    return this.http.get<Sale[]>(`${this.apiUrl}/Sales/vendor/${vendorId}`);
+  
+  getSalesSummary(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Sales/summary`);
   }
 
-  getSalesByDateRange(startDate: string, endDate: string): Observable<Sale[]> {
-    return this.http.get<Sale[]>(`${this.apiUrl}/Sales/daterange?startDate=${startDate}&endDate=${endDate}`);
+  getSalesSummarybyDate(startDate: string, endDate: string): Observable<SalesSummary> {
+    return this.http.get<SalesSummary>(`${this.apiUrl}/Sales/summary?startDate=${startDate}&endDate=${endDate}`);
   }
+
+ 
 
   getSalesByYear(year: number): Observable<Sale[]> {
     // Assuming you have an API endpoint to fetch sales for a specific year.
     return this.http.get<Sale[]>(`${this.apiUrl}/Sales/year/${year}`);
-  }
-
-  getSalesSummary(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/Sales/summary`);
   }
 
   createSale(sale: Sale): Observable<Sale> {
@@ -48,13 +47,12 @@ export class SalesService {
   deleteSale(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/Sales/${id}`);
   }
-
+  getSalesVeiwData(): Observable<SalesViewModel> {
+    return this.http.get<SalesViewModel>('/`${this.apiUrl2}/SalesDashboard/date-range'); 
+  }
   // Dashboard endpoints
   getDashboardData(): Observable<SalesViewModel> {
     return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard`);
   }
 
-  getDashboardDataByVendor(vendorId: string): Observable<SalesViewModel> {
-    return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard/vendor/${vendorId}`);
-  }
 }
