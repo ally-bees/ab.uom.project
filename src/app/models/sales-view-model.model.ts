@@ -1,13 +1,6 @@
 import { Order } from './order.model';
+import { Sale } from './sale.model';
 import { product } from './product.model';
-
-export interface Sale {
-  id?: string;
-  saleId: string;
-  orderIds: string[];
-  saleDate: string;
-  amount: number;
-}
 
 export interface SalesViewModel {
   sales: Sale[];
@@ -16,9 +9,4 @@ export interface SalesViewModel {
   totalRevenue: number;
   totalItems: number;
   totalOrders: number;
-}
-
-export interface SalesSummary {
-  currentTotal: number;
-  previousTotal: number;
 }

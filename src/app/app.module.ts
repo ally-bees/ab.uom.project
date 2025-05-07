@@ -15,6 +15,7 @@ import { SalesComponent } from './pages/sales/sales.component';
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
+import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
 
 // Material Modules
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -33,9 +34,10 @@ import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
-    MarketingDashboardComponent,
+    MarketingDashboardComponent
   ],
   imports: [
+    SalesHeatmapComponent,
     BrowserModule,
     SalesComponent,
     BrowserAnimationsModule,

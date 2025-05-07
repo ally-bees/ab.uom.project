@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { StatsCard } from '../../models/stats.model';
+import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { SalesViewModel } from '../../models/sales-view-model.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,6 +10,46 @@ import { CommonModule } from '@angular/common';
   templateUrl: './stats-card.component.html',
   styleUrls: ['./stats-card.component.css']
 })
-export class StatsCardComponent {
-  @Input() stats!: StatsCard;
+export class StatsCardComponent implements OnInit {
+  @Input() startDate?: string;
+  @Input() endDate?: string;
+
+  salesData!: SalesViewModel;
+  loading = true;
+  error = false;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    // If startDate and endDate are not provided, use default (last 30 days)
+    if (!this.startDate || !this.endDate) {
+      const today = new Date();
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(today.getDate() - 30);
+
+      this.endDate = today.toISOString().split('T')[0];
+      this.startDate = thirtyDaysAgo.toISOString().split('T')[0];
+    }
+
+    this.fetchSalesData();
+  }
+
+  fetchSalesData(): void {
+    const params = new HttpParams()
+      .set('startDate', this.startDate!)
+      .set('endDate', this.endDate!);
+
+    this.http.get<SalesViewModel>('http://localhost:5241/api/SalesDashboard/date-range', { params })
+      .subscribe({
+        next: (data) => {
+          this.salesData = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching sales data:', err);
+          this.error = true;
+          this.loading = false;
+        }
+      });
+  }
 }

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Order } from '../models/order.model';
+import { SalesViewModel } from '../models/sales-view-model.model'; 
+import { map } from 'rxjs/operators';
+import { Order } from '../models/order.model'; 
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +11,19 @@ import { Order } from '../models/order.model';
 export class OrdersService {
   private apiUrl = 'https://localhost:7143/api/Orders';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
+  // Fetch Sales View Model
+  getSalesViewModel(startDate: string, endDate: string): Observable<SalesViewModel> {
+    return this.http.get<SalesViewModel>(`${this.apiUrl}/Sales/summary?startDate=${startDate}&endDate=${endDate}`).pipe(
+      map(salesViewModel => {
+        // Optional processing if needed
+        return salesViewModel;
+      })
+    );
+  }
+
+  // Other existing methods
   getAllOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(this.apiUrl);
   }
