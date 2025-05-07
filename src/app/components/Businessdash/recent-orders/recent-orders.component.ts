@@ -31,7 +31,10 @@ export class RecentOrdersComponent implements OnInit {
     this.http.get<Order[]>('http://localhost:5241/api/orders')
       .subscribe({
         next: (orders) => {
-          this.recentOrders = orders.slice(0, 5).map(order => ({
+          this.recentOrders = orders
+          .sort((a, b) => b.orderId.localeCompare(a.orderId))  // Compare by orderId in descending order
+          .slice(0, 5)  // Get the latest 5 orders
+          .map(order => ({
             ...order,
             orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
           }));
