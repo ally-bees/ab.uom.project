@@ -1,10 +1,17 @@
-import { Component } from '@angular/core';
+import { HeaderComponent } from "../header/header.component";
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Chart, ChartConfiguration } from 'chart.js';
+import { CouriersidebarComponent } from "../sidebar/couriersidebar/couriersidebar.component";
+import { FooterComponent } from "../../footer/footer.component";
+
 
 
 @Component({
+  standalone:true,
   selector: 'app-courier',
   templateUrl: './courier-dashboard.component.html',
-  styleUrls: ['./courier-dashboard.component.css']
+  styleUrls: ['./courier-dashboard.component.css'],
+  imports: [HeaderComponent, CouriersidebarComponent, FooterComponent]
 })
 export class CourierDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('deliveryPieChart') deliveryPieChartRef!: ElementRef;

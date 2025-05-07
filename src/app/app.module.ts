@@ -23,7 +23,6 @@ import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
-    MarketingDashboardComponent,
   ],
   imports: [
     BrowserModule,

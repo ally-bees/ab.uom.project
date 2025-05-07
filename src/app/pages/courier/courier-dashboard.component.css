@@ -199,13 +199,21 @@ td {
   border-top: 1px solid #f0f0f0;
 }
 
-tbody tr {
+/*tbody tr {
   background-color: #e0f7fa;
 }
 
 tbody tr:nth-child(even) {
   background-color: #b2ebf2;
 }
+
+
+tbody td:nth-child(even),
+thead th:nth-child(even) {
+  background-color: #b2ebf2;
+}
+
+
 
 .status {
   font-size: 12px;
@@ -292,3 +300,5 @@ tbody tr:nth-child(even) {
     overflow-x: auto;
   }
 }
+
+
