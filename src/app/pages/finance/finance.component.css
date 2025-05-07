@@ -117,12 +117,14 @@
       font-weight: 500;
       color: #333;
     }
-  }
+  
   
   .chart-container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;
+    position: relative;
+    height: 200px;
+    width: 100%;
+  }
+  
     
     .pie-chart {
       flex: 1;
@@ -144,7 +146,6 @@
         font-size: 14px;
         color: #666;
       }
-      
       .color-box {
         width: 16px;
         height: 16px;
@@ -155,6 +156,23 @@
         &.green { background-color: #34a853; }
       }
     }
+  }
+  .legend-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .color-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
   }
   
   .table-container {

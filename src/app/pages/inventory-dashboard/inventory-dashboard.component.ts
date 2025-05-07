@@ -1,15 +1,8 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface StockAlert {
-  orderId: string;
-  date: string;
-  quantity: number;
-  alertAmount: number;
-  status: 'In Stock' | 'Low Stock' | 'Out of Stock';
-}
+import { product } from '../../models/product.model';
+import { InventoryService } from '../../services/inventory.service';
 
 @Component({
   selector: 'app-inventory-dashboard',
@@ -19,53 +12,64 @@ interface StockAlert {
   styleUrls: ['./inventory-dashboard.component.css']
 })
 export class InventoryDashboardComponent implements OnInit {
-  // Date range filter
-  fromDate: string = '2024/12/05';
-  toDate: string = '2024/12/12';
-  
-  // Stock summary data
-  stockSummary = {
-    inStock: 500,
-    lowStock: 220,
-    outOfStock: 225
-  };
-  
-  // Stock alerts table data
-  stockAlerts: StockAlert[] = [
-    { orderId: '1233', date: '2024-05-21', quantity: 255, alertAmount: 8, status: 'Low Stock' },
-    { orderId: '1234', date: '2024-05-21', quantity: 11, alertAmount: 5, status: 'In Stock' },
-    { orderId: '1255', date: '2024-05-21', quantity: 22, alertAmount: 5, status: 'Out of Stock' },
-    { orderId: '1233', date: '2024-05-21', quantity: 255, alertAmount: 8, status: 'Low Stock' },
-    { orderId: '1234', date: '2024-05-21', quantity: 11, alertAmount: 5, status: 'In Stock' },
-    { orderId: '1255', date: '2024-05-21', quantity: 22, alertAmount: 5, status: 'Out of Stock' }
-  ];
-  
-  // Search functionality
+  products: product[] = [];
+  bestSellingProducts: product[] = [];
   searchTerm: string = '';
-  
-  constructor() { }
-  
+
+  inStockCount = 0;
+  lowStockCount = 0;
+  outOfStockCount = 0;
+
+  constructor(private inventoryService: InventoryService) {}
+
   ngOnInit(): void {
-    // Initialize the component with data
-    // In a real application, this would likely fetch data from a service
+    this.loadProducts();
   }
-  
-  // Method to filter stock alerts based on search term
-  filterStockAlerts(): StockAlert[] {
-    if (!this.searchTerm) {
-      return this.stockAlerts;
-    }
-    
-    return this.stockAlerts.filter(alert => 
-      alert.orderId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      alert.status.toLowerCase().includes(this.searchTerm.toLowerCase())
+
+  loadProducts(): void {
+    this.inventoryService.getAllProducts().subscribe({
+      next: (data: product[]) => {
+        this.products = data;
+        this.calculateStockCounts();
+        this.loadBestSellingProducts();
+      },
+      error: err => console.error('Error loading products:', err)
+    });
+  }
+
+  calculateStockCounts(): void {
+    this.inStockCount = this.products.filter(p => p.stockQuantity > 20).length;
+    this.lowStockCount = this.products.filter(p => p.stockQuantity > 0 && p.stockQuantity <= 20).length;
+    this.outOfStockCount = this.products.filter(p => p.stockQuantity === 0).length;
+  }
+
+  getStockStatusClass(product: product): string {
+    if (product.stockQuantity === 0) return 'stock-status out-of-stock';
+    if (product.stockQuantity <= 20) return 'stock-status low-stock';
+    return 'stock-status in-stock';
+  }
+
+  getStockStatusText(product: product): string {
+    if (product.stockQuantity === 0) return 'Out of Stock';
+    if (product.stockQuantity <= 20) return 'Low Stock';
+    return 'In Stock';
+  }
+
+  filteredProducts(): product[] {
+    const term = this.searchTerm.toLowerCase();
+    const filtered = this.products.filter(p =>
+      p.stockQuantity <= 20 && p.name.toLowerCase().includes(term)
     );
+    return [
+      ...filtered.filter(p => p.stockQuantity === 0),
+      ...filtered.filter(p => p.stockQuantity > 0 && p.stockQuantity <= 20)
+    ];
   }
-  
-  // Method to update date range
-  updateDateRange(): void {
-    // In a real application, this would trigger a data refresh based on the new date range
-    console.log('Date range updated:', this.fromDate, 'to', this.toDate);
-    // You would call a service to fetch new data here
+
+  loadBestSellingProducts(): void {
+    // Assume best 10 are determined by stock reduction logic (e.g., lowest stock among popular ones)
+    this.bestSellingProducts = [...this.products]
+      .sort((a, b) => a.stockQuantity - b.stockQuantity)
+      .slice(0, 10);
   }
 }

@@ -88,48 +88,77 @@
 }
 
 .sidebar-footer {
-  padding: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 8px;
   border-top: 1px solid #eee;
-  
+
+  .dashboard-btn {
+    background-color: #ffffff;
+    color: #00bcd4;
+    border: 1px solid #00bcd4;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease-in-out;
+
+    i {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: #00bcd4;
+      color: #ffffff;
+    }
+  }
+
   .sidebar-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 500;
-    
+
     i {
       margin-right: 10px;
     }
-    
+
     &.schedule-btn {
       background-color: #00b8d4;
       color: white;
-      
+
       &:hover {
-        background-color: darken(#00b8d4, 5%);
+        background-color: #555;
       }
     }
-    
+
     &.pending-btn {
-      background-color: #f0f0f0;
-      color: #555;
-      
+      background-color: #00b8d4;
+      color: white;
+
       &:hover {
-        background-color: darken(#f0f0f0, 5%);
+        background-color: #555;
       }
     }
-    
+
     &.logout-btn {
       background-color: transparent;
       color: #555;
       justify-content: center;
-      
+
       &:hover {
         background-color: #f0f0f0;
       }

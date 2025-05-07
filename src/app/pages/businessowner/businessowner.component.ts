@@ -1,7 +1,7 @@
 // dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
-import { BOSidebarComponent } from '../sidebar/BussinesOwnerSidebar/sidebar.component';
+import { BOSidebarComponent } from '../sidebar/BusinesOwnerSidebar/sidebar.component';
 import { BusinessStatsCardComponent } from '../../components/Businessdash/BusinesStatsCard/statscard.component';
 import { FinanceFlowComponent } from '../../components/Businessdash/financeflow/financeflow.component';
 import { SalesInsightComponent } from '../../components/Businessdash/sales-insight/sales-insight.component';
@@ -10,7 +10,7 @@ import { RecentOrdersComponent } from '../../components/Businessdash/recent-orde
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, BOSidebarComponent, BusinessStatsCardComponent, FinanceFlowComponent, SalesInsightComponent, RecentOrdersComponent],
+  imports: [ BusinessStatsCardComponent, FinanceFlowComponent, SalesInsightComponent, RecentOrdersComponent],
   templateUrl: './businessowner.component.html',
   styleUrls: ['./businessowner.component.scss']
 })

@@ -21,12 +21,10 @@ import { ExpenseFormComponent } from './pages/expense-form/expense-form.componen
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
 import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
-
+import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
+import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-//   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-  {path: 'sales', component: SalesComponent},
   {
     path: 'salesmanager',
     component: SalesMainpageComponent,
@@ -35,12 +33,38 @@ export const routes: Routes = [
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {path:'customerinsight',component:customerinsightComponent}
+      { path:'customerinsight',component:customerinsightComponent}
+    ]
+  },
+  {
+    path: 'inventoryManager',
+    component: InventoryMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
+      { path: 'inventoryDashboard', component: InventoryDashboardComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'order', component: OrderSummaryComponent }
+    ]
+  },
+  {
+    path: 'businessowner',
+    component: BusinessMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'businessownerdashboard', pathMatch: 'full' },
+      { path: 'businessownerdashboard', component: BusinessDashComponent },
+      { path: 'finance', component: FinanceComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'schedule', component: ScheduleComponent },
+      { path: 'shipping', component: ShippingDashboardComponent },
+      { path : 'sales', component: SalesComponent },
+      { path: 'customerinsight', component: customerinsightComponent },
+      { path: 'order', component: OrderSummaryComponent },
+      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+      { path: 'printreport', component: PrintReportComponent },
+      // Add more pages for the business owner here
     ]
   },
   { path: 'order-summary', component: OrderSummaryComponent},
-  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
-  { path: 'inventory', component: InventoryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
@@ -59,6 +83,6 @@ export const routes: Routes = [
   {path: 'expense-form', component: ExpenseFormComponent},
   {path: 'salesmainpage', component: SalesMainpageComponent},
   {path: 'sales-heatmap', component: SalesHeatmapComponent},
-
+  {path: 'expense-form', component: ExpenseFormComponent}
 ];
 

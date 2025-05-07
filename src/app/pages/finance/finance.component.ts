@@ -1,6 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ChartConfiguration, ChartType } from 'chart.js';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Invoice {
   id: string;
@@ -9,151 +14,149 @@ interface Invoice {
   shipmentDate: Date;
   city: string;
   status: string;
+  amount: number;
 }
 
 @Component({
   selector: 'app-finance',
   standalone: true,
-  imports: [ FormsModule, CommonModule ],
+  imports: [FormsModule, CommonModule, HttpClientModule, NgChartsModule],
   templateUrl: './finance.component.html',
   styleUrls: ['./finance.component.scss']
 })
 export class FinanceComponent implements OnInit, AfterViewInit {
-  @ViewChild('pieChartContainer') pieChartContainer!: ElementRef;
 
-  // Date filters
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+
   fromDate: string | undefined;
   toDate: string | undefined;
-  searchTerm: string = '';
-  
-  // Financial data
-  totalProfit: number = 500000;
-  totalRevenue: number = 700000;
-  totalExpenses: number = 200000;
-  onHoldAmount: number = 50000;
-  
-  // Dummy data for invoices
-  invoices: Invoice[] = [
-    {
-      id: 'INV001',
-      date: new Date('2024-03-15'),
-      orderDate: new Date('2024-03-12'),
-      shipmentDate: new Date('2024-03-20'),
-      city: 'Mumbai',
-      status: 'New'
-    },
-    {
-      id: 'INV002',
-      date: new Date('2024-04-25'),
-      orderDate: new Date('2024-04-20'),
-      shipmentDate: new Date('2024-05-01'),
-      city: 'Chennai',
-      status: 'Pending'
-    },
-    {
-      id: 'INV003',
-      date: new Date('2024-05-08'),
-      orderDate: new Date('2024-05-03'),
-      shipmentDate: new Date('2024-05-12'),
-      city: 'Bangalore',
-      status: 'Completed'
-    },
-    {
-      id: 'INV004',
-      date: new Date('2024-06-10'),
-      orderDate: new Date('2024-06-05'),
-      shipmentDate: new Date('2024-06-15'),
-      city: 'Kolkata',
-      status: 'Completed'
-    },
-    {
-      id: 'INV005',
-      date: new Date('2024-06-18'),
-      orderDate: new Date('2024-06-12'),
-      shipmentDate: new Date('2024-06-22'),
-      city: 'Delhi',
-      status: 'Cancelled'
-    },
-    {
-      id: 'INV006',
-      date: new Date('2024-07-05'),
-      orderDate: new Date('2024-07-01'),
-      shipmentDate: new Date('2024-07-10'),
-      city: 'Hyderabad',
-      status: 'Completed'
-    }
-  ];
-filteredInvoices: any;
 
-  constructor() { }
+  lineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Income',
+        borderColor: '#007bff',
+        backgroundColor: '#007bff',
+        pointRadius: 4,
+        borderWidth: 1.5,
+        tension: 0.5,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#007bff'
+      },
+      {
+        data: [],
+        label: 'Expenses',
+        borderColor: '#00b894',
+        backgroundColor: '#00b894',
+        pointRadius: 4,
+        borderWidth: 1.5,
+        tension: 0.5,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#00b894'
+      }
+    ]
+  };
+
+  lineChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    elements: {
+      line: {
+        tension: 0.5
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          title: () => '',
+          label: (tooltipItem) => {
+            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        beginAtZero: false,
+        grid: {
+          display: false
+        }
+      }
+    }
+  };
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
-    // Initialize date filters
-    const today = new Date();
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(today.getMonth() - 3);
-    
-    this.fromDate = this.formatDate(threeMonthsAgo);
-    this.toDate = this.formatDate(today);
-    
-    // Load initial data
-    this.loadFinanceData();
+    this.fromDate = this.formatDate(new Date(new Date().setMonth(new Date().getMonth() - 3)));
+    this.toDate = this.formatDate(new Date());
+    this.fetchFinanceData();
   }
 
   ngAfterViewInit(): void {
-    // Initialize charts after view is ready
+    // Ensure chart is updated after view is initialized
     setTimeout(() => {
-      this.initializePieChart();
-    }, 100);
+      this.chart?.update();
+    }, 0);
   }
 
-  loadFinanceData(): void {
-    // Here you would fetch data from your services
-    // Example:
-    // this.dataService.getFinancialSummary(this.fromDate, this.toDate).subscribe(data => {
-    //   this.totalProfit = data.totalProfit;
-    //   this.totalRevenue = data.totalRevenue;
-    //   this.totalExpenses = data.totalExpenses;
-    //   this.onHoldAmount = data.onHoldAmount;
-    //   this.renderPieChart();
-    // });
-    
-    // this.dataService.getInvoices(this.fromDate, this.toDate).subscribe(data => {
-    //   this.invoices = data;
-    // });
-  }
-
-  initializePieChart(): void {
-    // Initialize your pie chart here using chart library of your choice
-    // Example placeholder - replace with your actual chart implementation:
-    console.log('Rendering pie chart in', this.pieChartContainer.nativeElement);
-    
-    // Example with chart.js or any other library:
-    // const ctx = this.pieChartContainer.nativeElement;
-    // const data = {
-    //   datasets: [{
-    //     data: [this.onHoldAmount, this.totalProfit, this.totalExpenses],
-    //     backgroundColor: ['#fbbc05', '#ea4335', '#34a853']
-    //   }],
-    //   labels: ['On Hold Amount', 'Net Income', 'Total Expenses']
-    // };
-    // const chart = new Chart(ctx, {
-    //   type: 'pie',
-    //   data: data,
-    //   options: {...}
-    // });
-  }
-
-  printReport(): void {
-    // Implement report printing functionality
-    console.log('Printing finance report...');
-    window.print();
-  }
-
-  private formatDate(date: Date): string {
+  formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  fetchFinanceData(): void {
+    this.http.get<Invoice[]>('http://localhost:5241/api/finance').subscribe(data => {
+      const monthMap = new Map<string, { income: number, expenses: number }>();
+
+      data.forEach(entry => {
+        const date = new Date(entry.orderDate);
+        if (isNaN(date.getTime())) return;
+
+        const key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
+        if (!monthMap.has(key)) {
+          monthMap.set(key, { income: 0, expenses: 0 });
+        }
+
+        const current = monthMap.get(key)!;
+        if (entry.status?.toLowerCase() === 'income') {
+          current.income += entry.amount;
+        } else if (entry.status?.toLowerCase() === 'expense') {
+          current.expenses += entry.amount;
+        }
+      });
+
+      const sortedKeys = Array.from(monthMap.keys()).sort();
+
+      this.lineChartData.labels = sortedKeys.map(key => {
+        const [year, month] = key.split('-').map(Number);
+        return new Date(year, month - 1).toLocaleString('default', { month: 'short', year: 'numeric' });
+      });
+
+      this.lineChartData.datasets[0].data = sortedKeys.map(key => monthMap.get(key)!.income);
+      this.lineChartData.datasets[1].data = sortedKeys.map(key => monthMap.get(key)!.expenses);
+
+      this.cdr.detectChanges();   // Ensure chart view updates
+      this.chart?.update();       // Force redraw
+    }, error => {
+      console.error('Error fetching finance data:', error);
+    });
+  }
+
+  printReport(): void {
+    console.log('Print Report button clicked');
+    this.router.navigate(['/businessowner/printreport']);
   }
 }
