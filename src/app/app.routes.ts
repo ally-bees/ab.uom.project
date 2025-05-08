@@ -35,7 +35,8 @@ export const routes: Routes = [
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      { path:'customerinsight',component:customerinsightComponent}
+      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'printreport', component: PrintReportComponent },
     ]
   },
   {

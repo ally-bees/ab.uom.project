@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
@@ -158,7 +159,10 @@ export class SalesComponent implements OnInit {
   // Track which pie chart is visible in slideshow
   activeChart: 'product' | 'category' = 'category';
 
-  constructor(private salesService: SalesService) {}
+  constructor(
+    private salesService: SalesService,
+    private router: Router
+  ) {}
 
   // Initialize with last 30 days by default
   ngOnInit(): void {
@@ -344,20 +348,6 @@ export class SalesComponent implements OnInit {
     params.api.sizeColumnsToFit();
   }
 
-  // Toggle print report modal
-  openPrintReport(): void {
-    this.showPrintDialog = true;
-  }
-
-  closePrintDialog(): void {
-    this.showPrintDialog = false;
-  }
-
-  printReport(): void {
-    window.print();
-    this.showPrintDialog = false;
-  }
-
   // Apply both date and search filters
   applyFilters(): void {
     this.filteredData = this.rowData.filter((sale) => {
@@ -425,5 +415,14 @@ export class SalesComponent implements OnInit {
     if (!data || data.length < 2) return false;
 
     return data[0] > data[1];
+  }
+
+  printReport(): void {
+    console.log('Print Report button clicked');
+    this.router.navigate(['/salesmanager/printreport']);
+  }
+
+  closePrintDialog(): void {
+    this.showPrintDialog = false;
   }
 }

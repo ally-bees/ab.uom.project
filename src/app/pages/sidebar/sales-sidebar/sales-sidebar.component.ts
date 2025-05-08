@@ -34,6 +34,11 @@ export class SMSidebarComponent {
     }
   }
   
+  goToDashboard(): void {
+    this.activeMenuItem = 'dashboard';
+    this.router.navigate(['salesmanager/salesdashboard']);
+  }  
+
   scheduleReport(): void {
     // Logic for schedule report
     console.log('Schedule report clicked');
