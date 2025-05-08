@@ -26,15 +26,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
-// AG Grid
-import { AgGridModule } from 'ag-grid-angular';
-import { NgChartsModule } from 'ng2-charts';
-
-// ModuleRegistry.registerModules([ClientSideRowModelModule]);
-
-@NgModule({
-  declarations: [
-    MarketingDashboardComponent
   ],
   imports: [
     SalesHeatmapComponent,
@@ -50,20 +41,8 @@ import { NgChartsModule } from 'ng2-charts';
     MatButtonModule,
     MatCheckboxModule,
     MatDatepickerModule,
-    MatNativeDateModule,  
+    MatNativeDateModule,
     MatCardModule,
-    MatDividerModule,
-    ShippingDashboardComponent,
-    CourierDashboardComponent,
-    BusinessMainpageComponent,
-    HttpClientModule,
-    AgGridModule,
-    ExpenseFormComponent,
-    BusinessDashComponent,
-    NgChartsModule
-  ],
-  providers: [
-    DatePipe
-  ]
+
 })
 export class AppModule { }
