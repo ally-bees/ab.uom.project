@@ -52,26 +52,7 @@ export const routes: Routes = [
       { path: 'order', component: OrderSummaryComponent },
       {path: 'expense-form', component: ExpenseFormComponent}
     ]
-  },
-  {
-    path: 'businessowner',
-    component: BusinessMainpageComponent,
-    children: [
-      { path: '', redirectTo: 'businessownerdashboard', pathMatch: 'full' },
-      { path: 'businessownerdashboard', component: BusinessDashComponent },
-      { path: 'finance', component: FinanceComponent },
-      { path: 'inventory', component: InventoryComponent },
-      { path: 'schedule', component: ScheduleComponent },
-      { path: 'shipping', component: ShippingDashboardComponent },
-      { path : 'sales', component: SalesComponent },
-      { path: 'customerinsight', component: customerinsightComponent },
-      { path: 'order', component: OrderSummaryComponent },
-      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
-      { path: 'printreport', component: PrintReportComponent },
-      // Add more pages for the business owner here
-    ]
-  },
-  { path: 'salesdashboard', component: SalesDashboardComponent },
+
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
