@@ -1,6 +1,7 @@
-using System.Net;
+using MongoDB.Driver;
 using Backend.Models;
 using Backend.Services;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,16 +11,30 @@ ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 builder.Services.Configure<MongoDBSettings>(
     builder.Configuration.GetSection("MongoDBSettings"));
 
+// Register IMongoClient and IMongoDatabase
+builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
+{
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    return new MongoClient(mongoDbSettings.ConnectionString);
+});
+
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var mongoClient = sp.GetRequiredService<IMongoClient>();
+    return mongoClient.GetDatabase("ab-uom"); // Specify your database name
+});
+
+// Register services
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
+builder.Services.AddSingleton<ExpenseService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ExpenseService>();
 
 // Configure CORS for Angular frontend
 builder.Services.AddCors(options =>
@@ -47,12 +62,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Update the database name in the test endpoint
+// Test MongoDB connection endpoint
 app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
 {
     try
     {
-        var database = mongoClient.GetDatabase("ab-uom"); // Updated database name
+        var database = mongoClient.GetDatabase("ab-uom");
         var collectionNames = await database.ListCollectionNamesAsync();
         var collections = await collectionNames.ToListAsync();
         return Results.Ok(new { Connected = true, Collections = collections });

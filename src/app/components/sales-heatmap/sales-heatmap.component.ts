@@ -67,7 +67,7 @@ export class SalesHeatmapComponent implements OnInit {
   getIntensityClass(sales: number): string {
     if (sales === 0) {
       return 'intensity-none';
-    } else if (sales < 1000) {
+    } else if (sales < 2000) {
       return 'intensity-low';
     } else if (sales < 5000) {
       return 'intensity-medium';
