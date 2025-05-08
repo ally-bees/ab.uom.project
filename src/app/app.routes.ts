@@ -52,7 +52,7 @@ export const routes: Routes = [
       { path: 'order', component: OrderSummaryComponent },
       {path: 'expense-form', component: ExpenseFormComponent}
     ]
-
+  },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
