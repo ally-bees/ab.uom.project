@@ -36,7 +36,7 @@ namespace Backend.Services
             return await _mongoDBService.GetExpenseByIdAsync(id);
         }
 
-        public async Task<Expense> CreateExpenseAsync(Expense expense, IFormFile receiptFile)
+        public async Task<Expense> CreateExpenseAsync(Expense expense, IFormFile? receiptFile)
         {
             // Handle receipt file if provided
             if (receiptFile != null)
@@ -59,12 +59,13 @@ namespace Backend.Services
             return expense;
         }
 
-        public async Task<string> GetReceiptPath(string fileName)
-        {
-            return Path.Combine(_uploadDirectory, fileName);
-        }
+                public async Task<string> GetReceiptPathAsync(string fileName)
+            {
+                return await Task.Run(() => Path.Combine(_uploadDirectory, fileName));
+            }
 
-        public async Task UpdateExpenseAsync(string id, Expense expense, IFormFile receiptFile)
+
+        public async Task UpdateExpenseAsync(string id, Expense expense, IFormFile? receiptFile)
         {
             var existingExpense = await _mongoDBService.GetExpenseByIdAsync(id);
             

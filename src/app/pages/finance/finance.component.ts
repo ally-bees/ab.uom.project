@@ -88,7 +88,17 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     this.toDate = this.formatDate(new Date());
     this.fetchFinanceData();
   }
-
+  filterInvoices(): void {
+    const from = new Date(this.fromDate!);
+    const to = new Date(this.toDate!);
+  
+    // Filter the invoices based on the selected date range
+    this.filteredInvoices = this.filteredInvoices.filter(invoice => {
+      const orderDate = new Date(invoice.orderDate);
+      return orderDate >= from && orderDate <= to;
+    });
+  }
+  
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.chart?.update();

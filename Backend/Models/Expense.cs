@@ -38,11 +38,11 @@ namespace Backend.Models
 
     // Make description optional
     [BsonElement("description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     // Make receiptUrl optional
     [BsonElement("receiptUrl")]
-    public string ReceiptUrl { get; set; }
+    public string? ReceiptUrl { get; set; }
 
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.Now;

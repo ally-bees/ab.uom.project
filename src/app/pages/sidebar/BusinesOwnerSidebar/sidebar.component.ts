@@ -20,7 +20,8 @@ export class BOSidebarComponent {
       { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast', route: 'businessowner/reports/courier' },
       { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave', route: 'businessowner/finance' },
       { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'businessowner/customerinsight' },
-      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'businessowner/analytics' }
+      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'businessowner/analytics' },
+      { id: 'expense-form', label: 'Expense Form', icon: 'fa-file-invoice-dollar', route: 'businessowner/expense-form' }
     ]}
   ];
   
