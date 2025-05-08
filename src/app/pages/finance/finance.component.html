@@ -12,11 +12,11 @@
             <div class="date-filter">
               <div class="date-input">
                 <span>From:</span>
-                <input type="date" [(ngModel)]="fromDate">
+                <input type="date" [(ngModel)]="fromDate" (change)="filterInvoices()">
               </div>
               <div class="date-input">
                 <span>To:</span>
-                <input type="date" [(ngModel)]="toDate">
+                <input type="date" [(ngModel)]="toDate" (change)="filterInvoices()">
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>Finance ID</th>
+                <!-- <th>Finance ID</th> -->
                 <th>Order Date</th>
                 <th>Amount</th>
                 <th>Status</th>
@@ -95,7 +95,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let invoice of filteredInvoices">
-                <td>{{ invoice.financeId || 'No ID' }}</td>
+                <!-- <td>{{ invoice.financeId || 'No ID' }}</td> -->
                 <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
                 <td>Rs. {{ invoice.amount | number:'1.0-2' }}</td>
                 <td>

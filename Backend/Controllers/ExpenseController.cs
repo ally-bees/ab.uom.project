@@ -167,7 +167,7 @@ namespace Backend.Controllers
         [HttpGet("receipts/{fileName}")]
         public async Task<IActionResult> GetReceipt(string fileName)
         {
-            var filePath = await _expenseService.GetReceiptPath(fileName);
+            var filePath = await _expenseService.GetReceiptPathAsync(fileName);
             
             if (!System.IO.File.Exists(filePath))
                 return NotFound();

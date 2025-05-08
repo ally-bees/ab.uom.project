@@ -1,8 +1,9 @@
 /* Overall container */
 .orders-container {
-  background-color: #f7f8f8;
+  background-color: #ffffff;
   padding: 20px;
   font-family: Arial, sans-serif;
+  border-radius: 12px;
 }
 
 /* Card styling */
