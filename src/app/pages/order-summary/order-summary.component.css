@@ -1,8 +1,9 @@
 /* Overall container */
 .orders-container {
-  background-color: #f7f8f8;
+  background-color: #ffffff;
   padding: 20px;
   font-family: Arial, sans-serif;
+  border-radius: 12px;
 }
 
 /* Card styling */
@@ -28,7 +29,7 @@
   padding: 20px;
 }
 
-/* Search and filters - keeping existing structure but can be removed if needed */
+/* Search and filters */
 .search-filters {
   display: flex;
   flex-wrap: wrap;
@@ -86,33 +87,27 @@
   border-radius: 4px;
 }
 
-/* Order stats and chart */
-.order-stats-container {
+/* Order stats and chart - Flex container */
+.stats-chart-wrapper {
   display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 2rem;
   flex-wrap: wrap;
-  gap: 20px;
 }
 
 .order-stats {
-  min-width: 200px;
+  min-width: 250px;
   flex-grow: 1;
 }
 
 .stat-item {
-  margin-bottom: 15px;
-}
-
-.label {
-  font-weight: bold;
-  color: #555;
-}
-
-.value {
-  color: #333;
+  margin-bottom: 1rem;
+  font-size: 16px;
 }
 
 .chart-container {
-  flex-grow: 2;
+  flex: 1;
   min-width: 300px;
   display: flex;
   flex-direction: column;
@@ -149,16 +144,16 @@
   border-radius: 3px;
 }
 
-.yellow {
-  background-color: #FFC107; /* Match with badge-pending */
+.color-box.yellow {
+  background-color: #f9c74f; /* Yellow for pending */
 }
 
-.green {
-  background-color: #4CAF50; /* Match with badge-completed */
+.color-box.green {
+  background-color: #90be6d; /* Green for completed */
 }
 
-.red {
-  background-color: #F44336; /* Match with badge-rejected */
+.color-box.blue {
+  background-color: #577590; /* Blue for new */
 }
 
 /* AG Grid styles */
@@ -168,12 +163,44 @@
   --ag-odd-row-background-color: #e3f2fd; /* Light blue background */
   --ag-row-hover-color: rgba(0, 188, 212, 0.1);
   --ag-selected-row-background-color: rgba(0, 188, 212, 0.2);
-  --ag-background-color: #f7f8f8;
-  height: 400px;
-  width: 100%;
 }
 
-/* Status badge styles that would be used in cell renderers */
+/* Table styles for when ag-Grid is not used */
+.table-container {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.orders-table th, .orders-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.orders-table th {
+  background-color: #00BCD4; /* Teal color from the image */
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.orders-table tbody tr {
+  background-color: #e3f2fd; /* Light blue background */
+}
+
+.orders-table tbody tr:nth-child(even) {
+  background-color: #f3f3f3; /* Alternate row color */
+}
+
+.orders-table tr:hover {
+  background-color: rgba(0, 188, 212, 0.1);
+}
+
 .status-badge {
   padding: 5px 10px;
   border-radius: 15px;
@@ -181,20 +208,24 @@
   color: white;
   display: inline-block;
   text-align: center;
+  width: auto;
   min-width: 80px;
 }
 
 .badge-completed {
   background-color: #4CAF50; /* Green from image */
+  text-align: center;
 }
 
 .badge-pending {
   background-color: #FFC107; /* Yellow/amber from image */
   color: #333;
+  text-align: center;
 }
 
 .badge-rejected {
   background-color: #F44336; /* Red from image */
+  text-align: center;
 }
 
 /* Print section */
@@ -351,32 +382,15 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .order-stats-container {
+  .stats-chart-wrapper {
     flex-direction: column;
   }
-  
+
   .chart-container {
     width: 100%;
   }
-  
+
   .date-filter {
     flex-direction: column;
   }
-}
-
-/* Font awesome icon styles */
-.fa {
-  display: inline-block;
-  font-family: "FontAwesome";
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-}
-
-.fa-search:before {
-  content: "\f002";
-}
-
-.fa-print:before {
-  content: "\f02f";
 }

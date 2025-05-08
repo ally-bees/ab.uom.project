@@ -1,52 +1,46 @@
-<div class="sales-heatmap-card">
-    <div class="header">
-      <div>
-        <h2 class="card-title">Total sales per month</h2>
-        <p class="contributions">{{ salesData.totalContributions }} contributions in the last year</p>
-      </div>
-      <div class="settings-icon">
-        <span class="material-icon">⚙️</span>
-      </div>
-    </div>
-  
-    <div class="year-selector">
-      <button 
-        *ngFor="let year of yearOptions" 
-        [class.active]="year === selectedYear"
-        (click)="onYearSelect(year)">
-        {{ year }}
-      </button>
-    </div>
-  
-    <p class="subtitle">Among six months which have most sales</p>
-  
-    <div class="heatmap-container">
-      <div class="month-labels">
-        <div class="month-label" *ngFor="let month of getMonths()">{{ month }}</div>
-      </div>
-      <div class="heatmap-grid">
-        <div class="heatmap-row" *ngFor="let row of [0, 1, 2, 3]">
-          <div class="heatmap-cell" 
-              *ngFor="let month of getMonths()"
-              [style.background-color]="getCellColor(month, row)">
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <div class="legend">
-      <div>Learn how we count contributions</div>
-      <div class="scale">
-        <span>Less</span>
-        <div class="scale-cells">
-          <div class="scale-cell" *ngFor="let level of [0, 1, 2, 3]" 
-              [style.background-color]="getColorForLevel(level)">
-          </div>
-        </div>
-        <span>More</span>
-      </div>
-    </div>
-  
-    <button class="show-more">Show more activity</button>
+<div class="heatmap-container">
+  <!-- Header Section -->
+  <div class="heatmap-header">
+    <h1 class="heatmap-title">Sales Heatmap</h1>
+    <p class="heatmap-subtitle">Analyze the total sales per month for each year.<BR> Hover over each cell to view detailed sales data for that specific month and year..</p>
   </div>
-  
+
+  <!-- Year Selector Section -->
+  <div class="year-selector">
+    <button [class.active]="selectedYear === 2023" (click)="selectYear(2023)">2023</button>
+    <button [class.active]="selectedYear === 2024" (click)="selectYear(2024)">2024</button>
+    <button [class.active]="selectedYear === 2025" (click)="selectYear(2025)">2025</button>
+  </div>
+
+  <!-- Subtitle -->
+  <div class="section-subtitle">Monthly Sales Data</div>
+
+  <!-- Heatmap Grid -->
+  <div class="heatmap-grid">
+    <div class="heatmap-row" *ngFor="let row of heatmapData; let i = index">
+      <div class="month-label">{{ monthNames[i] }}</div>
+      <div class="heatmap-cell" *ngFor="let cell of row">
+        <div 
+          [ngClass]="getIntensityClass(cell.sales)" 
+          [attr.data-tooltip]="cell.tooltipData">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="heatmap-legend">
+    <div class="intensity-legend">
+      <div class="intensity-none"></div><span>None</span>
+    </div>
+    <div class="intensity-legend">
+      <div class="intensity-low"></div><span>Low</span>
+    </div>
+    <div class="intensity-legend">
+      <div class="intensity-medium"></div><span>Medium</span>
+    </div>
+    <div class="intensity-legend">
+      <div class="intensity-high"></div><span>High</span>
+    </div>
+  </div>
+</div>

@@ -1,30 +1,151 @@
-<h2>Sales List</h2>
+<div class="sales-container">
+  <div class="sales-card">
+    <div class="card-header">
+      <h3>Sales Summary</h3>
+    </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Sale ID</th>
-      <th>Vendor ID</th>
-      <th>Product IDs</th>
-      <th>Date</th>
-      <th>Total Sales</th>
-      <th>Total Orders</th>
-      <th>Total Items Sold</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let sale of sales">
-      <td>{{ sale.saleId }}</td>
-      <td>{{ sale.vendorId }}</td>
-      <td>
-        <ul>
-          <li *ngFor="let pid of sale.productIds">{{ pid }}</li>
-        </ul>
-      </td>
-      <td>{{ sale.date }}</td>
-      <td>{{ sale.totalSales | number:'1.2-2' }}</td>
-      <td>{{ sale.totalOrdersCount }}</td>
-      <td>{{ sale.totalItemsSold }}</td>
-    </tr>
-  </tbody>
-</table>
+    <div class="card-body">
+      <!-- Search and Filters -->
+      <div class="search-filters">
+        <div class="search-box">
+          <input
+            id="search"
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearchChange($event)"
+            placeholder="Search Product Name"
+          />
+          
+        </div>
+
+        <div class="date-filter">
+          <div class="date-group">
+            <span>From:</span>
+            <input
+              id="fromDate"
+              type="date"
+              [(ngModel)]="fromDate"
+              (change)="onDateChange()"
+            />
+          </div>
+
+          <div class="date-group">
+            <span>To:</span>
+            <input
+              id="toDate"
+              type="date"
+              [(ngModel)]="toDate"
+              (change)="onDateChange()"
+            />
+          </div>
+        </div>
+
+        
+      </div>
+
+            <!-- Add this after the search-filters div and before the charts-container div -->
+      <div class="daily-sales-chart">
+        <div class="chart-box">
+          <canvas
+            baseChart
+            [data]="dailySalesChartData"
+            [options]="dailySalesChartOptions"
+            [type]="'line'"
+          ></canvas>
+        </div>
+      </div>
+      <!-- Charts Container -->
+      <div class="charts-container">
+        <!-- Left Side - Pie Charts -->
+        <div class="pie-charts-container">
+          <div style="margin-top: 40px;">
+            <div class="chart-toggle-headings">
+              <h3
+                [class.active]="activeChart === 'category'"
+                (click)="activeChart = 'category'"
+              >
+                Sales by Category
+              </h3>
+              <h3
+                [class.active]="activeChart === 'product'"
+                (click)="activeChart = 'product'"
+              >
+                Sales by Product
+              </h3>
+            </div>
+
+            <div class="chart-slide-container">
+              <!-- Product Pie Chart -->
+              <div *ngIf="activeChart === 'product'" class="chart-box">
+                <canvas
+                  baseChart
+                  [data]="productChartData"
+                  [options]="pieChartOptions"
+                  [type]="'pie'"
+                ></canvas>
+              </div>
+
+              <!-- Category Pie Chart -->
+              <div *ngIf="activeChart === 'category'" class="chart-box">
+                <canvas
+                  baseChart
+                  [data]="categoryChartData"
+                  [options]="pieChartOptions"
+                  [type]="'pie'"
+                ></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Comparison Donut Chart -->
+        <div class="comparison-chart-container">
+          <div class="chart-box">
+            <h4>Sales Performance Comparison</h4>
+            <canvas
+              baseChart
+              [data]="comparisonChartData"
+              [options]="donutChartOptions"
+              [type]="'doughnut'"
+            ></canvas>
+            <div class="profit-info">
+              <p *ngIf="isProfitIncreased()">
+                <i class="fa fa-arrow-up" style="color: #4CAF50;"></i>
+                Profit increased by {{ calculateMonthlyProfitPercentage() }}% compared to last month
+              </p>
+              <p *ngIf="!isProfitIncreased()">
+                <i class="fa fa-arrow-down" style="color: #F44336;"></i>
+                Profit decreased by {{ calculateMonthlyProfitPercentage() }}% compared to last month
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AG Grid Table -->
+      <div class="table-box">
+      <div class="sales-table">
+        <h4>Sortable Sales Overview</h4>
+        <ag-grid-angular
+          style="width: 100%; height: 600px;"
+          class="ag-theme-alpine"
+          [rowData]="filteredData"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event)"
+        >
+        </ag-grid-angular>
+      </div>
+      </div>
+
+      <div class="print-section">
+        <button class="print-btn" (click)="printReport()">
+          <i class="fa fa-print"></i>
+          Print Report
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,116 +1,94 @@
-<div class="page-container">
-
-
-    <div class="inventory-container">
-        <h1 class="page-title">Inventory Summary</h1>
-        
-        <!-- Search and date filters -->
-        <div class="filters-container">
-        <div class="search-container">
-            <input type="text" [(ngModel)]="searchTerm" placeholder="Search product" class="search-input">
-            <button class="search-button">
-                <i class="search-icon">⌕</i>
-            </button>
+<div class="inventory-container">
+    <div class="card-header">
+        <h3>Inventory Summary</h3>
+      </div>
+  
+    <!-- Pie Chart and Summary Cards Side-by-Side -->
+    <div class="chart-summary-wrapper">
+      <!-- Left: Chart with Legend below -->
+      <div class="chart-area">
+        <canvas #stockChart></canvas>
+  
+        <!-- Legend under chart -->
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color in-stock-color"></div>
+            <span>In Stock</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color low-stock-color"></div>
+            <span>Low Stock</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color out-of-stock-color"></div>
+            <span>Out of Stock</span>
+          </div>
         </div>
-        
-        <div class="date-filters">
-            <div class="date-filter">
-            <label>From : </label>
-            <input type="date" [(ngModel)]="fromDate" class="date-input">
-            </div>
-            
-            <div class="date-filter">
-            <label>To : </label>
-            <input type="date" [(ngModel)]="toDate" class="date-input">
-            </div>
+      </div>
+  
+      <!-- Right: Summary Cards -->
+      <div class="summary-cards">
+        <div class="summary-card in-stock-box">
+          <h3>In Stock</h3>
+          <div class="count">{{ inStockCount }}</div>
+          <div class="label">items</div>
         </div>
+        <div class="summary-card low-stock-box">
+          <h3>Low Stock</h3>
+          <div class="count">{{ lowStockCount }}</div>
+          <div class="label">items</div>
         </div>
+        <div class="summary-card out-of-stock-box">
+          <h3>Out of Stock</h3>
+          <div class="count">{{ outOfStockCount }}</div>
+          <div class="label">items</div>
+        </div>
+      </div>
       
-        <!-- Stock cards summary -->
-        <div class="stock-cards-container">
-            <div class="stock-card in-stock">
-            <h2 class="card-title">In Stock</h2>
-            <p class="stock-number">{{ stockSummary.inStock }}</p>
-            <p class="items-label">Items</p>
-            </div>
-            
-            <div class="stock-card low-stock">
-            <h2 class="card-title">Low Stock</h2>
-            <p class="stock-number">{{ stockSummary.lowStock }}</p>
-            <p class="items-label">Items</p>
-            </div>
-            
-            <div class="stock-card out-of-stock">
-            <h2 class="card-title">Out of Stock</h2>
-            <p class="stock-number">{{ stockSummary.outOfStock }}</p>
-            <p class="items-label">Items</p>
-            </div>
-        </div>
-    </div> 
-        
-
-
-    <!-- PIE CHART -->
-        <div class="data-display">
-        <div class="pie-chart-container">
-            <div class="pie-chart">
-            <!-- SVG Pie Chart representation based on stock data -->
-            <svg width="100%" height="100%" viewBox="0 0 100 100">
-                <!-- Blue segment for In Stock -->
-                <path d="M50,50 L50,0 A50,50 0 0,1 97,67 Z" fill="#78A7FF"></path>
-                <!-- Yellow segment for Low Stock -->
-                <path d="M50,50 L97,67 A50,50 0 0,1 23,67 Z" fill="#F9F06A"></path>
-                <!-- Red segment for Out of Stock -->
-                <path d="M50,50 L23,67 A50,50 0 0,1 50,0 Z" fill="#FF4B4B"></path>
-            </svg>
-            </div>
-            
-            
-            <div class="chart-legend">
-            <div class="legend-item">
-                <span class="legend-color" style="background-color: #78A7FF;"></span>
-                <span>In Stock</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background-color: #F9F06A;"></span>
-                <span>Low Stock</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background-color: #FF4B4B;"></span>
-                <span>Out of Stock</span>
-            </div>
-            </div>
-        </div>
-        
-        <div class="products-table-container">
-            <h2 class="title">Best Selling Products</h2>
-            <table class="products-table">
-            <thead>
-                <tr>
-                <th>Product ID</th>
-                <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let product of filterProducts()">
-                <td>{{ product.productId }}</td>
-                <td>
-                    <span class="status-badge" 
-                        [ngClass]="{'in-stock': product.status === 'In Stock', 
-                                    'low-stock': product.status === 'Low Stock', 
-                                    'out-of-stock': product.status === 'Out of Stock'}">
-                    {{ product.status }}
-                    </span>
-                </td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
-        </div>
-
-        <div class="report-actions">
-        <button class="print-button" (click)="printReport()">
-            Print Report
-        </button>
-        </div>
-</div>
+    </div>
+  
+    <div class="table-box">
+        <h4>Current Inventory Overview</h4>
+        <!-- Search Input -->
+    <div class="search-container">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search by Product Name or Category"
+          class="search-input"
+        />
+      </div>
+    
+      <!-- Product Table -->
+      <div class="product-list">
+        <table>
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock Quantity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filteredProducts()">
+              <td>{{ product.productId }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.category }}</td>
+              <td>{{ product.price | currency }}</td>
+              <td>{{ product.stockQuantity }}</td>
+              <td>
+                <span [ngClass]="['stock-status', getStockStatusClass(product)]">
+                  {{ getStockStatus(product) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    
+  

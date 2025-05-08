@@ -2,7 +2,7 @@ namespace Backend.Models
 {
     public class Customer
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public required string Id { get; set; }
+        public required string Name { get; set; }
     }
 }

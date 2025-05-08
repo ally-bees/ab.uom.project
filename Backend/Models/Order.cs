@@ -15,7 +15,7 @@ namespace Backend.Models
         [BsonElement("order_id")]
         public string OrderId { get; set; }
 
-        [BsonElement("customer_id")]
+        [BsonElement("customerId")]
         public string CustomerId { get; set; }
 
         [BsonElement("product_id")]
@@ -24,10 +24,13 @@ namespace Backend.Models
         [BsonElement("quantity")]
         public List<int> Quantities { get; set; }
 
+        [BsonElement("orderDetails")]
+        public List<OrderDetail> OrderDetails { get; set; }
+
         [BsonElement("total_amount")]
         public double TotalAmount { get; set; }
 
-        [BsonElement("order_date")]
+        [BsonElement("orderDate")]
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime OrderDate { get; set; }
 

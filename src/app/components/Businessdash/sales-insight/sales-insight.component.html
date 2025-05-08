@@ -1,38 +1,41 @@
-<!-- sales-insight.component.html -->
 <div class="sales-insight">
-    <h3>Sales Insight</h3>
-    
-    <div class="profit-gauge">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background circle -->
-        <circle 
-          cx="50" 
-          cy="50" 
-          r="40" 
-          fill="none" 
-          stroke="#e0e0e0" 
-          stroke-width="8"
-        />
-        
-        <!-- Progress circle -->
-        <circle 
-          cx="50" 
-          cy="50" 
-          r="40" 
-          fill="none" 
-          stroke="#4caf50" 
-          stroke-width="8" 
-          stroke-linecap="round" 
-          transform="rotate(-90 50 50)" 
-          [attr.style]="getCircleStyle()"
-        />
-      </svg>
+  <h3>Sales Insight</h3>
+
+  <div class="profit-gauge">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background circle -->
+      <circle 
+        cx="50" 
+        cy="50" 
+        r="40" 
+        fill="none" 
+        stroke="#e0e0e0" 
+        stroke-width="8"
+      />
       
-      <div class="profit-indicator">
-        <div class="profit-value">
-          <span class="profit-arrow">↑</span> {{ profitPercentage }}%
-        </div>
-        <div class="profit-label">PROFIT</div>
-      </div>
-    </div>
+      <!-- Progress circle -->
+      <circle 
+        cx="50" 
+        cy="50" 
+        r="40" 
+        fill="none" 
+        stroke="#4caf50" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        transform="rotate(-90 50 50)" 
+        [attr.style]="getCircleStyle()"
+      />
+      
+      <!-- Percentage inside the circle -->
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="profit-text">
+        {{ profitPercentage }}%
+      </text>
+    </svg>
   </div>
+
+  <!-- Monthly profit summary below the chart -->
+  <div class="monthly-summary">
+    <div>{{ thisMonthLabel }}: <strong>Rs. {{ thisMonthProfit }}</strong></div>
+    <div>{{ lastMonthLabel }}: <strong>Rs. {{ lastMonthProfit }}</strong></div>
+  </div>
+</div>

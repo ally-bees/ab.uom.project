@@ -13,25 +13,29 @@ import { UserManagementComponent } from './adminpart/user-management/user-manage
 import { SalesComponent } from './pages/sales/sales.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytics-dashboard/marketing-analytics-dashboard.component';
-import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 
-export const routes: Routes = [
-  { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-//   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
-  {path: 'sales', component: SalesComponent},
-  /*{
     path: 'salesmanager',
     component: SalesMainpageComponent,
     children: [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
+      { path: 'order', component: OrderSummaryComponent },
+      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'printreport', component: PrintReportComponent },
+    ]
+  },
+  {
+    path: 'inventoryManager',
+    component: InventoryMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
+      { path: 'inventoryDashboard', component: InventoryDashboardComponent },
+      { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent }
     ]
-  },*/
+
   { path: 'order-summary', component: OrderSummaryComponent},
-  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
-  { path: 'inventory', component: InventoryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
   {path:'signup',component:SignupComponent},
@@ -40,6 +44,6 @@ export const routes: Routes = [
   {path:'auditlogs',component:AuditLogsComponent},
   {path:'usermanagement',component:UserManagementComponent},
   {path:'analytics',component:MarketingAnalyticsDashboardComponent},
-  {path:'courier',component:CourierDashboardComponent},
-  { path: '**', redirectTo: 'dashboard' } // Redirect unknown routes to dashboard
+
 ];
+

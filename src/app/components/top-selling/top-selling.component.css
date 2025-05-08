@@ -1,40 +1,61 @@
-.top-selling-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        height: 100%;
-    }
-    
-    .card-title {
-        margin-top: 0;
-        margin-bottom: 20px;
-        font-size: 24px;
-        color: #333;
-        text-align: center;
-    }
-    
-    .product-item {
-        margin-bottom: 0px;
-    }
-    
-    .product-bar-container {
-        height: 36px;
-        border-radius: 0px 0px 0px;
-        overflow: hidden;
-    }
-    
-    .product-bar {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-        font-weight: bold;
-        color: rgb(0, 0, 0);
-        border-radius: 0px 6px 6px 0px;
-    }
-    
-    .product-name {
-        white-space: nowrap;
-        margin-left: 7px;
-    }
+.top-selling-container {
+    max-width: 600px;
+    padding: 24px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+  }
+  
+  h4 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #222;
+  }
+  
+  label {
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  
+  input[type="number"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 80px;
+    text-align: center;
+    margin-right: 8px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #0060c7;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .product-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 24px;
+  }
+  
+  .product-list li {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  

@@ -1,33 +1,64 @@
-import { Component, Input } from '@angular/core';
-import { Product } from '../../models/product.model';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular'; 
+import { NgChartsModule } from 'ng2-charts';     
+import { product } from '../../models/product.model';
+import { InventoryService } from '../../services/inventory.service';
 
 @Component({
   selector: 'app-top-selling',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, AgGridModule, NgChartsModule], // Include common Angular modules required for forms and structure
   templateUrl: './top-selling.component.html',
   styleUrls: ['./top-selling.component.css']
 })
-export class TopSellingComponent {
-  @Input() products: Product[] = [];
+export class TopSellingComponent implements OnInit {
+  topSellingProducts: product[] = [];
+  productLimit: number = 10; // Default to 10
 
- 
-  getBarWidth(value: number): number {
-      return (value / 100) * 100;
-     }
-    
-     getBarColor(index: number): string {
-      const colors = [
-       '#02518A',
-       '#0077B6',
-       '#0096C7',
-       '#00B4D8',
-       '#48CAE4',
-       '#90E0EF',
-       '#ADE8F4',
-       '#CAF0F8'
-      ];
-      return colors[index % colors.length];
-     }
+  constructor(private inventoryService: InventoryService) {}
+
+  ngOnInit(): void {
+    this.loadTopSellingProducts();
+  }
+
+  loadTopSellingProducts(): void {
+    this.inventoryService.getBestSellingProducts(this.productLimit).subscribe({
+      next: (products) => {
+        this.topSellingProducts = products;
+      },
+      error: (err) => {
+        console.error('Error fetching top-selling products', err);
+      }
+    });
+  }
+
+  // Generate a gradient color for each product based on its index
+  getProductBackgroundColor(index: number): string {
+    const startColor = { r: 0, g: 51, b: 102 }; // Dark blue
+    const endColor = { r: 204, g: 224, b: 255 }; // Lightest blue
+
+    // Calculate the factor based on the index
+    const factor = index / (this.productLimit - 1);
+
+    const r = Math.round(startColor.r + (endColor.r - startColor.r) * factor);
+    const g = Math.round(startColor.g + (endColor.g - startColor.g) * factor);
+    const b = Math.round(startColor.b + (endColor.b - startColor.b) * factor);
+
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  // Determine if a color is light or dark by calculating its luminance
+  getTextColor(backgroundColor: string): string {
+    // Extract RGB values from the background color
+    const rgb = backgroundColor.match(/\d+/g)?.map(Number);
+    if (rgb) {
+      const [r, g, b] = rgb;
+      // Using luminance formula to calculate brightness
+      const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      return luminance > 128 ? 'black' : 'white';
+    }
+    return 'black'; // Default text color if something goes wrong
+  }
 }

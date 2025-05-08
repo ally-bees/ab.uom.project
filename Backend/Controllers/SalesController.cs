@@ -1,6 +1,7 @@
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -33,21 +34,24 @@ namespace Backend.Controllers
             return Ok(sale);
         }
 
-        [HttpGet("vendor/{vendorId}")]
-        public async Task<IActionResult> GetByVendorId(string vendorId)
-        {
-            var sales = await _salesService.GetSalesByVendorIdAsync(vendorId);
-            return Ok(sales);
-        }
+        // Removed vendorId-based filter since it's no longer part of the data
 
-        [HttpGet("daterange")]
+        [HttpGet("date-range")]
         public async Task<IActionResult> GetByDateRange([FromQuery] string startDate, [FromQuery] string endDate)
         {
             var sales = await _salesService.GetSalesByDateRangeAsync(startDate, endDate);
             return Ok(sales);
         }
+        
+        [HttpGet("year/{year}")]
+        public async Task<IActionResult> GetByYear(int year)
+        {
+            var sales = await _salesService.GetSalesByYearAsync(year);
+            return Ok(sales);
+        }
 
-        //totalSales, totalOrders , totalItemsSold
+
+        // TotalSales, TotalOrders, TotalItemsSold summary
         [HttpGet("summary")]
         public async Task<IActionResult> GetSummary()
         {
@@ -59,20 +63,21 @@ namespace Backend.Controllers
         public async Task<IActionResult> Create([FromBody] Sale sale)
         {
             await _salesService.CreateSaleAsync(sale);
-            return CreatedAtAction(nameof(Get), new { id = sale.Id }, sale);
+            return CreatedAtAction(nameof(Get), new { saleId = sale.SaleId }, sale);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Sale sale)
+        [HttpPut("{saleId}")]
+        public async Task<IActionResult> Update(string saleId, [FromBody] Sale sale)
         {
-            var existingSale = await _salesService.GetSaleByIdAsync(id);
+            var existingSale = await _salesService.GetSaleByIdAsync(saleId);
             if (existingSale == null)
                 return NotFound();
 
-            sale.Id = id;
-            await _salesService.UpdateSaleAsync(id, sale);
+            sale.Id = saleId;
+            await _salesService.UpdateSaleAsync(saleId, sale);
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
