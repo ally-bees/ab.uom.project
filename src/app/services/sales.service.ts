@@ -8,7 +8,6 @@ import { Sale, SalesViewModel, SalesSummary } from '../models/sale.model';
 })
 export class SalesService {
   private apiUrl = 'http://localhost:5241/api';
-  private apiUrl2 = 'https://localhost:5241/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -47,9 +46,7 @@ export class SalesService {
   deleteSale(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/Sales/${id}`);
   }
-  getSalesVeiwData(): Observable<SalesViewModel> {
-    return this.http.get<SalesViewModel>('/`${this.apiUrl2}/SalesDashboard/date-range'); 
-  }
+  
   // Dashboard endpoints
   getDashboardData(): Observable<SalesViewModel> {
     return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard`);
