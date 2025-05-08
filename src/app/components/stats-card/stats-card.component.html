@@ -1,15 +1,15 @@
 <div class="stats-card" *ngIf="!loading && !error">
   <div class="card total-sales">
     <h3>Total Revenue <span class="last-30-days">(Last 30 Days)</span></h3>
-    <p>LKR {{ salesData.totalRevenue | number: '1.0-2' }}</p>
+    <p>LKR {{ salesData?.totalRevenue | number: '1.0-2' }}</p>
   </div>
   <div class="card total-orders">
     <h3>Total Orders <span class="last-30-days">(Last 30 Days)</span></h3>
-    <p>{{ salesData.totalOrders }}</p>
+    <p>{{ salesData?.totalOrders }}</p>
   </div>
   <div class="card total-items">
     <h3>Total Items Sold <span class="last-30-days">(Last 30 Days)</span></h3>
-    <p>{{ salesData.totalItems }}</p>
+    <p>{{ salesData?.totalItems ?? 'N/A' }}</p> <!-- Handle undefined case -->
   </div>
 </div>
 

@@ -1,7 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { SalesViewModel } from '../../models/sales-view-model.model';
 import { CommonModule } from '@angular/common';
+
+// Define SalesViewModel interface
+interface SalesViewModel {
+  totalSales: number;
+  totalOrders: number;
+  totalCustomers: number;
+  totalRevenue: number;
+  totalItems?: number; 
+}
 
 @Component({
   selector: 'app-stats-card',
@@ -14,9 +22,11 @@ export class StatsCardComponent implements OnInit {
   @Input() startDate?: string;
   @Input() endDate?: string;
 
-  salesData!: SalesViewModel;
-  loading = true;
-  error = false;
+  salesData?: SalesViewModel;
+  loading: boolean = true;
+  error: boolean = false;
+
+
 
   constructor(private http: HttpClient) {}
 
