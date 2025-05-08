@@ -131,4 +131,17 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   printReport(): void {
     window.print();
   }
+
+  getStatusClass(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return 'completed';
+      case 'pending':
+        return 'pending';
+      case 'rejected':
+        return 'rejected';
+      default:
+        return '';
+    }
+  }
 }
