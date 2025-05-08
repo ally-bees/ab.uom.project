@@ -9,6 +9,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 interface Invoice {
   id: string;
+  financeId: string;
   date: Date;
   orderDate: Date;
   shipmentDate: Date;
@@ -30,6 +31,8 @@ export class FinanceComponent implements OnInit, AfterViewInit {
 
   fromDate: string | undefined;
   toDate: string | undefined;
+
+  filteredInvoices: Invoice[] = [];
 
   lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -61,39 +64,23 @@ export class FinanceComponent implements OnInit, AfterViewInit {
 
   lineChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
-    elements: {
-      line: {
-        tension: 0.5
-      }
-    },
+    elements: { line: { tension: 0.5 } },
     plugins: {
-      legend: {
-        display: false
-      },
+      legend: { display: false },
       tooltip: {
         enabled: true,
         callbacks: {
           title: () => '',
-          label: (tooltipItem) => {
-            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
-          }
+          label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.raw}`
         }
       }
     },
     scales: {
-      x: {
-        grid: {
-          display: false
-        }
-      },
-      y: {
-        beginAtZero: false,
-        grid: {
-          display: false
-        }
-      }
+      x: { grid: { display: false } },
+      y: { beginAtZero: false, grid: { display: false } }
     }
   };
+
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
@@ -103,7 +90,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Ensure chart is updated after view is initialized
     setTimeout(() => {
       this.chart?.update();
     }, 0);
@@ -148,15 +134,17 @@ export class FinanceComponent implements OnInit, AfterViewInit {
       this.lineChartData.datasets[0].data = sortedKeys.map(key => monthMap.get(key)!.income);
       this.lineChartData.datasets[1].data = sortedKeys.map(key => monthMap.get(key)!.expenses);
 
-      this.cdr.detectChanges();   // Ensure chart view updates
-      this.chart?.update();       // Force redraw
+      // Sort invoices by latest orderDate for the table
+      this.filteredInvoices = data.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+
+      this.cdr.detectChanges();
+      this.chart?.update();
     }, error => {
       console.error('Error fetching finance data:', error);
     });
   }
 
   printReport(): void {
-    console.log('Print Report button clicked');
     this.router.navigate(['/businessowner/printreport']);
   }
 }
