@@ -15,7 +15,9 @@ export class SMSidebarComponent {
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
       { id: 'sales', label: 'Sales', icon: 'fa-chart-line', route: 'salesmanager/sales' },
       { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart', route: 'salesmanager/order' },
-      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'salesmanager/customerinsight' }
+      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'salesmanager/customerinsight' },
+      { id: 'expense-form', label: 'Expense Form', icon: 'fa-file-invoice-dollar', route: 'salesmanager/expense-form' }
+
     ]}
   ];
   

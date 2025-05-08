@@ -3,17 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
+import { TopSellingTableComponent } from '../../components/top-selling-table/top-selling-table.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; 
 
 @Component({
   selector: 'app-inventory-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,TopSellingTableComponent],
   templateUrl: './inventory-dashboard.component.html',
-  styleUrls: ['./inventory-dashboard.component.css']
+  styleUrls: ['./inventory-dashboard.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] 
 })
 export class InventoryDashboardComponent implements OnInit {
   products: product[] = [];
-  bestSellingProducts: product[] = [];
+  bestSellingProducts: product[] = [];  // Passed to <app-top-selling-table>
   searchTerm: string = '';
 
   inStockCount = 0;
@@ -51,23 +54,22 @@ export class InventoryDashboardComponent implements OnInit {
 
   getStockStatusText(product: product): string {
     if (product.stockQuantity === 0) return 'Out of Stock';
-    if (product.stockQuantity <= 20) return 'Low Stock';
+    if (product.stockQuantity <= 50) return 'Low Stock';
     return 'In Stock';
   }
 
   filteredProducts(): product[] {
     const term = this.searchTerm.toLowerCase();
     const filtered = this.products.filter(p =>
-      p.stockQuantity <= 20 && p.name.toLowerCase().includes(term)
+      p.stockQuantity <= 50 && p.name.toLowerCase().includes(term)
     );
     return [
       ...filtered.filter(p => p.stockQuantity === 0),
-      ...filtered.filter(p => p.stockQuantity > 0 && p.stockQuantity <= 20)
+      ...filtered.filter(p => p.stockQuantity > 0 && p.stockQuantity <= 50)
     ];
   }
 
   loadBestSellingProducts(): void {
-    // Assume best 10 are determined by stock reduction logic (e.g., lowest stock among popular ones)
     this.bestSellingProducts = [...this.products]
       .sort((a, b) => a.stockQuantity - b.stockQuantity)
       .slice(0, 10);

@@ -25,6 +25,7 @@ import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/invent
 import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
+import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
 
 export const routes: Routes = [
   {
@@ -37,6 +38,8 @@ export const routes: Routes = [
       { path: 'order', component: OrderSummaryComponent },
       { path:'customerinsight',component:customerinsightComponent},
       { path: 'printreport', component: PrintReportComponent },
+      {path: 'expense-form', component: ExpenseFormComponent}
+
     ]
   },
   {
@@ -46,7 +49,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
-      { path: 'order', component: OrderSummaryComponent }
+      { path: 'order', component: OrderSummaryComponent },
+      {path: 'expense-form', component: ExpenseFormComponent}
     ]
   },
   {
@@ -83,14 +87,13 @@ export const routes: Routes = [
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path:'customerinsight',component:customerinsightComponent},
-  { path: '**', redirectTo: 'salesdashboard' },
   {path: 'expense-form', component: ExpenseFormComponent},
   {path: 'salesmainpage', component: SalesMainpageComponent},
   {path: 'sales-heatmap', component: SalesHeatmapComponent},
   {path: 'top-selling', component: TopSellingComponent},
   {path: 'stats', component: StatsCardComponent},
-   
-
-  {path: 'expense-form', component: ExpenseFormComponent}
+  {path: 'Top', component: TopSellingTableComponent},
+  {path: 'expense-form', component: ExpenseFormComponent},
+  { path: '**', redirectTo: 'salesdashboard' }
 ];
 
