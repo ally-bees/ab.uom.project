@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace Backend.Models
@@ -8,28 +9,28 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [BsonElement("finance_id")]
-        public string FinanceId { get; set; }
+        public required string FinanceId { get; set; }
 
         [BsonElement("sales_id")]
-        public List<string> SalesIds { get; set; }
+        public required List<string> SalesIds { get; set; }
 
         [BsonElement("campal_id")]
-        public List<string> CampalIds { get; set; }
+        public required List<string> CampalIds { get; set; }
 
         [BsonElement("amount")]
         public double Amount { get; set; }
 
         [BsonElement("status")]
-        public string Status { get; set; }
+        public required string Status { get; set; }
 
         [BsonElement("date")]
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime OrderDate { get; set; }
 
         [BsonElement("description")]
-        public string Description { get; set; }
+        public required string Description { get; set; }
     }
 }
