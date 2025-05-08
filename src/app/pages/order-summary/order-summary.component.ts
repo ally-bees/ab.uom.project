@@ -2,26 +2,16 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { FooterComponent } from '../../footer/footer.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { Chart, ChartConfiguration } from 'chart.js';
 import { ColDef, GridApi, GridReadyEvent, GridOptions } from 'ag-grid-community';
 
-interface Order {
-  orderId: string;
-  customerId: string;
-  orderDate: string;
-  totalAmount: number;
-  status: string;
-}
+import { OrderService, Order } from '../../services/ordersummary.service'; // Adjust path as needed
 
 interface OrderStatus {
   status: string;
   count: number;
 }
-
-// ... [existing imports remain unchanged]
 
 @Component({
   selector: 'app-order-summary',
@@ -57,10 +47,11 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   private orderStatusData: OrderStatus[] = [];
   showPrintDialog = false;
 
-  private readonly ORDERS_API = 'http://localhost:5241/api/orders';
-  private readonly STATUS_API = 'http://localhost:5241/api/orderstatus/summary';
-  constructor(private http: HttpClient, private datePipe: DatePipe, private router: Router) {}
-
+  constructor(
+    private orderService: OrderService,
+    private datePipe: DatePipe,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -79,7 +70,7 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   }
 
   private loadOrders(): void {
-    this.http.get<Order[]>(this.ORDERS_API).subscribe({
+    this.orderService.getOrders().subscribe({
       next: (data) => {
         this.rowData = data.map(order => ({
           ...order,
@@ -92,32 +83,30 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   }
 
   private loadOrderStatusSummary(): void {
-    this.http.get<{ [key: string]: number }>(this.STATUS_API).subscribe({
+    this.orderService.getOrderStatusSummary().subscribe({
       next: (data) => {
         if (!data || typeof data !== 'object') {
           console.error('Invalid order status format:', data);
           return;
         }
-  
+
         this.pendingOrders = data['pending'] || 0;
         this.completedOrders = data['completed'] || 0;
         const newOrders = data['new'] || 0;
         this.totalOrders = this.pendingOrders + this.completedOrders + newOrders;
-  
-        // Convert to array format for chart
+
         const statusArray: OrderStatus[] = Object.entries(data).map(([status, count]) => ({
           status,
           count,
         }));
-  
+
         this.orderStatusData = statusArray;
         this.createPieChart(statusArray);
       },
       error: (err) => console.error('Order status fetch error:', err),
     });
   }
-  
-  
+
   applyDateFilter(): void {
     if (this.fromDate && this.toDate) {
       const from = new Date(this.fromDate);
@@ -204,5 +193,4 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   closePrintDialog(): void {
     this.showPrintDialog = false;
   }
-
 }
