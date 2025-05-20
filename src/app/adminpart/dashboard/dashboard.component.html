@@ -1,7 +1,7 @@
 <app-header></app-header>
 <div class="dashboard-container">
   <!-- Sidebar -->
-  <app-adminsidebar></app-adminsidebar>
+  <!-- <app-adminsidebar></app-adminsidebar> -->
 
   <!-- Dashboard Content -->
   <div class="dashboard-content">
@@ -10,7 +10,7 @@
       <app-status-card
         *ngFor="let card of statusCards"
         [title]="card.title"
-        [value]="card.value"
+        [value]="+card.value"
         [subtitle]="card.subtitle"
         [icon]="card.icon"
       ></app-status-card>

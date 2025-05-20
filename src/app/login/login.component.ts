@@ -66,4 +66,31 @@ export class LoginComponent implements OnInit {
     });
   
   }
+
+  // create onsubmit method to handle role based redirection
+  // onSubmit(): void { 
+  //   if (this.loginForm.invalid) {
+  //     return;
+  //   }
+  //   this.loading = true;
+  //   this.error = '';
+  //   this.authService.login(this.loginForm.value).subscribe({
+  //     next: () => {
+  //       let user: any;
+  //       this.authService.currentUser$.subscribe(currentUser => user = currentUser);
+  //       if (user && user.roles === 'admin') {
+  //         this.router.navigate(['/admindashboard']);
+  //       } else if (user && user.roles === 'user') {
+  //         this.router.navigate(['/userprofile']);
+  //       } else {
+  //         this.router.navigate(['/login']);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       this.error = err?.error?.message || 'Login failed. Please check your credentials.';
+  //       this.loading = false;
+  //     }
+  //   });
+  // }
+
 }

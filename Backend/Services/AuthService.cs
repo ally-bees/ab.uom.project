@@ -118,8 +118,8 @@ public class AuthService
     {
         try{
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddMinutes(_jwtSettings.ExpiresInMinutes);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddMinutes(_jwtSettings.ExpiresInMinutes);
 
         var claims = new List<Claim>
         {

@@ -70,7 +70,7 @@ export class AuthService {
 
   logout(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      // Call your logout API if available
+      // Call logout API
       this.http.post<any>(`${this.apiUrl}/auth/logout`, {})
         .subscribe({
           next: () => {
@@ -124,7 +124,7 @@ export class AuthService {
   getRedirectUrl(): string {
     const user = this.currentUserSubject.value;
     // If user is admin, redirect to admin dashboard
-    if (user && user.roles === 'Admin') {
+    if ( user && user.roles == 'Admin') {
       return '/admindashboard';
     }
     // Otherwise, redirect to user profile

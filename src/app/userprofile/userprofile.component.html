@@ -1,13 +1,16 @@
 <div class="settings-container">
     <h1 class="settings-title">{{profileForm.value.userName+"\'s "}}Profile</h1>
-    
+     
     <div class="profile-container">
       <div class="sidebar">
         <div class="profile-image-container">
-          <img src="assets/profile-placeholder.jpg" alt="Profile Image" class="profile-image" />
-          <button class="camera-button">
+          <img [src]="imageSrc" alt="Profile Image" class="profile-image" />
+        
+          <button class="camera-button" (click)="triggerFileInput()">
             <i class="camera-icon">📷</i>
           </button>
+        
+          <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
         </div>
         
         <div class="profile-info">

@@ -22,20 +22,6 @@ export class SignupComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  // ngOnInit(): void {
-  //   this.signupForm = this.fb.group({
-  //     username: ['', [Validators.required, Validators.minLength(3)]],
-  //     email: ['', [Validators.required, Validators.email]],
-  //     password: ['', [Validators.required, Validators.minLength(8)]],
-  //     role: ['', Validators.required],
-  //     honeycombId: ['', Validators.required]
-  //   });
-
-  //   if (this.authService.isLoggedIn()) {
-  //     this.router.navigate(['/admindashboard']);
-  //   }
-  // }
-
   ngOnInit(): void {
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -55,25 +41,6 @@ export class SignupComponent implements OnInit {
     return this.signupForm.controls;
   }
 
-  // onSubmit(): void {
-  //   if (this.signupForm.invalid) {
-  //     return;
-  //   }
-
-  //   this.loading = true;
-  //   this.error = '';
-
-  //   this.authService.register(this.signupForm.value).subscribe({
-  //     next: () => {
-  //       this.router.navigate(['/admindashboard']);
-  //     },
-  //     error: (err) => {
-  //       this.error = err?.error?.message || 'Registration failed. Please try again.';
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
-
   onSubmit(): void {
     if (this.signupForm.invalid) {
       return;
@@ -84,7 +51,7 @@ export class SignupComponent implements OnInit {
   
     this.authService.register(this.signupForm.value).subscribe({
       next: () => {
-        // Redirect to user profile instead of admin dashboard
+        // Redirect to user profile instead
         this.router.navigate(['/userprofile']);
       },
       error: (err) => {

@@ -23,6 +23,10 @@ builder.Services.Configure<JwtSettings>(
 // Register services
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<UserManagementService>();
+
 
 // Configure CORS
 builder.Services.AddCors(options =>

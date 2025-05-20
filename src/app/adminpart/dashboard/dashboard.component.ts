@@ -34,14 +34,14 @@ export class DashboardComponent implements OnInit {
     },
     {
       title: 'Active Users',
-      value: '1213',
-      subtitle: '342 online',
+      value: 1000,
+      subtitle: '3 online',
       icon: 'users-icon'
     },
     {
       title: 'Pending Requests',
       value: '12',
-      subtitle: 'Awaiting Approval',
+      subtitle: '1 Awaiting Approval',
       icon: 'clock-icon'
     },
     {
