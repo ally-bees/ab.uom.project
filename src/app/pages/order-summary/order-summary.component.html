@@ -1,139 +1,93 @@
 <div class="orders-container">
-    <div class="orders-card">
-      <div class="card-header">
-        <h2>Orders Summary</h2>
-      </div>
-      <div class="card-body">
-        <div class="search-filters">
-          <div class="search-box">
-            <input type="text" placeholder="Search product">
-            <button type="button" class="search-btn">
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-          <div class="date-filter">
-            <div class="date-group">
-              <span>From :</span>
-              <input type="date" value="2024/12/05">
-            </div>
-            <div class="date-group">
-              <span>To :</span>
-              <input type="date" value="2024/12/12">
-            </div>
-          </div>
-        </div>
-  
-        <div class="order-stats-container">
-          <div class="order-stats">
-            <div class="stat-item">
-              <span class="label">Total Orders</span>
-              <span class="value">: 650</span>
-            </div>
-            <div class="stat-item">
-              <span class="label">Pending Orders</span>
-              <span class="value">: 430</span>
-            </div>
-            <div class="stat-item">
-              <span class="label">Completed Orders</span>
-              <span class="value">: 200</span>
-            </div>
-          </div>
-          <div class="chart-container">
-            <!-- Placeholder for chart image -->
-            <div class="chart-placeholder">
-              <img src="assets/images/chart-placeholder.png" alt="Orders Chart">
-            </div>
-            <div class="chart-legend">
-              <div class="legend-item">
-                <span class="color-box yellow"></span>
-                <span>Pending Orders</span>
-              </div>
-              <div class="legend-item">
-                <span class="color-box green"></span>
-                <span>Completed Orders</span>
-              </div>
-              <div class="legend-item">
-                <span class="color-box red"></span>
-                <span>Rejected Orders</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Orders Summary Card -->
+  <div class="orders-card">
+    <div class="card-header">
+      <h2>Orders Summary</h2>
     </div>
-  
-    <div class="orders-card">
-      <div class="card-header">
-        <h3>Recent Order Details</h3>
-      </div>
-      <div class="card-body">
-        <div class="table-container">
-          <table class="orders-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer ID</th>
-                <th>Order Date</th>
-                <th>Amount</th>
-                <th>City</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let order of orders">
-                <td>{{ order.orderId }}</td>
-                <td>{{ order.customerId }}</td>
-                <td>{{ order.orderDate }}</td>
-                <td>{{ order.amount | currency }}</td>
-                <td>{{ order.city }}</td>
-                <td>
-                  <span class="status-badge" [ngClass]="getStatusClass(order.status)">
-                    {{ order.status }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="print-section">
-          <button class="print-btn" (click)="openPrintReport()">
-            <i class="fa fa-print"></i>
-            Print Report
+    <div class="card-body">
+      <div class="search-filters">
+        <div class="search-box">
+          <input type="text" placeholder="Search product" />
+          <button type="button" class="search-btn">
+            <i class="fa fa-search"></i>
           </button>
         </div>
-      </div>
-    </div>
-  
-    <!-- Print Report Dialog -->
-    <div class="print-overlay" *ngIf="showPrintDialog">
-      <div class="print-dialog">
-        <div class="print-dialog-header">
-          <h2>Print Report</h2>
-          <button class="close-btn" (click)="closePrintDialog()">×</button>
-        </div>
-        <div class="print-dialog-body">
-          <div class="report-content">
-            <h3>Order Summary Report</h3>
-            <p><strong>Date Range:</strong> 2024/12/05 - 2024/12/12</p>
-            <p><strong>Total Orders:</strong> 650</p>
-            <p><strong>Pending Orders:</strong> 430</p>
-            <p><strong>Completed Orders:</strong> 200</p>
-            <p><strong>Rejected Orders:</strong> 20</p>
-            
-            <hr>
-            
-            <p>This report provides a summary of all orders processed during the specified period. 
-               The completion rate is approximately 31% with a rejection rate of 3%. 
-               Most orders are coming from the Colombo region (42%), followed by Galle (28%).</p>
-            
-            <p>For detailed analytics and performance metrics, please refer to the quarterly business report.</p>
+        <div class="date-filter">
+          <div class="date-group">
+            <span>From :</span>
+            <input type="date" [(ngModel)]="fromDate" (change)="applyDateFilter()" />
+          </div>
+          <div class="date-group">
+            <span>To :</span>
+            <input type="date" [(ngModel)]="toDate" (change)="applyDateFilter()" />
           </div>
         </div>
-        <div class="print-dialog-footer">
-          <button class="cancel-btn" (click)="closePrintDialog()">Cancel</button>
-          <button class="print-action-btn" (click)="printReport()">Print</button>
+      </div>
+
+      <div class="stats-chart-wrapper">
+        <div class="order-stats">
+          <div class="stat-item">
+            <span class="label">Total Orders</span>
+            <span class="value">: {{ totalOrders }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">Pending Orders</span>
+            <span class="value">: {{ pendingOrders }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">Completed Orders</span>
+            <span class="value">: {{ completedOrders }}</span>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-placeholder">
+            <canvas id="orderStatusPieChart" width="400" height="400"></canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="color-box yellow"></span>
+              <span>Pending Orders</span>
+            </div>
+            <div class="legend-item">
+              <span class="color-box green"></span>
+              <span>Completed Orders</span>
+            </div>
+            <div class="legend-item">
+              <span class="color-box blue"></span>
+              <span>New Orders</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <app-footer></app-footer>
+
+  <!-- Recent Order Details Card with ag-Grid -->
+  <div class="orders-card">
+    <div class="card-header">
+      <h3>Order Details</h3>
+    </div>
+    <div class="card-body">
+      <div class="table-container">
+        <ag-grid-angular
+          style="width: 100%; height: 400px;"
+          class="ag-theme-alpine"
+          [rowData]="filteredRowData.length ? filteredRowData : rowData"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          [gridOptions]="gridOptions"
+          (gridReady)="onGridReady($event)"
+        ></ag-grid-angular>
+      </div>
+      
+      <div class="print-section">
+        <button class="print-btn" (click)="printReport()">
+          <i class="fa fa-print"></i>
+          Print Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

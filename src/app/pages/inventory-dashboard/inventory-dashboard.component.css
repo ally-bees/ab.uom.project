@@ -1,289 +1,188 @@
 .inventory-container {
-    padding: 2rem;
-    font-family: Arial, sans-serif;
-  }
-  
-  .page-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    color: #333;
-  }
-  
-  /* Filters section */
-  .filters-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .search-container {
-    position: relative;
-    display: flex;
-    width: 100%;
-    max-width: 250px;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 0.6rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
-  }
-  
-  .search-button {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  
-  .date-filters {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .date-filter {
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  
-  .date-filter label {
-    margin-right: 0.5rem;
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  .date-input {
-    padding: 0.6rem 0.6rem 0.6rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 140px;
-    font-size: 0.9rem;
-  }
-  
-  .calendar-icon {
-    position: absolute;
-    right: 10px;
-    pointer-events: none;
-  }
-  
-  /* Stock cards section */
-  .stock-cards-container {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-  
-  .stock-card {
-    flex: 1;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-left: 20px;
-    text-align: center;
-  }
-  
-  .in-stock {
-    background-color: #cce1ff;
-  }
-  
-  .low-stock {
-    background-color: #fff9d8;
-  }
-  
-  .out-of-stock {
-    background-color: #fedfdf;
-    margin-right: 20px;
+  padding: 35px;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  border-radius: 12px;
+}
 
-  }
-  
-  .card-title {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    font-weight: normal;
-    color: #555;
-  }
-  
-  .stock-number {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0.2rem 0;
-  }
-  
-  .items-label {
-    font-size: 0.9rem;
-    color: #777;
-    margin: 0;
-  }
-  
-  /* Stock alerts section */
-  .stock-alerts-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.19);
-    padding: 1.5rem;
-  }
-  
-  .section-title {
-    font-size: 1.2rem;
-    margin: 0 0 1rem 0;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid #eee;
-  }
-/*   
-  .stock-alerts-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .stock-alerts-table th {
-    background-color: #5ecbc4;
-    color: white;
-    text-align: left;
-    padding: 0.8rem 1rem;
-  }
-  
-  .stock-alerts-table th:first-child {
-    border-top-left-radius: 4px;
-  }
-  
-  .stock-alerts-table th:last-child {
-    border-top-right-radius: 4px;
-  }
-  
-  .stock-alerts-table td {
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid #eee;
-  }
-   */
+/* Horizontal Summary Cards */
+.summary-cards-horizontal {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
 
-   
-  /* Table styles */
-.table-container {
-    overflow-x: auto;
-  }
+.summary-card {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  color: #4a4f52;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-weight: bold;
+}
+
+.summary-card h3 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.summary-card .count {
+  font-size: 50px;
+  font-weight: bold;
+  margin: 10px 0px 15px 0px;
+}
+
+.summary-card .label {
+  font-size: 14px;
+  color: #4a4f52;
+}
+
+.in-stock-box {
+  background-color: #94baff;
+}
+
+.low-stock-box {
+  background-color: #fff59b;
+}
+
+.out-of-stock-box {
+  background-color: #ffa3ab;
+}
+
+/* Table Section */
+.table-box {
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  padding: 25px 50px 30px 50px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.table-box h4 {
+  margin: 0 0 5px 0;
+  color: #757474;
+}
+
+.table-description {
+  margin-top: 0px;
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+}
+
+.search-container {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  width: 60%;
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+}
+
+.product-list {
+  max-height: 600px; 
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.product-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.product-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.product-list::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.product-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f7f8f8;
+}
+
+.product-list th,
+.product-list td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #dddddd9a;
+}
+
+.product-list th:last-child,
+.product-list td:last-child {
+  border-right: none;
+}
+
+.product-list th {
+  background-color: #00BCD4;
+  color: white;
+  font-weight: bold;
+}
+
+.product-list tr:nth-child(odd) {
+  background-color: #e3f2fd;
+}
+
+.product-list tr:hover {
+  background-color: rgba(0, 188, 212, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+/* Stock Status Button Styles */
+.stock-status {
+  width: 120px;
+  padding: 5px 0;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  cursor: default;
+  border: none;
+  margin: 0 auto; 
   
-  .stock-alerts-table {
-    width: 96%;
-    border-collapse: collapse;
-    margin: 0px 20px 20px 20px;
-  }
+  background-color: #fff59b;
+  color: rgb(197, 145, 0);
   
-  .stock-alerts-table th, .stock-alerts-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .stock-alerts-table th {
-    background-color: #17a2b8;
-    color: white;
-    position: sticky;
-    top: 0;
-  }
-  
-  .stock-alerts-table tr:nth-child(even) td:nth-child(odd) {
-    background-color: #17a3b85a;
-  }
-  
-  .stock-alerts-table tr:nth-child(odd) td:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .stock-alerts-table tr:nth-child(even) td:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .stock-alerts-table tr:nth-child(odd) td:nth-child(odd) {
-    background-color: #17a3b85a;
-  }
-  
-  .stock-alerts-table tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .status-badge {
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.9em;
-    color: white;
-    display: inline-block;
-    width: 55%;
-  }
-  
-  .badge-completed {
-    background-color: #4CAF50;
-    text-align: center;
-  }
-  
-  .badge-pending {
-    background-color: #FFC107;
-    color: #333;
-    text-align: center;
-  }
-  
-  .badge-rejected {
-    background-color: #F44336;
-    text-align: center;
-  }
+}
 
 
-  /*//////////////////////*/
-  .status-badge {
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-  }
+.low-stock {
+  background-color: #fff59b;
+  color: rgb(197, 145, 0);
+
+}
+
+.out-of-stock {
   
-  .status-badge.in-stock {
-    background-color: #e1f5fe;
-    color: #0288d1;
-  }
-  
-  .status-badge.low-stock {
-    background-color: #fff8e1;
-    color: #ffa000;
-  }
-  
-  .status-badge.out-of-stock {
-    background-color: #ffebee;
-    color: #e53935;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .filters-container {
-      flex-direction: column;
-      gap: 1rem;
-    }
-    
-    .search-container {
-      max-width: 100%;
-    }
-    
-    .date-filters {
-      flex-direction: column;
-    }
-    
-    .stock-cards-container {
-      flex-direction: column;
-    }
-    
-    .stock-card {
-      width: 100%;
-    }
-  }
+  background-color: #ffa3ab;
+  color: rgb(116, 0, 0);
+
+}
+
+.stock-status:hover {
+  opacity: 0.9;
+}
+/* Side-by-side dual table layout */
+.dual-table-box {
+  display: flex;
+  gap: 20px;
+}
+
+.dual-table-box .table-box {
+  flex: 1;
+  padding: 25px 30px;
+}

@@ -14,11 +14,12 @@ export class BusinessStatsCardComponent {
   
   getFormattedValue(): string {
     if (this.valueType === 'currency') {
-      return `$${this.value.toLocaleString()}`;
+      return `Rs. ${(+this.value).toLocaleString()}`;
     } else if (this.valueType === 'percentage') {
       return `${this.value}%`;
     } else {
-      return this.value.toLocaleString();
+      return (+this.value).toLocaleString();
     }
   }
+  
 }

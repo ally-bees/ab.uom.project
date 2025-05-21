@@ -1,13 +1,15 @@
-// recent-orders.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface Order {
-  id: string;
-  product: string;
-  date: string;
-  amount: number;
-  status: 'Delivered' | 'Canceled' | 'Pending' | 'Processing';
+  orderId: string;
+  customerId: string;
+  orderDate: string;
+  totalAmount: number;
+  status: string;
 }
 
 @Component({
@@ -15,29 +17,37 @@ interface Order {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './recent-orders.component.html',
-  styleUrls: ['./recent-orders.component.scss']
+  styleUrls: ['./recent-orders.component.scss'],
+  providers: [DatePipe]
 })
 export class RecentOrdersComponent implements OnInit {
-  recentOrders: Order[] = [
-    {
-      id: '#968659684',
-      product: 'Ipad pro 456gb',
-      date: 'Aug 30, 2023',
-      amount: 4345,
-      status: 'Delivered'
-    },
-    {
-      id: '#968659684',
-      product: 'Ipad pro mini 512gb',
-      date: 'Sep 01, 2023',
-      amount: 236,
-      status: 'Canceled'
-    }
-  ];
-  
-  constructor() { }
-  
+  recentOrders: Order[] = [];
+  constructor(private http: HttpClient, private datePipe: DatePipe, private router: Router) { }
+
+  goToOrderSummary(): void {
+    this.router.navigate(['businessowner/order']);
+  }
+
   ngOnInit(): void {
-    // This will be populated from your API when ready
+    this.fetchOrders();
+  }
+
+
+  fetchOrders(): void {
+    this.http.get<Order[]>('http://localhost:5241/api/orders')
+      .subscribe({
+        next: (orders) => {
+          this.recentOrders = orders
+          .sort((a, b) => b.orderId.localeCompare(a.orderId))  // Compare by orderId in descending order
+          .slice(0, 5)  // Get the latest 5 orders
+          .map(order => ({
+            ...order,
+            orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
+          }));
+        },
+        error: (err) => {
+          console.error('Error fetching orders:', err);
+        }
+      });
   }
 }

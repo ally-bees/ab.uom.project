@@ -1,12 +1,18 @@
-<div class="top-selling-card">
-        <h2 class="card-title">Top Selling Products</h2>
-        <div class="product-list">
-          <div class="product-item" *ngFor="let product of products; let i = index">
-            <div class="product-bar-container">
-              <div class="product-bar" [style.width.%]="getBarWidth(product.value)" [ngStyle]="{'background': getBarColor(i)}">
-                <span class="product-name">{{ product.name }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>
+<div class="top-selling-container">
+  <h4>Top Sellings</h4>
+
+  <!-- Input to let user select number of top products -->
+  <label for="limitInput">Number of Products:</label>
+  <input id="limitInput" type="number" [(ngModel)]="productLimit" min="1" />
+  <button (click)="loadTopSellingProducts()">Load</button>
+
+  <ul class="product-list">
+    <li *ngFor="let product of topSellingProducts; let i = index" 
+        [ngStyle]="{
+          'background-color': getProductBackgroundColor(i), 
+          'color': getTextColor(getProductBackgroundColor(i))
+        }">
+      {{ product.name }}
+    </li>
+  </ul>
+</div>

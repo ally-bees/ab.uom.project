@@ -41,6 +41,25 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# ===== .NET backend ignore rules =====
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.mdb
+*.log
+/Backend/.vs/
+/Backend/.vscode/
+/Backend/publish/
+/Backend/*.user
+/Backend/*.suo
+/Backend/*.tmp
+/Backend/*.mdf
+/Backend/*.ldf
+/Backend/appsettings.Development.json
+
 .fake
 
 # ---- Backend (ASP.NET Core) ----

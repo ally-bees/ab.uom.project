@@ -1,37 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Inventory } from '../models/sale.model';
+import { Sale } from '../models/sale.model';
+import { SalesViewModel } from '../models/sale.model';
+import { product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiUrl = 'https://localhost:7143/api/Inventory';
+  private apiUrl = 'http://localhost:5241/api/Inventory'; 
 
   constructor(private http: HttpClient) { }
 
-  getAllInventory(): Observable<Inventory[]> {
-    return this.http.get<Inventory[]>(this.apiUrl);
+
+  getAllProducts(): Observable<product[]> {
+    return this.http.get<product[]>(`${this.apiUrl}`);
   }
 
-  getInventoryById(id: string): Observable<Inventory> {
-    return this.http.get<Inventory>(`${this.apiUrl}/${id}`);
+
+  getProductById(id: string): Observable<product> {
+    return this.http.get<product>(`${this.apiUrl}/${id}`);
   }
 
-  getInventoryByProductId(productId: string): Observable<Inventory> {
-    return this.http.get<Inventory>(`${this.apiUrl}/product/${productId}`);
+ 
+  addProduct(product: product): Observable<product> {
+    return this.http.post<product>(`${this.apiUrl}`, product);
   }
 
-  createInventory(inventory: Inventory): Observable<Inventory> {
-    return this.http.post<Inventory>(this.apiUrl, inventory);
+
+  updateProduct(id: string, product: product): Observable<product> {
+    return this.http.put<product>(`${this.apiUrl}/${id}`, product);
   }
 
-  updateInventory(id: string, inventory: Inventory): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, inventory);
+  
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  deleteInventory(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+
+  getLowStockProducts(): Observable<product[]> {
+    return this.http.get<product[]>(`${this.apiUrl}/lowstock`);
+  }
+
+
+  getOutOfStockProducts(): Observable<product[]> {
+    return this.http.get<product[]>(`${this.apiUrl}/outofstock`);
+  }
+
+ 
+  getBestSellingProducts(limit: number = 5): Observable<product[]> {
+    return this.http.get<product[]>(`${this.apiUrl}/bestselling?limit=${limit}`);
   }
 }
