@@ -36,15 +36,13 @@ namespace auditpagebackend.Service
                 Builders<Table>.Filter.Lte(t => t.Date, toString)
             );
 
-            return await _CollectionAudit.Find(filter).ToListAsync(); // <-- important fix!
+            return await _CollectionAudit.Find(filter).ToListAsync(); 
         }
         public async Task<Dictionary<string, double>> GetTotalSumsAsync(string from, string to)
         {
             
-                // Standardize date format
                 DateTime fromDate, toDate;
                 
-                // Try to parse dates in various formats
                 if (!DateTime.TryParse(from, out fromDate))
                 {
                     Console.WriteLine($"Failed to parse from date: {from}");
@@ -57,26 +55,21 @@ namespace auditpagebackend.Service
                     toDate = DateTime.Now;
                 }
 
-                // Format dates as string in yyyy-MM-dd format
                 var fromDateStr = fromDate.ToString("yyyy-MM-dd");
                 var toDateStr = toDate.ToString("yyyy-MM-dd");
 
                 Console.WriteLine($"Calculating totals from {fromDateStr} to {toDateStr}");
 
-                // Create a filter to query the "date" field
                 var filter = Builders<Table>.Filter.And(
                     Builders<Table>.Filter.Gte(t => t.Date, fromDateStr),
                     Builders<Table>.Filter.Lte(t => t.Date, toDateStr)
                 );
 
-                // Log the filter for debugging
                 Console.WriteLine($"Filter: {filter.ToBsonDocument()}");
 
-                // First, find all matching documents to verify data exists
                 var matchingDocs = await _CollectionAudit.Find(filter).ToListAsync();
                 Console.WriteLine($"Found {matchingDocs.Count} documents matching the date range");
 
-                // Execute the aggregation only if there are matching documents
                 if (matchingDocs.Count > 0)
                 {
                     var pipeline = new BsonDocument[]
@@ -105,7 +98,6 @@ namespace auditpagebackend.Service
                     }
                 }
 
-                // Calculate totals manually from matching documents as a fallback
                 double totalValue = 0, totalTax = 0, totalNetValue = 0;
                 
                 foreach (var doc in matchingDocs)
@@ -126,6 +118,7 @@ namespace auditpagebackend.Service
             }
     
         public async Task<Dictionary<int,double>> GetlastthreetaxAsync(){
+            
             var result = new Dictionary<int,double>();
             var currentYear=DateTime.Now.Year;
 

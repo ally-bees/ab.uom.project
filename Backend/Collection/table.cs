@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace auditpagebackend.Collection
 {
-    [BsonIgnoreExtraElements] // Optional: ignores unmatched fields like 'names' instead of 'name'
+    [BsonIgnoreExtraElements] 
     public class Table
     {
         [BsonId]
@@ -25,7 +25,7 @@ namespace auditpagebackend.Collection
         public string? Name { get; set; }
 
         [BsonElement("value")]
-        public double? Value { get; set; }  // Use double to match 79.99
+        public double? Value { get; set; }  
 
         [BsonElement("tax")]
         public double? Tax { get; set; }

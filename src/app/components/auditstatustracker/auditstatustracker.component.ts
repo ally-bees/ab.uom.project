@@ -19,7 +19,7 @@ export class AuditstatustrackerComponent implements OnInit {
     for (let year = 2023; year <= currentYear + 1; year++) {
       this.fiscalYears.unshift(`FY ${year}-${year + 1}`);
     }
-    this.selectFY(this.fiscalYears[0]); // Default to the latest fiscal year
+    this.selectFY(this.fiscalYears[0]); 
   }
 
   selectFY(fy: string) {

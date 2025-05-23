@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AgChartsModule } from 'ag-charts-angular';  // Import this
+import { AgChartsModule } from 'ag-charts-angular';  
 import { AgCharts  } from 'ag-charts-angular';
 import { barchartService } from './auditsummary.service';
-import { AgChartOptions } from 'ag-charts-community'; // Import correct type
+import { AgChartOptions } from 'ag-charts-community'; 
+
 
 @Component({
   selector: 'app-auditsummary',
