@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Backend.Models;
-using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Backend.Services;
+using Backend.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/courier")]
     public class CourierController : ControllerBase
     {
         private readonly CourierService _courierService;
@@ -17,54 +17,123 @@ namespace Backend.Controllers
             _courierService = courierService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Courier>>> GetAll()
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetSummary([FromQuery] DateTime from, [FromQuery] DateTime to)
         {
-            return await _courierService.GetAllAsync();
+            try
+            {
+                var summary = await _courierService.GetSummaryAsync(from, to);
+                return Ok(summary);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("recent")]
+        public async Task<IActionResult> GetRecentDeliveries([FromQuery] int count = 10)
+        {
+            try
+            {
+                var deliveries = await _courierService.GetRecentDeliveriesAsync(count);
+                return Ok(deliveries);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllCouriers()
+        {
+            try
+            {
+                var couriers = await _courierService.GetAllAsync();
+                return Ok(couriers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Courier>> GetById(string id)
+        public async Task<IActionResult> GetCourierById(string id)
         {
-            var courier = await _courierService.GetByIdAsync(id);
-            if (courier == null)
+            try
             {
-                return NotFound();
+                var courier = await _courierService.GetByIdAsync(id);
+                if (courier == null)
+                {
+                    return NotFound();
+                }
+                return Ok(courier);
             }
-            return courier;
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Courier courier)
+        public async Task<IActionResult> CreateCourier([FromBody] Courier courier)
         {
-            await _courierService.CreateAsync(courier);
-            return CreatedAtAction(nameof(GetById), new { id = courier.Id }, courier);
+            if (courier == null)
+                return BadRequest("Courier data is required.");
+
+            try
+            {
+                await _courierService.CreateAsync(courier);
+                return CreatedAtAction(nameof(GetCourierById), new { id = courier.Id }, courier);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, Courier updatedCourier)
+        public async Task<IActionResult> UpdateCourier(string id, [FromBody] Courier updatedCourier)
         {
-            var courier = await _courierService.GetByIdAsync(id);
-            if (courier == null)
-            {
-                return NotFound();
-            }
+            if (updatedCourier == null)
+                return BadRequest("Updated courier data is required.");
 
-            await _courierService.UpdateAsync(id, updatedCourier);
-            return NoContent();
+            try
+            {
+                var existingCourier = await _courierService.GetByIdAsync(id);
+                if (existingCourier == null)
+                {
+                    return NotFound();
+                }
+                await _courierService.UpdateAsync(id, updatedCourier);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteCourier(string id)
         {
-            var courier = await _courierService.GetByIdAsync(id);
-            if (courier == null)
+            try
             {
-                return NotFound();
+                var existingCourier = await _courierService.GetByIdAsync(id);
+                if (existingCourier == null)
+                {
+                    return NotFound();
+                }
+                await _courierService.DeleteAsync(id);
+                return NoContent();
             }
-
-            await _courierService.DeleteAsync(id);
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
+

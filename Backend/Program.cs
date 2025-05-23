@@ -21,7 +21,7 @@ builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var mongoClient = sp.GetRequiredService<IMongoClient>();
-    return mongoClient.GetDatabase("ab-uom"); // Specify your database name
+    return mongoClient.GetDatabase("ab-uom"); // <-- this is correct
 });
 
 // Register services
@@ -31,6 +31,7 @@ builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
+builder.Services.AddSingleton<CourierService>(); // <-- ADD THIS LINE
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

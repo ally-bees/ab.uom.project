@@ -26,6 +26,7 @@ import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussines
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
+import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -75,6 +76,7 @@ export const routes: Routes = [
   {path: 'stats', component: StatsCardComponent},
   {path: 'Top', component: TopSellingTableComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
-  { path: '**', redirectTo: 'salesdashboard' }
+  { path: '**', redirectTo: 'salesdashboard' },
+  {path: 'courier', component: CourierDashboardComponent},
 ];
 

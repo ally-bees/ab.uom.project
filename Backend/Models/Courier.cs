@@ -8,16 +8,16 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("order_id")]
-        public string? OrderId { get; set; }
+        public string OrderId { get; set; }
 
         [BsonElement("courier_id")]
-        public string? CourierId { get; set; }
+        public string CourierId { get; set; }
 
         [BsonElement("destination")]
-        public string? Destination { get; set; }
+        public string Destination { get; set; }
 
         [BsonElement("date")]
         public DateTime Date { get; set; }
@@ -26,6 +26,6 @@ namespace Backend.Models
         public DateTime EstimateDate { get; set; }
 
         [BsonElement("status")]
-        public string? Status { get; set; }
+        public string Status { get; set; }
     }
 }
