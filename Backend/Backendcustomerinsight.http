@@ -1,0 +1,6 @@
+@Backendcustomerinsight_HostAddress = http://localhost:5230
+
+GET {{Backendcustomerinsight_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

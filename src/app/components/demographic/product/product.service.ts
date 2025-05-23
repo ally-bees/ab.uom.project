@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-interface Topproduct{
-    proid : string,
-    name: string,
-    imgurl :string
+export interface Topproduct{
+    productId : string,
+    name :string
 }
 
 @Injectable({
@@ -12,17 +12,11 @@ interface Topproduct{
   })
 
 export class productservice{
+        private apiUrl = 'http://localhost:5230/Customer'; // Replace with your actual base URL
 
-    // Mock data to simulate database response
-        private topproduct: Topproduct = {
-            proid: "OR1211",
-            name: "Marshall Headphone",
-            imgurl:"'https://example.com/cat-image.jpg'"
-        };  
+        constructor(private http: HttpClient) { }
         
-        constructor() { }
-        
-        getproRecords(): Observable<Topproduct> {
-          return of(this.topproduct); 
+        getproRecords(){
+      return this.http.get<Topproduct>(`${this.apiUrl}/top-product`)
         }
 } 

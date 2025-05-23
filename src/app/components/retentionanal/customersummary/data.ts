@@ -1,7 +1,10 @@
+import { customerservice, cusdetail} from './customer.service';
+
+
 export function getData() {
     return [
-      { asset: "Stocks", amount: 60000 },
-      { asset: "Bonds", amount: 40000 },
+      { asset: "Active", amount: 60000 },
+      { asset: "In-active", amount: 40000 },
     ];
   }
   

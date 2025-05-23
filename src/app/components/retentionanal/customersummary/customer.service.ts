@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-interface cus{
-    active : number,
-    inactive: number,
+export interface cusdetail{
+    aCount : number,
+    iaCount: number,
 }
 
 @Injectable({
@@ -12,15 +13,11 @@ interface cus{
 
 export class customerservice{
 
-    // Mock data to simulate database response
-        private cus: cus = {
-            active: 30,
-            inactive: 50,
-        };  
+    private apiUrl = 'http://localhost:5230/Customer';  
+
+    constructor(private http: HttpClient) { }
         
-        constructor() { }
-        
-        getpur(): Observable<cus> {
-          return of(this.cus); 
-        }
+    getpur(){
+      return this.http.get<cusdetail>(`${this.apiUrl}/active-and-inactive`)
+    }
 } 

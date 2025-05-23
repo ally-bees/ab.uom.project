@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "CrXpU5t85SNdtIcAl0k4KZ65/k2sSeYjhgm73RSR47c=",
+  "Source": "Backendcustomerinsight",
+  "BasePath": "_content/Backendcustomerinsight",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
