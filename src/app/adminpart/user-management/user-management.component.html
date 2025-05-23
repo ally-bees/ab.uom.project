@@ -1,0 +1,55 @@
+<app-header></app-header>
+<div class="user-management">
+    <div class="header">
+      <h2>User Management</h2>
+      <p class="subtitle">Add, edit, and manage user accounts</p>
+      
+      <div class="actions">
+        <button class="add-user-btn" (click)="addUser()">
+          <i class="icon add-icon"></i> Add User
+        </button>
+      </div>
+    </div>
+    
+    <div class="search-container">
+      <div class="search-box">
+        <i class="icon search-icon"></i>
+        <input type="text" placeholder="Search users" [(ngModel)]="searchText">
+      </div>
+      <button class="filter-btn">
+        <i class="icon filter-icon"></i>
+      </button>
+    </div>
+    
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Role</th>
+          <th>Last Active</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td class="user-cell">
+            <div class="user-name">{{user.name}}</div>
+            <div class="user-email">{{user.email}}</div>
+          </td>
+          <td>{{user.role}}</td>
+          <td>{{user.lastActive}}</td>
+          <td>
+            <span class="status-badge" [ngClass]="user.status.toLowerCase()">
+              {{user.status}}
+            </span>
+          </td>
+          <td>
+            <button class="action-btn">
+              <i class="icon more-icon"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

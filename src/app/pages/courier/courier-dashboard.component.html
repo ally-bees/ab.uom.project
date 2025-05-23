@@ -1,0 +1,46 @@
+<div class="dashboard-container">
+  <section class="summary">
+    <h3>Courier Summary</h3>
+    <div class="filters">
+      <input type="text" placeholder="Search product" />
+      <input type="date" />
+      <input type="date" />
+    </div>
+    <div class="summary-details">
+      <p>Total Deliveries: <strong>650</strong></p>
+      <p>Pending Deliveries: <strong>430</strong></p>
+      <p>Completed Deliveries: <strong>200</strong></p>
+      <p>Rejected Deliveries: <strong>20</strong></p>
+    </div>
+    <div class="chart">
+      <canvas id="courierChart"></canvas>
+    </div>
+  </section>
+
+  <section class="recent-deliveries">
+    <h3>Recent Deliveries</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Delivery ID</th>
+          <th>Order ID</th>
+          <th>Order Date</th>
+          <th>Estimated to</th>
+          <th>City</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let delivery of deliveries">
+          <td>{{ delivery.id }}</td>
+          <td>{{ delivery.orderId }}</td>
+          <td>{{ delivery.orderDate }}</td>
+          <td>{{ delivery.estimatedDate }}</td>
+          <td>{{ delivery.city }}</td>
+          <td [ngClass]="getStatusClass(delivery.status)">{{ delivery.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="print-report">Print Report</button>
+  </section>
+</div>

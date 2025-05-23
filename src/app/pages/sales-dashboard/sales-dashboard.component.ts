@@ -12,7 +12,7 @@ import { SalesData } from '../../models/sales-data.model';
 import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-sales-dashboard',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,10 +23,10 @@ import { FooterComponent } from '../../footer/footer.component';
     SalesHeatmapComponent,
     MembersListComponent
   ],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './sales-dashboard.component.html',
+  styleUrls: ['./sales-dashboard.component.css']
 })
-export class DashboardComponent {
+export class SalesDashboardComponent  {
   statsCards: StatsCard[] = [
     {
       count: 75,

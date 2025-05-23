@@ -1,25 +1,46 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';  
+import { CommonModule } from '@angular/common';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormComponent } from './form/form.component';  
-import { FormsModule } from '@angular/forms'; 
+import { FormComponent } from './form/form.component';
+import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
+import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
+
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
+    CourierDashboardComponent,
+    MarketingDashboardComponent,
+    ShippingDashboardComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    CommonModule,
     FormComponent,
-    AppComponent,      
+    AppComponent,
     ReactiveFormsModule,
     FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatDividerModule
   ],
   providers: [
     DatePipe
   ],
-  // bootstrap: [AppComponent]  // Bootstrap with AppComponent
+
 })
 export class AppModule { }

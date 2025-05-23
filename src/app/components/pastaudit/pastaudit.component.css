@@ -7,7 +7,8 @@
 }
 .past h2{
     font-weight: 400;
-    color: #000000;
+    font-size: 30px;
+    color: #285F83;
 }
 
 .detail{
@@ -33,6 +34,7 @@
 
 .content h3{
     font-weight: 400;
+    font-size: 20px;
     margin-top: 5px;
     margin-bottom: 5px;
 }

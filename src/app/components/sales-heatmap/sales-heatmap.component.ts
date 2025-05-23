@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './sales-heatmap.component.html',
-  styleUrls: ['./sales-heatmap.component.scss']
+  styleUrls: ['./sales-heatmap.component.css']
 })
 export class SalesHeatmapComponent {
   @Input() salesData!: SalesData;
