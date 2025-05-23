@@ -1,33 +1,25 @@
 <div class="audit_status">
-    <h1>Concurrent Audit</h1>
+    <h2>Concurrent Audit</h2>
     <div class="viewaudit">
-        <div class="subtitle">
-            <h4>Status trackers</h4>
-            <div class="dropdown">
-                <button class="dropbtn">FY 2024-2025</button>
-                <div class="dropdown-content">
-                  <a href="#">FY 2023-2024</a>
-                  <a href="#">FY 2022-2023</a>
-                  <a href="#">FY 2021-2022</a>
-                </div>
-            </div>
+      <div class="subtitle">
+        <h4>Status trackers</h4>
+        <div class="dropdown">
+          <button class="dropbtn">{{ selectedFY }}</button>
+          <div class="dropdown-content">
+            <a *ngFor="let fy of fiscalYears" (click)="selectFY(fy)">
+              {{ fy }}
+            </a>
+          </div>
         </div>
-        <div class="cards">
-            <div class="stats-card">
-                <h6>January 2025</h6>
-                <p>Last available report <span>24 Dec 2024</span></p>
-                <button>View Dashboard</button>
-            </div>
-            <div class="stats-card">
-                <h6>January 2025</h6>
-                <p>Last available report <span>24 Dec 2024</span></p>
-                <button>View Dashboard</button>
-            </div>
-            <div class="stats-card">
-                <h6>January 2025</h6>
-                <p>Last available report <span>24 Dec 2024</span></p>
-                <button>View Dashboard</button>
-            </div>
+      </div>
+  
+      <div class="cards">
+        <div class="stats-card" *ngFor="let card of statusCards">
+          <h6>{{ card.month }} {{ card.year }}</h6>
+          <p>Last available report <span>--</span></p>
+          <button [routerLink]="['/auditpage/audit']" [queryParams]="{year:card.year,month: card.month}">View Dashboard</button>
         </div>
-    </div>    
-</div>
+      </div>
+    </div>
+  </div>
+  
