@@ -1,151 +1,152 @@
 <!-- expense-form.component.html -->
+
 <div class="expenses-container">
-    <div class="header">
-      <div class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3CBED0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 5H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2z"></path>
-          <path d="M17 15V9"></path>
-          <path d="M13 12h.01"></path>
-          <path d="M9 9v6"></path>
-        </svg>
-      </div>
-      <h2>Expense Details</h2>
+  <div *ngIf="loading" class="loading-message">Loading...</div>
+  <div *ngIf="error" class="error-message">Failed to load data. Please try again later.</div>
+  <div class="header">
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3CBED0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 5H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2z"></path>
+        <path d="M17 15V9"></path>
+        <path d="M13 12h.01"></path>
+        <path d="M9 9v6"></path>
+      </svg>
     </div>
-  
-    <div class="form-container">
-      <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="expense-form">
-        <!-- Basic Details Section -->
-        <div class="section-wrapper">
-          <div class="section-header">
-            <div class="section-number">1</div>
-            <h3>Basic Details</h3>
-          </div>
-          
-          <div class="section">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="position">Employee Position</label>
-                <select id="position" formControlName="position" class="form-control">
-                  <option value="" disabled>Sales Manager</option>
-                  <option *ngFor="let position of positions" [value]="position">{{position}}</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label for="employeeName">Employee Name</label>
-                <input type="text" id="employeeName" formControlName="employeeName" class="form-control">
-              </div>
-            </div>
-          </div>
+    <h2>Expense Details</h2>
+  </div>
+
+  <div class="form-container">
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="expense-form">
+      <!-- Basic Details Section -->
+      <div class="section-wrapper">
+        <div class="section-header">
+          <div class="section-number">1</div>
+          <h3>Basic Details</h3>
         </div>
-  
-        <!-- Expense Details Section -->
-        <div class="section-wrapper">
-          <div class="section-header">
-            <div class="section-number">2</div>
-            <h3>Expense Details</h3>
-          </div>
-          
-          <div class="section">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="expenseType">Expense Type</label>
-                <select id="expenseType" formControlName="expenseType" class="form-control">
-                  <option value="" disabled>Select Expense Type</option>
-                  <option *ngFor="let type of expenseTypes" [value]="type">{{type}}</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="text" id="amount" formControlName="amount" class="form-control">
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="date">Date</label>
-                <mat-form-field appearance="outline" class="date-picker-field">
-                  <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="date">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Additional Details Section -->
-        <div class="section-wrapper">
-          <div class="section-header">
-            <div class="section-number">3</div>
-            <h3>Additional Details</h3>
-          </div>
-          
-          <div class="section">
+
+        <div class="section">
+          <div class="form-row">
             <div class="form-group">
-              <label for="paymentMethod">Payment Method</label>
-              <select id="paymentMethod" formControlName="paymentMethod" class="form-control">
-                <option value="" disabled>Select method</option>
-                <option *ngFor="let method of paymentMethods" [value]="method">{{method}}</option>
+              <label for="position">Employee Position</label>
+              <select id="position" formControlName="position" class="form-control">
+                <option value="" disabled>Select Position</option>
+                <option *ngFor="let position of positions" [value]="position">{{position}}</option>
               </select>
             </div>
             
             <div class="form-group">
-              <label for="receipt">Receipt Upload</label>
-              <div class="file-upload">
-                <input type="text" readonly class="file-name" [value]="selectedFile ? selectedFile.name : 'No File Choosen'">
-                <input type="file" id="receipt" (change)="onFileSelected($event)" formControlName="receipt" hidden>
-                <label for="receipt" class="browse-btn">Browse</label>
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea id="description" formControlName="description" placeholder="Enter expense description" class="form-control"></textarea>
+              <label for="employeeName">Employee Name</label>
+              <input type="text" id="employeeName" formControlName="employeeName" class="form-control">
             </div>
           </div>
         </div>
-  
-        <div class="form-actions">
-          <button type="button" class="btn btn-cancel">Cancel</button>
-          <button type="submit" class="btn btn-save">Save</button>
+      </div>
+
+      <!-- Expense Details Section -->
+      <div class="section-wrapper">
+        <div class="section-header">
+          <div class="section-number">2</div>
+          <h3>Expense Details</h3>
         </div>
-      </form>
-    </div>
-  
-    <!-- Recent Expenses Section -->
-    
-    
-    <!-- Inside the recent-expenses section in your HTML template -->
-<div class="recent-expenses">
-  <h3>Recent Expenses</h3>
-  <table class="expenses-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Employee</th>
-        <th>Position</th>
-        <th>Type</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let expense of recentExpenses">
-        <td>{{ expense.date | date:'MM/dd/yyyy' }}</td>
-        <td>{{ expense.employeeName }}</td>
-        <td>{{ expense.position }}</td>
-        <td>{{ expense.expenseType}}</td>
-        <td>Rs. {{ expense.amount.toFixed(2) }}</td>
-      </tr>
-      <!-- Add empty rows when there are fewer items -->
-      <tr *ngFor="let _ of [].constructor(5 - recentExpenses.length); let i = index" [hidden]="recentExpenses.length >= 5">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+        
+        <div class="section">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expenseType">Expense Type</label>
+              <select id="expenseType" formControlName="expenseType" class="form-control">
+                <option value="" disabled>Select Expense Type</option>
+                <option *ngFor="let type of expenseTypes" [value]="type">{{type}}</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="text" id="amount" formControlName="amount" class="form-control">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">Date</label>
+              <mat-form-field appearance="outline" class="date-picker-field">
+                <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Details Section -->
+      <div class="section-wrapper">
+        <div class="section-header">
+          <div class="section-number">3</div>
+          <h3>Additional Details</h3>
+        </div>
+        
+        <div class="section">
+          <div class="form-group">
+            <label for="paymentMethod">Payment Method</label>
+            <select id="paymentMethod" formControlName="paymentMethod" class="form-control">
+              <option value="" disabled>Select method</option>
+              <option *ngFor="let method of paymentMethods" [value]="method">{{method}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="receipt">Receipt Upload</label>
+            <div class="file-upload">
+              <input type="text" readonly class="file-name" [value]="selectedFile ? selectedFile.name : 'No File Choosen'">
+              <input type="file" id="receipt" (change)="onFileSelected($event)" formControlName="receipt" hidden>
+              <label for="receipt" class="browse-btn">Browse</label>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" placeholder="Enter expense description" class="form-control"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancelForm()">Cancel</button>
+        <button type="submit" class="btn btn-save">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Recent Expenses Section -->
+  <div class="recent-expenses">
+    <h3>Recent Expenses</h3>
+    <table class="expenses-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Employee</th>
+          <th>Position</th>
+          <th>Type</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let expense of recentExpenses">
+          <td>{{ expense.date | date:'MM/dd/yyyy' }}</td>
+          <td>{{ expense.employeeName }}</td>
+          <td>{{ expense.position }}</td>
+          <td>{{ expense.expenseType }}</td>
+          <td>Rs. {{ expense.amount.toFixed(2) }}</td>
+        </tr>
+        <!-- Add empty rows when there are fewer items -->
+        <tr *ngFor="let i of [0, 1, 2, 3, 4].slice(recentExpenses.length)" [hidden]="recentExpenses.length >= 5">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
