@@ -19,7 +19,7 @@ interface TaxRecord {
 
 export class TaxSummaryService {
 
-  private apiUrl = 'http://localhost:5110/Table/totals'; // Change to match your backend API
+  private apiUrl = 'http://localhost:5241/Table/totals'; // Change to match your backend API
 
   constructor(private http: HttpClient) {}
   

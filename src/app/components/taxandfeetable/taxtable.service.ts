@@ -17,7 +17,7 @@ interface TaxRecord {
   providedIn: 'root'
 })
 export class TaxTableService {
-  private apiUrl = 'http://localhost:5110/Table/table';  // Your backend API URL
+  private apiUrl = 'http://localhost:5241/Table/table';  // Your backend API URL
 
   constructor(private http: HttpClient) {}
 
