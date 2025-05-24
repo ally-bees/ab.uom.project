@@ -27,7 +27,7 @@ namespace Backend.Models
         [BsonElement("orderDetails")]
         public List<OrderDetail> OrderDetails { get; set; }
 
-        [BsonElement("total_amount")]
+        [BsonElement("totalAmount")]
         public double TotalAmount { get; set; }
 
         [BsonElement("orderDate")]

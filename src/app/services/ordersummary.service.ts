@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Order {
-  orderId: string;
-  customerId: string;
-  orderDate: string;
-  totalAmount: number;
-  status: string;
-}
+import { Order } from '../models/ordersummery.model'; // Adjust path as needed
 
 @Injectable({
   providedIn: 'root',

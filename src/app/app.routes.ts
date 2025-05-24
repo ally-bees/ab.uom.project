@@ -81,8 +81,13 @@ export const routes: Routes = [
   {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path:'customerinsight',component:customerinsightComponent},
-  { path: '**', redirectTo: 'dashboard' },
-  {path: 'expense-form', component: ExpenseFormComponent}
+  {path: 'expense-form', component: ExpenseFormComponent},
+  {path: 'salesmainpage', component: SalesMainpageComponent},
+  {path: 'sales-heatmap', component: SalesHeatmapComponent},
+  {path: 'top-selling', component: TopSellingComponent},
+  {path: 'stats', component: StatsCardComponent},
+   
 
+  { path: '**', redirectTo: 'businessowner' }
 ];
 
