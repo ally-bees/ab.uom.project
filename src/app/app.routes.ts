@@ -23,8 +23,9 @@ import { customerinsightComponent } from './pages/customer-insight/customer-insi
 import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
 import { inventorySidebarComponent } from './pages/sidebar/inventory-sidebar/inventory-sidebar.component';
 import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
-
-
+import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
+import { TopSellingComponent } from './components/top-selling/top-selling.component';
+import { StatsCardComponent } from './components/stats-card/stats-card.component';
 
 export const routes: Routes = [
   {
