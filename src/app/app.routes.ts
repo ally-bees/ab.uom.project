@@ -26,6 +26,9 @@ import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussines
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
+import { AuditpageComponent } from './pages/auditpage/auditpage.component'
+import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
+import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
 
 export const routes: Routes = [
   {
@@ -75,6 +78,14 @@ export const routes: Routes = [
   {path: 'stats', component: StatsCardComponent},
   {path: 'Top', component: TopSellingTableComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
+  { 
+    path: 'auditpage', 
+    component: AuditorpageComponent, // The parent container
+    children: [
+      { path: '', component: AuditdashboardComponent },
+      {path: 'audit', component:AuditpageComponent}
+    ]
+   },
   { path: '**', redirectTo: 'salesdashboard' }
 ];
 

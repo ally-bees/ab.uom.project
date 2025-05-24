@@ -1,17 +1,22 @@
-
-.past h1{
+.contents{
+    display: flex;
+    padding-left: 20px;
+}
+.past{
+    padding: 20px;
+}
+.past h2{
     font-weight: 400;
-    font-size: 30px;
-    color: #285F83;
+    color: #000000;
 }
 
 .detail{
     margin-top: 10px;
     width: 368;
-height: 223;
-top: 564px;
-left: 1023px;
-background: white;
+    height: 223;
+    top: 564px;
+    left: 1023px;
+    background: white;
     border-radius: 12px;
     padding:  1px 10px 10px 10px;
     align-items: center;
@@ -28,7 +33,6 @@ background: white;
 
 .content h3{
     font-weight: 400;
-    font-size: 20px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
