@@ -13,3 +13,10 @@ export interface OrderDetail {
   quantity: number;
   price: number;
 }
+
+export interface OrderSummary {
+  totalOrders: number;
+  totalRevenue: number;
+  totalSales: number;
+}
+

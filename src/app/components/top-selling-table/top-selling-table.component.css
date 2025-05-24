@@ -1,0 +1,114 @@
+.top-selling-container h4 {
+    margin: 0 0 0px 0;
+    color: #757474;
+  }
+  
+  .top-selling-container label {
+    font-size: 14px;
+    margin-right: 10px;
+    color: #555;
+    margin: 10px;
+  }
+  
+  .top-selling-container input[type="number"] {
+    width: 80px;
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 6px;
+    border: 1px solid #ddd;
+    margin: 10px;
+  }
+  
+  .top-selling-container button {
+    padding: 6px 14px;
+    font-size: 14px;
+    background-color: #00BCD4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+   
+.stock-status-message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #757474;
+    text-align: center;
+  }
+  
+  .top-selling-container button:hover {
+    background-color: #00a4ba;
+  }
+  
+  /* Updated Table Styles */
+  .top-selling-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    background-color: #f7f8f8;
+  }
+  .table-wrapper {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+
+}
+   
+  .top-selling-table th,
+  .top-selling-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #dddddd9a;
+  }
+  
+  .top-selling-table th:last-child,
+  .top-selling-table td:last-child {
+    border-right: none;
+  }
+  
+  .top-selling-table th {
+    background-color: #00BCD4;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .top-selling-table tr:nth-child(odd) {
+    background-color: #e3f2fd;
+  }
+  
+  .top-selling-table tr:hover {
+    background-color: rgba(0, 188, 212, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Stock status label styles */
+  .status-label {
+    width: 120px;
+    padding: 5px 0;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+    cursor: default;
+    border: none;
+    margin: 0 auto;
+  }
+  
+  .in-stock {
+    background-color: #c8e6c9;
+    color: #256029;
+  }
+  
+  .low-stock {
+    background-color: #fff9c4;
+    color: #8c6d00;
+  }
+  
+  .out-stock {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+  }
+  

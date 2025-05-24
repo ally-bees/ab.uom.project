@@ -1,7 +1,7 @@
-using System.Net;
+using MongoDB.Driver;
 using Backend.Models;
 using Backend.Services;
-using MongoDB.Driver;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,31 +11,30 @@ ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 builder.Services.Configure<MongoDBSettings>(
     builder.Configuration.GetSection("MongoDBSettings"));
 
-// Safely bind and validate MongoDB settings
-var mongoSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
-
-if (mongoSettings == null || string.IsNullOrEmpty(mongoSettings.ConnectionString) || string.IsNullOrEmpty(mongoSettings.DatabaseName))
+// Register IMongoClient and IMongoDatabase
+builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
-    throw new InvalidOperationException("MongoDBSettings are missing or incomplete in the configuration file.");
-}
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    return new MongoClient(mongoDbSettings.ConnectionString);
+});
 
-var mongoClient = new MongoClient(mongoSettings.ConnectionString);
-var mongoDatabase = mongoClient.GetDatabase(mongoSettings.DatabaseName);
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var mongoClient = sp.GetRequiredService<IMongoClient>();
+    return mongoClient.GetDatabase("ab-uom"); // Specify your database name
+});
 
 // Register services
-builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
+builder.Services.AddSingleton<ExpenseService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ExpenseService>();
-builder.Services.AddSingleton<AutomationService>();
-builder.Services.AddSingleton<FinanceService>();
 
 // Configure CORS for Angular frontend
 builder.Services.AddCors(options =>
@@ -62,5 +61,21 @@ app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Test MongoDB connection endpoint
+app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
+{
+    try
+    {
+        var database = mongoClient.GetDatabase("ab-uom");
+        var collectionNames = await database.ListCollectionNamesAsync();
+        var collections = await collectionNames.ToListAsync();
+        return Results.Ok(new { Connected = true, Collections = collections });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, title: "Database Connection Error");
+    }
+});
 
 app.Run();

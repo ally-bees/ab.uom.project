@@ -88,7 +88,7 @@
 }
 
 .product-list {
-  max-height: 600px; /* Adjust the height as needed */
+  max-height: 600px; 
   overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -153,6 +153,10 @@
   cursor: default;
   border: none;
   margin: 0 auto; 
+  
+  background-color: #fff59b;
+  color: rgb(197, 145, 0);
+  
 }
 
 

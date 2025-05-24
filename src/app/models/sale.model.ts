@@ -17,3 +17,8 @@ export interface SalesViewModel {
   totalItems: number;
   totalOrders: number;
 }
+
+export interface SalesSummary {
+  currentTotal: number;
+  previousTotal: number;
+}

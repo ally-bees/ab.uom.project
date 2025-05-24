@@ -84,7 +84,7 @@ export const routes: Routes = [
   {path:'customerinsight',component:customerinsightComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
   {path: 'salesmainpage', component: SalesMainpageComponent},
-  {path: 'sales-heatmap', component: SalesHeatmapComponent},
+  {path: 'sales-heatmap', component: SalesComponent},
   {path: 'top-selling', component: TopSellingComponent},
   {path: 'stats', component: StatsCardComponent},
    

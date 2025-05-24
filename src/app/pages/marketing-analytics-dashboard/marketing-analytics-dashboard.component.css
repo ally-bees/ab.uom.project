@@ -13,7 +13,7 @@
 }
 
 /* Sidebar */
-app-sidebar {
+app-analyticssidebar {
   width: 250px; /* Fixed width for the sidebar */
   background-color: white;
   border-right: 1px solid #eee;

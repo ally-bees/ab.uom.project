@@ -1,0 +1,35 @@
+<div class="top-selling-container">
+    <h4>Top Selling Products</h4>
+    
+    <div class="stock-status-message">
+        <p>Make sure top-selling products are in stock or have a good stock level!</p>
+      </div>
+      
+    <label for="limitInput">Number of Products:</label>
+    <input id="limitInput" type="number" [(ngModel)]="productLimit" min="1" />
+    <button (click)="loadTopSellingProducts()">Load</button>
+  
+    <div class="table-wrapper">
+    <table class="top-selling-table">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Stock Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of topSellingProducts">
+          <td>{{ product.productId }}</td>
+          <td>{{ product.name }}</td>
+          <td>
+            <span class="status-label" [ngClass]="getStockStatusClass(product.stockQuantity)">
+              {{ getStockStatus(product.stockQuantity) }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  
