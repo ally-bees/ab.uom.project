@@ -101,7 +101,7 @@
         <!-- Right Side - Comparison Donut Chart -->
         <div class="comparison-chart-container">
           <div class="chart-box">
-            <h4>Monthly Sales Comparison</h4>
+            <h4>Sales Performance Comparison</h4>
             <canvas
               baseChart
               [data]="comparisonChartData"
@@ -140,32 +140,12 @@
       </div>
 
       <div class="print-section">
-        <button class="print-btn" (click)="openPrintReport()">
-          <i class="fa fa-print"></i> Print Report
+        <button class="print-btn" (click)="printReport()">
+          <i class="fa fa-print"></i>
+          Print Report
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Print Dialog Modal -->
-<!-- <div *ngIf="showPrintDialog" class="print-overlay">
-  <div class="print-dialog">
-    <div class="print-dialog-header">
-      <h2>Print Sales Report</h2>
-      <button class="close-btn" (click)="closePrintDialog()">&times;</button>
-    </div>
-
-    <div class="print-dialog-body">
-      <div class="report-content">
-        <h3>Sales Report Details</h3>
-        <p>Are you sure you want to print this report?</p>
-      </div>
-    </div>
-
-    <div class="print-dialog-footer">
-      <button class="cancel-btn" (click)="closePrintDialog()">Cancel</button>
-      <button class="print-action-btn" (click)="printReport()">Print</button>
-    </div>
-  </div>
-</div> -->

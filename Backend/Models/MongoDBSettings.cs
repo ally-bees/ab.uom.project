@@ -2,7 +2,7 @@ namespace Backend.Models
 {
     public class MongoDBSettings
     {
-        public string ConnectionString { get; set; } = string.Empty;
-        public string DatabaseName { get; set; } = string.Empty;
+        public required string ConnectionString { get; set; } 
+        public required string DatabaseName { get; set; } 
     }
 }

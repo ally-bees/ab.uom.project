@@ -1,25 +1,25 @@
-<!-- sidebar.component.html -->
+
 <div class="sidebar">
   <div class="sidebar-content">
     <div class="menu-items">
       <div *ngFor="let menuItem of menuItems" class="menu-item">
-        <div 
+        <div
           [class.active]="activeMenuItem === menuItem.id"
           [class.expanded]="menuItem.expanded"
-          class="menu-header" 
+          class="menu-header"
           (click)="toggleExpand(menuItem)"
         >
           <i class="fa" [ngClass]="menuItem.icon"></i>
           <span>{{ menuItem.label }}</span>
           <i *ngIf="menuItem.children" class="fa fa-chevron-down expand-icon"></i>
         </div>
-        
+
         <div *ngIf="menuItem.children && menuItem.expanded" class="submenu">
-          <div 
-            *ngFor="let child of menuItem.children" 
+          <div
+            *ngFor="let child of menuItem.children"
             [class.active]="activeMenuItem === child.id"
             class="submenu-item"
-            (click)="setActive(child.id, child.route)"
+            (click)="setActive(child.id)"
           >
             <i class="fa" [ngClass]="child.icon"></i>
             <span>{{ child.label }}</span>
@@ -30,11 +30,6 @@
   </div>
 
   <div class="sidebar-footer">
-    <!-- Back to Dashboard Button -->
-    <button (click)="goToDashboard()" class="dashboard-btn">
-      <i class="fas fa-home"></i> Back to Dashboard
-    </button>
-    
     <button class="sidebar-btn schedule-btn" (click)="scheduleReport()">
       <i class="fa fa-calendar"></i>
       Schedule Report

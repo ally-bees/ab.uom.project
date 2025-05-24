@@ -1,138 +1,171 @@
-.sales-heatmap-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    height: 100%;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-  
-  .card-title {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .contributions {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
-  }
-  
-  .settings-icon {
-    background: #f5f5f5;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .material-icon {
-    font-size: 16px;
-  }
-  
+/* Container for the heatmap */
+.heatmap-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24PX;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Title & Subtitle */
+.heatmap-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.heatmap-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #222;
+}
+.heatmap-subtitle {
+  font-size: 15px;
+  color: #666;
+  margin-top: 0px;
+}
+
+/* Year buttons */
+.year-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.year-selector button {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.year-selector button:hover {
+  background: #e0e0e0;
+}
+.year-selector button.active {
+  background: #008cff;
+  color: white;
+  border-color: #008cff;
+  font-weight: 600;
+}
+
+/* Subtitle before grid */
+.section-subtitle {
+  margin-bottom: 12px;
+  font-size: 14px;
+  text-align: center;
+  color: #555;
+}
+
+/* Heatmap Grid Layout */
+.heatmap-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-x: auto;
+}
+.heatmap-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+/* Month Labels */
+.month-label {
+  width: 80px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  text-align: right;
+  padding-right: 8px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Heatmap Cell */
+.heatmap-cell {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.heatmap-cell div {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  position: relative;
+}
+.heatmap-cell div:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 110%;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Color Intensities */
+.intensity-none {
+  background-color: #e0e0e0;
+}
+.intensity-low {
+  background-color: #abe6ff;
+}
+.intensity-medium {
+  background-color: #00b3ff;
+}
+.intensity-high {
+  background-color: #00338a;
+}
+
+/* Legend Styling */
+.heatmap-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  gap: 10px;
+}
+.intensity-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #444;
+}
+.intensity-legend div {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
   .year-selector {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .year-selector button {
-    padding: 5px 15px;
-    border-radius: 20px;
-    border: 1px solid #ddd;
-    background: white;
-    cursor: pointer;
-  }
-  
-  .year-selector button.active {
-    background: #1565c0;
-    color: white;
-    border-color: #1565c0;
-  }
-  
-  .subtitle {
-    color: #666;
-    margin-bottom: 15px;
-  }
-  
-  .heatmap-container {
-    margin-bottom: 20px;
-  }
-  
-  .month-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
-  
-  .month-label {
-    width: 40px;
-    text-align: center;
-    font-size: 12px;
-  }
-  
-  .heatmap-grid {
-    display: flex;
     flex-direction: column;
-    gap: 4px;
+    align-items: center;
   }
-  
-  .heatmap-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 4px;
-  }
-  
+
   .heatmap-cell {
-    width: 40px;
-    height: 20px;
-    background-color: #eee;
-    border-radius: 2px;
+    width: 16px;
+    height: 16px;
   }
-  
-  .legend {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+
+  .heatmap-cell div:hover::after {
+    font-size: 11px;
+  }
+
+  .month-label {
+    width: 60px;
     font-size: 12px;
-    color: #666;
   }
-  
-  .scale {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .scale-cells {
-    display: flex;
-    gap: 2px;
-  }
-  
-  .scale-cell {
-    width: 15px;
-    height: 15px;
-    border-radius: 2px;
-  }
-  
-  .show-more {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: #f5f5f5;
-    border-radius: 6px;
-    cursor: pointer;
-    color: #666;
-  }
+}

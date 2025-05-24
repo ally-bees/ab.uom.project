@@ -23,7 +23,8 @@ import { customerinsightComponent } from './pages/customer-insight/customer-insi
 import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
 import { inventorySidebarComponent } from './pages/sidebar/inventory-sidebar/inventory-sidebar.component';
 import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
-
+import { TopSellingComponent } from './components/top-selling/top-selling.component';
+import { StatsCardComponent } from './components/stats-card/stats-card.component';
 
 
 export const routes: Routes = [
@@ -83,7 +84,7 @@ export const routes: Routes = [
   {path:'customerinsight',component:customerinsightComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
   {path: 'salesmainpage', component: SalesMainpageComponent},
-  {path: 'sales-heatmap', component: SalesHeatmapComponent},
+  {path: 'sales-heatmap', component: SalesComponent},
   {path: 'top-selling', component: TopSellingComponent},
   {path: 'stats', component: StatsCardComponent},
    

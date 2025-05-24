@@ -8,24 +8,24 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = string.Empty;
+        public required string Id { get; set; } 
 
         [BsonElement("product_id")]
-        public string ProductId { get; set; } = string.Empty;
+        public required string ProductId { get; set; } 
 
         [BsonElement("name")]
-        public string Name { get; set; } = string.Empty;
+        public required string Name { get; set; } 
 
         [BsonElement("category")]
-        public string Category { get; set; } = string.Empty;
+        public required string Category { get; set; } 
 
         [BsonElement("price")]
-        public double Price { get; set; }
+        public required double Price { get; set; }
 
         [BsonElement("stockQuantity")]
-        public int StockQuantity { get; set; }
+        public required int StockQuantity { get; set; }
 
         [BsonElement("description")]
-        public string Description { get; set; } = string.Empty;
+        public required string Description { get; set; } = string.Empty;
     }
 }

@@ -13,16 +13,16 @@ namespace Backend.Models
         public string? Id { get; set; }
 
         [BsonElement("sales_id")] 
-        public string SaleId { get; set; } = string.Empty;
+        public required string SaleId { get; set; }
 
         [BsonElement("orderIds")]
-        public List<string> OrderIds { get; set; } = new();
+        public required List<string> OrderIds { get; set; }
 
         [BsonElement("saledate")]
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-        public DateTime SaleDate { get; set; }
+        public required DateTime SaleDate { get; set; }
 
         [BsonElement("amount")]
-        public double Amount { get; set; }
+        public required double Amount { get; set; }
     }
 }

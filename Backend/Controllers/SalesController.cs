@@ -42,6 +42,14 @@ namespace Backend.Controllers
             var sales = await _salesService.GetSalesByDateRangeAsync(startDate, endDate);
             return Ok(sales);
         }
+        
+        [HttpGet("year/{year}")]
+        public async Task<IActionResult> GetByYear(int year)
+        {
+            var sales = await _salesService.GetSalesByYearAsync(year);
+            return Ok(sales);
+        }
+
 
         // TotalSales, TotalOrders, TotalItemsSold summary
         [HttpGet("summary")]

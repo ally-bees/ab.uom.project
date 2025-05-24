@@ -3,7 +3,8 @@
     display: flex;
     flex-direction: column; /* Arrange elements vertically */
     align-items: center; /* Center horizontally */
-    background: rgb(246, 246, 246);
+    background: rgb(250, 250, 250);
+    border-radius: 12px;
     padding: 20px;
     font-family: sans-serif; /* Use a clean font */
   }

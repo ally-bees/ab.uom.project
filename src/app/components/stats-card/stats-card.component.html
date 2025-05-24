@@ -1,13 +1,17 @@
-<div class="stats-card">
-    <div class="stats-icon">
-      <img [src]="stats.icon" alt="icon">
-    </div>
-    <div class="stats-content">
-      <h2 class="stats-count">{{ stats.count }}</h2>
-      <p class="stats-title">{{ stats.title }}</p>
-      <p class="stats-trend">
-        <span class="trend-arrow">↑</span> 
-        {{ stats.trend }}% ({{ stats.trendLabel }})
-      </p>
-    </div>
+<div class="stats-card" *ngIf="!loading && !error">
+  <div class="card total-sales">
+    <h3>Total Revenue <span class="last-30-days">(Last 30 Days)</span></h3>
+    <p>LKR {{ salesData?.totalRevenue | number: '1.0-2' }}</p>
   </div>
+  <div class="card total-orders">
+    <h3>Total Orders <span class="last-30-days">(Last 30 Days)</span></h3>
+    <p>{{ salesData?.totalOrders }}</p>
+  </div>
+  <div class="card total-items">
+    <h3>Total Items Sold <span class="last-30-days">(Last 30 Days)</span></h3>
+    <p>{{ salesData?.totalItems ?? 'N/A' }}</p> <!-- Handle undefined case -->
+  </div>
+</div>
+
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">Failed to load data. Please try again.</div>
