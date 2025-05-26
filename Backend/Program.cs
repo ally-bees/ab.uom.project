@@ -2,34 +2,27 @@ using MongoDB.Driver;
 using Backend.Models;
 using Backend.Services;
 using System.Net;
-using Backend.Settings;
-using AuthAPI.Settings;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-// Bind configuration sections
-builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoSettings"));
-builder.Services.Configure<MongoDbSetings>(builder.Configuration.GetSection("MongoDbSetings"));
+// Configure MongoDB settings
+builder.Services.Configure<MongoDBSettings>(
+    builder.Configuration.GetSection("MongoDBSettings"));
 
-
-// General MongoDB Client (main DB)
-builder.Services.AddSingleton<IMongoClient>(sp =>
+// Register IMongoClient and IMongoDatabase
+builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
-    var mongoSettings = builder.Configuration.GetSection("MongoSettings").Get<MongoSettings>();
-    return new MongoClient(mongoSettings.ConnectionURI);
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    return new MongoClient(mongoDbSettings.ConnectionString);
 });
 
-// General MongoDB Database
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var mongoClient = sp.GetRequiredService<IMongoClient>();
-    var mongoSettings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
-    return mongoClient.GetDatabase(mongoSettings.DatabaseName);
+    return mongoClient.GetDatabase("ab-uom"); // Specify your database name
 });
-
 
 // Register services
 builder.Services.AddSingleton<Auditservice>();

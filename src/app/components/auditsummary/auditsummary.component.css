@@ -1,15 +1,13 @@
-.audit_summary{
-    width: 800;
-    height: 314;
-}
+
 
 h2{
     font-weight: 400;
+    font-size: 30px;
 }
 
 .summary_box{
     height: 250px;
-    margin-top: 20px;
+    margin-top: 10px;
     width: 500px;
     background: white;
     border-radius: 12px;

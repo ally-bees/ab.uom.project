@@ -4,7 +4,6 @@ using MongoDB.Driver;
 using MongoDB.Bson; 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Backend.Settings;
 
 
 namespace Backend.Services
@@ -12,15 +11,16 @@ namespace Backend.Services
     public class Auditservice
     {
         private readonly IMongoCollection<Table> _CollectionAudit;
-
-        public Auditservice(IOptions<MongoSettings> mongoDBSettings)
+        public Auditservice(IOptions<MongoDBSettings> mongoDBSettings)
         {
             var settings = mongoDBSettings.Value;
 
-            var client = new MongoClient(settings.ConnectionURI);    // Correct
-            var database = client.GetDatabase(settings.DatabaseName); // Fix here, not DataBaseName
-            _CollectionAudit = database.GetCollection<Table>(settings.CollectionName);
+            var client = new MongoClient(settings.ConnectionString);    
+            var database = client.GetDatabase(settings.DatabaseName); 
+
+            _CollectionAudit = database.GetCollection<Table>("audit");
         }
+
 
 
         public async Task<List<Table>> GetFilteredAsync(DateTime? from, DateTime? to)
