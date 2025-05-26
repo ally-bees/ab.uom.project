@@ -1,5 +1,5 @@
 h1{
-    color: black;
+    color: rgb(75, 74, 74);
     font-size: 20px;
     font-weight: 400;
 }
@@ -24,14 +24,17 @@ img{
 }
 
 h2{
-    margin-top: 15px;
+    margin-top: 5px;
     margin-left: 40px;
     color: #083A50;
     font-size: 15px;
+    margin-bottom: 0px;
 }
 
 p{
+    margin-top: 0px;
+    padding-top: 0px;
     color: #A2AEB4;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 400;
 }
