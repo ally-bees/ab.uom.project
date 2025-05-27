@@ -1,45 +1,57 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { AgCharts } from "ag-charts-angular";
 import { AgChartOptions } from "ag-charts-community";
-import { getData } from "./data";
-import {customerservice} from './customer.service';
-
-interface cus{
-  active : number,
-  inactive: number,
-}
+import { customerservice, cusdetail} from './customer.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-customersummary',
   standalone: true,
-  imports: [AgCharts],
+  imports: [AgCharts,CommonModule],
   templateUrl: './customersummary.component.html',
   styleUrl: './customersummary.component.css',
   providers: [customerservice]
 })
-export class CustomersummaryComponent {
 
-  cus: cus | null = null;
+
+export class CustomersummaryComponent implements OnInit {
+
+  cusdetail: cusdetail | null = null;
+  errorMessage = '';
+  public options:AgChartOptions = {
+    data: [],
+   series: [],
+  }
   
       ngOnInit(): void {
-        this.getpur();
+        this.customerservice.getpur().subscribe({
+      next: (data) => {
+        this.cusdetail = data;
+        this.setChartOptions(data);
+      },
+      error: (error) => {
+        this.errorMessage = error.error || 'Failed to load customer summary.';
+      }
+    });
       }
     
-      getpur(): void {
-        this.customerservice.getpur().subscribe(records => {
-          this.cus = records;
-        });
-      }
   
-  public options:AgChartOptions;
 
-  constructor(private customerservice:customerservice) {
+  constructor(private customerservice:customerservice) {}
+  
+  private setChartOptions(data: cusdetail): void{
     this.options = {
-      data: getData(),
+      width: 300,
+      height: 250,
+      data: [
+         { asset: "Active", amount: data.aCount },
+        { asset: "In-active", amount: data.iaCount },
+      ],
       series: [
         {
           type: "pie",
           angleKey: "amount",
+          fills: ["#F9F06A", "#FF4B4B"]
         },
       ],
     };

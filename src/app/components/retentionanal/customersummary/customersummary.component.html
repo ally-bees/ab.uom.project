@@ -6,19 +6,19 @@
                 <div class="box1">
     
                 </div>
-                <p>Active customer-{{cus?.active}}</p>
+                <p>Active customer-{{cusdetail?.aCount}}</p>
             </div>
             <div class="color">
                 <div class="box2">
     
                 </div>
-                <p>In-Active customer-{{cus?.inactive}}</p>
+                <p>In-Active customer-{{cusdetail?.iaCount}}</p>
             </div>
         </div>
-        <div class="table">
+        <div class="table" *ngIf="options">
             <ag-charts
             [options]="options"
-        ></ag-charts>
+            ></ag-charts>
         </div>
     </div>
 </div>

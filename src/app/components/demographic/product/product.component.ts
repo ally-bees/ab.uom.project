@@ -1,11 +1,5 @@
 import { Component } from '@angular/core';
-import { productservice } from './product.service';
-
-interface Topproduct{
-  proid : string,
-  name: string,
-  imgurl :string
-}
+import { productservice, Topproduct } from './product.service';
 
 @Component({
   selector: 'app-product',
@@ -19,17 +13,19 @@ interface Topproduct{
 
 export class ProductComponent {
   topproduct: Topproduct | null = null;
-  
+  errorMessage = '';
+
     constructor(private productservice:productservice){
       
     }
     ngOnInit(): void {
-      this.getproRecords();
-    }
+      this.productservice.getproRecords().subscribe({
+        next: (data) => {
+          this.topproduct = data;
+        },
+        error: (error) => {
+          this.errorMessage = error.error || 'Failed to load top customer.';
+        }
+    });    }
   
-    getproRecords(): void {
-      this.productservice.getproRecords().subscribe(records => {
-        this.topproduct = records;
-      });
-    }
 }

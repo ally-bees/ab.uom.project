@@ -9,7 +9,7 @@ import { FooterComponent } from '../../footer/footer.component';
 @Component({
   selector: 'app-auditdashboard',
   standalone: true,
-  imports: [ PastauditComponent,AuditsummaryComponent,AuditstatustrackerComponent,HeaderComponent,SidebarComponent,FooterComponent  ],
+  imports: [ PastauditComponent,AuditsummaryComponent,AuditstatustrackerComponent  ],
   templateUrl: './auditdashboard.component.html',
   styleUrl: './auditdashboard.component.css'
 })

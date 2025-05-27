@@ -1,29 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-interface Topbuyer{
-    name : string;
-    orders: number;
-    location: string;
-    img:string;
+export interface TopCustomer {
+  name: string;
+  location: string;
 }
+
 
 @Injectable({
     providedIn: 'root' 
   })
 
-export class buyerService {
-    // Mock data to simulate database response
-    private topbuyer: Topbuyer = {
-        name: "Mobina Mirbagheri",
-        orders: 111,
-        location: "Moratuwa",
-        img:"'https://example.com/cat-image.jpg'"
-    };  
+export class buyerService {    
+    private apiUrl = 'http://localhost:5241/Customer'; // Replace with your actual base URL
+
+    constructor(private http: HttpClient) { }
     
-    constructor() { }
-    
-    getbuyRecords(): Observable<Topbuyer> {
-      return of(this.topbuyer); 
+    getbuyRecords() {
+      return this.http.get<TopCustomer>(`${this.apiUrl}/top-customer`)
     }
   }

@@ -26,22 +26,36 @@ import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussines
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
+import { AuditpageComponent } from './pages/auditpage/auditpage.component'
+import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
+import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
+import { DemographicComponent } from './components/demographic/demographic.component';
+import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
+import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 
 export const routes: Routes = [
   {
-    path: 'salesmanager',
-    component: SalesMainpageComponent,
-    children: [
-      { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
-      { path: 'salesdashboard', component: SalesDashboardComponent },
-      { path: 'sales', component: SalesComponent },
-      { path: 'order', component: OrderSummaryComponent },
-      { path:'customerinsight',component:customerinsightComponent},
-      { path: 'printreport', component: PrintReportComponent },
-      {path: 'expense-form', component: ExpenseFormComponent}
-
-    ]
-  },
+  path: 'salesmanager',
+  component: SalesMainpageComponent,
+  children: [
+    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+    { path: 'salesdashboard', component: SalesDashboardComponent },
+    { path: 'sales', component: SalesComponent },
+    { path: 'order', component: OrderSummaryComponent },
+    { 
+      path: 'customerinsight',
+      component: customerinsightComponent,
+      children: [
+        { path: '', redirectTo: 'demographic', pathMatch: 'full' },
+        { path: 'demographic', component: DemographicComponent },
+        { path: 'purchase-behavior', component: PurchasebehaveComponent },
+        { path: 'retention-analysis', component: RetentionanalComponent }
+      ]
+    },
+    { path: 'printreport', component: PrintReportComponent },
+    { path: 'expense-form', component: ExpenseFormComponent }
+  ]
+},
   {
     path: 'inventoryManager',
     component: InventoryMainpageComponent,
@@ -75,6 +89,14 @@ export const routes: Routes = [
   {path: 'stats', component: StatsCardComponent},
   {path: 'Top', component: TopSellingTableComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
+  { 
+    path: 'auditpage', 
+    component: AuditorpageComponent, // The parent container
+    children: [
+      { path: '', component: AuditdashboardComponent },
+      {path: 'audit', component:AuditpageComponent}
+    ]
+   },
   { path: '**', redirectTo: 'salesdashboard' }
 ];
 
