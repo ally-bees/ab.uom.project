@@ -18,12 +18,12 @@
       <div class="date-range">
         <div class="date-input">
           <label>From : </label>
-          <input type="text" placeholder="Select start date" readonly />
+          <input type="date" [(ngModel)]="fromDate" />
           <span class="material-icons">calendar_today</span>
         </div>
         <div class="date-input">
           <label>To : </label>
-          <input type="text" placeholder="Select end date" readonly />
+          <input type="date" [(ngModel)]="toDate" />
           <span class="material-icons">calendar_today</span>
         </div>
       </div>

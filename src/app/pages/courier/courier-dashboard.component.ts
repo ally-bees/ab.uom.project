@@ -21,12 +21,19 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   recentDeliveries: Courier[] = [];
   private pieChart: Chart | undefined;
 
+  fromDate: string = '';
+  toDate: string = '';
+
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
     this.courierService.getRecentDeliveries(6).subscribe(data => {
-      console.log('API data:', data);
       this.recentDeliveries = data;
+    });
+
+   
+    this.courierService.getSummary(this.fromDate, this.toDate).subscribe(data => {
+      this.summary = data;
     });
   }
 
