@@ -37,7 +37,7 @@ export class ForgetPasswordComponent {
     this.loading = true;
     const email = this.email?.value;
 
-    this.authService.forgetPassword(email).subscribe({
+    this.authService.forgotPassword(email).subscribe({
       next: () => {
         this.successMessage = 'If your email exists, we have sent a password reset link.';
         this.loading = false;

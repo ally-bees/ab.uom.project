@@ -5,7 +5,24 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
+//import { UserService } from '../services/user.service';
+import { UserService } from '../services/userProfile.service';
 
+export interface UserDetails {
+  id?: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  phoneCountryCode: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  country: string;
+  address: string;
+  city: string;
+  profileImage?: string;
+}
 
 @Component({
   selector: 'app-user-profile',
@@ -21,6 +38,10 @@ export class UserProfileComponent implements OnInit {
   lastUpdate: string = new Date().toUTCString();
   activeSection: string = 'Edit Profile';
   currentUser: User | null = null;
+  selectedFile: File | null = null;
+  isLoading = false;
+  saveMessage = '';
+  saveSuccess = false;
  
   navigationItems = [
     { name: 'Edit Profile', active: true },
@@ -32,6 +53,7 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService : UserService,
     private router: Router
   ) {
     this.profileForm = this.fb.group({
@@ -40,7 +62,7 @@ export class UserProfileComponent implements OnInit {
       email: ['', [Validators.email]],
       userName: [''],
       phoneCountryCode: ['+94'],
-      phoneNumber: [''],
+      phoneNumber: ['',[Validators.pattern(/^\d{9,10}$/)]],
       dateOfBirth: [''],
       country: [''],
       address: [''],
@@ -80,20 +102,128 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  loadUserProfile(userId: string) {
+    this.userService.getUserDetails(userId).subscribe({
+      next: (userDetails: UserDetails) => {
+        // Populate form with existing user details
+        this.profileForm.patchValue({
+          firstName: userDetails.firstName,
+          lastName: userDetails.lastName,
+          email: userDetails.email,
+          userName: userDetails.userName,
+          phoneCountryCode: userDetails.phoneCountryCode,
+          phoneNumber: userDetails.phoneNumber,
+          dateOfBirth: userDetails.dateOfBirth,
+          country: userDetails.country,
+          address: userDetails.address,
+          city: userDetails.city
+        });
+
+        // Set profile image if exists
+        if (userDetails.profileImage) {
+          this.imageSrc = userDetails.profileImage;
+        }
+      },
+      error: (error) => {
+        console.log('No existing user details found, using defaults');
+      }
+    });
+  }
+
+  onSave() {
+    if (this.profileForm.valid && this.currentUser) {
+      this.isLoading = true;
+      this.saveMessage = '';
+
+      const userDetails: UserDetails = {
+        userId: this.currentUser.id ?? '',
+        firstName: this.profileForm.value.firstName,
+        lastName: this.profileForm.value.lastName,
+        email: this.profileForm.value.email,
+        userName: this.profileForm.value.userName,
+        phoneCountryCode: this.profileForm.value.phoneCountryCode,
+        phoneNumber: this.profileForm.value.phoneNumber,
+        dateOfBirth: this.profileForm.value.dateOfBirth,
+        country: this.profileForm.value.country,
+        address: this.profileForm.value.address,
+        city: this.profileForm.value.city
+      };
+
+      // Save user details first
+      this.userService.saveUserDetails(userDetails).subscribe({
+        next: (response) => {
+          console.log('User details saved successfully:', response);
+          
+          // If there's a selected file, upload it
+          if (this.selectedFile) {
+            this.uploadProfileImage();
+          } else {
+            this.showSuccessMessage('Profile saved successfully!');
+            this.isLoading = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error saving user details:', error);
+          this.showErrorMessage('Failed to save profile. Please try again.');
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.markFormGroupTouched(this.profileForm);
+      this.showErrorMessage('Please fill in all required fields correctly.');
+    }
+  }
+
+  uploadProfileImage() {
+    if (this.selectedFile && this.currentUser) {
+      this.userService.uploadProfileImage(this.currentUser.id!, this.selectedFile).subscribe({
+        next: (response) => {
+          console.log('Profile image uploaded successfully:', response);
+          this.showSuccessMessage('Profile and image saved successfully!');
+          this.selectedFile = null;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error uploading image:', error);
+          this.showErrorMessage('Profile saved, but image upload failed.');
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.isLoading = false;
+    }
+  }
+
+  showSuccessMessage(message: string) {
+    this.saveMessage = message;
+    this.saveSuccess = true;
+    setTimeout(() => {
+      this.saveMessage = '';
+    }, 3000);
+  }
+
+  showErrorMessage(message: string) {
+    this.saveMessage = message;
+    this.saveSuccess = false;
+    setTimeout(() => {
+      this.saveMessage = '';
+    }, 3000);
+  }
+
 
   openDatePicker() {
     // This will trigger the native date picker
     document.getElementById('dateOfBirth')?.click();
   }
 
-  onSave() {
-    if (this.profileForm.valid) {
-      console.log('Form submitted', this.profileForm.value);
-      // Here you would typically call a service to update the profile
-    } else {
-      this.markFormGroupTouched(this.profileForm);
-    }
-  }
+  // onSave() {
+  //   if (this.profileForm.valid) {
+  //     console.log('Form submitted', this.profileForm.value);
+  //     // Here you would typically call a service to update the profile
+  //   } else {
+  //     this.markFormGroupTouched(this.profileForm);
+  //   }
+  // }
  
   markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
@@ -125,21 +255,23 @@ export class UserProfileComponent implements OnInit {
 
   logout() {
     try {
-      // If authService.logout() returns a Promise
+      // If authService.logout() returns an Observable
       this.authService.logout()
-        .then(() => {
-          // Clear any local storage items
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          sessionStorage.removeItem('token');
-          
-          // Force (more forceful redirect than router.navigate) navigation to login page
-          window.location.href = '/login'; 
-        })
-        .catch(error => {
-          console.error('Logout failed:', error);
-          // Still try to redirect even if logout API fails
-          window.location.href = '/login';
+        .subscribe({
+          next: () => {
+            // Clear any local storage items
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            
+            // Force (more forceful redirect than router.navigate) navigation to login page
+            window.location.href = '/login'; 
+          },
+          error: (error) => {
+            console.error('Logout failed:', error);
+            // Still try to redirect even if logout API fails
+            window.location.href = '/login';
+          }
         });
     } catch (error) {
       console.error('Error during logout process:', error);

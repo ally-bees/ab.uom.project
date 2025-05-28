@@ -3,7 +3,7 @@ export interface User {
     username: string;
     email: string;
     honeycombId: string;
-    roles: string;
+    role: string;
 }
   
 export interface RegisterRequest {

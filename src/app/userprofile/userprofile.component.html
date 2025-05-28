@@ -166,7 +166,22 @@
             </div>
             
             <div class="form-actions">
-              <button type="submit" class="save-button">Save</button>
+              <button 
+                type="submit" 
+                class="save-button" 
+                (click)="onSave()" 
+                [disabled]="isLoading"
+              >
+                <span *ngIf="!isLoading">Save Changes</span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin"></i> Saving...
+                </span>
+              </button>
+              <div class="save-status" *ngIf="saveMessage">
+                <div class="alert" [class.alert-success]="saveSuccess" [class.alert-error]="!saveSuccess">
+                    {{ saveMessage }}
+                </div>
+              </div>
             </div>
           </form>
         </div>

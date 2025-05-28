@@ -1,5 +1,6 @@
 using AuthAPI.Models;
 using AuthAPI.Settings;
+using Backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -7,7 +8,7 @@ public class UserManagementService
 {
     private readonly IMongoCollection<User> _users;
 
-    public UserManagementService(IOptions<MongoDbSetings> mongoSettings)
+    public UserManagementService(IOptions<MongoDBSettings> mongoSettings)
     {
         var settings = mongoSettings.Value;
         var client = new MongoClient(settings.ConnectionString);

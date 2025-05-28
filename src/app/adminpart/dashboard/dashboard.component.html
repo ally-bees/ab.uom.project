@@ -1,9 +1,57 @@
-<app-header></app-header>
+<!-- <app-header></app-header> -->
 <div class="dashboard-container">
-  <!-- Sidebar -->
-  <!-- <app-adminsidebar></app-adminsidebar> -->
+  
+  <!-- Top Navigation Bar -->
+  <div class="user-panel" *ngIf="currentUser">
+    <div class="user-info-section">
+      <!-- Left Side - User Info -->
+      <div class="user-left">
+        <div class="user-avatar">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="user-details">
+          <h3>{{ currentUser.username }}</h3>
+          <p class="role">{{ currentUser.role }}</p>
+          <p class="email">{{ currentUser.email }}</p>
+          <p class="honeycomb">ID: {{ currentUser.honeycombId }}</p>
+        </div>
+      </div>
 
-  <!-- Dashboard Content -->
+      <!-- Center - Navigation Links (Optional) -->
+      <div class="user-center">
+        <div class="nav-item" [class.active]="activeTab === 'dashboard'" (click)="setActiveTab('dashboard')">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
+          <i class="fas fa-users"></i>
+          <span>Users</span>
+        </div>
+        <div class="nav-item" [class.active]="activeTab === 'config'" (click)="setActiveTab('config')">
+          <i class="fas fa-cogs"></i>
+          <span>Settings</span>
+        </div>
+        <div class="nav-item" [class.active]="activeTab === 'logs'" (click)="setActiveTab('logs')">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Logs</span>
+        </div>
+      </div>
+
+      <!-- Right Side - Actions -->
+      <div class="user-actions">
+        <button class="action-btn profile-btn" (click)="goToProfile()">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </button>
+        <button class="action-btn logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content Area -->
   <div class="dashboard-content">
     <!-- Status Cards Row -->
     <div class="status-cards-row">
@@ -46,6 +94,10 @@
       <app-user-management *ngIf="activeTab === 'users'"></app-user-management>
       <app-system-config *ngIf="activeTab === 'config'"></app-system-config>
       <app-audit-logs *ngIf="activeTab === 'logs'"></app-audit-logs>
+      <div *ngIf="activeTab === 'dashboard'">
+        <h2>Welcome to Admin Dashboard</h2>
+        <p>Use the navigation above to manage your system.</p>
+      </div>
     </div>
   </div>
 </div>
