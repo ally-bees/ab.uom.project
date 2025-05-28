@@ -1,36 +1,18 @@
 /* dashboard.component.scss */
-.dashboard-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f9f9f9;
-  }
-  
-  .dashboard-content {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-  
-  .main-content {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-  }
-  
+
 .up{
     margin-top: 40px;
-    margin-left: 250px;
+    margin-left: 20px;
 }
 
 .content{
-    margin-top: 40px;
-    margin-left: 250px;
+    margin-top: 30px;
+    margin-left: 20px;
     display: flex;
     margin-bottom: 40px;
 }
 
 app-pastaudit{
     margin-left: 20px;
-    margin-top: 80px;
+    margin-top: 5px;
 }

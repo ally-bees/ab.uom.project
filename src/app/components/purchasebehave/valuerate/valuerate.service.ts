@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-interface pur{
-    value : number,
-    rate: number,
+export interface Pur{
+  productName: string;
+  productSoldCount: number;
+  totalCustomerCount: number;
+  value: number;
 }
 
 @Injectable({
@@ -12,15 +15,11 @@ interface pur{
 
 export class valuerateservice{
 
-    // Mock data to simulate database response
-        private pur: pur = {
-          value: 500,
-          rate: 50,
-        };  
-        
-        constructor() { }
-        
-        getpur(): Observable<pur> {
-          return of(this.pur); 
+     private apiUrl = 'http://localhost:5241/Customer/product-stats';  
+    
+        constructor(private http: HttpClient) { }
+            
+        getpur(productId: string): Observable<Pur>{
+          return this.http.get<Pur>(`${this.apiUrl}/${productId}`);
         }
 } 

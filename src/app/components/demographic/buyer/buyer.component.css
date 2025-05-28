@@ -1,6 +1,6 @@
 
 h1{
-    color: black;
+    color: rgb(79, 78, 78);
     font-size: 20px;
     font-weight: 400;
 }
@@ -26,6 +26,7 @@ img{
 h2{
     color: #083A50;
     font-weight: 400;
+    font-size: 25px;
 }
 
 .para{

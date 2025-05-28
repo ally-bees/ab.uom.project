@@ -86,7 +86,6 @@
 
 //   { path: '**', redirectTo: 'dashboard' }
 // ];
-
 import { Routes } from '@angular/router';
 import {
   authGuard,
@@ -124,14 +123,23 @@ import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
+
 import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
 import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
 import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
 import { ResetPasswordComponent } from './adminpart/reset-password/reset-password.component';
+
 import { TestsalesDashboardComponent } from './dashboards/testsales-dashboard/testsales-dashboard.component';
 import { TestbusinessDashboardComponent } from './dashboards/testbusiness-dashboard/testbusiness-dashboard.component';
 import { TestinventoryDashboardComponent } from './dashboards/testinventory-dashboard/testinventory-dashboard.component';
 import { TestmarketingDashboardComponent } from './dashboards/testmarketing-dashboard/testmarketing-dashboard.component';
+
+import { AuditpageComponent } from './pages/auditpage/auditpage.component';
+import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
+import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
+import { DemographicComponent } from './components/demographic/demographic.component';
+import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
+import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 
 export const routes: Routes = [
   // Default route
@@ -143,7 +151,7 @@ export const routes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
 
-  // Admin-only
+  // Admin-only routes
   { path: 'admindashboard', component: DashboardComponent, canActivate: [adminGuard] },
   { path: 'systemconfig', component: SystemConfigComponent, canActivate: [adminGuard] },
   { path: 'auditlogs', component: AuditLogsComponent, canActivate: [adminGuard] },
@@ -152,23 +160,32 @@ export const routes: Routes = [
   // Business owner
   { path: 'testbusinessowner', component: TestbusinessDashboardComponent, canActivate: [businessOwnerGuard] },
 
-  // Sales Manager - child routes under main layout
-  {
-    path: 'testsalesmanager',
-    component: TestsalesDashboardComponent,
-    canActivate: [salesManagerGuard],
-    children: [
+// Sales Manager with child routes
+{
+  path: 'salesmanager',
+  component: SalesMainpageComponent,
+  canActivate: [salesManagerGuard],
+  children: [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      { path: 'customerinsight', component: customerinsightComponent },
+      { 
+        path: 'customerinsight',
+        component: customerinsightComponent,
+        children: [
+          { path: '', redirectTo: 'demographic', pathMatch: 'full' },
+          { path: 'demographic', component: DemographicComponent },
+          { path: 'purchase-behavior', component: PurchasebehaveComponent },
+          { path: 'retention-analysis', component: RetentionanalComponent }
+        ]
+      },
       { path: 'printreport', component: PrintReportComponent },
       { path: 'expense-form', component: ExpenseFormComponent }
     ]
   },
 
-  // Inventory Manager - child routes under main layout
+  // Inventory Manager with child routes
   {
     path: 'testinventorymanager',
     component: TestinventoryDashboardComponent,
@@ -189,7 +206,7 @@ export const routes: Routes = [
     canActivate: [marketingManagerGuard]
   },
 
-  // Common routes (for logged in users)
+  // Common routes (authenticated users)
   { path: 'userprofile', component: UserProfileComponent, canActivate: [authGuard] },
   { path: 'finance', component: FinanceComponent, canActivate: [authGuard] },
   { path: 'schedule', component: ScheduleComponent, canActivate: [authGuard] },
@@ -201,11 +218,17 @@ export const routes: Routes = [
   { path: 'stats', component: StatsCardComponent, canActivate: [authGuard] },
   { path: 'top', component: TopSellingTableComponent, canActivate: [authGuard] },
 
+  // Audit related routes (if needed)
+  { path: 'auditpage', component: AuditpageComponent },
+  { path: 'auditdashboard', component: AuditdashboardComponent },
+  { path: 'auditorpage', component: AuditorpageComponent },
+
   // Policies
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
 
-  // Catch-all
+  // Catch-all redirect
   { path: '**', redirectTo: 'login' }
 ];
+
 

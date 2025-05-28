@@ -47,8 +47,13 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 
-// === Custom Services ===
+
 // Backend-related services
+
+// Register services
+builder.Services.AddSingleton<MongoDbCustomerInsightService>();
+builder.Services.AddSingleton<Auditservice>();
+
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
