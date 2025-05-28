@@ -35,7 +35,7 @@ builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
-builder.Services.AddSingleton<CourierService>(); // <-- ADD THIS LINE
+builder.Services.AddSingleton<CourierService>(); 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

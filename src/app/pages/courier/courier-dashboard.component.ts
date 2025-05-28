@@ -1,104 +1,60 @@
-import { HeaderComponent } from "../header/header.component";
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Chart, ChartConfiguration } from 'chart.js';
+import { CourierService, Courier } from '../../services/courier.service';
+import { Chart } from 'chart.js';
+import { HeaderComponent } from "../header/header.component";
 import { CouriersidebarComponent } from "../sidebar/couriersidebar/couriersidebar.component";
 import { FooterComponent } from "../../footer/footer.component";
-
-
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  standalone:true,
+  standalone: true,
   selector: 'app-courier',
   templateUrl: './courier-dashboard.component.html',
   styleUrls: ['./courier-dashboard.component.css'],
-  imports: [HeaderComponent, CouriersidebarComponent, FooterComponent]
+  imports: [HeaderComponent, CouriersidebarComponent, FooterComponent, CommonModule, FormsModule]
 })
 export class CourierDashboardComponent implements OnInit, AfterViewInit {
-  @ViewChild('deliveryPieChart') deliveryPieChartRef!: ElementRef;
+  @ViewChild('deliveryPieChart') deliveryPieChartRef!: ElementRef<HTMLCanvasElement>;
 
-  // Delivery stats
-  deliveryStats = {
-    total: 650,
-    pending: 430,
-    completed: 200,
-    rejected: 20
-  };
+  summary: any = {};
+  recentDeliveries: Courier[] = [];
+  private pieChart: Chart | undefined;
 
-  // Recent deliveries data
-  recentDeliveries = [
-    {
-      id: '00001A',
-      orderId: '202400085',
-      orderDate: '19/12/2024',
-      estimatedDate: '26/12/2024',
-      city: 'Galle',
-      status: 'Completed'
-    },
-    {
-      id: '00002B',
-      orderId: '202400025',
-      orderDate: '19/12/2024',
-      estimatedDate: '26/12/2024',
-      city: 'Colombo',
-      status: 'Pending'
-    },
-    {
-      id: '00003C',
-      orderId: '202400093',
-      orderDate: '20/12/2024',
-      estimatedDate: '27/12/2024',
-      city: 'Kaluthara',
-      status: 'Completed'
-    },
-    {
-      id: '00004D',
-      orderId: '202400069',
-      orderDate: '21/12/2024',
-      estimatedDate: '28/12/2024',
-      city: 'Mathara',
-      status: 'Completed'
-    },
-    {
-      id: '00005E',
-      orderId: '202400048',
-      orderDate: '22/12/2024',
-      estimatedDate: '31/12/2024',
-      city: 'Galle',
-      status: 'rejected'
-    },
-    {
-      id: '00005E',
-      orderId: '202400048',
-      orderDate: '22/12/2024',
-      estimatedDate: '31/12/2024',
-      city: 'Galle',
-      status: 'Completed'
-    }
-  ];
+  constructor(private courierService: CourierService) {}
 
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
-    this.initializePieChart();
+  ngOnInit(): void {
+    this.courierService.getRecentDeliveries(6).subscribe(data => {
+      console.log('API data:', data);
+      this.recentDeliveries = data;
+    });
   }
 
-  initializePieChart(): void {
+  ngAfterViewInit(): void {
+    this.updatePieChart();
+  }
+
+  updatePieChart(): void {
+    if (!this.deliveryPieChartRef) return;
     const canvas = this.deliveryPieChartRef.nativeElement;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    const config: ChartConfiguration = {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+
+    this.pieChart = new Chart(ctx, {
       type: 'pie',
       data: {
         labels: ['Pending Deliveries', 'Completed Deliveries', 'Rejected Deliveries'],
         datasets: [{
-          data: [this.deliveryStats.pending, this.deliveryStats.completed, this.deliveryStats.rejected],
-          backgroundColor: [
-            '#f9e559', // Yellow for pending
-            '#4caf50', // Green for completed
-            '#f44336'  // Red for rejected
+          data: [
+            this.summary?.pending || 0,
+            this.summary?.completed || 0,
+            this.summary?.rejected || 0
           ],
+          backgroundColor: ['#f9e559', '#4caf50', '#f44336'],
           borderWidth: 0
         }]
       },
@@ -106,42 +62,18 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const label = context.label || '';
-                const value = context.formattedValue;
-                const dataset = context.dataset;
-                const total = dataset.data.reduce((a: any, b: any) => a + b, 0);
-                const percentage = Math.round((context.raw as number / total) * 100);
-                return `${label}: ${value} (${percentage}%)`;
-              }
-            }
-          }
+          legend: { display: false }
         }
       }
-    };
-
-    new Chart(ctx, config);
+    });
   }
 
-  printReport(): void {
-    window.print();
-  }
-
-  getStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return 'completed';
-      case 'pending':
-        return 'pending';
-      case 'rejected':
-        return 'rejected';
-      default:
-        return '';
+  getStatusClass(status: string | undefined): string {
+    switch ((status || '').toLowerCase()) {
+      case 'completed': return 'completed';
+      case 'pending': return 'pending';
+      case 'rejected': return 'rejected';
+      default: return '';
     }
   }
 }
