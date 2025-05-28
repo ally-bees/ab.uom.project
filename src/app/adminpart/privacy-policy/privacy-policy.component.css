@@ -1,0 +1,17 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  
+  h1, h2 {
+    margin-top: 20px;
+  }
+
+  .privacy-list {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  

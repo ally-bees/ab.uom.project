@@ -61,3 +61,38 @@ Thumbs.db
 /Backend/appsettings.Development.json
 
 .fake
+
+# ---- Backend (ASP.NET Core) ----
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.vspscc
+*.vssscc
+
+# Visual Studio working folder
+.vs/
+
+# Output files
+*.exe
+*.dll
+*.pdb
+*.log
+*.cache
+
+# Runtime-generated config files
+*.runtimeconfig.json
+*.deps.json
+
+# Configuration files with potential secrets
+appsettings.json
+appsettings.Development.json
+
+# HTTP files (used for API testing in some editors)
+*.http
+
+# Others
+*.db
+*.DS_Store

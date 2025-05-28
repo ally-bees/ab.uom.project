@@ -1,5 +1,6 @@
 using AuthAPI.Models;
 using AuthAPI.Settings;
+using Backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Security.Cryptography;
@@ -10,7 +11,7 @@ public class UserService
 {
     private readonly IMongoCollection<User> _usersCollection;
 
-    public UserService(IOptions<MongoDbSetings> mongoDbSettings)
+    public UserService(IOptions<MongoDBSettings> mongoDbSettings)
     {
         var mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
         var mongoDatabase = mongoClient.GetDatabase(mongoDbSettings.Value.AdminDatabaseName);

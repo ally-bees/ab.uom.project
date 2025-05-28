@@ -1,17 +1,34 @@
-using MongoDB.Driver;
+
+using AuthAPI.Models.DTOs;
+using AuthAPI.Services;
+using AuthAPI.Settings;
 using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using System.Net;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// add services
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Use TLS 1.2
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-// Configure MongoDB settings
-builder.Services.Configure<MongoDBSettings>(
-    builder.Configuration.GetSection("MongoDBSettings"));
+// === Configuration Bindings ===
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings")); // Backend Mongo
+//builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));   // Auth Mongo
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// Register IMongoClient and IMongoDatabase
+
+// === MongoDB Setup ===
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
@@ -21,12 +38,17 @@ builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var mongoClient = sp.GetRequiredService<IMongoClient>();
-    return mongoClient.GetDatabase("ab-uom"); // Specify your database name
+    return mongoClient.GetDatabase("ab-uom");
 });
+
+
+
+// Backend-related services
 
 // Register services
 builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<Auditservice>();
+
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
@@ -34,22 +56,67 @@ builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Auth & User services
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<UserManagementService>();
 
-// Configure CORS for Angular frontend
+builder.Services.AddSingleton<IPasswordResetService, PasswordResetService>();
+builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
+
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
-        builder => builder
-            .WithOrigins("http://localhost:4200")
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
+
+// === JWT Authentication ===
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+if (jwtSettings == null)
+    throw new InvalidOperationException("JWT settings are not configured properly.");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+    };
+});
+
+// === Role-based Authorization ===
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy =>
+        policy.RequireRole("Admin"));
+
+    options.AddPolicy("RequireUserRole", policy =>
+        policy.RequireRole("User"));
+});
+
+//add autherization
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// === Middleware Pipeline ===
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -57,14 +124,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAngularApp");
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Test MongoDB connection endpoint
+// === MongoDB Connection Test Endpoint ===
 app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
 {
     try
