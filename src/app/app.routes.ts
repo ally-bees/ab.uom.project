@@ -160,12 +160,12 @@ export const routes: Routes = [
   // Business owner
   { path: 'testbusinessowner', component: TestbusinessDashboardComponent, canActivate: [businessOwnerGuard] },
 
-  // Sales Manager with child routes
-  {
-    path: 'salesmanager',
-    component: SalesMainpageComponent,
-    canActivate: [salesManagerGuard], 
-    children: [
+// Sales Manager with child routes
+{
+  path: 'salesmanager',
+  component: SalesMainpageComponent,
+  canActivate: [salesManagerGuard],
+  children: [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },

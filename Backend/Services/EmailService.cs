@@ -1,73 +1,4 @@
-// using System.Net;
-// using System.Net.Mail;
-// using Microsoft.Extensions.Options;
 
-// namespace AuthAPI.Services;
-
-// public class EmailSettings
-// {
-//     public string SmtpServer { get; set; }
-//     public int SmtpPort { get; set; }
-//     public string SenderEmail { get; set; }
-//     public string SenderName { get; set; }
-//     public string Password { get; set; }
-//     public bool UseSsl { get; set; }
-// }
-
-// public interface IEmailService
-// {
-//     Task SendEmailAsync(string to, string subject, string body, bool isHtml = true);
-// }
-
-// public class EmailService : IEmailService
-// {
-//     private readonly EmailSettings _emailSettings;
-//     private readonly ILogger<EmailService> _logger;
-
-//     public EmailService(IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
-//     {
-//         _emailSettings = emailSettings.Value;
-//         _logger = logger;
-//     }
-
-//     public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = true)
-//     {
-//         try
-//         {
-//             var message = new MailMessage
-//             {
-//                 From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
-//                 Subject = subject,
-//                 Body = body,
-//                 IsBodyHtml = isHtml
-//             };
-            
-//             message.To.Add(new MailAddress(to));
-
-//             using var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort)
-//             {
-//                 Credentials = new NetworkCredential(_emailSettings.SenderEmail, _emailSettings.Password),
-//                 EnableSsl = _emailSettings.UseSsl
-//             };
-
-//             await client.SendMailAsync(message);
-//             _logger.LogInformation($"Email sent successfully to {to}");
-//         }
-//         catch (Exception ex)
-//         {
-//             _logger.LogError($"Failed to send email to {to}. Error: {ex.Message}");
-//             // For development/testing, we'll just log the email instead
-//             _logger.LogInformation($"Would have sent email to: {to}");
-//             _logger.LogInformation($"Subject: {subject}");
-//             _logger.LogInformation($"Body: {body}");
-            
-//             // Depending on your requirements, you might want to:
-//             // 1. Rethrow the exception
-//             // 2. Swallow it and just log (as we're doing)
-//             // 3. Return a failure result
-//         }
-//     }
-// }
 
 using System.Net;
 using System.Net.Mail;
@@ -107,6 +38,22 @@ namespace AuthAPI.Services
         {
             try
             {
+                Console.WriteLine($"🔍 Attempting to send email to: {to}");
+                Console.WriteLine($"🔍 SMTP Server: {_emailSettings.SmtpServer}:{_emailSettings.SmtpPort}");
+                Console.WriteLine($"🔍 Sender Email: {_emailSettings.SenderEmail}");
+                Console.WriteLine($"🔍 Use SSL: {_emailSettings.UseSsl}");
+                
+                // Validate email settings
+                if (string.IsNullOrEmpty(_emailSettings.SenderEmail) || _emailSettings.SenderEmail.Contains("PLACEHOLDER"))
+                {
+                    throw new InvalidOperationException("Email sender not configured properly");
+                }
+                
+                if (string.IsNullOrEmpty(_emailSettings.Password) || _emailSettings.Password.Contains("PLACEHOLDER"))
+                {
+                    throw new InvalidOperationException("Email password not configured properly");
+                }
+
                 var message = new MailMessage
                 {
                     From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
@@ -120,21 +67,42 @@ namespace AuthAPI.Services
                 using var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort)
                 {
                     Credentials = new NetworkCredential(_emailSettings.SenderEmail, _emailSettings.Password),
-                    EnableSsl = _emailSettings.UseSsl
+                    EnableSsl = _emailSettings.UseSsl,
+                    UseDefaultCredentials = false, // Important: Set this to false
+                    Timeout = 30000,
+                    DeliveryMethod = SmtpDeliveryMethod.Network
                 };
 
+                Console.WriteLine("🔍 Attempting SMTP connection...");
                 await client.SendMailAsync(message);
-                _logger.LogInformation($"Email sent successfully to {to}");
+                Console.WriteLine($"✅ Email sent successfully to {to}");
+                _logger.LogInformation($"✅ Email sent successfully to {to}");
             }
-            catch (Exception ex)
+            catch (SmtpException ex)
             {
-                _logger.LogError($"Failed to send email to {to}. Error: {ex.Message}");
+                Console.WriteLine($" SMTP Error: {ex.Message}");
+                Console.WriteLine($"Status Code: {ex.StatusCode}");
+                _logger.LogError($" SMTP failed to send email to {to}. SMTP Error: {ex.Message}, Status: {ex.StatusCode}");
                 
-                // For development/testing, log the email content
+                // Log for development, but still try to send in production
                 _logger.LogInformation($"Would have sent email to: {to}");
                 _logger.LogInformation($"Subject: {subject}");
                 _logger.LogInformation($"Body: {body}");
                 
+                // Re-throw for now to see the specific error
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($" General email error: {ex.Message}");
+                _logger.LogError($" Failed to send email to {to}. Error: {ex.Message}");
+                
+                // Log for development
+                _logger.LogInformation($"Would have sent email to: {to}");
+                _logger.LogInformation($"Subject: {subject}");
+                _logger.LogInformation($"Body: {body}");
+                
+                throw;
             }
         }
 

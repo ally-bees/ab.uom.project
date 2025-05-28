@@ -89,6 +89,7 @@ obj/
 # Configuration files with potential secrets
 appsettings.json
 appsettings.Development.json
+appsettings.Local.json
 
 # HTTP files (used for API testing in some editors)
 *.http
