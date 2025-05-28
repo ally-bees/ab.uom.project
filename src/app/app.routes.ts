@@ -156,7 +156,7 @@ export const routes: Routes = [
   {
     path: 'testsalesmanager',
     component: TestsalesDashboardComponent,
-    // canActivate: [salesManagerGuard],
+    canActivate: [salesManagerGuard],
     children: [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
