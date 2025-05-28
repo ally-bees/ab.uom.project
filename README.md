@@ -40,3 +40,33 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+# Backend Setup
+
+## Local Development Setup
+
+1. Create `appsettings.Local.json` in the Backend folder
+2. Add your real credentials (see example below)
+3. Never commit this file to Git
+
+### appsettings.Local.json Example:
+```json
+{
+  "MongoDBSettings": {
+    "ConnectionString": "your-real-mongo-connection-string"
+  },
+  "JwtSettings": {
+    "Key": "your-real-jwt-secret-key"
+  },
+  "EmailSettings": {
+    "SenderEmail": "your-email@gmail.com",
+    "Password": "your-gmail-app-password"
+  }
+}
+```
+
+## Gmail Setup
+1. Enable 2-Factor Authentication
+2. Generate App Password
+3. Use App Password in local config

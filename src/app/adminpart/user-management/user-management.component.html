@@ -1,5 +1,4 @@
 <div class="user-management-container">
-  <!-- Sidebar -->
   <!-- User Management Content -->
   <div class="user-management-content">
     <div class="header">
@@ -34,22 +33,37 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <!-- let user of users  -->
+        <tr *ngFor="let user of filteredUsers()">    
           <td class="user-cell">
-            <div class="user-name">{{ user.name }}</div>
+            <div class="user-name">{{ user.username }}</div>
             <div class="user-email">{{ user.email }}</div>
           </td>
-          <td>{{ user.role }}</td>
+          <td>{{ user.roles }}</td>
           <td>{{ user.lastActive }}</td>
           <td>
-            <span class="status-badge" [ngClass]="user.status.toLowerCase()">
+            <span class="status-badge" [ngClass]="user.status?.toLowerCase()">
               {{ user.status }}
             </span>
           </td>
-          <td>
+          <!-- <td>
             <button class="action-btn">
-              <i class="icon more-icon"></i>
+              <i class="icon more-icon"><strong>⋯</strong></i>
             </button>
+          </td> -->
+          <td class="action-cell">
+            <div class="dropdown-container">
+              <button class="action-btn" (click)="toggleDropdown(user)">
+                ⋯
+              </button>
+          
+              <!-- Dropdown menu -->
+              <div class="dropdown-menu" *ngIf="user.showMenu">
+                <button class="delete-btn" (click)="deleteUser(user)">
+                  🗑️ Delete
+                </button>
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>

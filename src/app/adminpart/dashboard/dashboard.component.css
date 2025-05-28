@@ -1,23 +1,250 @@
 /* Dashboard Container */
 .dashboard-container {
   display: flex;
-  height: calc(100vh - 60px); /* Adjust height based on header height */
+  flex-direction: column;
+  height: calc(100vh - 60px);
 }
 
 /* Sidebar */
 app-sidebar {
   width: 250px; /* Fixed width for the sidebar */
   background-color: white;
-  border-right: 1px solid #eee;
+  border-right: 1px solid rgba(0, 184, 212, 0.1); /* Changed to light primary color */
   overflow-y: auto; /* Enable scrolling if content overflows */
 }
 
-/* Dashboard Content */
+/* Top Navigation Bar User Panel */
+.user-panel {
+  background: linear-gradient(135deg, #00b8d4 0%, #0095b3 100%); /* Changed to primary color gradient */
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: 0 4px 20px rgba(0, 184, 212, 0.25); /* Changed shadow to primary color */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.user-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+  pointer-events: none;
+}
+
+.user-info-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 30px;
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Left side - User info */
+.user-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.3);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.user-avatar::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: 1px;
+  width: 12px;
+  height: 12px;
+  background: #4CAF50;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+}
+
+.user-avatar i {
+  font-size: 22px;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-details h3 {
+  margin: 0;
+  color: white;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  letter-spacing: 0.3px;
+}
+
+.user-details .role {
+  color: rgba(255,255,255,0.95);
+  font-weight: 500;
+  margin: 0;
+  font-size: 0.8em;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
+  width: fit-content;
+}
+
+.user-details .email,
+.user-details .honeycomb {
+  display: none; /* Hide on navbar to save space */
+}
+
+/* Center - Navigation Links (Optional) */
+.user-center {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-item {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-size: 0.9em;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-1px);
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.25);
+  color: white;
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* Right side - Actions */
+.user-actions {
+  display: flex;
+  gap: 12px;
+  margin-left: 0;
+}
+
+.action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  min-width: 100px;
+  justify-content: center;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.action-btn:hover::before {
+  left: 100%;
+}
+
+.action-btn i {
+  font-size: 0.9em;
+}
+
+.profile-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-btn:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.logout-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 2px 10px rgba(238, 90, 82, 0.3);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(45deg, #ff5252, #d32f2f);
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(238, 90, 82, 0.4);
+}
+
+/* Dashboard Content - Now below navbar */
 .dashboard-content {
-  flex: 1; /* Take up remaining space */
+  flex: 1;
   padding: 20px;
-  overflow-y: auto; /* Enable scrolling if content overflows */
-  background-color: #f5f5f7; /* Background color for the content area */
+  overflow-y: auto;
+  background-color: #f5f5f7;
 }
 
 /* Status Cards Row */
@@ -47,15 +274,17 @@ app-sidebar {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: 1px solid rgba(0, 184, 212, 0.1); /* Added subtle primary color border */
 }
 
 .tab-button.active {
-  background-color: #00bcd4;
+  background-color: #00b8d4; /* Your primary color */
   color: white;
 }
 
 .tab-button:hover:not(.active) {
-  background-color: #f0f0f0;
+  background-color: rgba(0, 184, 212, 0.05); /* Light primary color on hover */
+  border-color: rgba(0, 184, 212, 0.2);
 }
 
 /* Content Panel */
@@ -63,5 +292,99 @@ app-sidebar {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(0, 184, 212, 0.08); /* Changed shadow to primary color */
+  border: 1px solid rgba(0, 184, 212, 0.05); /* Added subtle primary color border */
+}
+
+/* Responsive Design for Navbar */
+@media (max-width: 1024px) {
+  .user-info-section {
+    padding: 15px 20px;
+  }
+  
+  .user-center {
+    gap: 20px;
+  }
+  
+  .nav-item {
+    padding: 6px 12px;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-info-section {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .user-left {
+    gap: 12px;
+  }
+  
+  .user-center {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .user-actions {
+    gap: 8px;
+  }
+  
+  .action-btn {
+    padding: 6px 12px;
+    font-size: 0.8em;
+    min-width: 80px;
+  }
+  
+  .nav-item {
+    padding: 5px 10px;
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-info-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px 10px;
+  }
+  
+  .user-left {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .user-center {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .user-actions {
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .action-btn {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .user-details .email,
+  .user-details .honeycomb {
+    display: block;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.75em;
+    margin: 2px 0;
+  }
+}
+
+.user-panel:hover {
+  box-shadow: 0 6px 25px rgba(0, 184, 212, 0.3); /* Changed hover shadow to primary color */
 }

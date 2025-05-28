@@ -7,6 +7,10 @@ import { AuditLogsComponent } from '../audit-logs/audit-logs.component';
 import { HeaderComponent } from '../../pages/header/header.component';
 import { FooterComponent } from '../../footer/footer.component';
 import { AdminsidebarComponent } from '../../pages/sidebar/adminsidebar/adminsidebar.component';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { User } from '../../models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,14 +38,14 @@ export class DashboardComponent implements OnInit {
     },
     {
       title: 'Active Users',
-      value: '1213',
-      subtitle: '342 online',
+      value: 1000,
+      subtitle: '3 online',
       icon: 'users-icon'
     },
     {
       title: 'Pending Requests',
       value: '12',
-      subtitle: 'Awaiting Approval',
+      subtitle: '1 Awaiting Approval',
       icon: 'clock-icon'
     },
     {
@@ -54,9 +58,40 @@ export class DashboardComponent implements OnInit {
 
   activeTab = 'users'; // Default active tab
 
-  constructor() { }
+  currentUser: User | null = null;
+  private userSubscription?: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['/userprofile']);
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Logout error:', error);
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   setActiveTab(tab: string): void {
