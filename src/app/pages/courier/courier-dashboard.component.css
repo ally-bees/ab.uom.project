@@ -13,7 +13,7 @@
 /* Section title */
 .section-title h2 {
   margin: 0 0 20px;
-  font-size: 18px;
+  font-size: 28px;
   color: #333;
 }
 
@@ -76,10 +76,7 @@
   font-size: 14px;
 }
 
-.date-input .material-icons {
-  color: #777;
-  font-size: 18px;
-}
+
 
 /* Summary section */
 .summary-section {
@@ -116,6 +113,8 @@
 
 .pie-chart {
   flex: 1;
+  justify-content: center;
+  align-items: center;
   position: relative;
   height: 200px;
   min-width: 180px;
@@ -162,10 +161,10 @@
 /* Recent deliveries */
 .recent-deliveries {
   background-color: white;
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .recent-deliveries h3 {
@@ -185,9 +184,15 @@ table {
 }
 
 thead tr {
-  background-color: #00bcd4;
+  background-color: #00BCD4;
   color: white;
+  font-size: 15px;
 }
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
 
 th {
   padding: 12px 15px;
@@ -270,14 +275,19 @@ td {
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s;
-  width: 100%;
+  width: 19%;
   font-size: 16px;
-  padding: 12px 0;
+  padding: 12px 25px;
 }
 
 .print-report button:hover {
   background-color: #0097a7;
+  
 }
+.print-report button svg {
+  vertical-align: middle;
+}
+
 
 /* Responsive tweaks using media queries */
 @media (max-width: 768px) {
