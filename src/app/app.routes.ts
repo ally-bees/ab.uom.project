@@ -32,6 +32,11 @@ import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.compone
 import { DemographicComponent } from './components/demographic/demographic.component';
 import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
+import { CustomersupportComponent } from './pages/customersupport/customersupport.component';
+import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
+import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
+import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
+import { ChatpanelinvenComponent } from './components/chatpanelinven/chatpanelinven.component';
 
 export const routes: Routes = [
   {
@@ -97,6 +102,17 @@ export const routes: Routes = [
       {path: 'audit', component:AuditpageComponent}
     ]
    },
+   { 
+      path: 'customersupport',
+      component: CustomersupportComponent,
+      children: [
+        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+        { path: 'chatbot', component: AimessagepanelComponent },
+        { path: 'social-connect', component: SocialmessagepanelComponent },
+        { path: 'Messaging-app', component: ChatpanelComponent }
+      ]
+    },
+  {path: 'app-chatpanelinven', component: ChatpanelinvenComponent},
   { path: '**', redirectTo: 'salesdashboard' }
 ];
 
