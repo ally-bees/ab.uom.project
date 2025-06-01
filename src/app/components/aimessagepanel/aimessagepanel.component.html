@@ -1,0 +1,42 @@
+ <div class="chat-container">
+      <div class="chat-header">
+        <h2>Chat with AI</h2>
+      </div>
+      
+      <div class="chat-messages">
+        <div 
+          *ngFor="let message of messages" 
+          class="message-wrapper"
+          [ngClass]="{'user-message': message.isUser, 'bot-message': !message.isUser}"
+        >
+          <div class="message-bubble" [ngClass]="{'completed': message.isCompleted}">
+            <div class="avatar">
+              <div class="avatar-circle" [ngClass]="{'user-avatar': message.isUser, 'bot-avatar': !message.isUser}">
+                <div class="avatar-icon">👤</div>
+              </div>
+              <div *ngIf="message.isCompleted" class="check-mark">✓</div>
+            </div>
+            <div class="message-content">
+              {{ message.text }}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chat-input">
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            placeholder="All Done" 
+            [(ngModel)]="currentMessage"
+            (keyup.enter)="sendMessage()"
+            class="message-input"
+          >
+          <button (click)="sendMessage()" class="send-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="://www.w3.org/2000/svg">
+              <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
