@@ -16,7 +16,7 @@ export interface Courier {
 
 @Injectable({ providedIn: 'root' })
 export class CourierService {
-  private baseUrl = 'http://localhost:5241/api/courier'; // Use http if not using SSL
+  private baseUrl = 'http://localhost:5241/api/courier'; 
 
   constructor(private http: HttpClient) {}
 
