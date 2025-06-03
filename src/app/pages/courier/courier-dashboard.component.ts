@@ -27,7 +27,7 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
-    this.courierService.getRecentDeliveries(6).subscribe(data => {
+    this.courierService.getRecentDeliveries(10).subscribe(data => {
       this.recentDeliveries = data;
     });
 
