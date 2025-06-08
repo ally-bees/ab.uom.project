@@ -15,7 +15,7 @@
         <h2>{{ receiver }}</h2>
       </div>
       
-      <div class="chat-messages">
+      <div class="chat-messages" #messagesContainer> <!-- add scroll to new message -->
         <div 
           *ngFor="let message of messages" 
           class="message-wrapper"
@@ -31,9 +31,15 @@
               </div>
               <div *ngIf="message.isCompleted" class="check-mark">✓</div>
             </div>
-            <div class="message-content">
+            <div class="messagedisplay">
+              <div class="message-content">
               {{ message.text }}
             </div>
+            <div class="message-timestamp">
+            {{ message.timestamp | date:'short' }}
+            </div>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -42,13 +48,13 @@
         <div class="input-wrapper">
           <input 
             type="text" 
-            placeholder="All Done" 
+            placeholder="Type a message..." 
             [(ngModel)]="currentMessage"
             (keyup.enter)="sendMessage()"
             class="message-input"
           >
           <button (click)="sendMessage()" class="send-button">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="://www.w3.org/2000/svg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor"/>
             </svg>
           </button>

@@ -1,6 +1,40 @@
+.chat-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem; /* space between items */
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.input-status,
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px; /* consistent height */
+  padding: 0 12px;
+  font-size: 14px;
+  background-color: #16a085;
+  border: 1px solid #023b30;
+  border-radius: 6px;
+}
+
+.btn:hover{
+  background-color: white;
+}
+
+.input-status {
+  white-space: nowrap;
+  gap: 10px;
+}
+
+
+
 .chat-container {
       width: 100%;
-      max-width: 400px;
+      width: 800px;
       height: 600px;
       background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #5eead4 100%);
       border-radius: 20px;
@@ -115,6 +149,10 @@
       font-size: 14px;
       font-weight: 500;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-content .message-timestamp{
+      color: #0d6660;
     }
 
     .bot-message .message-content {

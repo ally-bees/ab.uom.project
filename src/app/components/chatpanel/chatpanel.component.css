@@ -154,6 +154,16 @@
   font-size: px;
 }
 
+.messagedisplay{
+  display: block;
+}
+
+.message-timestamp{
+  margin: 0;
+  padding-top: 0;
+  padding-left: 20px;
+}
+
 .chat-input {
   padding: 20px;
 }
