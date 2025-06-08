@@ -2,6 +2,8 @@ using MongoDB.Driver;
 using Backend.Models;
 using Backend.Services;
 using System.Net;
+using Backend.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,7 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 // Register services
-
+builder.Services.AddSignalR();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<Auditservice>();
@@ -47,7 +49,8 @@ builder.Services.AddCors(options =>
         builder => builder
             .WithOrigins("http://localhost:4200")
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
 var app = builder.Build();
@@ -65,6 +68,7 @@ app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chathub");
 
 // Test MongoDB connection endpoint
 app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>

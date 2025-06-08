@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
+using Backend.Hubs;
 using Backend.Services;
+using Microsoft.AspNetCore.SignalR;  
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -11,10 +13,12 @@ namespace Backend.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public ChatController(IChatService chatService)
+        public ChatController(IChatService chatService, IHubContext<ChatHub> hubContext)
         {
             _chatService = chatService;
+            _hubContext = hubContext;
         }
 
         [HttpGet("messages")]
@@ -30,7 +34,12 @@ namespace Backend.Controllers
             if (message == null || string.IsNullOrWhiteSpace(message.Text))
                 return BadRequest("Invalid message");
 
+            // Save to database first
             await _chatService.SendMessageAsync(message);
+
+            // Broadcast to all clients via SignalR
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
+
             return Ok();
         }
     }
