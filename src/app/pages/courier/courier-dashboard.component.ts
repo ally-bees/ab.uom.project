@@ -30,7 +30,7 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
-    // Optionally set initial dates to last 7 days
+    // Optionally set initial dates to last 6 months
     const today = new Date();
     const weekAgo = new Date();
     weekAgo.setDate(today.getDate() - 180);
@@ -41,6 +41,11 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     this.courierService.getRecentDeliveries(10).subscribe(data => {
       this.recentDeliveries = data;
       this.allDeliveries = data; // Keep a copy of all data for searching
+    });
+
+    this.courierService.getAllCouriers().subscribe(data => {
+      this.allDeliveries = data;
+      this.recentDeliveries = data.slice(-10).reverse(); 
     });
 
     // Fetch summary for initial date range
@@ -111,9 +116,11 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   searchDeliveries(): void {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
-      this.recentDeliveries = [...this.allDeliveries];
+      // Show only the last 10 couriers when search is empty
+      this.recentDeliveries = this.allDeliveries.slice(-10).reverse();
       return;
     }
+    // Filter allDeliveries and show matching results (could be more or less than 10)
     this.recentDeliveries = this.allDeliveries.filter(delivery =>
       (delivery.courierId && delivery.courierId.toLowerCase().includes(term)) ||
       (delivery.orderId && delivery.orderId.toLowerCase().includes(term))

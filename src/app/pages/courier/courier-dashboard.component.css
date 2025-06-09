@@ -142,7 +142,7 @@
 .legend-item {
   display: flex;
   align-items: relative;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .legend-color {
@@ -223,6 +223,11 @@ td {
   border-radius: 1px;
 }
 
+/* Shade odd columns in light blue except the header row */
+tbody td:nth-child(odd) {
+  background-color: #e3f6fc;
+}
+
 @media (max-width: 900px) {
   table {
     min-width: 500px;
@@ -239,6 +244,18 @@ td {
     flex-direction: column;
     gap: 20px;
   }
+  /* Hide side nav bar on small screens */
+app-couriersidebar,
+.couriersidebar,
+.sidebar,
+.side-nav {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+}
 }
 
 @media (max-width: 600px) {
@@ -348,6 +365,36 @@ td {
   .table-container {
     overflow-x: auto;
   }
+  /* Improve summary and table responsiveness for very small screens */
+.summary-section {
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px;
+}
+.pie-chart {
+  height: 100px;
+  min-width: 100px;
+}
+.delivery-stats, .pie-chart, .chart-legend {
+  min-width: 0;
+  width: 100%;
+  flex: unset;
+}
+.recent-deliveries {
+  padding: 8px;
+}
+.table-container {
+  padding: 0;
+}
+.search-container {
+  width: 100%;
+  min-width: 0;
+}
+.date-range {
+  margin-left: 0;
+  gap: 8px;
+  height: auto;
+}
 }
 
 /* Print styles */
