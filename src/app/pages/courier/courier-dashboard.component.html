@@ -9,8 +9,8 @@
 
     <div class="filters-row">
       <div class="search-container">
-        <input type="text" placeholder="Search product..." />
-        <button class="search-btn">
+        <input type="text" placeholder="Search by Courier ID or Order ID..." [(ngModel)]="searchTerm" (keyup.enter)="searchDeliveries()" />
+        <button class="search-btn" (click)="searchDeliveries()">
           <span class="material-icons">search</span>
         </button>
       </div>
@@ -18,11 +18,11 @@
       <div class="date-range">
         <div class="date-input">
           <label>From : </label>
-          <input type="date" [(ngModel)]="fromDate" />
+          <input type="date" [(ngModel)]="fromDate" (change)="fetchSummary()" />
         </div>
         <div class="date-input">
           <label>To : </label>
-          <input type="date" [(ngModel)]="toDate" />
+          <input type="date" [(ngModel)]="toDate" (change)="fetchSummary()" />
         </div>
       </div>
     </div>
@@ -98,10 +98,14 @@
     </div>
 
     <div class="print-report">
-      <button>
+      <button (click)="printReport()">
         Print Report
         <span class="material-icons">print</span>
       </button>
+    </div>
+
+    <div id="report-section">
+      <!-- your summary, table, etc. -->
     </div>
   </div>
 </div>

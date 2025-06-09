@@ -50,9 +50,11 @@
 }
 
 .date-range {
+  margin-left: 100px;
   display: flex;
-  gap: 225px;
+  gap: 125px;
   flex-wrap: wrap;
+  height: 38px;
 }
 
 .date-input {
@@ -329,6 +331,29 @@ td {
 
   .table-container {
     overflow-x: auto;
+  }
+}
+
+/* Print styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #report-section, #report-section * {
+    visibility: visible;
+  }
+  #report-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+  }
+  app-couriersidebar, .couriersidebar, .sidebar, .side-nav {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .print-report {
+    display: none !important;
   }
 }
 

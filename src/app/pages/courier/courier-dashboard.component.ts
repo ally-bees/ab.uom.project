@@ -24,17 +24,37 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   fromDate: string = '';
   toDate: string = '';
 
+  searchTerm: string = '';
+  allDeliveries: Courier[] = [];
+
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
+    // Optionally set initial dates to last 7 days
+    const today = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 180);
+
+    this.fromDate = weekAgo.toISOString().slice(0, 10);
+    this.toDate = today.toISOString().slice(0, 10);
+
     this.courierService.getRecentDeliveries(10).subscribe(data => {
       this.recentDeliveries = data;
+      this.allDeliveries = data; // Keep a copy of all data for searching
     });
 
-   
-    this.courierService.getSummary(this.fromDate, this.toDate).subscribe(data => {
-      this.summary = data;
-    });
+    // Fetch summary for initial date range
+    this.fetchSummary();
+  }
+
+  fetchSummary(): void {
+    // This will be called when date inputs change
+    if (this.fromDate && this.toDate) {
+      this.courierService.getSummary(this.fromDate, this.toDate).subscribe(data => {
+        this.summary = data;
+        this.updatePieChart();
+      });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -82,6 +102,22 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       case 'rejected': return 'rejected';
       default: return '';
     }
+  }
+
+  printReport(): void {
+    window.print();
+  }
+
+  searchDeliveries(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.recentDeliveries = [...this.allDeliveries];
+      return;
+    }
+    this.recentDeliveries = this.allDeliveries.filter(delivery =>
+      (delivery.courierId && delivery.courierId.toLowerCase().includes(term)) ||
+      (delivery.orderId && delivery.orderId.toLowerCase().includes(term))
+    );
   }
 }
 
