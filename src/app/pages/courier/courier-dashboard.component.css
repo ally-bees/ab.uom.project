@@ -1,11 +1,11 @@
 .container {
-  max-width: 1200px;
+  max-width: 1200px; /* Centers content within a max width */
   margin: 0 auto;
   display: flex;
 }
 
 .courier-container {
-  background-color: #f5f6fa;
+  background-color: #f5f6fa; /* Light background for content area */
   padding: 20px;
   font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
@@ -17,7 +17,7 @@
   color: #333;
 }
 
-/* Filters row */
+/* Filters row for search and date inputs */
 .filters-row {
   display: flex;
   flex-wrap: wrap;
@@ -25,6 +25,7 @@
   gap: 15px;
   margin-bottom: 20px;
 }
+
 .search-container {
   position: relative;
   width: 300px;
@@ -78,9 +79,7 @@
   font-size: 14px;
 }
 
-
-
-/* Summary section */
+/* Summary section styles */
 .summary-section {
   display: flex;
   flex-wrap: wrap;
@@ -107,16 +106,15 @@
 
 .stat-label {
   color: #555;
-  min-width: 160px;      
+  min-width: 160px;
   text-align: left;
-  margin-right: 0;       
 }
 
 .stat-value {
   font-weight: 500;
   color: #333;
-  min-width: 40px;       
-  text-align: right;     
+  min-width: 40px;
+  text-align: right;
   display: inline-block;
 }
 
@@ -127,7 +125,7 @@
   position: relative;
   height: 200px;
   min-width: 180px;
-  margin-left: -1000px; 
+  margin-left: -1000px; /* Adjust layout visually */
 }
 
 .chart-legend {
@@ -152,6 +150,7 @@
   border-radius: 2px;
 }
 
+/* Pie chart legend colors by status */
 .legend-color.pending {
   background-color: #f9e559;
 }
@@ -168,7 +167,7 @@
   color: #555;
 }
 
-/* Recent deliveries */
+/* Table for recent deliveries */
 .recent-deliveries {
   background-color: white;
   border-radius: 16px;
@@ -203,7 +202,6 @@ tbody tr:hover {
   background-color: #f1f1f1;
 }
 
-
 th {
   padding: 12px 15px;
   text-align: left;
@@ -223,11 +221,12 @@ td {
   border-radius: 1px;
 }
 
-/* Shade odd columns in light blue except the header row */
+/* Alternating row background color */
 tbody td:nth-child(odd) {
   background-color: #e3f6fc;
 }
 
+/* Responsive styles for medium screens */
 @media (max-width: 900px) {
   table {
     min-width: 500px;
@@ -244,20 +243,22 @@ tbody td:nth-child(odd) {
     flex-direction: column;
     gap: 20px;
   }
-  /* Hide side nav bar on small screens */
-app-couriersidebar,
-.couriersidebar,
-.sidebar,
-.side-nav {
-  display: none !important;
-  visibility: hidden !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  padding: 0 !important;
-}
+
+  /* Hide side navigation on smaller screens */
+  app-couriersidebar,
+  .couriersidebar,
+  .sidebar,
+  .side-nav {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    padding: 0 !important;
+  }
 }
 
+/* Responsive styles for small screens */
 @media (max-width: 600px) {
   table {
     min-width: 400px;
@@ -291,7 +292,7 @@ app-couriersidebar,
   }
 }
 
-/* Print report button */
+/* Print report button styling */
 .print-report {
   display: flex;
   justify-content: center;
@@ -302,38 +303,33 @@ app-couriersidebar,
   background-color: #00bcd4;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   border-radius: 5px;
   display: flex;
   align-items: center;
   gap: 5px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-  width: 19%;
   font-size: 16px;
-  padding: 12px 25px;
+  width: 19%;
+  transition: background-color 0.3s;
 }
 
 .print-report button:hover {
   background-color: #0097a7;
-  
 }
+
 .print-report button svg {
   vertical-align: middle;
 }
 
-
-/* Responsive tweaks using media queries */
+/* Responsive tweaks */
 @media (max-width: 768px) {
   .section-title h2 {
     font-size: 18px;
   }
-
   .summary-section {
     flex-direction: column;
   }
-
   .chart-legend {
     position: static;
     flex-direction: row;
@@ -341,7 +337,6 @@ app-couriersidebar,
     gap: 10px;
     margin-top: 10px;
   }
-
   .recent-deliveries h3 {
     font-size: 18px;
   }
@@ -352,52 +347,48 @@ app-couriersidebar,
     flex-direction: column;
     gap: 10px;
   }
-
   .date-range {
     gap: 10px;
     flex-direction: column;
   }
-
   .summary-section {
     padding: 10px;
   }
-
   .table-container {
     overflow-x: auto;
   }
-  /* Improve summary and table responsiveness for very small screens */
-.summary-section {
-  flex-direction: column;
-  gap: 10px;
-  padding: 8px;
-}
-.pie-chart {
-  height: 100px;
-  min-width: 100px;
-}
-.delivery-stats, .pie-chart, .chart-legend {
-  min-width: 0;
-  width: 100%;
-  flex: unset;
-}
-.recent-deliveries {
-  padding: 8px;
-}
-.table-container {
-  padding: 0;
-}
-.search-container {
-  width: 100%;
-  min-width: 0;
-}
-.date-range {
-  margin-left: 0;
-  gap: 8px;
-  height: auto;
-}
+  .summary-section {
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+  }
+  .pie-chart {
+    height: 100px;
+    min-width: 100px;
+  }
+  .delivery-stats, .pie-chart, .chart-legend {
+    min-width: 0;
+    width: 100%;
+    flex: unset;
+  }
+  .recent-deliveries {
+    padding: 8px;
+  }
+  .table-container {
+    padding: 0;
+  }
+  .search-container {
+    width: 100%;
+    min-width: 0;
+  }
+  .date-range {
+    margin-left: 0;
+    gap: 8px;
+    height: auto;
+  }
 }
 
-/* Print styles */
+/* Print-specific styles */
 @media print {
   body * {
     visibility: hidden;
@@ -419,5 +410,3 @@ app-couriersidebar,
     display: none !important;
   }
 }
-
-

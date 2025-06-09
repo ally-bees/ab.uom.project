@@ -15,22 +15,29 @@ import { FormsModule } from '@angular/forms';
   imports: [HeaderComponent, CouriersidebarComponent, FooterComponent, CommonModule, FormsModule]
 })
 export class CourierDashboardComponent implements OnInit, AfterViewInit {
+  // Reference to the pie chart canvas element
   @ViewChild('deliveryPieChart') deliveryPieChartRef!: ElementRef<HTMLCanvasElement>;
 
+  // Summary statistics for deliveries
   summary: any = {};
+  // List of recent deliveries to display in table
   recentDeliveries: Courier[] = [];
+  // Pie chart instance
   private pieChart: Chart | undefined;
 
+  // Date filters for the summary
   fromDate: string = '';
   toDate: string = '';
 
+  // Search term entered by user
   searchTerm: string = '';
+  // All delivery data (used for filtering/searching)
   allDeliveries: Courier[] = [];
 
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
-    // Optionally set initial dates to last 6 months
+    // Initialize default date range (last 6 months)
     const today = new Date();
     const weekAgo = new Date();
     weekAgo.setDate(today.getDate() - 180);
@@ -38,44 +45,50 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     this.fromDate = weekAgo.toISOString().slice(0, 10);
     this.toDate = today.toISOString().slice(0, 10);
 
+    // Load recent deliveries (limit 10)
     this.courierService.getRecentDeliveries(10).subscribe(data => {
       this.recentDeliveries = data;
-      this.allDeliveries = data; // Keep a copy of all data for searching
+      this.allDeliveries = data; // Backup for search
     });
 
+    // Load all deliveries and derive recent deliveries from it
     this.courierService.getAllCouriers().subscribe(data => {
       this.allDeliveries = data;
       this.recentDeliveries = data.slice(-10).reverse(); 
     });
 
-    // Fetch summary for initial date range
+    // Fetch summary data for current date range
     this.fetchSummary();
   }
 
+  // Fetch delivery summary statistics based on selected date range
   fetchSummary(): void {
-    // This will be called when date inputs change
     if (this.fromDate && this.toDate) {
       this.courierService.getSummary(this.fromDate, this.toDate).subscribe(data => {
         this.summary = data;
-        this.updatePieChart();
+        this.updatePieChart(); // Refresh chart with new data
       });
     }
   }
 
   ngAfterViewInit(): void {
+    // Draw the chart after view has initialized
     this.updatePieChart();
   }
 
+  // Method to (re)draw the pie chart
   updatePieChart(): void {
     if (!this.deliveryPieChartRef) return;
     const canvas = this.deliveryPieChartRef.nativeElement;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Destroy previous chart if exists
     if (this.pieChart) {
       this.pieChart.destroy();
     }
 
+    // Create new pie chart with delivery stats
     this.pieChart = new Chart(ctx, {
       type: 'pie',
       data: {
@@ -100,6 +113,7 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // Return CSS class based on delivery status
   getStatusClass(status: string | undefined): string {
     switch ((status || '').toLowerCase()) {
       case 'completed': return 'completed';
@@ -109,22 +123,24 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Trigger print functionality
   printReport(): void {
     window.print();
   }
 
+  // Search deliveries by courier ID or order ID
   searchDeliveries(): void {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
-      // Show only the last 10 couriers when search is empty
+      // Reset to last 10 if search is cleared
       this.recentDeliveries = this.allDeliveries.slice(-10).reverse();
       return;
     }
-    // Filter allDeliveries and show matching results (could be more or less than 10)
+
+    // Filter by courierId or orderId matching search term
     this.recentDeliveries = this.allDeliveries.filter(delivery =>
       (delivery.courierId && delivery.courierId.toLowerCase().includes(term)) ||
       (delivery.orderId && delivery.orderId.toLowerCase().includes(term))
     );
   }
 }
-

@@ -15,7 +15,6 @@ export class CouriersidebarComponent {
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
       { id: 'sales', label: 'Sales', icon: 'fa-chart-line' },
       { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart' },
-      { id: 'shipping', label: 'Shipping', icon: 'fa-truck' },
       { id: 'products', label: 'Products', icon: 'fa-box' },
       { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast' },
       { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave' },

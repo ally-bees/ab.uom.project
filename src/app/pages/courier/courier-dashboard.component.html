@@ -1,20 +1,26 @@
 <app-header></app-header>
 <div class="container">
+  <!-- Sidebar navigation for courier operations -->
   <app-couriersidebar></app-couriersidebar>
 
   <div class="courier-container">
+    <!-- Page Title -->
     <div class="section-title">
       <h2><b>Courier Summary</b></h2>
     </div>
 
+    <!-- Filter Inputs: Search and Date Range -->
     <div class="filters-row">
       <div class="search-container">
+        <!-- Search input for courier or order ID -->
         <input type="text" placeholder="Search by Courier ID or Order ID..." [(ngModel)]="searchTerm" (keyup.enter)="searchDeliveries()" />
+        <!-- Trigger search manually -->
         <button class="search-btn" (click)="searchDeliveries()">
           <span class="material-icons">search</span>
         </button>
       </div>
 
+      <!-- Date filter inputs -->
       <div class="date-range">
         <div class="date-input">
           <label>From : </label>
@@ -27,13 +33,17 @@
       </div>
     </div>
 
+    <!-- Delivery summary stats and pie chart -->
     <div class="summary-section">
       <div class="delivery-stats">
+        <!-- Total deliveries -->
         <div class="stat-row total-row">
           <span class="stat-label"><b>Total Deliveries</b></span>
           <span class="stat-value">: {{summary.total || 0}}</span>
         </div>
         <div class="stat-divider"></div>
+
+        <!-- Breakdown by status -->
         <div class="stat-row">
           <span class="stat-label">Pending Deliveries</span>
           <span class="stat-value">: {{summary.pending || 0}}</span>
@@ -47,8 +57,11 @@
           <span class="stat-value">: {{summary.rejected || 0}}</span>
         </div>
       </div>
+
+      <!-- Pie chart for delivery status -->
       <div class="pie-chart">
         <canvas #deliveryPieChart></canvas>
+        <!-- Chart legend -->
         <div class="chart-legend">
           <div class="legend-item">
             <span class="legend-color pending"></span>
@@ -66,6 +79,7 @@
       </div>
     </div>
 
+    <!-- List of recent deliveries in table format -->
     <div class="recent-deliveries">
       <h3>Recent Deliveries</h3>
       <div class="table-container">
@@ -98,6 +112,7 @@
       </div>
     </div>
 
+    <!-- Button to print summary report -->
     <div class="print-report">
       <button (click)="printReport()">
         Print Report
@@ -105,6 +120,7 @@
       </button>
     </div>
 
+    <!-- Hidden or print-only section for exportable report content -->
     <div id="report-section">
       <!-- your summary, table, etc. -->
     </div>
