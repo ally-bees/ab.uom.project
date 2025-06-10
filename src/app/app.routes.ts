@@ -37,6 +37,8 @@ import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepa
 import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
 import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
 import { ChatpanelinvenComponent } from './components/chatpanelinven/chatpanelinven.component';
+import { IMchatpanelComponent } from './components/imchatpanel/imchatpanel.component';
+import { IMcustomersupportComponent } from './pages/imcustomersupport/imcustomersupport.component';
 
 export const routes: Routes = [
   {
@@ -58,7 +60,17 @@ export const routes: Routes = [
       ]
     },
     { path: 'printreport', component: PrintReportComponent },
-    { path: 'expense-form', component: ExpenseFormComponent }
+    { path: 'expense-form', component: ExpenseFormComponent },
+    { 
+      path: 'customersupport',
+      component: CustomersupportComponent,
+      children: [
+        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+        { path: 'chatbot', component: AimessagepanelComponent },
+        { path: 'social-connect', component: SocialmessagepanelComponent },
+        { path: 'Messaging-app', component: ChatpanelComponent }
+      ]
+    }
   ]
 },
   {
@@ -69,8 +81,19 @@ export const routes: Routes = [
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {path: 'expense-form', component: ExpenseFormComponent}
+      {path: 'expense-form', component: ExpenseFormComponent},
+      { 
+      path: 'app-imcustomersupport',
+      component: IMcustomersupportComponent,
+      children: [
+        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+        { path: 'chatbot', component: AimessagepanelComponent },
+        { path: 'social-connect', component: SocialmessagepanelComponent },
+        { path: 'app-imchatpanel', component: IMchatpanelComponent }
+      ]
+    }
     ]
+    
   },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},

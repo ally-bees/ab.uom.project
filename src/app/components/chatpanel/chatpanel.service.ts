@@ -10,6 +10,12 @@ interface ChatMessage {
   receiver: string;
   timestamp: Date;
   isCompleted?: boolean;
+  isEdited?: boolean;
+}
+
+interface MessageEvent {
+  type: 'send' | 'edit' | 'delete';
+  message: ChatMessage;
 }
 
 @Injectable({
@@ -20,9 +26,9 @@ export class ChatService {
   private apiUrl = 'http://localhost:5241/api/chat';
   private hubConnection!: signalR.HubConnection;
 
-  // Use a subject so components can subscribe to new messages
-  private messageSubject = new BehaviorSubject<ChatMessage | null>(null);
-  public message$ = this.messageSubject.asObservable();
+  // Use a subject so components can subscribe to message events
+  private messageEventSubject = new BehaviorSubject<MessageEvent | null>(null);
+  public messageEvent$ = this.messageEventSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +38,14 @@ export class ChatService {
 
   getMessagesBetween(sender: string, receiver: string): Observable<ChatMessage[]> {
     return this.http.get<ChatMessage[]>(`${this.apiUrl}/messages?sender=${sender}&receiver=${receiver}`);
+  }
+
+  deleteMessage(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+  }
+
+  updateMessage(id: string, newText: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/edit/${id}`, { text: newText });
   }
   
   public startHubConnection(sender: string): void {
@@ -49,17 +63,36 @@ export class ChatService {
       })
       .catch(err => console.error('SignalR connection error:', err));
 
-    // Register to receive messages
+    // Register to receive new messages
     this.hubConnection.on('ReceiveMessage', (msg: ChatMessage) => {
-      console.log('Received message via SignalR:', msg);
+      console.log('Received new message via SignalR:', msg);
       
-      // Convert timestamp string to Date object if needed
       if (typeof msg.timestamp === 'string') {
         msg.timestamp = new Date(msg.timestamp);
       }
       
-      // Push all messages - component will filter
-      this.messageSubject.next(msg);
+      this.messageEventSubject.next({ type: 'send', message: msg });
+    });
+
+    // Register to receive message updates
+    this.hubConnection.on('MessageUpdated', (msg: ChatMessage) => {
+      console.log('Received message update via SignalR:', msg);
+      
+      if (typeof msg.timestamp === 'string') {
+        msg.timestamp = new Date(msg.timestamp);
+      }
+      
+      // Mark the message as edited when received via SignalR
+      msg.isEdited = true;
+      
+      this.messageEventSubject.next({ type: 'edit', message: msg });
+    });
+
+    // Register to receive message deletions
+    this.hubConnection.on('MessageDeleted', (msg: ChatMessage) => {
+      console.log('Received message deletion via SignalR:', msg);
+      
+      this.messageEventSubject.next({ type: 'delete', message: msg });
     });
   }
 
