@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { ChatService } from './chatpanel.service';
+import { ChatService } from '../chatpanel/chatpanel.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,15 +20,16 @@ interface MessageEvent {
   message: ChatMessage;
 }
 
+
 @Component({
-  selector: 'app-chatpanel',
+  selector: 'app-imchatpanel',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule
   ],
-  templateUrl: './chatpanel.component.html',
-  styleUrls: ['./chatpanel.component.css'],
+  templateUrl: './imchatpanel.component.html',
+  styleUrl: './imchatpanel.component.css',
   animations: [
     trigger('slideIn', [
       transition(':enter', [
@@ -41,7 +42,8 @@ interface MessageEvent {
     ])
   ]
 })
-export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
+
+export class IMchatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messagesContainer', { static: false }) messagesContainer!: ElementRef;
 
   currentMessage = '';
@@ -57,12 +59,12 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
   popupType: 'success' | 'error' = 'success';
   private popupTimeout: any;
 
-  sender = 'SalesManager';
-  receiver = 'SalesManager';
+  sender = 'InventoryManager';
+  receiver = 'InventoryManager';
   receivers = [
+    { name: 'InventoryManager', image: 'assets/images/im.jpg' },
     { name: 'SalesManager', image: 'assets/images/sm.jpg' },
     { name: 'BusinessOwner', image: 'assets/images/bo.jpg' },
-    { name: 'InventoryManager', image: 'assets/images/im.jpg' },
     { name: 'MarketingHead', image: 'assets/images/mm.jpg' },
     { name: 'FinanceManager', image: 'assets/images/fm.jpg' }
   ];

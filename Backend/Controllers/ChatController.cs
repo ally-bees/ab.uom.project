@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
 using Backend.Hubs;
 using Backend.Services;
-using Microsoft.AspNetCore.SignalR;  
+using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -42,5 +42,51 @@ namespace Backend.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteMessage(string id)
+        {
+            // Get the message before deleting to have the data for broadcasting
+            var messageToDelete = await _chatService.GetMessageByIdAsync(id);
+            if (messageToDelete == null)
+                return NotFound("Message not found");
+
+            var result = await _chatService.DeleteMessageAsync(id);
+
+            if (result.DeletedCount == 0)
+                return NotFound("Message not found");
+
+            // Broadcast deletion to all clients via SignalR
+            await _hubContext.Clients.All.SendAsync("MessageDeleted", messageToDelete);
+
+            return Ok("Message deleted successfully");
+        }
+
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> EditMessage(string id, [FromBody] EditMessageRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Text))
+                return BadRequest("Message text cannot be empty");
+
+            var result = await _chatService.UpdateMessageAsync(id, request.Text);
+
+            if (result.ModifiedCount == 0)
+                return NotFound("Message not found or no changes");
+
+            // Get the updated message to broadcast
+            var updatedMessage = await _chatService.GetMessageByIdAsync(id);
+            if (updatedMessage != null)
+            {
+                // Broadcast updated message to all clients via SignalR
+                await _hubContext.Clients.All.SendAsync("MessageUpdated", updatedMessage);
+            }
+
+            return Ok("Message updated successfully");
+        }
+    }
+
+    public class EditMessageRequest
+    {
+        public string Text { get; set; } = string.Empty;
     }
 }
