@@ -26,53 +26,23 @@ import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussines
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
-import { AuditpageComponent } from './pages/auditpage/auditpage.component'
-import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
-import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
-import { DemographicComponent } from './components/demographic/demographic.component';
-import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
-import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
-import { CustomersupportComponent } from './pages/customersupport/customersupport.component';
-import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
-import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
-import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
-import { ChatpanelinvenComponent } from './components/chatpanelinven/chatpanelinven.component';
-import { IMchatpanelComponent } from './components/imchatpanel/imchatpanel.component';
-import { IMcustomersupportComponent } from './pages/imcustomersupport/imcustomersupport.component';
+import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 
 export const routes: Routes = [
   {
-  path: 'salesmanager',
-  component: SalesMainpageComponent,
-  children: [
-    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
-    { path: 'salesdashboard', component: SalesDashboardComponent },
-    { path: 'sales', component: SalesComponent },
-    { path: 'order', component: OrderSummaryComponent },
-    { 
-      path: 'customerinsight',
-      component: customerinsightComponent,
-      children: [
-        { path: '', redirectTo: 'demographic', pathMatch: 'full' },
-        { path: 'demographic', component: DemographicComponent },
-        { path: 'purchase-behavior', component: PurchasebehaveComponent },
-        { path: 'retention-analysis', component: RetentionanalComponent }
-      ]
-    },
-    { path: 'printreport', component: PrintReportComponent },
-    { path: 'expense-form', component: ExpenseFormComponent },
-    { 
-      path: 'customersupport',
-      component: CustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: ChatpanelComponent }
-      ]
-    }
-  ]
-},
+    path: 'salesmanager',
+    component: SalesMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+      { path: 'salesdashboard', component: SalesDashboardComponent },
+      { path: 'sales', component: SalesComponent },
+      { path: 'order', component: OrderSummaryComponent },
+      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'printreport', component: PrintReportComponent },
+      {path: 'expense-form', component: ExpenseFormComponent}
+
+    ]
+  },
   {
     path: 'inventoryManager',
     component: InventoryMainpageComponent,
@@ -81,19 +51,8 @@ export const routes: Routes = [
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {path: 'expense-form', component: ExpenseFormComponent},
-      { 
-      path: 'app-imcustomersupport',
-      component: IMcustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'app-imchatpanel', component: IMchatpanelComponent }
-      ]
-    }
+      {path: 'expense-form', component: ExpenseFormComponent}
     ]
-    
   },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
@@ -117,26 +76,7 @@ export const routes: Routes = [
   {path: 'stats', component: StatsCardComponent},
   {path: 'Top', component: TopSellingTableComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
-  { 
-    path: 'auditpage', 
-    component: AuditorpageComponent, // The parent container
-    children: [
-      { path: '', component: AuditdashboardComponent },
-      {path: 'audit', component:AuditpageComponent}
-    ]
-   },
-   { 
-      path: 'customersupport',
-      component: CustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: ChatpanelComponent }
-      ]
-    },
-  {path: 'app-chatpanelinven', component: ChatpanelinvenComponent},
-  { path: '**', redirectTo: 'salesdashboard' }
+  { path: '**', redirectTo: 'salesdashboard' },
+  {path: 'courier', component: CourierDashboardComponent},
 ];
 
-// updated

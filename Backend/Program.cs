@@ -17,13 +17,17 @@ builder.Services.Configure<MongoDBSettings>(
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.ConnectionString))
+    {
+        throw new InvalidOperationException("MongoDBSettings or ConnectionString is not configured properly.");
+    }
     return new MongoClient(mongoDbSettings.ConnectionString);
 });
 
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var mongoClient = sp.GetRequiredService<IMongoClient>();
-    return mongoClient.GetDatabase("ab-uom"); // Specify your database name
+    return mongoClient.GetDatabase("ab-uom"); // <-- this is correct
 });
 
 // Register services
@@ -37,6 +41,7 @@ builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
+builder.Services.AddSingleton<CourierService>(); 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
