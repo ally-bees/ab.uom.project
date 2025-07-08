@@ -4,7 +4,7 @@
   <app-marketingsidebar></app-marketingsidebar>
   <div class="dashboard-container">
     <!-- Header Cards -->
-    <div class="header-cards">
+    <div class="header-cards" *ngIf="dashboardData">
       <div class="card campaigns-card">
         <div class="card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +25,7 @@
           </svg>
         </div>
         <div class="card-content">
-          <h3>Spent Amount</h3>
+          <h3>Total Spent Amount</h3>
           <p>{{ dashboardData.spentAmount | number }}</p>
         </div>
       </div>
@@ -38,7 +38,7 @@
           </svg>
         </div>
         <div class="card-content">
-          <h3>New Visitors</h3>
+          <h3>Total New Visitors</h3>
           <p>{{ dashboardData.newVisitors }}</p>
         </div>
       </div>
@@ -53,7 +53,7 @@
           </svg>
         </div>
         <div class="card-content">
-          <h3>New Customers</h3>
+          <h3>Total New Customers</h3>
           <p>{{ dashboardData.newCustomers }}</p>
         </div>
       </div>
@@ -84,7 +84,7 @@
         </div>
       </div>
 
-      <div class="charts-container">
+      <div class="charts-container" *ngIf="dashboardData">
         <div class="chart-item">
           <div class="chart-wrapper">
             <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
@@ -96,13 +96,16 @@
                 fill="none" 
                 stroke="#EF4444" 
                 stroke-width="16"
-                [attr.stroke-dasharray]="getCircumference() * 0.81 + ' ' + getCircumference() * 0.19"
+                [attr.stroke-dasharray]="getCircumference() * (dashboardData.pie.orderPercent / 100) + ' ' + getCircumference() * (1 - dashboardData.pie.orderPercent / 100)"
                 [attr.stroke-dashoffset]="getCircumference() * 0.25"
                 transform="rotate(-90 60 60)"/>
-              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">81%</text>
+              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">
+                {{ dashboardData.pie.orderPercent | number:'1.0-0' }}%
+              </text>
             </svg>
           </div>
           <h4>Total Order</h4>
+          <div *ngIf="showValues">{{ dashboardData.pie.totalOrder }}</div>
         </div>
 
         <div class="chart-item">
@@ -116,13 +119,16 @@
                 fill="none" 
                 stroke="#10B981" 
                 stroke-width="16"
-                [attr.stroke-dasharray]="getCircumference() * 0.22 + ' ' + getCircumference() * 0.78"
+                [attr.stroke-dasharray]="getCircumference() * (dashboardData.pie.growthPercent / 100) + ' ' + getCircumference() * (1 - dashboardData.pie.growthPercent / 100)"
                 [attr.stroke-dashoffset]="getCircumference() * 0.25"
                 transform="rotate(-90 60 60)"/>
-              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">22%</text>
+              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">
+                {{ dashboardData.pie.growthPercent | number:'1.0-0' }}%
+              </text>
             </svg>
           </div>
           <h4>Customer Growth</h4>
+          <div *ngIf="showValues">{{ dashboardData.pie.customerGrowth }}</div>
         </div>
 
         <div class="chart-item">
@@ -136,13 +142,16 @@
                 fill="none" 
                 stroke="#3B82F6" 
                 stroke-width="16"
-                [attr.stroke-dasharray]="getCircumference() * 0.62 + ' ' + getCircumference() * 0.38"
+                [attr.stroke-dasharray]="getCircumference() * (dashboardData.pie.revenuePercent / 100) + ' ' + getCircumference() * (1 - dashboardData.pie.revenuePercent / 100)"
                 [attr.stroke-dashoffset]="getCircumference() * 0.25"
                 transform="rotate(-90 60 60)"/>
-              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">62%</text>
+              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">
+                {{ dashboardData.pie.revenuePercent | number:'1.0-0' }}%
+              </text>
             </svg>
           </div>
           <h4>Total Revenue</h4>
+          <div *ngIf="showValues">{{ dashboardData.pie.totalRevenue | number }}</div>
         </div>
       </div>
     </div>

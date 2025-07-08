@@ -4,13 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../header/header.component";
 import { FooterComponent } from "../../footer/footer.component";
 import { MarketingsidebarComponent } from "../sidebar/marketingsidebar/marketingsidebar.component";
-
-interface DashboardData {
-  campaigns: number;
-  spentAmount: number;
-  newVisitors: number;
-  newCustomers: number;
-}
+import { MarketingDashboardService, DashboardData } from '../../services/marketing-dashboard.service';
 
 @Component({
   selector: 'app-marketing-dashboard',
@@ -20,17 +14,17 @@ interface DashboardData {
   styleUrls: ['./marketing-dashboard.component.css']
 })
 export class MarketingDashboardComponent implements OnInit {
-  dashboardData: DashboardData = {
-    campaigns: 10,
-    spentAmount: 100000,
-    newVisitors: 6,
-    newCustomers: 4
-  };
-
+  dashboardData: DashboardData | null = null;
   showValues = true;
   showPercentage = true;
 
-  ngOnInit(): void {}
+  constructor(private marketingService: MarketingDashboardService) {}
+
+  ngOnInit(): void {
+    this.marketingService.getDashboardData().subscribe(data => {
+      this.dashboardData = data;
+    });
+  }
 
   toggleValues() {
     this.showValues = !this.showValues;
