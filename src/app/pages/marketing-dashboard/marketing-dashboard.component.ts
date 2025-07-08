@@ -1,48 +1,47 @@
+// marketing-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HeaderComponent } from "../header/header.component";
+import { FooterComponent } from "../../footer/footer.component";
+import { MarketingsidebarComponent } from "../sidebar/marketingsidebar/marketingsidebar.component";
 
-interface CampaignStat {
-  title: string;
-  value: string | number;
-  icon: string;
-  color: string;
-}
-
-interface Member {
-  name: string;
-  accessLevel: string;
-  avatar: string;
+interface DashboardData {
+  campaigns: number;
+  spentAmount: number;
+  newVisitors: number;
+  newCustomers: number;
 }
 
 @Component({
   selector: 'app-marketing-dashboard',
+  standalone: true,
+  imports: [CommonModule, FooterComponent, MarketingsidebarComponent, HeaderComponent],
   templateUrl: './marketing-dashboard.component.html',
   styleUrls: ['./marketing-dashboard.component.css']
 })
 export class MarketingDashboardComponent implements OnInit {
-  campaignStats: CampaignStat[] = [
-    { title: 'Campaigns', value: 10, icon: 'campaign', color: 'linear-gradient(135deg, #3f5efb, #00BFFF)' },
-    { title: 'Spent Amount', value: '100.000', icon: 'money', color: '#E3F2FD' },
-    { title: 'New Visitors', value: 6, icon: 'person_add', color: '#E3F2FD' },
-    { title: 'New Customers', value: 4, icon: 'groups', color: '#E3F2FD' }
-  ];
+  dashboardData: DashboardData = {
+    campaigns: 10,
+    spentAmount: 100000,
+    newVisitors: 6,
+    newCustomers: 4
+  };
 
-  members: Member[] = [
-    { name: 'Jaquline', accessLevel: 'Full Access', avatar: 'assets/avatar1.jpg' },
-    { name: 'Sennorita', accessLevel: 'Limited Access', avatar: 'assets/avatar2.jpg' },
-    { name: 'Firoz', accessLevel: 'Full Access', avatar: 'assets/avatar3.jpg' }
-  ];
+  showValues = true;
+  showPercentage = true;
 
-  campaignResults = [
+  ngOnInit(): void {}
 
-    { label: 'Total Order', value: 81, color: '#FF6B6B' },
-    { label: 'Customer Growth', value: 22, color: '#1DE9B6' },
-    { label: 'Total Revenue', value: 62, color: '#4285F4' }
-  ];
+  toggleValues() {
+    this.showValues = !this.showValues;
+  }
 
-  showValue = true;
-  showChart = true;
+  togglePercentage() {
+    this.showPercentage = !this.showPercentage;
+  }
 
-  constructor() { }
-
-  ngOnInit(): void { }
+  getCircumference(): number {
+    const r = 40;
+    return 2 * Math.PI * r;
+  }
 }

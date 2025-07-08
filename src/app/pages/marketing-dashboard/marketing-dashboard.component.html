@@ -1,63 +1,151 @@
-<div class="dashboard-container">
-  <div class="main-content">
-    <!-- Campaign Stats Cards -->
-    <div class="stats-container">
-      <div *ngFor="let stat of campaignStats" class="stat-card" [ngStyle]="{'background': stat.color}">
+<!-- marketing-dashboard.component.html -->
+<app-header></app-header>
+<div class="container">
+  <app-marketingsidebar></app-marketingsidebar>
+  <div class="dashboard-container">
+    <!-- Header Cards -->
+    <div class="header-cards">
+      <div class="card campaigns-card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7V10C2 16 12 22 12 22S22 16 22 10V7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
         <div class="card-content">
-          <div class="icon-container" [ngClass]="{'white-icon': stat.title === 'Campaigns'}">
-            <mat-icon>{{stat.icon}}</mat-icon>
-          </div>
-          <div [ngClass]="{'white-text': stat.title === 'Campaigns'}">
-            <h3>{{stat.title}}</h3>
-            <span class="value">{{stat.value}}</span>
-          </div>
+          <h3>Campaigns</h3>
+          <p>{{ dashboardData.campaigns }}</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/>
+            <path d="M12 6V12L16 14" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h3>Spent Amount</h3>
+          <p>{{ dashboardData.spentAmount | number }}</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9 19.1 16 17 16H7C4.9 16 4 17.9 4 19V21" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="7" r="4" stroke="#3B82F6" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h3>New Visitors</h3>
+          <p>{{ dashboardData.newVisitors }}</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 21V19C16 17.9 15.1 16 13 16H5C2.9 16 2 17.9 2 19V21" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="8.5" cy="7" r="4" stroke="#3B82F6" stroke-width="2"/>
+            <path d="M20 8V6C20 5.4 19.6 5 19 5C18.4 5 18 5.4 18 6V8" stroke="#3B82F6" stroke-width="2"/>
+            <path d="M22 13C22 10.8 20.2 9 18 9S14 10.8 14 13V16H22V13Z" stroke="#3B82F6" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h3>New Customers</h3>
+          <p>{{ dashboardData.newCustomers }}</p>
         </div>
       </div>
     </div>
 
-
-    <div class="results-container">
+    <!-- Campaign Results Section -->
+    <div class="results-section">
       <div class="results-header">
-        <h2>Campaigns Results</h2>
+        <h2>Campaign Results</h2>
         <div class="controls">
-          <mat-checkbox [(ngModel)]="showChart">Chart</mat-checkbox>
-          <mat-checkbox [(ngModel)]="showValue" color="primary" [checked]="true">Show Value</mat-checkbox>
-          <button mat-icon-button>
-            <mat-icon>more_vert</mat-icon>
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <input type="checkbox" [checked]="showValues" (change)="toggleValues()">
+              <span class="toggle-text">Values</span>
+            </label>
+            <label class="toggle-label active">
+              <input type="checkbox" [checked]="showPercentage" (change)="togglePercentage()">
+              <span class="toggle-text">Percentage</span>
+            </label>
+          </div>
+          <button class="menu-button">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="2" r="1" fill="#6B7280"/>
+              <circle cx="8" cy="8" r="1" fill="#6B7280"/>
+              <circle cx="8" cy="14" r="1" fill="#6B7280"/>
+            </svg>
           </button>
         </div>
       </div>
 
       <div class="charts-container">
-        <div *ngFor="let result of campaignResults" class="chart-item">
-          <div class="progress-circle" [ngStyle]="{'--progress': result.value, '--color': result.color}">
-            <div class="percentage">{{result.value}}%</div>
+        <div class="chart-item">
+          <div class="chart-wrapper">
+            <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="40" fill="none" stroke="#FEE2E2" stroke-width="16"/>
+              <circle 
+                cx="60" 
+                cy="60" 
+                r="40" 
+                fill="none" 
+                stroke="#EF4444" 
+                stroke-width="16"
+                [attr.stroke-dasharray]="getCircumference() * 0.81 + ' ' + getCircumference() * 0.19"
+                [attr.stroke-dashoffset]="getCircumference() * 0.25"
+                transform="rotate(-90 60 60)"/>
+              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">81%</text>
+            </svg>
           </div>
-          <div class="chart-label">{{result.label}}</div>
+          <h4>Total Order</h4>
+        </div>
+
+        <div class="chart-item">
+          <div class="chart-wrapper">
+            <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="40" fill="none" stroke="#D1FAE5" stroke-width="16"/>
+              <circle 
+                cx="60" 
+                cy="60" 
+                r="40" 
+                fill="none" 
+                stroke="#10B981" 
+                stroke-width="16"
+                [attr.stroke-dasharray]="getCircumference() * 0.22 + ' ' + getCircumference() * 0.78"
+                [attr.stroke-dashoffset]="getCircumference() * 0.25"
+                transform="rotate(-90 60 60)"/>
+              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">22%</text>
+            </svg>
+          </div>
+          <h4>Customer Growth</h4>
+        </div>
+
+        <div class="chart-item">
+          <div class="chart-wrapper">
+            <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="40" fill="none" stroke="#DBEAFE" stroke-width="16"/>
+              <circle 
+                cx="60" 
+                cy="60" 
+                r="40" 
+                fill="none" 
+                stroke="#3B82F6" 
+                stroke-width="16"
+                [attr.stroke-dasharray]="getCircumference() * 0.62 + ' ' + getCircumference() * 0.38"
+                [attr.stroke-dashoffset]="getCircumference() * 0.25"
+                transform="rotate(-90 60 60)"/>
+              <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">62%</text>
+            </svg>
+          </div>
+          <h4>Total Revenue</h4>
         </div>
       </div>
     </div>
-  </div>
-
-
-  <div class="members-section">
-    <div class="members-header">
-      <h2>Members</h2>
-      <a href="#" class="view-all">View all</a>
-    </div>
-
-    <div class="members-list">
-      <div *ngFor="let member of members" class="member-item">
-        <img [src]="member.avatar" alt="{{member.name}}" class="member-avatar">
-        <div class="member-info">
-          <div class="member-name">{{member.name}}</div>
-          <div class="member-access">{{member.accessLevel}}</div>
-        </div>
-      </div>
-    </div>
-
-    <button mat-flat-button color="primary" class="add-member-btn">
-      Add member
-    </button>
   </div>
 </div>
+<app-footer></app-footer>
