@@ -39,6 +39,10 @@ import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
 import { ChatpanelinvenComponent } from './components/chatpanelinven/chatpanelinven.component';
 import { IMchatpanelComponent } from './components/imchatpanel/imchatpanel.component';
 import { IMcustomersupportComponent } from './pages/imcustomersupport/imcustomersupport.component';
+import { BochatpanelComponent } from './components/bochatpanel/bochatpanel.component';
+import { MhchatpanelComponent } from './components/mhchatpanel/mhchatpanel.component';
+import { BocustomersupportComponent } from './pages/bocustomersupport/bocustomersupport.component';
+import { MhcustomersupportComponent } from './pages/mhcustomersupport/mhcustomersupport.component';
 
 export const routes: Routes = [
   {
@@ -73,6 +77,40 @@ export const routes: Routes = [
     }
   ]
 },
+/*{
+  path: 'businessowner',
+  component: SalesMainpageComponent,
+  children: [
+    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+    { 
+      path: 'bo-customersupport',
+      component: BocustomersupportComponent,
+      children: [
+        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+        { path: 'chatbot', component: AimessagepanelComponent },
+        { path: 'social-connect', component: SocialmessagepanelComponent },
+        { path: 'app-bochatpanel', component: BochatpanelComponent }
+      ]
+    }
+  ]
+},
+{
+  path: 'markethead',
+  component: SalesMainpageComponent,
+  children: [
+    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+    { 
+      path: 'mh-customersupport',
+      component: MhcustomersupportComponent,
+      children: [
+        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+        { path: 'chatbot', component: AimessagepanelComponent },
+        { path: 'social-connect', component: SocialmessagepanelComponent },
+        { path: 'Messaging-app', component: MhchatpanelComponent }
+      ]
+    }
+  ]
+},*/
   {
     path: 'inventoryManager',
     component: InventoryMainpageComponent,
