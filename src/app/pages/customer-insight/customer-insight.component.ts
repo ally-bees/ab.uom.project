@@ -9,7 +9,7 @@ import { FooterComponent } from '../../footer/footer.component';
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [ CommonModule,RouterModule,HeaderComponent,SidebarComponent, FooterComponent],
+  imports: [ CommonModule,RouterModule],
   templateUrl: './customer-insight.component.html',
   styleUrl: './customer-insight.component.css'
 })

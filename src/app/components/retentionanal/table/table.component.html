@@ -10,27 +10,22 @@
             </div>
         </div>
         <div class="datepicker">
-        
-          <form>
-              <input type="date" id="birthday" name=>
-          </form>
-  
-          <form>
-              <input type="date" id="birthday" name="birthday">
-          </form>
+  <form>
+    <label>From:</label>
+    <input type="date" name="fromDate" [(ngModel)]="fromDate" (ngModelChange)="getRecords(fromDate, toDate)" />
 
-          <form>
-            <input type="search" id="birthday" name="birthday" placeholder="Search">
-        </form>
-          
-      </div>
+    <label>To:</label>
+    <input type="date" name="toDate" [(ngModel)]="toDate" (ngModelChange)="getRecords(fromDate, toDate)" />
+  </form>
+</div>
+
     </div>
     <div class="table">
         <div class="table-container">
             <table class="tax-table">
               <thead>
                 <tr>
-                  <th>Audit ID</th>
+                  <th>customer_id</th>
                   <th>Name</th>
                   <th>Value</th>
                   <th>Tax</th>
@@ -40,11 +35,11 @@
               </thead>
               <tbody>
                 <tr *ngFor="let record of tableRecords">
-                  <td>{{ record.auditId }}</td>
+                  <td>{{ record.customer_id }}</td>
                   <td>{{ record.name }}</td>
-                  <td>{{ record.value }}</td>
-                  <td>{{ record.tax }}</td>
-                  <td>{{ record.netValue }}</td>
+                  <td>{{ record.active_date }}</td>
+                  <td>{{ record.estimate_date }}</td>
+                  <td>{{ record.location }}</td>
                   <td>{{ record.status }}</td>
                 </tr>
               </tbody>

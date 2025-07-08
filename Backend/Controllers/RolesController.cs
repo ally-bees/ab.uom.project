@@ -3,14 +3,14 @@ using AuthAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthAPI.Controllers;
+namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = "Admin")]
 public class RolesController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly UserService _userService;   
 
     public RolesController(UserService userService)
     {
