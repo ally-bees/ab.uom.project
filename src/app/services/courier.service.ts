@@ -15,6 +15,13 @@ export interface Courier {
   status: string;
 }
 
+export interface CountryStat {
+  name: string;
+  code: string;
+  percentage: number;
+}
+
+
 @Injectable({ providedIn: 'root' }) // Makes this service globally available
 export class CourierService {
   // Base URL for all courier-related API endpoints
@@ -27,6 +34,12 @@ export class CourierService {
     const params = new HttpParams().set('from', from).set('to', to);
     return this.http.get(`${this.baseUrl}/summary`, { params });
   }
+
+  // Get top 3 contries 
+  getTopCountries(): Observable<CountryStat[]> {
+    return this.http.get<CountryStat[]>(`${this.baseUrl}/top-nations`);
+  }
+  
 
   // Fetch a limited number of recent deliveries (default = 6)
   getRecentDeliveries(count = 6): Observable<Courier[]> {
