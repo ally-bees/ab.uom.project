@@ -1,9 +1,13 @@
 <div class="receiver-buttons">
-  <button *ngFor="let person of receivers" class="circle-button" [class.active]="receiver === person.name"
-    (click)="setReceiver(person.name)" [disabled]="receiver === person.name">
+  <button *ngFor="let person of receivers" class="circle-button" 
+          [class.active]="receiver === person.name"
+          (click)="setReceiver(person.name)" 
+          [disabled]="receiver === person.name">
     <img [src]="person.image" [alt]="person.name" />
+    <label>{{ person.name }}</label>
   </button>
 </div>
+
 
 <div class="chat-container">
   <div class="chat-header">

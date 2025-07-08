@@ -66,7 +66,6 @@ export class IMchatpanelComponent implements OnInit, OnDestroy, AfterViewChecked
     { name: 'SalesManager', image: 'assets/images/sm.jpg' },
     { name: 'BusinessOwner', image: 'assets/images/bo.jpg' },
     { name: 'MarketingHead', image: 'assets/images/mm.jpg' },
-    { name: 'FinanceManager', image: 'assets/images/fm.jpg' }
   ];
 
   constructor(private chatService: ChatService) { }
