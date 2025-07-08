@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { SalesDashboardComponent } from './pages/sales-dashboard/sales-dashboard.component';
 import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
-import { PrintReportComponent } from './pages/print-report/print-report.component'
 import { InventoryDashboardComponent } from './pages/inventory-dashboard/inventory-dashboard.component';
 import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
 import { LoginComponent } from './login/login.component';
@@ -26,6 +25,7 @@ import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussines
 import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
+import { PrintReportComponent } from './pages/print-report/print-report.component';
 
 export const routes: Routes = [
   {

@@ -61,3 +61,4 @@ Thumbs.db
 /Backend/appsettings.Development.json
 
 .fake
+.env

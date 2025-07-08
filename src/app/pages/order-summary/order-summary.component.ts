@@ -7,7 +7,8 @@ import { Chart, ChartConfiguration } from 'chart.js';
 import { ColDef, GridApi, GridReadyEvent, GridOptions } from 'ag-grid-community';
 
 import { OrderService } from '../../services/ordersummary.service';
-import { Order } from '../../models/ordersummery.model'; // Adjust path as needed
+import { PrintReportService } from '../../services/printreport.service';
+import { Order } from '../../models/ordersummery.model'; 
 
 // Interface to represent order status with count
 interface OrderStatus {
@@ -59,7 +60,8 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   constructor(
     private orderService: OrderService,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private printReportService: PrintReportService
   ) {}
 
   // Lifecycle hook - called on component initialization
@@ -210,12 +212,40 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
 
   // Navigate to the print report route
   printReport(): void {
-    console.log('Print Report button clicked');
-    this.router.navigate(['/businessowner/printreport']);
+  if (!this.filteredRowData || this.filteredRowData.length === 0) {
+    alert('No data available to print.');
+    return;
   }
 
-  // Close the print dialog
-  closePrintDialog(): void {
-    this.showPrintDialog = false;
-  }
+  const tableColumns = ['Order ID', 'Customer ID', 'Order Date', 'Amount', 'Status'];
+
+  const tableData = this.filteredRowData.map(order => ({
+    'Order ID': order.orderId,
+    'Customer ID': order.customerId,
+    'Order Date': order.orderDate, // Already formatted via DatePipe
+    'Amount': order.totalAmount.toFixed(2),
+    'Status': order.status
+  }));
+
+  const reportPayload = {
+    reportType: 'Order Summary Report',
+    exportFormat: 'PDF Document (.pdf)',
+    startDate: this.fromDate,
+    endDate: this.toDate,
+    pageOrientation: 'Portrait',
+    tableColumns,
+    tableData
+  };
+
+  console.log('📄 Order Report Payload:', reportPayload);
+
+  // Save to shared service
+  this.printReportService.setReportData(reportPayload);
+
+  // Navigate to the report preview
+  this.router.navigate(['/businessowner/printreport'], {
+    state: reportPayload
+  });
+}
+
 }

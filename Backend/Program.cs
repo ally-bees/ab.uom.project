@@ -1,17 +1,27 @@
 using System.Net;
+using QuestPDF.Infrastructure;                       // ✅ Needed for QuestPDF license
 using Backend.Models;
 using Backend.Services;
+using Hangfire;
+using Hangfire.Mongo;
+using Hangfire.Mongo.Migration.Strategies;
+using Hangfire.Mongo.Migration;
 using MongoDB.Driver;
+using DotNetEnv;
+Env.Load(); 
+
+// ✅ Set license before anything else
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Enable TLS 1.2
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
 // Configure MongoDB settings
 builder.Services.Configure<MongoDBSettings>(
     builder.Configuration.GetSection("MongoDBSettings"));
 
-// Safely bind and validate MongoDB settings
 var mongoSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
 
 if (mongoSettings == null || string.IsNullOrEmpty(mongoSettings.ConnectionString) || string.IsNullOrEmpty(mongoSettings.DatabaseName))
@@ -29,15 +39,35 @@ builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
+builder.Services.AddSingleton<ExpenseService>();
+builder.Services.AddSingleton<FinanceService>();
+builder.Services.AddSingleton<AutomationService>();
+builder.Services.AddSingleton<ReportGenerator>();
+builder.Services.AddSingleton<ReportJobService>();
 
+// Hangfire configuration
+builder.Services.AddHangfire(config =>
+    config.UseMongoStorage(
+        mongoSettings.ConnectionString,
+        "hangfire-db",
+        new MongoStorageOptions
+        {
+            MigrationOptions = new MongoMigrationOptions
+            {
+                MigrationStrategy = new MigrateMongoMigrationStrategy(),
+                // BackupStrategy = new CollectionMongoBackupStrategy()
+            }
+        }
+    )
+);
+builder.Services.AddHangfireServer();
+
+// Swagger + Controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ExpenseService>();
-builder.Services.AddSingleton<AutomationService>();
-builder.Services.AddSingleton<FinanceService>();
 
-// Configure CORS for Angular frontend
+// CORS for Angular
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
@@ -56,11 +86,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAngularApp");
-
 app.UseAuthorization();
-
 app.MapControllers();
+
+// Hangfire dashboard
+app.UseHangfireDashboard();
+
+// Schedule recurring job
+RecurringJob.AddOrUpdate<ReportJobService>(
+    "check-and-send-reports",
+    job => job.ProcessScheduledReportsAsync(),
+    "* * * * *"
+);
 
 app.Run();
