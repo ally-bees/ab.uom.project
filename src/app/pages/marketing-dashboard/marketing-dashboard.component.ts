@@ -15,8 +15,7 @@ import { MarketingDashboardService, DashboardData } from '../../services/marketi
 })
 export class MarketingDashboardComponent implements OnInit {
   dashboardData: DashboardData | null = null;
-  showValues = true;
-  showPercentage = true;
+  showMode: 'value' | 'percentage' = 'percentage';
 
   constructor(private marketingService: MarketingDashboardService) {}
 
@@ -26,12 +25,16 @@ export class MarketingDashboardComponent implements OnInit {
     });
   }
 
-  toggleValues() {
-    this.showValues = !this.showValues;
+  setShowMode(mode: 'value' | 'percentage') {
+    this.showMode = mode;
   }
 
-  togglePercentage() {
-    this.showPercentage = !this.showPercentage;
+  getPieValue(key: 'totalOrder' | 'customerGrowth' | 'totalRevenue') {
+    return this.dashboardData?.pie[key];
+  }
+
+  getPiePercent(key: 'orderPercent' | 'growthPercent' | 'revenuePercent') {
+    return this.dashboardData?.pie[key];
   }
 
   getCircumference(): number {

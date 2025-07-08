@@ -65,93 +65,76 @@
         <h2>Campaign Results</h2>
         <div class="controls">
           <div class="toggle-group">
-            <label class="toggle-label">
-              <input type="checkbox" [checked]="showValues" (change)="toggleValues()">
-              <span class="toggle-text">Values</span>
-            </label>
-            <label class="toggle-label active">
-              <input type="checkbox" [checked]="showPercentage" (change)="togglePercentage()">
-              <span class="toggle-text">Percentage</span>
-            </label>
+            <button 
+              class="toggle-label" 
+              [class.active]="showMode === 'value'" 
+              (click)="setShowMode('value')">
+              Values
+            </button>
+            <button 
+              class="toggle-label" 
+              [class.active]="showMode === 'percentage'" 
+              (click)="setShowMode('percentage')">
+              Percentage
+            </button>
           </div>
-          <button class="menu-button">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="8" cy="2" r="1" fill="#6B7280"/>
-              <circle cx="8" cy="8" r="1" fill="#6B7280"/>
-              <circle cx="8" cy="14" r="1" fill="#6B7280"/>
-            </svg>
-          </button>
+          
         </div>
       </div>
 
       <div class="charts-container" *ngIf="dashboardData">
+        <!-- Total Order Pie -->
         <div class="chart-item">
           <div class="chart-wrapper">
             <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
               <circle cx="60" cy="60" r="40" fill="none" stroke="#FEE2E2" stroke-width="16"/>
               <circle 
-                cx="60" 
-                cy="60" 
-                r="40" 
-                fill="none" 
-                stroke="#EF4444" 
-                stroke-width="16"
-                [attr.stroke-dasharray]="getCircumference() * (dashboardData.pie.orderPercent / 100) + ' ' + getCircumference() * (1 - dashboardData.pie.orderPercent / 100)"
+                cx="60" cy="60" r="40" fill="none" stroke="#EF4444" stroke-width="16"
+                [attr.stroke-dasharray]="getCircumference() * (showMode === 'percentage' ? getPiePercent('orderPercent')! / 100 : getPieValue('totalOrder')! / getPieValue('totalOrder')!) + ' ' + getCircumference() * (1 - (showMode === 'percentage' ? getPiePercent('orderPercent')! / 100 : getPieValue('totalOrder')! / getPieValue('totalOrder')!))"
                 [attr.stroke-dashoffset]="getCircumference() * 0.25"
                 transform="rotate(-90 60 60)"/>
               <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">
-                {{ dashboardData.pie.orderPercent | number:'1.0-0' }}%
+                {{ showMode === 'percentage' ? (getPiePercent('orderPercent') | number:'1.0-0') + '%' : getPieValue('totalOrder') }}
               </text>
             </svg>
           </div>
           <h4>Total Order</h4>
-          <div *ngIf="showValues">{{ dashboardData.pie.totalOrder }}</div>
         </div>
 
+        <!-- Customer Growth Pie -->
         <div class="chart-item">
           <div class="chart-wrapper">
             <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
               <circle cx="60" cy="60" r="40" fill="none" stroke="#D1FAE5" stroke-width="16"/>
               <circle 
-                cx="60" 
-                cy="60" 
-                r="40" 
-                fill="none" 
-                stroke="#10B981" 
-                stroke-width="16"
-                [attr.stroke-dasharray]="getCircumference() * (dashboardData.pie.growthPercent / 100) + ' ' + getCircumference() * (1 - dashboardData.pie.growthPercent / 100)"
+                cx="60" cy="60" r="40" fill="none" stroke="#10B981" stroke-width="16"
+                [attr.stroke-dasharray]="getCircumference() * (showMode === 'percentage' ? getPiePercent('growthPercent')! / 100 : getPieValue('customerGrowth')! / getPieValue('customerGrowth')!) + ' ' + getCircumference() * (1 - (showMode === 'percentage' ? getPiePercent('growthPercent')! / 100 : getPieValue('customerGrowth')! / getPieValue('customerGrowth')!))"
                 [attr.stroke-dashoffset]="getCircumference() * 0.25"
                 transform="rotate(-90 60 60)"/>
               <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">
-                {{ dashboardData.pie.growthPercent | number:'1.0-0' }}%
+                {{ showMode === 'percentage' ? (getPiePercent('growthPercent') | number:'1.0-0') + '%' : getPieValue('customerGrowth') }}
               </text>
             </svg>
           </div>
           <h4>Customer Growth</h4>
-          <div *ngIf="showValues">{{ dashboardData.pie.customerGrowth }}</div>
         </div>
 
+        <!-- Total Revenue Pie -->
         <div class="chart-item">
           <div class="chart-wrapper">
             <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
               <circle cx="60" cy="60" r="40" fill="none" stroke="#DBEAFE" stroke-width="16"/>
               <circle 
-                cx="60" 
-                cy="60" 
-                r="40" 
-                fill="none" 
-                stroke="#3B82F6" 
-                stroke-width="16"
-                [attr.stroke-dasharray]="getCircumference() * (dashboardData.pie.revenuePercent / 100) + ' ' + getCircumference() * (1 - dashboardData.pie.revenuePercent / 100)"
+                cx="60" cy="60" r="40" fill="none" stroke="#3B82F6" stroke-width="16"
+                [attr.stroke-dasharray]="getCircumference() * (showMode === 'percentage' ? getPiePercent('revenuePercent')! / 100 : getPieValue('totalRevenue')! / getPieValue('totalRevenue')!) + ' ' + getCircumference() * (1 - (showMode === 'percentage' ? getPiePercent('revenuePercent')! / 100 : getPieValue('totalRevenue')! / getPieValue('totalRevenue')!))"
                 [attr.stroke-dashoffset]="getCircumference() * 0.25"
                 transform="rotate(-90 60 60)"/>
               <text x="60" y="60" text-anchor="middle" dy="0.3em" class="chart-percentage">
-                {{ dashboardData.pie.revenuePercent | number:'1.0-0' }}%
+                {{ showMode === 'percentage' ? (getPiePercent('revenuePercent') | number:'1.0-0') + '%' : (getPieValue('totalRevenue') | number) }}
               </text>
             </svg>
           </div>
           <h4>Total Revenue</h4>
-          <div *ngIf="showValues">{{ dashboardData.pie.totalRevenue | number }}</div>
         </div>
       </div>
     </div>
