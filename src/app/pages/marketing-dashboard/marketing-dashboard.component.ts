@@ -17,11 +17,32 @@ export class MarketingDashboardComponent implements OnInit {
   dashboardData: DashboardData | null = null;
   showMode: 'value' | 'percentage' = 'percentage';
 
+  campaignCount: number = 0;
+  spentAmount: number = 0;
+  newVisitors: number = 0;
+  newCustomers: number = 0;
+
   constructor(private marketingService: MarketingDashboardService) {}
 
   ngOnInit(): void {
     this.marketingService.getDashboardData().subscribe(data => {
       this.dashboardData = data;
+    });
+
+    this.marketingService.getCampaignCount().subscribe(data => {
+      this.campaignCount = data;
+    });
+
+    this.marketingService.getSpentAmount().subscribe(data => {
+      this.spentAmount = parseFloat(data.toFixed(2));
+    });
+
+    this.marketingService.getNewVisitors().subscribe(data => {
+      this.newVisitors = data;
+    });
+
+    this.marketingService.getNewCustomers().subscribe(data => {
+      this.newCustomers = data;
     });
   }
 

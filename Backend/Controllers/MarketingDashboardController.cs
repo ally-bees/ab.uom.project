@@ -52,7 +52,7 @@ public class MarketingDashboardController : ControllerBase
     public async Task<IActionResult> GetCampaignCount()
     {
         var count = await _mongo.Campaigns.CountDocumentsAsync(_ => true);
-        return Ok(new { count });
+        return Ok(count);
     }
 
     // Total spent amount
@@ -61,7 +61,7 @@ public class MarketingDashboardController : ControllerBase
     {
         var campaigns = await _mongo.Campaigns.Find(_ => true).ToListAsync();
         double totalSpent = campaigns.Sum(c => c.SpentAmount);
-        return Ok(new { totalSpent });
+        return Ok(totalSpent);
     }
 
     // Total visitors
@@ -70,7 +70,7 @@ public class MarketingDashboardController : ControllerBase
     {
         var campaigns = await _mongo.Campaigns.Find(_ => true).ToListAsync();
         int totalVisitors = campaigns.Sum(c => c.NoOfVisitors);
-        return Ok(new { totalVisitors });
+        return Ok(totalVisitors);
     }
 
     // Total customers
@@ -79,6 +79,6 @@ public class MarketingDashboardController : ControllerBase
     {
         var campaigns = await _mongo.Campaigns.Find(_ => true).ToListAsync();
         int totalCustomers = campaigns.Sum(c => c.NoOfCustomers);
-        return Ok(new { totalCustomers });
+        return Ok(totalCustomers);
     }
 }

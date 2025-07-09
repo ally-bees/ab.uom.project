@@ -17,6 +17,10 @@ export interface DashboardData {
   };
 }
 
+// export interface CampaignCount {
+//   count: number;
+// }
+
 @Injectable({ providedIn: 'root' })
 export class MarketingDashboardService {
   private apiUrl = 'http://localhost:5241/api/marketingdashboard';
@@ -26,4 +30,21 @@ export class MarketingDashboardService {
   getDashboardData(): Observable<DashboardData> {
     return this.http.get<DashboardData>(`${this.apiUrl}/dashboard`);
   }
+
+  getCampaignCount(): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/campaigns/count`);
+  }
+
+  getSpentAmount(): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/campaigns/spent`);
+  }
+
+  getNewVisitors(): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/campaigns/visitors`);
+  }
+
+  getNewCustomers(): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/campaigns/customers`);
+  }
+
 }
