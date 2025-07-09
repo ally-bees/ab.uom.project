@@ -41,6 +41,34 @@ namespace Backend.Services
             await _courier.DeleteOneAsync(courier => courier.Id == id); // Deletes the courier document with the specified ID.
         }
 
+        public async Task<List<object>> GetTopCountriesPercentageAsync() // top 3 contries
+            {
+                var couriers = await _courier.Find(courier => true).ToListAsync();
+
+                // Extract country from destination and group
+                var countryCounts = couriers
+                    .Select(c => c.Destination?.Split(',').LastOrDefault()?.Trim())
+                    .Where(country => !string.IsNullOrWhiteSpace(country))
+                    .GroupBy(country => country)
+                    .Select(g => new { Country = g.Key, Count = g.Count() })
+                    .OrderByDescending(x => x.Count)
+                    .ToList();
+
+                int total = countryCounts.Sum(x => x.Count);
+
+                var top3 = countryCounts
+                    .Take(3)
+                    .Select(x => new
+                    {
+                        name = x.Country,
+                        percentage = Math.Round((x.Count * 100.0) / total, 2)
+                    })
+                    .ToList<object>();
+
+                return top3;
+            }
+
+
         public async Task<CourierSummaryDto> GetSummaryAsync(DateTime from, DateTime to)
         {
             var courier = await _courier.Find(courier => courier.Date >= from && courier.Date <= to).ToListAsync(); // Retrieves couriers within date range.

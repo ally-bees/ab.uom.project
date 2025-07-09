@@ -59,6 +59,13 @@ namespace Backend.Controllers
             }
         }
 
+        [HttpGet("top-nations")] // Handles GET requests for top 3 contries
+        public async Task<IActionResult> GetTopCountries()
+        {
+            var result = await _courierService.GetTopCountriesPercentageAsync();
+            return Ok(result);
+        }
+
         [HttpGet("{id}")] // Handles GET requests for a specific courier by ID.
         public async Task<IActionResult> GetCourierById(string id)
         {

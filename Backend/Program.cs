@@ -42,7 +42,8 @@ builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
 builder.Services.AddSingleton<CourierService>(); 
-
+builder.Services.AddSingleton<CampaignService>();
+builder.Services.AddSingleton<MongoService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

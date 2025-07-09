@@ -27,6 +27,7 @@ import { TopSellingComponent } from './components/top-selling/top-selling.compon
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,17 @@ export const routes: Routes = [
       {path: 'expense-form', component: ExpenseFormComponent}
     ]
   },
+  {
+    path: 'marketingManager',
+    component: MarketingDashboardComponent,
+    children: [
+      { path: '', redirectTo: 'marketing', pathMatch: 'full' },
+      { path: 'sales', component: SalesComponent },
+      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+
+    ]
+  },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},
@@ -78,5 +90,6 @@ export const routes: Routes = [
   {path: 'expense-form', component: ExpenseFormComponent},
   { path: '**', redirectTo: 'salesdashboard' },
   {path: 'courier', component: CourierDashboardComponent},
+  {path: 'marketing', component: MarketingDashboardComponent},
 ];
 
