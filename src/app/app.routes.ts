@@ -55,6 +55,17 @@ export const routes: Routes = [
       {path: 'expense-form', component: ExpenseFormComponent}
     ]
   },
+  {
+    path: 'marketingManager',
+    component: MarketingDashboardComponent,
+    children: [
+      { path: '', redirectTo: 'marketing', pathMatch: 'full' },
+      { path: 'sales', component: SalesComponent },
+      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+
+    ]
+  },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
   { path:'login', component:LoginComponent},

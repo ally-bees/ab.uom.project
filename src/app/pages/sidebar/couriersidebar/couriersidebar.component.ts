@@ -13,13 +13,13 @@ import { Router } from '@angular/router';
 export class CouriersidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
-      { id: 'sales', label: 'Sales', icon: 'fa-chart-line' },
-      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart' },
-      { id: 'products', label: 'Products', icon: 'fa-box' },
-      { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast' },
-      { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave' },
-      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users' },
-      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn' }
+      { id: 'sales', label: 'Sales', icon: 'fa-chart-line',route: 'courier/' },
+      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart',route: 'courier/'},
+      { id: 'products', label: 'Products', icon: 'fa-box', route: 'courier/' },
+      { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast' ,route: 'courier/'},
+      { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave' ,route: 'courier/'},
+      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'courier/customerinsight' },
+      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'courier/' },
     ]}
   ];
 
@@ -31,10 +31,12 @@ export class CouriersidebarComponent {
     menuItem.expanded = !menuItem.expanded;
   }
 
-  setActive(id: string): void {
+  setActive(id: string, route?: string): void {
     this.activeMenuItem = id;
+    if (route) {
+      this.router.navigate([route]);
+    }
   }
-
    goToDashboard(): void {
     this.activeMenuItem = 'dashboard';
     this.router.navigate(['businessowner/businessownerdashboard']);

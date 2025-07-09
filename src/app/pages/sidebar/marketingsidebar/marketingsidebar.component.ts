@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
 export class MarketingsidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
-      { id: 'sales', label: 'Sales', icon: 'fa-chart-line' },
-      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users' },
-      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn' }
+      { id: 'sales', label: 'Sales', icon: 'fa-chart-line',route: 'marketing/analytics' },
+      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users',route: 'marketing/analytics' },
+      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'marketing/analytics' },
     ]}
   ];
 
