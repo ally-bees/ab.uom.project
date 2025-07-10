@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Services;
-using Backend.Models;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/campaign")]
+    [Route("api/[controller]")]
     public class CampaignController : ControllerBase
     {
         private readonly CampaignService _campaignService;
@@ -15,18 +15,28 @@ namespace Backend.Controllers
             _campaignService = campaignService;
         }
 
-        [HttpGet("get-all")]
-        public async Task<IActionResult> GetAllCampaigns()
+        // Full campaign details
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var campaigns = await _campaignService.GetAllAsync();
-                return Ok(campaigns);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message); // Returns 500 Internal Server Error if an exception occurs.
-            }
+            var campaigns = await _campaignService.GetAllAsync();
+            return Ok(campaigns);
+        }
+
+        // Summary: CamId, Description, SpentAmount
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetSummary()
+        {
+            var summary = await _campaignService.GetSummaryAsync();
+            return Ok(summary);
+        }
+
+        // Table-ready campaign data
+        [HttpGet("table")]
+        public async Task<IActionResult> GetTableData()
+        {
+            var tableData = await _campaignService.GetTableDataAsync();
+            return Ok(tableData);
         }
     }
 }
