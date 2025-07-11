@@ -177,6 +177,48 @@
         </table>
       </div>
     </div>
+
+    <!-- Campaign Modal Popup -->
+    <div class="modal-overlay" *ngIf="showCampaignTable" (click)="closeCampaignModal($event)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Campaign Details</h2>
+          <button class="close-modal-btn" (click)="showCampaignTable = false">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="table-container">
+            <table class="campaign-details-table">
+              <thead>
+                <tr>
+                  <th>Campaign ID</th>
+                  <th>Platform</th>
+                  <th>Description</th>
+                  <th>CTR</th>
+                  <th>CPC</th>
+                  <th>Spent Amount</th>
+                  <th>Visitors</th>
+                  <th>Customers</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let campaign of campaigns">
+                  <td>{{ campaign.camId }}</td>
+                  <td>{{ campaign.platform }}</td>
+                  <td>{{ campaign.description }}</td>
+                  <td>{{ campaign.clickThroughRate | percent:'1.2-2' }}</td>
+                  <td>{{ campaign.cpc | currency }}</td>
+                  <td>{{ campaign.spentAmount | currency }}</td>
+                  <td>{{ campaign.noOfVisitors }}</td>
+                  <td>{{ campaign.noOfCustomers }}</td>
+                  <td>{{ campaign.date | date:'short' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <app-footer></app-footer>

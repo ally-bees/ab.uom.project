@@ -72,4 +72,11 @@ export class MarketingDashboardComponent implements OnInit {
       this.campaigns = data;
     });
   }
+
+  closeCampaignModal(event: MouseEvent): void {
+    // Close only if clicking the overlay background, not the modal content
+    if ((event.target as HTMLElement).className === 'modal-overlay') {
+      this.showCampaignTable = false;
+    }
+  }
 }
