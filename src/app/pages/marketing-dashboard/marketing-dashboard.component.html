@@ -5,6 +5,7 @@
   <div class="dashboard-container">
     <!-- Header Cards -->
     <div class="header-cards" *ngIf="dashboardData">
+      <!-- Campaign Card -->
       <div class="card campaigns-card" (click)="showCampaignDetails()">
         <div class="card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +18,8 @@
         </div>
       </div>
 
-      <div class="card">
+      <!-- Spent Amount Card -->
+      <div class="card" (click)="showSpentAmountDetails()">
         <div class="card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/>
@@ -139,45 +141,6 @@
       </div>
     </div>
 
-    <!-- Campaign Table Section -->
-    <div class="campaign-table-section" *ngIf="showCampaignTable">
-      <div class="section-header">
-        <h2>Campaign Details</h2>
-        <button class="close-btn" (click)="showCampaignTable = false">×</button>
-      </div>
-      
-      <div class="table-container">
-        <table class="campaign-details-table">
-          <thead>
-            <tr>
-              <th>Campaign ID</th>
-              <th>Platform</th>
-              <th>Description</th>
-              <th>CTR</th>
-              <th>CPC</th>
-              <th>Spent Amount</th>
-              <th>Visitors</th>
-              <th>Customers</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let campaign of campaigns">
-              <td>{{ campaign.camId }}</td>
-              <td>{{ campaign.platform }}</td>
-              <td>{{ campaign.description }}</td>
-              <td>{{ campaign.clickThroughRate | percent:'1.2-2' }}</td>
-              <td>{{ campaign.cpc | currency }}</td>
-              <td>{{ campaign.spentAmount | currency }}</td>
-              <td>{{ campaign.noOfVisitors }}</td>
-              <td>{{ campaign.noOfCustomers }}</td>
-              <td>{{ campaign.date | date:'short' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
     <!-- Campaign Modal Popup -->
     <div class="modal-overlay" *ngIf="showCampaignTable" (click)="closeCampaignModal($event)">
       <div class="modal-content">
@@ -214,6 +177,42 @@
                   <td>{{ campaign.date | date:'short' }}</td>
                 </tr>
               </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add new modal for spent amount details -->
+    <div class="modal-overlay" *ngIf="showSpentAmountTable" (click)="closeSpentModal($event)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Campaign Spend Details</h2>
+          <button class="close-modal-btn" (click)="showSpentAmountTable = false">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="table-container">
+            <table class="campaign-details-table">
+              <thead>
+                <tr>
+                  <th>Campaign ID</th>
+                  <th>Campaign Name</th>
+                  <th>Spent Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let campaign of campaigns">
+                  <td>{{ campaign.camId }}</td>
+                  <td>{{ campaign.description }}</td>
+                  <td>{{ campaign.spentAmount | currency }}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2"><strong>Total Spent Amount</strong></td>
+                  <td><strong>{{ getTotalSpentAmount() | currency }}</strong></td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>

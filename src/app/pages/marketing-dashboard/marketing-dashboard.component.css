@@ -37,6 +37,7 @@ app-marketingsidebar {
   align-items: center;
   gap: 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -256,6 +257,16 @@ app-marketingsidebar {
 
 .campaign-details-table tbody tr:hover {
   background-color: #F9FAFB;
+}
+
+.campaign-details-table tfoot td {
+  background-color: #F9FAFB;
+  font-weight: 500;
+  padding: 14px 12px;
+}
+
+.campaign-details-table tfoot td:last-child {
+  color: #EF4444;
 }
 
 .card.campaigns-card {

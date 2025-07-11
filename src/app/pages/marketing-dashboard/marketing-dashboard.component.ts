@@ -24,6 +24,7 @@ export class MarketingDashboardComponent implements OnInit {
 
   campaigns: Campaign[] = [];
   showCampaignTable = false;
+  showSpentAmountTable = false;
 
   constructor(private marketingService: MarketingDashboardService) {}
 
@@ -78,5 +79,25 @@ export class MarketingDashboardComponent implements OnInit {
     if ((event.target as HTMLElement).className === 'modal-overlay') {
       this.showCampaignTable = false;
     }
+  }
+
+  showSpentAmountDetails(): void {
+    this.showSpentAmountTable = true;
+    this.marketingService.getCampaigns().subscribe(data => {
+      this.campaigns = data;
+    });
+  }
+
+  closeSpentModal(event: MouseEvent): void {
+    if ((event.target as HTMLElement).className === 'modal-overlay') {
+      this.showSpentAmountTable = false;
+    }
+  }
+
+  getTotalSpentAmount(): number {
+    if (!this.campaigns || this.campaigns.length === 0) {
+      return 0;
+    }
+    return this.campaigns.reduce((sum, campaign) => sum + campaign.spentAmount, 0);
   }
 }
