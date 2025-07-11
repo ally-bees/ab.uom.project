@@ -130,3 +130,33 @@
     border: none;
     cursor: pointer;
   }
+
+
+  .dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 6px;
+    z-index: 1000;
+    right: 0;
+    top: 100%;
+    min-width: 100px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .delete-btn {
+    background: transparent;
+    border: none;
+    color: red;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+  }
+  

@@ -1,12 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { buyerService } from './buyer.service';
-
-interface Topbuyer{
-  name : string;
-  orders: number;
-  location: string;
-  img:string;
-}
+import { buyerService,TopCustomer  } from './buyer.service';
 
 @Component({
   selector: 'app-buyer',
@@ -18,18 +11,23 @@ interface Topbuyer{
 })
 export class BuyerComponent implements OnInit {
 
-  buyerrecord: Topbuyer | null = null;
+  topCustomer: TopCustomer | null = null;
+  errorMessage = '';
 
   constructor(private buyerservice:buyerService){
     
   }
   ngOnInit(): void {
-    this.getbuyRecords();
-  }
-
-  getbuyRecords(): void {
-    this.buyerservice.getbuyRecords().subscribe(records => {
-      this.buyerrecord = records;
+    this.buyerservice.getbuyRecords().subscribe({
+      next: (data) => {
+        this.topCustomer = data;
+      },
+      error: (error) => {
+        this.errorMessage = error.error || 'Failed to load top customer.';
+      }
     });
   }
-}
+
+  
+  }
+
