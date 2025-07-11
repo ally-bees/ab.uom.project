@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 
 // Components
 import { AppComponent } from './app.component';
@@ -34,9 +34,9 @@ import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
-    MarketingDashboardComponent
   ],
   imports: [
+    MarketingDashboardComponent,
     SalesHeatmapComponent,
     BrowserModule,
     SalesComponent,
@@ -63,7 +63,8 @@ import { NgChartsModule } from 'ng2-charts';
     NgChartsModule
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    provideHttpClient()
   ]
 })
 export class AppModule { }

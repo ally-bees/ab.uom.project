@@ -17,6 +17,19 @@ export interface DashboardData {
   };
 }
 
+export interface Campaign {
+  id?: string;
+  camId: string;
+  platform: string;
+  description: string;
+  clickThroughRate: number;
+  cpc: number;
+  spentAmount: number;
+  noOfVisitors: number;
+  noOfCustomers: number;
+  date: Date;
+}
+
 // export interface CampaignCount {
 //   count: number;
 // }
@@ -47,4 +60,7 @@ export class MarketingDashboardService {
     return this.http.get<any>(`${this.apiUrl}/campaigns/customers`);
   }
 
+  getCampaigns(): Observable<Campaign[]> {
+    return this.http.get<Campaign[]>('http://localhost:5241/api/campaign');
+  }
 }

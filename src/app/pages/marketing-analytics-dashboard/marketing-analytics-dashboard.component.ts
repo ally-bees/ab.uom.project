@@ -11,13 +11,17 @@ import { CourierService } from '../../services/courier.service';
 import { OrdersService } from '../../services/orders.service';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { Inject } from '@angular/core';
+import { MarketingCampaignService, CampaignPerformance } from '../../services/campaign.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-marketing-analytics-dashboard',
   templateUrl: './marketing-analytics-dashboard.component.html',
   styleUrls: ['./marketing-analytics-dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, AnalyticssidebarComponent, FormsModule]
+  imports: [CommonModule, HttpClientModule, HeaderComponent, FooterComponent, 
+            AnalyticssidebarComponent, FormsModule]
 })
 export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('salesFunnelChart') salesFunnelChart!: ElementRef;
@@ -61,11 +65,7 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
   desktopPercentage: number = 2.76;
   tabletPercentage: number = 0.82;
 
-  campaigns = [
-    { name: 'Google Ads', icon: 'G', color: '#34A853', impressions: '109k', clicks: '9', cpc: '10.12', spend: '566,033.12' },
-    { name: 'Tik Tok', icon: 'T', color: '#00F2EA', impressions: '287k', clicks: '13', cpc: '12.12', spend: '845,123.12' },
-    { name: 'Instagram', icon: 'I', color: '#C13584', impressions: '156k', clicks: '12', cpc: '11.12', spend: '378,121.12' }
-  ];
+  campaigns: CampaignPerformance[] = [];
 
   topCountries = [
     { name: '', code: '', percentage: 0 },
@@ -82,15 +82,20 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
     'Canada': 'CA'
   };
 
+  // Add this property for the modal
+  showAllCampaigns = false;
+
   constructor(
     private salesService: SalesService,
     private courierService: CourierService,
-    private orderService: OrdersService
+    private orderService: OrdersService,
+    private marketingCampaignService: MarketingCampaignService
   ) {}
 
   ngOnInit(): void {
     this.loadInitialData();
     this.loadChartData();
+    this.loadCampaignData(); // Add this
   }
 
   ngAfterViewInit(): void {
@@ -200,6 +205,22 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
           this.initSalesFunnelChart();
         }
       }
+    });
+  }
+
+  // Add this method
+  loadCampaignData(): void {
+    this.marketingCampaignService.getCampaignPerformance().subscribe((campaigns: CampaignPerformance[]) => {
+      this.campaigns = campaigns;
+      
+      // Add default icon/color if not provided
+      this.campaigns = this.campaigns.map(campaign => ({
+        ...campaign,
+        icon: campaign.icon || campaign.name.charAt(0),
+        color: campaign.color || this.getRandomColor()
+      }));
+      
+      console.log('Campaign data loaded:', this.campaigns);
     });
   }
 
@@ -322,6 +343,27 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
     window.print();
   }
 
+  // Add "See All" functionality
+  showAllCampaignsModal(): void {
+    this.showAllCampaigns = true;
+  }
+  
+  closeAllCampaignsModal(event: MouseEvent): void {
+    if ((event.target as HTMLElement).className === 'modal-overlay') {
+      this.showAllCampaigns = false;
+    }
+  }
+
+  // Helper method for random colors
+  private getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
   // Debug method - you can call this from the template to test
   debugChart(): void {
     console.log('Debug Chart Data:', {
@@ -332,5 +374,10 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
       isViewInitialized: this.isViewInitialized,
       canvasElement: this.salesFunnelChart?.nativeElement
     });
+  }
+
+  getCountryCode(countryCode: string): string {
+    // Return the lowercase country code if it exists, otherwise return 'unknown'
+    return countryCode?.toLowerCase() || 'unknown';
   }
 }
