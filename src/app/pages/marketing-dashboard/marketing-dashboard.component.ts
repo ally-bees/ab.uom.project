@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../header/header.component";
 import { FooterComponent } from "../../footer/footer.component";
 import { MarketingsidebarComponent } from "../sidebar/marketingsidebar/marketingsidebar.component";
-import { MarketingDashboardService, DashboardData } from '../../services/marketing-dashboard.service';
+import { MarketingDashboardService, DashboardData, Campaign } from '../../services/marketing-dashboard.service';
 
 @Component({
   selector: 'app-marketing-dashboard',
@@ -21,6 +21,9 @@ export class MarketingDashboardComponent implements OnInit {
   spentAmount: number = 0;
   newVisitors: number = 0;
   newCustomers: number = 0;
+
+  campaigns: Campaign[] = [];
+  showCampaignTable = false;
 
   constructor(private marketingService: MarketingDashboardService) {}
 
@@ -61,5 +64,12 @@ export class MarketingDashboardComponent implements OnInit {
   getCircumference(): number {
     const r = 40;
     return 2 * Math.PI * r;
+  }
+
+  showCampaignDetails(): void {
+    this.showCampaignTable = true;
+    this.marketingService.getCampaigns().subscribe(data => {
+      this.campaigns = data;
+    });
   }
 }

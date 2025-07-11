@@ -5,7 +5,7 @@
   <div class="dashboard-container">
     <!-- Header Cards -->
     <div class="header-cards" *ngIf="dashboardData">
-      <div class="card campaigns-card">
+      <div class="card campaigns-card" (click)="showCampaignDetails()">
         <div class="card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2L2 7V10C2 16 12 22 12 22S22 16 22 10V7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -13,7 +13,7 @@
         </div>
         <div class="card-content">
           <h3>Campaigns</h3>
-          <p>{{ campaignCount}}</p>
+          <p>{{ campaignCount }}</p>
         </div>
       </div>
 
@@ -136,6 +136,45 @@
           </div>
           <h4>Total Revenue</h4>
         </div>
+      </div>
+    </div>
+
+    <!-- Campaign Table Section -->
+    <div class="campaign-table-section" *ngIf="showCampaignTable">
+      <div class="section-header">
+        <h2>Campaign Details</h2>
+        <button class="close-btn" (click)="showCampaignTable = false">×</button>
+      </div>
+      
+      <div class="table-container">
+        <table class="campaign-details-table">
+          <thead>
+            <tr>
+              <th>Campaign ID</th>
+              <th>Platform</th>
+              <th>Description</th>
+              <th>CTR</th>
+              <th>CPC</th>
+              <th>Spent Amount</th>
+              <th>Visitors</th>
+              <th>Customers</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let campaign of campaigns">
+              <td>{{ campaign.camId }}</td>
+              <td>{{ campaign.platform }}</td>
+              <td>{{ campaign.description }}</td>
+              <td>{{ campaign.clickThroughRate | percent:'1.2-2' }}</td>
+              <td>{{ campaign.cpc | currency }}</td>
+              <td>{{ campaign.spentAmount | currency }}</td>
+              <td>{{ campaign.noOfVisitors }}</td>
+              <td>{{ campaign.noOfCustomers }}</td>
+              <td>{{ campaign.date | date:'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

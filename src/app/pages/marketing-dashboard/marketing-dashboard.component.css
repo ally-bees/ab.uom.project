@@ -207,6 +207,61 @@ app-marketingsidebar {
   text-align: center;
 }
 
+/* Campaign Table Section */
+.campaign-table-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6B7280;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.campaign-details-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.campaign-details-table th,
+.campaign-details-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.campaign-details-table th {
+  font-weight: 500;
+  color: #6B7280;
+  background-color: #F9FAFB;
+}
+
+.campaign-details-table tbody tr:hover {
+  background-color: #F9FAFB;
+}
+
+.card.campaigns-card {
+  cursor: pointer;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-container {
