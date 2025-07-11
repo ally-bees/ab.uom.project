@@ -36,5 +36,8 @@ namespace Backend.Models
 
         [BsonElement("status")]
         public string Status { get; set; }
+
+        [BsonElement("CompanyId")]
+        public string? CompanyId { get; set; }
     }
 }
