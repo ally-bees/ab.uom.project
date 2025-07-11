@@ -14,7 +14,7 @@ import { AutomationService, Automation } from '../../services/automation.service
 export class ScheduleComponent implements OnInit {
   form: FormGroup;
   activeAutomations: Automation[] = [];
-  editingAutomationId: number | null = null;
+  editingAutomationId: string | null = null;
   daysOfMonth: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
   constructor(
@@ -91,7 +91,7 @@ export class ScheduleComponent implements OnInit {
 
   // Populate the form fields with data from the selected automation for editing
   editAutomation(automation: Automation): void {
-    this.editingAutomationId = automation.id;
+    this.editingAutomationId = automation.id.toString();
 
     this.form.patchValue({
       report: {
@@ -115,14 +115,15 @@ export class ScheduleComponent implements OnInit {
   }
 
   // Delete an automation and reset the form if it was being edited
-  deleteAutomation(id: number): void {
-    this.automationService.deleteAutomation(id).subscribe(() => {
-      this.loadAutomations();
-      if (this.editingAutomationId === id) {
-        this.resetForm();
-      }
-    });
-  }
+deleteAutomation(id: string): void {
+  this.automationService.deleteAutomation(String(id)).subscribe(() => {
+    this.loadAutomations();
+    if (this.editingAutomationId === id) {
+      this.resetForm();
+    }
+  });
+}
+
 
   // Reset the form to default values and clear edit state
   resetForm(): void {

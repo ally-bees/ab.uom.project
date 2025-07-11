@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using OfficeOpenXml;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using QuestPDF.Helpers;
 
 public class ReportGenerator
 {
@@ -90,11 +91,14 @@ private byte[] GeneratePdf(List<BsonDocument> data, out string fileName)
 
             page.Content().Table(table =>
             {
-                // Define columns
-                foreach (var _ in keys)
-                {
-                    table.ColumnsDefinition(columns => columns.RelativeColumn());
-                }
+               table.ColumnsDefinition(columns =>
+{
+    foreach (var _ in keys)
+    {
+        columns.RelativeColumn();
+    }
+});
+
 
                 if (keys.Count == 0)
                     return;
@@ -139,8 +143,11 @@ private byte[] GeneratePdf(List<BsonDocument> data, out string fileName)
 {
     try
     {
-        uvar emailUser = Environment.GetEnvironmentVariable("EMAIL_USER");
+        var emailUser = Environment.GetEnvironmentVariable("EMAIL_USER");
 var emailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD");
+
+ Console.WriteLine($"[DEBUG] EMAIL_USER: {emailUser}");
+        Console.WriteLine($"[DEBUG] EMAIL_PASSWORD is null: {string.IsNullOrEmpty(emailPassword)}");
 
 using var smtpClient = new SmtpClient("smtp.gmail.com")
 {

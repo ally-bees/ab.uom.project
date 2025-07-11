@@ -80,7 +80,7 @@
     <div *ngFor="let automation of activeAutomations">
       <p><strong>{{ automation.reportType }}</strong> | {{ automation.frequency }} at {{ automation.time }}</p>
       <button (click)="editAutomation(automation)">Edit</button>
-      <button (click)="deleteAutomation(automation.id)">Delete</button>
+      <button (click)="deleteAutomation(automation.id.toString())">Delete</button>
     </div>
   </div>
 </div>
