@@ -51,6 +51,8 @@
           <div class="period-selector">
             <select [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
               <option value="month">This Month</option>
+              <option value="month">Last Three Months</option>
+              <option value="month">Last Six Months</option>
               <option value="year">This Year</option>
             </select>
           </div>
@@ -134,13 +136,6 @@
       </div>
     </div>
 
-    <!-- Print -->
-    <div class="print-container">
-      <button class="print-button" (click)="printReport()">Print Report</button>
-    </div>
-  </div>
-</div>
-
 <!-- All Campaigns Modal Popup -->
 <div class="modal-overlay" *ngIf="showAllCampaigns" (click)="closeAllCampaignsModal($event)">
   <div class="modal-content">
@@ -181,5 +176,12 @@
     </div>
   </div>
 </div>
+ <!-- Print -->
+    <div class="print-report">
+      <button (click)="printReport()">
+        Print Report
+        <span class="material-icons">print</span>
+      </button>
+    </div>
 
 <app-footer></app-footer>

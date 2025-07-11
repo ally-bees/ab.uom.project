@@ -335,27 +335,36 @@ app-analyticssidebar {
   color: #1F2937;
 }
 
-/* Print Button */
-.print-container {
+/* Print report button styling */
+.print-report {
   display: flex;
   justify-content: center;
+  margin: 25px 0;
 }
 
-.print-button {
-  background-color: #06B6D4;
+.print-report button {
+  background-color: #00bcd4;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 12px 25px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-size: 16px;
+  width: 19%;
+  transition: background-color 0.3s;
 }
 
-.print-button:hover {
-  background-color: #0891B2;
+.print-report button:hover {
+  background-color: #0097a7;
 }
+
+.print-report button svg {
+  vertical-align: middle;
+}
+
 
 /* Modal Popup for Campaign Table */
 .modal-overlay {
