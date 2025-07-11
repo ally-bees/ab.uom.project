@@ -14,14 +14,14 @@ interface User {
   createdAt: string;
   status?: string;
   showMenu?: boolean; // for dropdown menu
-  honeycombId: string;
+  HoneyCombId: string;
 }
 
 interface UserCreate {
   username: string;
   email: string;
   roles: string;
-  honeycombId: string;
+  HoneyCombId: string;
   password: string; 
   status: string;
   createdAt: string;
@@ -47,7 +47,7 @@ export class UserManagementComponent implements OnInit {
         username: user.username,
         email: user.email,
         roles: user.roles,
-        honeycombId: user.honeycombId,
+        HoneyCombId: user.HoneyCombId,
         lastActive: new Date(user.lastActive || user.createdAt).toLocaleString(),
         createdAt: user.createdAt,
         status: 'Active',
@@ -119,7 +119,7 @@ export class UserManagementComponent implements OnInit {
       username: username,
       email: email,
       password: password,
-      honeycombId: honeycombId,
+      HoneyCombId: honeycombId,
       roles: 'Admin', // Always setting role to Admin
       status: 'Active',
       createdAt: now,
@@ -134,7 +134,7 @@ export class UserManagementComponent implements OnInit {
           username: createdUser.username,
           email: createdUser.email,
           roles: createdUser.roles,
-          honeycombId: createdUser.honeycombId,
+          HoneyCombId: createdUser.HoneyCombId,
           lastActive: new Date(createdUser.lastActive || createdUser.createdAt).toLocaleString(),
           createdAt: createdUser.createdAt,
           status: 'Active'

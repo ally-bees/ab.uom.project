@@ -7,7 +7,7 @@ export interface UserCreate {
   email: string;
   roles: string;
   password: string;
-  honeycombId: string;
+  HoneyCombId: string;
   status: string;
   createdAt: string;
   lastActive: string;
@@ -20,7 +20,7 @@ export interface User {
   lastActive: string;
   createdAt: string;
   status?: string;
-  honeycombId:string;
+  HoneyCombId:string;
 }
 
 @Injectable({

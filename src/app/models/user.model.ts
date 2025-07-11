@@ -2,15 +2,14 @@ export interface User {
     id?: string;
     username: string;
     email: string;
-    honeycombId: string;
-    role: string;
+    HoneyCombId: string;
+    Role: string;
 }
   
 export interface RegisterRequest {
     username: string;
     email: string;
     password: string;
-    role:string;
     honeycombId: string;
 }
   

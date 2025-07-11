@@ -70,7 +70,7 @@ builder.Services.AddSingleton<UserManagementService>();
 
 builder.Services.AddSingleton<IPasswordResetService, PasswordResetService>();
 builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
-
+builder.Services.AddScoped<HoneycombService>();
 
 builder.Services.AddCors(options =>
 {

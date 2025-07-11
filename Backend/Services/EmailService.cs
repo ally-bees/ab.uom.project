@@ -194,6 +194,7 @@ namespace AuthAPI.Services
                         <div class='content'>
                             <h2>Hello {userName}!</h2>
                             <p>Welcome to Allybees! Your account has been successfully created.</p>
+                            <p>If this activity is not yours contact immediately <a href=""mailto:allybees23@gmail.com"">allybees23@gmail.com</a></p>
                             <p>You can now access all the features of our platform.</p>
                             <p>Best regards,<br>The Allybees Team</p>
                         </div>

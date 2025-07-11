@@ -24,12 +24,10 @@
     "@angular/router": "^18.2.0",
     "@auth0/angular-jwt": "^5.2.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
-
-    "ag-charts-angular": "^11.3.0",
-    "ag-charts-community": "^11.3.0",
+    "ag-charts-angular": "^11.3.1",
+    "ag-charts-community": "^11.3.1",
     "ag-grid-angular": "^32.3.6",
     "ag-grid-community": "^32.3.6",
-
     "chart.js": "^4.4.9",
     "ng2-charts": "^4.1.1",
     "rxjs": "~7.8.0",
