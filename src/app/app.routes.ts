@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import {
   authGuard,
@@ -35,6 +36,7 @@ import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
+
 import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
 import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
 import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
@@ -48,37 +50,40 @@ import { TestmarketingDashboardComponent } from './dashboards/testmarketing-dash
 import { AuditpageComponent } from './pages/auditpage/auditpage.component';
 import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
 import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
-
 import { DemographicComponent } from './components/demographic/demographic.component';
 import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 
 export const routes: Routes = [
+  // Default route
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // Auth
+  // Auth routes
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
 
-  // Admin-only
+  // Admin-only routes
   { path: 'admindashboard', component: DashboardComponent, canActivate: [adminGuard] },
   { path: 'systemconfig', component: SystemConfigComponent, canActivate: [adminGuard] },
   { path: 'auditlogs', component: AuditLogsComponent, canActivate: [adminGuard] },
   { path: 'usermanagement', component: UserManagementComponent, canActivate: [adminGuard] },
 
-  // Sales Manager
-  {
-    path: 'salesmanager',
-    component: SalesMainpageComponent,
-    canActivate: [salesManagerGuard],
-    children: [
+  // Business owner
+  { path: 'testbusinessowner', component: TestbusinessDashboardComponent, canActivate: [businessOwnerGuard] },
+
+// Sales Manager with child routes
+{
+  path: 'salesmanager',
+  component: SalesMainpageComponent,
+  canActivate: [salesManagerGuard],
+  children: [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {
+      { 
         path: 'customerinsight',
         component: customerinsightComponent,
         children: [
@@ -93,7 +98,7 @@ export const routes: Routes = [
     ]
   },
 
-  // Inventory Manager
+  // Inventory Manager with child routes
   {
     path: 'testinventorymanager',
     component: TestinventoryDashboardComponent,
@@ -102,27 +107,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
-      { path: 'order', component: OrderSummaryComponent }
-    ]
-  },
-
-  // Business Owner
-  {
-    path: 'businessowner',
-    component: BusinessMainpageComponent,
-    canActivate: [businessOwnerGuard],
-    children: [
-      { path: '', redirectTo: 'businessownerdashboard', pathMatch: 'full' },
-      { path: 'businessownerdashboard', component: BusinessDashComponent },
-      { path: 'finance', component: FinanceComponent },
-      { path: 'inventory', component: InventoryComponent },
-      { path: 'schedule', component: ScheduleComponent },
-      { path: 'shipping', component: ShippingDashboardComponent },
-      { path: 'sales', component: SalesComponent },
-      { path: 'customerinsight', component: customerinsightComponent },
       { path: 'order', component: OrderSummaryComponent },
-      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
-      { path: 'printreport', component: PrintReportComponent },
       { path: 'expense-form', component: ExpenseFormComponent }
     ]
   },
@@ -134,18 +119,19 @@ export const routes: Routes = [
     canActivate: [marketingManagerGuard]
   },
 
-  // General Authenticated Routes
+  // Common routes (authenticated users)
   { path: 'userprofile', component: UserProfileComponent, canActivate: [authGuard] },
   { path: 'finance', component: FinanceComponent, canActivate: [authGuard] },
   { path: 'schedule', component: ScheduleComponent, canActivate: [authGuard] },
   { path: 'shipping', component: ShippingDashboardComponent, canActivate: [authGuard] },
 
+  // Components for shared dashboards or views
   { path: 'sales-heatmap', component: SalesHeatmapComponent, canActivate: [authGuard] },
   { path: 'top-selling', component: TopSellingComponent, canActivate: [authGuard] },
   { path: 'stats', component: StatsCardComponent, canActivate: [authGuard] },
   { path: 'top', component: TopSellingTableComponent, canActivate: [authGuard] },
 
-  // Audit
+  // Audit related routes (if needed)
   { path: 'auditpage', component: AuditpageComponent },
   { path: 'auditdashboard', component: AuditdashboardComponent },
   { path: 'auditorpage', component: AuditorpageComponent },
@@ -154,6 +140,8 @@ export const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
 
-  // Fallback
+  // Catch-all redirect
   { path: '**', redirectTo: 'login' }
 ];
+
+

@@ -6,20 +6,18 @@ namespace AuthAPI.Models.DTOs
     public class RegisterDto
     {
         [Required]
-        public string Username { get; set; }
+        [StringLength(40, MinimumLength = 6)]
+        public string Username { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(8)]
-        public string Password { get; set; }
+        [StringLength(32, MinimumLength = 6)]
+        public string Password { get; set; } = string.Empty;
 
         [Required]
-        public string Role { get; set; }
-
-        [Required]
-        public string HoneyCombId { get; set; }
+        public string HoneyCombId { get; set; } = string.Empty;
     }
 }
