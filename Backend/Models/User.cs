@@ -10,23 +10,28 @@ namespace AuthAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [Required]
-        public string Username { get; set; }
+        [BsonElement("username")]
+        public string Username { get; set; } = string.Empty;
 
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        [BsonElement("email")]
+        public string Email { get; set; } = string.Empty;
 
-        [Required]
-        public string PasswordHash { get; set; }
+        [BsonElement("passwordHash")]
+        public string PasswordHash { get; set; } = string.Empty;
 
-        public string Salt { get; set; }
+        [BsonElement("salt")]
+        public string Salt { get; set; } = string.Empty;
 
-        [Required]
-        public string HoneyCombId { get; set; }
+        [BsonElement("honeyCombId")]
+        public string HoneyCombId { get; set; } = string.Empty;
 
-        [Required]
-        public string Roles { get; set; } 
+        [BsonElement("roles")]
+        public string Roles { get; set; } = "user";
+
+        [BsonElement("companyId")]
+        public string CompanyId { get; set; } = string.Empty;
+
+        [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

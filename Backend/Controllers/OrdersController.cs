@@ -56,6 +56,14 @@ namespace Backend.Controllers
             return CreatedAtAction(nameof(GetByOrderId), new { orderId = order.OrderId }, order);
         }
 
+        [HttpGet("today-orders")]
+        public async Task<IActionResult> GetTodayOrdersCount()
+        {
+            var orders_count = await _orderService.GetTodayOrdersAsync();
+            return Ok(orders_count);
+        }
+
+
         [HttpPut("{orderId}")]
         public async Task<IActionResult> Update(string orderId, [FromBody] OrderCreateDTO dto)
         {

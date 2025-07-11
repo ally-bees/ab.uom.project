@@ -35,9 +35,9 @@ import { User } from '../../models/user.model';
           </div>
           <div class="user-info">
             <h3>{{ currentUser.username }}</h3>
-            <p class="role">{{ currentUser.role }}</p>
+            <p class="role">{{ currentUser.Role }}</p>
             <p class="email">{{ currentUser.email }}</p>
-            <p class="honeycomb">ID: {{ currentUser.honeycombId }}</p>
+            <p class="honeycomb">ID: {{ currentUser.HoneyCombId }}</p>
           </div>
           <div class="profile-action">
             <button class="edit-profile-btn" (click)="goToProfile()">

@@ -16,3 +16,27 @@
     padding: 20px;
     overflow-y: auto;
   }
+
+  .support-btn {
+  position: fixed;
+  bottom: 20px;   /* 20px from the bottom of the viewport */
+  right: 20px;    /* 20px from the right of the viewport */
+  background-color: #00b8d4; 
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.support-btn mat-icon {
+  color: white;
+  font-size: 28px;
+}
+
