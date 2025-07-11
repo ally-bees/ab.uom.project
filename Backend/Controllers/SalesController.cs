@@ -34,6 +34,24 @@ namespace Backend.Controllers
             return Ok(sale);
         }
 
+        [HttpGet("total-revenue")]
+        public async Task<IActionResult> GetTotalRevenue()
+        {
+            var totalRevenue = await _salesService.GetTotalSalesCostAsync();
+            if(totalRevenue == 0)
+                return Ok(0);
+            return Ok(totalRevenue);
+        }
+
+        [HttpGet("today-cost")]
+        public async Task<IActionResult> GetTodayRevenue()
+        {
+            var todayRevenue = await _salesService.GetTodaySalesRevenueAsync();
+            if(todayRevenue == 0)
+                return Ok(0);
+            return Ok(todayRevenue);
+        }
+
         // Removed vendorId-based filter since it's no longer part of the data
 
         [HttpGet("date-range")]
@@ -57,6 +75,36 @@ namespace Backend.Controllers
         {
             var summary = await _salesService.GetSalesSummaryAsync();
             return Ok(summary);
+        }
+
+         [HttpGet("monthly")]
+        public async Task<IActionResult> GetMonthlySales()
+        {
+            try
+            {
+                var monthlySales = await _salesService.GetMonthlySalesAsync();
+                return Ok(monthlySales);
+            }
+            catch (System.Exception ex)
+            {
+                // Log exception if needed
+                return StatusCode(500, "An error occurred while retrieving monthly sales data.");
+            }
+        }
+
+        [HttpGet("year-data")]
+        public async Task<IActionResult> GetYearlySales()
+        {
+            try
+            {
+                var monthlySales = await _salesService.GetYearlySalesAsync(DateTime.Now.Year);
+                return Ok(monthlySales);
+            }
+            catch (System.Exception ex)
+            {
+                // Log exception if needed
+                return StatusCode(500, "An error occurred while retrieving monthly sales data.");
+            }
         }
 
         [HttpPost]

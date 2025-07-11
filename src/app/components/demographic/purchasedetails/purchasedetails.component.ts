@@ -1,6 +1,6 @@
 import { Component,OnInit   } from '@angular/core';
 import { AgCharts } from "ag-charts-angular";
-import { AgChartOptions } from "ag-charts-community";
+import { AgChartOptions,AgBarSeriesOptions  } from "ag-charts-community";
 import { getData } from "./data";
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -30,7 +30,7 @@ export class PurchasedetailsComponent implements OnInit{
 
   constructor(private http: HttpClient) {}
 
-  loadChartData(): void {
+loadChartData(): void {
   this.http.get<any[]>('http://localhost:5241/Customer/location-count')
     .subscribe((data) => {
       this.options = {
@@ -39,10 +39,10 @@ export class PurchasedetailsComponent implements OnInit{
         data: data,
         series: [
           {
-            type: 'bar',          
+            type: 'bar',
             xKey: 'location',
             yKey: 'count',
-            yName: 'Customer Count',
+            yName: 'Customer Count'
           },
         ],
       };

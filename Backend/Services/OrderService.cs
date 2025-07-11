@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using Backend.Models;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,6 +44,31 @@ namespace Backend.Services
 
             return group.ToDictionary(x => x.Status, x => x.Count);
         }
+
+        public async Task<double> GetTodayOrdersAsync()
+        {
+            var bsonOrders = await _ordersCollection.Find(_ => true).ToListAsync();
+
+            // Parse manually from raw BSON to get the correct orderDate string
+            var today = DateTime.Today;
+            int count = 0;
+
+            foreach (var bsonOrder in bsonOrders)
+            {
+                var rawDoc = bsonOrder.ToBsonDocument();
+                var orderDateValue = rawDoc.GetValue("orderDate", null);
+
+                if (orderDateValue != null && DateTime.TryParse(orderDateValue.ToString(), out var parsedDate))
+                {
+                    if (parsedDate.Date == today)
+                        count++;
+                }
+            }
+
+            return count;
+        }
+
+
 
 
         // Create a new order
