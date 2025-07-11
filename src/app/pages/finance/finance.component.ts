@@ -8,6 +8,7 @@ import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { FinanceService } from '../../services/finance.service';
+import { PrintReportService } from '../../services/printreport.service';
 import { Invoice } from '../../models/invoice.model';
 
 // Component decorator defining selector, standalone usage, and required modules
@@ -86,6 +87,7 @@ export class FinanceComponent implements OnInit, AfterViewInit {
 
   // Dependency injection for services
   constructor(
+    private printReportService: PrintReportService,
     private financeService: FinanceService,
     private cdr: ChangeDetectorRef,
     private router: Router,
@@ -226,6 +228,40 @@ export class FinanceComponent implements OnInit, AfterViewInit {
 
   // Navigates to print report page
   printReport(): void {
-    this.router.navigate(['/businessowner/printreport']);
+    console.log('Filtered Invoices:', this.filteredInvoices); // 🔍 Check this
+  if (!this.filteredInvoices || this.filteredInvoices.length === 0) {
+    alert('No data available to print.');
+    return;
   }
+  const tableColumns = ['Finance ID', 'Amount', 'Status', 'Order Date'];
+
+  const tableData = this.filteredInvoices.map(invoice => ({
+    'Finance ID': invoice.financeId,
+    'Sales IDs': invoice.salesId?.join(', '),
+    'Campal IDs': invoice.campalId?.join(', '),
+    'Amount': invoice.amount.toFixed(2),
+    'Status': invoice.status,
+    'Order Date': invoice.orderDate // Should be already formatted
+  }));
+
+  console.log('Table Data to Pass:', tableData);
+
+  const reportPayload = {
+    reportType: 'Finance Report',
+    exportFormat: 'PDF Document (.pdf)',
+    startDate: this.fromDate,
+    endDate: this.toDate,
+    pageOrientation: 'Portrait',
+    tableColumns,
+    tableData
+  };
+
+  this.router.navigate(['/businessowner/printreport'], {
+    state: reportPayload
+  });
+  this.printReportService.setReportData(reportPayload); // ✅ store the data
+  // Optionally, you can remove the second navigation if not needed
+  // this.router.navigate(['/businessowner/printreport']);
+}
+
 }

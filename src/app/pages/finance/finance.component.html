@@ -46,26 +46,27 @@
               <h2>Recent Months Summary</h2>
           </div>
 
-          <div class="table-container">
-              <table class="data-table">
-                  <thead>
-                      <tr>
-                          <th>Order Date</th>
-                          <th>Amount</th>
-                          <th>Status</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let invoice of filteredInvoices">
-                          <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
-                          <td>Rs. {{ invoice.amount | number:'1.0-2' }}</td>
-                          <td>
-                              <span class="status-badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
+          <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Order Date</th>
+        <th>Amount</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let invoice of filteredInvoices">
+        <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
+        <td>Rs. {{ invoice.amount | number:'1.0-2' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
       </div>
 
       <div class="report-button-container">

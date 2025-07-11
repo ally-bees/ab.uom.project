@@ -1,17 +1,8 @@
 
 import { Routes } from '@angular/router';
-import {
-  authGuard,
-  adminGuard,
-  businessOwnerGuard,
-  salesManagerGuard,
-  marketingManagerGuard,
-  inventoryManagerGuard
-} from './guards/auth.guard';
-
 import { SalesDashboardComponent } from './pages/sales-dashboard/sales-dashboard.component';
 import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
-import { PrintReportComponent } from './pages/print-report/print-report.component';
+import { PrintReportComponent } from './pages/print-report/print-report.component'
 import { InventoryDashboardComponent } from './pages/inventory-dashboard/inventory-dashboard.component';
 import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
 import { LoginComponent } from './login/login.component';
@@ -26,12 +17,23 @@ import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytic
 import { FinanceComponent } from './pages/finance/finance.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
-import { SalesMainpageComponent } from './mainpage/sales-mainpage/sales-mainpage.component';
-import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
-import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
+import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
+
+import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
+
+
+export const routes: Routes = [
+  { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
+//   { path: '', redirectTo: 'order-summary', pathMatch: 'full' },
+  {path: 'sales', component: SalesComponent},
+  {
+    path: 'salesmanager',
+    component: SalesMainpageComponent,
+    children: [
+
 import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
@@ -79,10 +81,32 @@ export const routes: Routes = [
   component: SalesMainpageComponent,
   canActivate: [salesManagerGuard],
   children: [
+
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
+
+      {path:'customerinsight',component:customerinsightComponent}
+    ]
+  },
+  {
+    path: 'businessowner',
+    component: BusinessMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'businessownerdashboard', pathMatch: 'full' },
+      { path: 'businessownerdashboard', component: BusinessDashComponent },
+      { path: 'finance', component: FinanceComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'schedule', component: ScheduleComponent },
+      { path: 'shipping', component: ShippingDashboardComponent },
+      { path : 'sales', component: SalesComponent },
+      { path: 'customerinsight', component: customerinsightComponent },
+      { path: 'order', component: OrderSummaryComponent },
+      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+      { path: 'printreport', component: PrintReportComponent },
+      // Add more pages for the business owner here
+
       { 
         path: 'customerinsight',
         component: customerinsightComponent,
@@ -109,8 +133,28 @@ export const routes: Routes = [
       { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent },
       { path: 'expense-form', component: ExpenseFormComponent }
+
     ]
   },
+  { path: 'order-summary', component: OrderSummaryComponent},
+  { path: 'inventory-dashboard', component: InventoryDashboardComponent },
+  { path: 'inventory', component: InventoryComponent},
+  {path: 'printreport', component:PrintReportComponent},
+  { path:'login', component:LoginComponent},
+  {path:'signup',component:SignupComponent},
+  {path:'userprofile',component:UserProfileComponent},
+  {path:'systemconfig',component:SystemConfigComponent},
+  {path:'auditlogs',component:AuditLogsComponent},
+  {path:'usermanagement',component:UserManagementComponent},
+  {path:'analytics',component:MarketingAnalyticsDashboardComponent},
+  {path: 'bussinessownerdash', component: BusinessDashComponent}, 
+  {path: 'finance', component: FinanceComponent},
+  {path: 'schedule', component: ScheduleComponent},
+  {path: 'shipping', component: ShippingDashboardComponent},
+  {path:'admindashboard',component:DashboardComponent},
+  {path:'customerinsight',component:customerinsightComponent},
+  { path: '**', redirectTo: 'dashboard' },
+  {path: 'expense-form', component: ExpenseFormComponent}
 
   // Marketing Manager
   {
@@ -142,6 +186,7 @@ export const routes: Routes = [
 
   // Catch-all redirect
   { path: '**', redirectTo: 'login' }
+
 ];
 
 

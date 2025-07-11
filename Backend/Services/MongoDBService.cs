@@ -1,11 +1,17 @@
 using Backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Bson;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Backend.Services
 {
     public class MongoDBService
     {
+        private readonly IMongoDatabase _database;
+
         private readonly IMongoCollection<Sale> _salesCollection;
         private readonly IMongoCollection<Order> _ordersCollection;
         private readonly IMongoCollection<Inventory> _inventoryCollection;
@@ -15,24 +21,21 @@ namespace Backend.Services
         public MongoDBService(IOptions<MongoDBSettings> mongoDBSettings)
         {
             var mongoClient = new MongoClient(mongoDBSettings.Value.ConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(mongoDBSettings.Value.DatabaseName);
+            _database = mongoClient.GetDatabase(mongoDBSettings.Value.DatabaseName);
 
-            _salesCollection = mongoDatabase.GetCollection<Sale>("sales");
-            _ordersCollection = mongoDatabase.GetCollection<Order>("orders");
-            _inventoryCollection = mongoDatabase.GetCollection<Inventory>("inventory");
-            _expensesCollection = mongoDatabase.GetCollection<Expense>("expenses");
-            _automationCollection = mongoDatabase.GetCollection<Automation>("automation");
+            _salesCollection = _database.GetCollection<Sale>("sales");
+            _ordersCollection = _database.GetCollection<Order>("orders");
+            _inventoryCollection = _database.GetCollection<Inventory>("inventory");
+            _expensesCollection = _database.GetCollection<Expense>("expenses");
+            _automationCollection = _database.GetCollection<Automation>("automation");
 
-            // Create indexes for better query performance
-
-            // Sales collection indexes
+            // Index creation (optional, keep as you have it)
             var saleIdIndex = Builders<Sale>.IndexKeys.Ascending(s => s.SaleId);
             _salesCollection.Indexes.CreateOne(new CreateIndexModel<Sale>(saleIdIndex));
 
             var saleDateIndex = Builders<Sale>.IndexKeys.Ascending(s => s.SaleDate);
             _salesCollection.Indexes.CreateOne(new CreateIndexModel<Sale>(saleDateIndex));
 
-            // Orders collection indexes
             var orderIdIndex = Builders<Order>.IndexKeys.Ascending(o => o.OrderId);
             _ordersCollection.Indexes.CreateOne(new CreateIndexModel<Order>(orderIdIndex));
 
@@ -42,18 +45,11 @@ namespace Backend.Services
             var orderDateIndex = Builders<Order>.IndexKeys.Ascending(o => o.OrderDate);
             _ordersCollection.Indexes.CreateOne(new CreateIndexModel<Order>(orderDateIndex));
 
-            // Inventory collection indexes
             var productIdIndex = Builders<Inventory>.IndexKeys.Ascending(i => i.ProductId);
             _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(productIdIndex));
 
             var categoryIndex = Builders<Inventory>.IndexKeys.Ascending(i => i.Category);
             _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(categoryIndex));
-
-            var productIdIndexKeysDefinition = Builders<Inventory>.IndexKeys.Ascending(i => i.ProductId);
-            _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(productIdIndexKeysDefinition));
-
-            var categoryIndexKeysDefinition = Builders<Inventory>.IndexKeys.Ascending(i => i.Category);
-            _inventoryCollection.Indexes.CreateOne(new CreateIndexModel<Inventory>(categoryIndexKeysDefinition));
 
             var expenseDateIndexKeysDefinition = Builders<Expense>.IndexKeys.Ascending(e => e.Date);
             _expensesCollection.Indexes.CreateOne(new CreateIndexModel<Expense>(expenseDateIndexKeysDefinition));
@@ -151,6 +147,18 @@ namespace Backend.Services
         {
             return _automationCollection;
         }
+
+        // Fix here: use the _database field
+        public IMongoCollection<BsonDocument> GetCollectionByType(string reportType)
+        {
+            return reportType.ToLower() switch
+            {
+                "sales" => _database.GetCollection<BsonDocument>("sales"),
+                "inventory" => _database.GetCollection<BsonDocument>("inventory"),
+                "financial" => _database.GetCollection<BsonDocument>("financial"),
+                "analytics" => _database.GetCollection<BsonDocument>("analytics"),
+                _ => throw new Exception("Invalid report type")
+            };
+        }
     }
 }
-
