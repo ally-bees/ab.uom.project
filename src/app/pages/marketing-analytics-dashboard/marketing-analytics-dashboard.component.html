@@ -7,7 +7,7 @@
     <!-- Top Stats -->
     <div class="stats-row">
       <div class="stat-card">
-        <div class="stat-label">Available to withdraw</div>
+        <div class="stat-label">Total Revenue</div>
         <div class="stat-value">${{ revenue | number:'1.2-2' }}</div>
         <div class="stat-metric">
           <span class="trend-up">↑ {{ revenueGrowth }}%</span>
@@ -25,7 +25,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Today Sessions</div>
+        <div class="stat-label">Today Orders</div>
         <div class="stat-value">{{ todaySessions }}</div>
         <div class="stat-metric">
           <span class="trend-up">↑ {{ todaySessionsChange }}%</span>
@@ -34,7 +34,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Subscribers</div>
+        <div class="stat-label">Total Customers</div>
         <div class="stat-value">{{ subscribers | number }}</div>
         <div class="stat-metric">
           <span class="trend-up">↑ {{ subscribersChange }}%</span>
@@ -89,9 +89,68 @@
       <div class="chart-card campaign-performance">
         <div class="card-header">
           <h2>Campaign Performance</h2>
-          <div class="see-all">See All</div>
+          <div class="see-all" (click)="showAllCampaignsModal()">See All</div>
         </div>
         <table class="campaign-table">
+          <thead>
+            <tr>
+              <th>Campaign</th>
+              <th>Impressions</th>
+              <th>Clicks</th>
+              <th>CPC</th>
+              <th>Spend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let campaign of campaigns.slice(0, 3)">
+              <td>
+                <div class="campaign-info">
+                  <div class="campaign-icon" [ngStyle]="{ 'background-color': campaign.color }">
+                    <span>{{ campaign.icon }}</span>
+                  </div>
+                  <span>{{ campaign.name }}</span>
+                </div>
+              </td>
+              <td>{{ campaign.impressions }}</td>
+              <td>{{ campaign.clicks }}%</td>
+              <td>${{ campaign.cpc }}</td>
+              <td>${{ campaign.spend }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-card top-countries">
+        <div class="card-header">
+          <h2>Top Countries</h2>
+        </div>
+        <div class="countries-list">
+          <div class="country-row" *ngFor="let country of topCountries">
+            <div class="country-flag" [ngClass]="getCountryCode(country.code)"></div>
+            <div class="country-name">{{ country.name }}</div>
+            <div class="country-percentage">{{ country.percentage }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Print -->
+    <div class="print-container">
+      <button class="print-button" (click)="printReport()">Print Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- All Campaigns Modal Popup -->
+<div class="modal-overlay" *ngIf="showAllCampaigns" (click)="closeAllCampaignsModal($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>All Campaign Performance</h2>
+      <button class="close-modal-btn" (click)="showAllCampaigns = false">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="table-container">
+        <table class="campaign-details-table">
           <thead>
             <tr>
               <th>Campaign</th>
@@ -119,24 +178,6 @@
           </tbody>
         </table>
       </div>
-
-      <div class="chart-card top-countries">
-        <div class="card-header">
-          <h2>Top Countries</h2>
-        </div>
-        <div class="countries-list">
-          <div class="country-row" *ngFor="let country of topCountries">
-            <div class="country-flag" [ngClass]="country.code.toLowerCase()"></div>
-            <div class="country-name">{{ country.name }}</div>
-            <div class="country-percentage">{{ country.percentage }}%</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Print -->
-    <div class="print-container">
-      <button class="print-button" (click)="printReport()">Print Report</button>
     </div>
   </div>
 </div>

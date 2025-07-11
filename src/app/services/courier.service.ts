@@ -2,7 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 // Interface defining structure of a Courier object
 export interface Courier {
@@ -36,8 +37,27 @@ export class CourierService {
   }
 
   // Get top 3 contries 
-  getTopCountries(): Observable<CountryStat[]> {
-    return this.http.get<CountryStat[]>(`${this.baseUrl}/top-nations`);
+  getTopCountries(): Observable<{ name: string, code: string, percentage: number }[]> {
+    return this.http.get<any>(`${this.baseUrl}/top-countries`).pipe(
+      map(data => {
+        return data.map((country: any) => {
+          return {
+            name: country.name,
+            code: country.code.toLowerCase(), // Ensure lowercase
+            percentage: country.percentage
+          };
+        });
+      }),
+      catchError(error => {
+        console.error('Error fetching top countries:', error);
+        // Fallback data with proper country codes
+        return of([
+          { name: 'Sri Lanka', code: 'lk', percentage: 65 },
+          { name: 'United States', code: 'us', percentage: 15 },
+          { name: 'United Kingdom', code: 'gb', percentage: 10 }
+        ]);
+      })
+    );
   }
   
 
