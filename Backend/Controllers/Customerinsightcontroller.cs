@@ -68,5 +68,46 @@ namespace Backend.Controller
             return Ok(result);
         }
 
+        //just to operate with database 
+        //not for application
+
+
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody] Customerr customer)
+        {
+            customer.Id = null;
+            await _mongoDbCustomerinsightService.CreateAsync(customer);
+            return CreatedAtAction(nameof(GetByCustomerId), new { customerId = customer.Customer_id }, customer);
+        }
+
+
+        [HttpGet("by-customer-id/{customerId}")]
+        public async Task<ActionResult<Customerr>> GetByCustomerId(string customerId)
+        {
+            var customer = await _mongoDbCustomerinsightService.GetByCustomerIdAsync(customerId);
+            if (customer == null)
+                return NotFound();
+            return Ok(customer);
+        }
+
+        [HttpPut("{customerId}")]
+        public async Task<ActionResult> Update(string customerId, [FromBody] Customerr updatedCustomer)
+        {
+            var success = await _mongoDbCustomerinsightService.UpdateAsync(customerId, updatedCustomer);
+            if (!success)
+                return NotFound();
+            return NoContent();
+        }
+    
+        [HttpDelete("{customerId}")]
+        public async Task<ActionResult> Delete(string customerId)
+        {
+            var success = await _mongoDbCustomerinsightService.DeleteAsync(customerId);
+            if (!success)
+                return NotFound();
+            return NoContent();
+        }
+
+
     }
 }
