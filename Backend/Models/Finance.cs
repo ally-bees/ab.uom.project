@@ -32,5 +32,8 @@ namespace Backend.Models
 
         [BsonElement("description")]
         public required string Description { get; set; }
+
+        [BsonElement("CompanyId")]
+        public string? CompanyId { get; set; }
     }
 }

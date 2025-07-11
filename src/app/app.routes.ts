@@ -119,6 +119,26 @@ export const routes: Routes = [
     canActivate: [marketingManagerGuard]
   },
 
+  {
+    path: 'businessowner',
+    component: BusinessMainpageComponent,
+    canActivate: [businessOwnerGuard],
+    children: [
+      { path: '', redirectTo: 'businessownerdashboard', pathMatch: 'full' },
+      { path: 'businessownerdashboard', component: BusinessDashComponent },
+      { path: 'finance', component: FinanceComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'schedule', component: ScheduleComponent },
+      { path: 'shipping', component: ShippingDashboardComponent },
+      { path : 'sales', component: SalesComponent },
+      { path: 'customerinsight', component: customerinsightComponent },
+      { path: 'order', component: OrderSummaryComponent },
+      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+      { path: 'printreport', component: PrintReportComponent },
+      // Add more pages for the business owner here
+    ]
+  },
+
   // Common routes (authenticated users)
   { path: 'userprofile', component: UserProfileComponent, canActivate: [authGuard] },
   { path: 'finance', component: FinanceComponent, canActivate: [authGuard] },

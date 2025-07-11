@@ -19,12 +19,15 @@ namespace Backend.Services
     {
         private readonly IMongoCollection<PasswordReset> _passwordResetCollection;
 
-        public PasswordResetService(IOptions<MongoDBSettings> mongoDbSettings)
+        public PasswordResetService(IOptions<Backend.Models.MongoDBSettings> mongoDbSettings)
         {
             var settings = mongoDbSettings.Value;
             var mongoClient = new MongoClient(settings.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(settings.UserDetailsdatabase);
             _passwordResetCollection = mongoDatabase.GetCollection<PasswordReset>(settings.PasswordResetCollectionName);
+
+            Console.WriteLine($"Admin DB: {settings.AdminDatabaseName}"); // or any other property
+
         }
 
         public async Task<string> GenerateResetTokenAsync(string userId, string email)

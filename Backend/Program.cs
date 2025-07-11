@@ -1,7 +1,7 @@
 
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
-using AuthAPI.Settings;
+//using AuthAPI.Settings;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen();
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
 // === Configuration Bindings ===
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings")); // Backend Mongo
+builder.Services.Configure<Backend.Models.MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings")); // Backend Mongo
 //builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));   // Auth Mongo
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -36,7 +36,7 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 // === MongoDB Setup ===
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
-    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>();
     return new MongoClient(mongoDbSettings.ConnectionString);
 });
 
@@ -60,6 +60,8 @@ builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
+builder.Services.AddSingleton<FinanceService>();
+builder.Services.AddSingleton<AutomationService>();
 
 // Auth & User services
 builder.Services.AddSingleton<UserService>();

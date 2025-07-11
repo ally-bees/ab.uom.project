@@ -5,7 +5,7 @@ public class MongoService
 {
     private readonly IMongoDatabase _database;
 
-    public MongoService(IOptions<MongoDBSettings> settings)
+    public MongoService(IOptions<Backend.Models.MongoDBSettings> settings)
     {
         var client = new MongoClient(settings.Value.ConnectionString);
         _database = client.GetDatabase(settings.Value.DatabaseName);
