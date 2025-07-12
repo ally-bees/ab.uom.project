@@ -19,7 +19,7 @@
             *ngFor="let child of menuItem.children"
             [class.active]="activeMenuItem === child.id"
             class="submenu-item"
-            (click)="setActive(child.id)"
+            (click)="setActive(child.id, child.route)"
           >
             <i class="fa" [ngClass]="child.icon"></i>
             <span>{{ child.label }}</span>
@@ -30,6 +30,9 @@
   </div>
 
   <div class="sidebar-footer">
+    <button (click)="goToDashboard()" class="dashboard-btn">
+      <i class="fas fa-home"></i> Back to Dashboard
+    </button>
     <button class="sidebar-btn schedule-btn" (click)="scheduleReport()">
       <i class="fa fa-calendar"></i>
       Schedule Report

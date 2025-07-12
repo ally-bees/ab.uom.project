@@ -8,7 +8,7 @@ import { Order } from '../models/order.model';
   providedIn: 'root'
 })
 export class OrdersService {
-  private apiUrl = 'https://localhost:5241/api/Orders';
+  private apiUrl = 'http://localhost:5241/api/Orders';
 
   constructor(private http: HttpClient) {}
 
@@ -19,6 +19,10 @@ export class OrdersService {
 
   getOrderById(id: string): Observable<Order> {
     return this.http.get<Order>(`${this.apiUrl}/${id}`);
+  }
+
+  getTodayOrdersCount(): Observable<number>{
+    return this.http.get<any>(`${this.apiUrl}/today-orders`)
   }
 
   createOrder(order: Order): Observable<Order> {

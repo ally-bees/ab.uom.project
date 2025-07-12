@@ -1,50 +1,387 @@
 <div class="audit-logs-container">
-  <!-- Sidebar -->
 
-  <!-- Audit Logs Content -->
   <div class="audit-logs-content">
-    <div class="header">
-      <h2>Audit Logs</h2>
-      <p class="subtitle">View system activity and error logs</p>
+    <!-- Header Section -->
+    <div class="header-section">
+      <div class="header-left">
+        <h1><i class="fas fa-clipboard-list"></i> Audit Logs</h1>
+        <p class="subtitle">Monitor system activity and track user actions</p>
+      </div>
       
-      <div class="actions">
-        <button class="export-btn" (click)="exportLogs()">
-          <i class="icon download-icon"></i> Export Logs
+      <div class="header-actions">
+        <button class="btn btn-secondary" (click)="toggleAutoRefresh()" [class.active]="autoRefresh">
+          <i class="fas fa-sync-alt"></i>
+          {{ autoRefresh ? 'Auto Refresh ON' : 'Auto Refresh OFF' }}
+        </button>
+        <button class="btn btn-primary" (click)="refreshData()">
+          <i class="fas fa-refresh"></i> Refresh
+        </button>
+        <button class="btn btn-success" (click)="exportLogs()">
+          <i class="fas fa-download"></i> Export
+        </button>
+        <button class="btn btn-warning" (click)="cleanupOldLogs()">
+          <i class="fas fa-broom"></i> Cleanup
+        </button>
+        <button class="btn btn-info" (click)="createTestData()" style="margin-left: 8px;">
+          <i class="fas fa-plus"></i> Create Test Data
         </button>
       </div>
     </div>
-    
-    <div class="search-container">
-      <div class="search-box">
-        <i class="icon search-icon"></i>
-        <input type="text" placeholder="Search logs" [(ngModel)]="searchText">
+
+    <!-- Summary Cards -->
+    <div class="summary-section" *ngIf="summary">
+      <div class="summary-card">
+        <div class="summary-icon total">
+          <i class="fas fa-list"></i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ summary.totalLogs | number }}</h3>
+          <p>Total Logs</p>
+        </div>
       </div>
-      <button class="filter-btn">
-        <i class="icon filter-icon"></i>
+      
+      <div class="summary-card">
+        <div class="summary-icon success">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ summary.successCount | number }}</h3>
+          <p>Successful</p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-icon failed">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ summary.failedCount | number }}</h3>
+          <p>Failed</p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-icon pending">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ summary.pendingCount | number }}</h3>
+          <p>Pending</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="filter-header">
+        <button class="btn btn-outline" (click)="toggleFilters()">
+          <i class="fas fa-filter"></i>
+          {{ showFilters ? 'Hide' : 'Show' }} Filters
+        </button>
+        <button class="btn btn-link" (click)="clearFilters()" *ngIf="showFilters">
+          <i class="fas fa-times"></i> Clear All
+        </button>
+      </div>
+
+      <div class="filter-panel" [class.show]="showFilters" [formGroup]="filterForm">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>From Date</label>
+            <input type="datetime-local" formControlName="fromDate" class="form-control">
+          </div>
+          
+          <div class="filter-group">
+            <label>To Date</label>
+            <input type="datetime-local" formControlName="toDate" class="form-control">
+          </div>
+          
+          <div class="filter-group">
+            <label>Username</label>
+            <input type="text" formControlName="username" class="form-control" placeholder="Search username...">
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>Action Type</label>
+            <select formControlName="actionType" class="form-control">
+              <option value="">All Action Types</option>
+              <option *ngFor="let type of actionTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Resource</label>
+            <select formControlName="resource" class="form-control">
+              <option value="">All Resources</option>
+              <option *ngFor="let resource of resources" [value]="resource">{{ resource }}</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Status</label>
+            <select formControlName="status" class="form-control">
+              <option value="">All Statuses</option>
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>Severity</label>
+            <select formControlName="severity" class="form-control">
+              <option value="">All Severities</option>
+              <option *ngFor="let severity of severities" [value]="severity">{{ severity }}</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Module</label>
+            <select formControlName="module" class="form-control">
+              <option value="">All Modules</option>
+              <option *ngFor="let module of modules" [value]="module">{{ module }}</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Page Size</label>
+            <select [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)" class="form-control">
+              <option [value]="25">25 per page</option>
+              <option [value]="50">50 per page</option>
+              <option [value]="100">100 per page</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" *ngIf="loading">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading audit logs...</p>
+      </div>
+    </div>
+
+    <!-- Audit Logs Table -->
+    <div class="table-section" *ngIf="!loading">
+      <div class="table-header">
+        <h3>Audit Logs ({{ totalCount | number }} total)</h3>
+        <div class="table-actions">
+          <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>User</th>
+              <th>Action</th>
+              <th>Resource</th>
+              <th>Status</th>
+              <th>Severity</th>
+              <th>Module</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of auditLogs" [class.error-row]="log.status === 'Failed'">
+              <td class="timestamp">
+                <i class="fas fa-clock"></i>
+                {{ formatTimestamp(log.timestamp) }}
+              </td>
+              
+              <td class="user-info">
+                <div class="user-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                  <div class="username">{{ log.username || 'System' }}</div>
+                  <div class="user-role">{{ log.userRole || 'N/A' }}</div>
+                </div>
+              </td>
+              
+              <td class="action">
+                <div class="action-icon">
+                  <i [class]="getActionIcon(log.actionType)"></i>
+                </div>
+                <div class="action-details">
+                  <div class="action-text">{{ log.action }}</div>
+                  <div class="action-type">{{ log.actionType }}</div>
+                </div>
+              </td>
+              
+              <td class="resource">
+                <span *ngIf="log.resource">{{ log.resource }}</span>
+                <span *ngIf="log.resourceId" class="resource-id">#{{ log.resourceId }}</span>
+                <span *ngIf="!log.resource" class="no-resource">N/A</span>
+              </td>
+              
+              <td class="status">
+                <span class="status-badge" [ngClass]="getStatusColor(log.status)">
+                  {{ log.status }}
+                </span>
+              </td>
+              
+              <td class="severity">
+                <span class="severity-badge" [ngClass]="getSeverityColor(log.severity)">
+                  {{ log.severity }}
+                </span>
+              </td>
+              
+              <td class="module">
+                <div class="module-info" *ngIf="log.module">
+                  <i [class]="getModuleIcon(log.module)"></i>
+                  <span>{{ log.module }}</span>
+                </div>
+                <span *ngIf="!log.module" class="no-module">N/A</span>
+              </td>
+              
+              <td class="actions">
+                <button class="btn btn-sm btn-outline" (click)="showLogDetails(log)" title="View Details">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="auditLogs.length === 0">
+          <i class="fas fa-search"></i>
+          <h3>No audit logs found</h3>
+          <p>Try adjusting your filters or check back later for new activity.</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button class="btn btn-outline" 
+                [disabled]="currentPage === 1"
+                (click)="onPageChange(currentPage - 1)">
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        
+        <div class="page-numbers">
+          <button class="btn btn-outline" 
+                  *ngFor="let page of [].constructor(totalPages); let i = index"
+                  [class.active]="currentPage === i + 1"
+                  (click)="onPageChange(i + 1)">
+            {{ i + 1 }}
+          </button>
+        </div>
+        
+        <button class="btn btn-outline" 
+                [disabled]="currentPage === totalPages"
+                (click)="onPageChange(currentPage + 1)">
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Log Details Modal -->
+<div class="modal-overlay" *ngIf="showDetails" (click)="closeDetails()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Audit Log Details</h2>
+      <button class="btn btn-icon" (click)="closeDetails()">
+        <i class="fas fa-times"></i>
       </button>
     </div>
     
-    <table class="logs-table">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>User</th>
-          <th>TimeStamp</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let log of logs">
-          <td>{{log.action}}</td>
-          <td>{{log.user}}</td>
-          <td>{{log.timestamp}}</td>
-          <td>
-            <span class="status-badge" [ngClass]="log.status.toLowerCase()">
-              {{log.status}}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="modal-body" *ngIf="selectedLog">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Timestamp</label>
+          <span>{{ formatTimestamp(selectedLog.timestamp) }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>User</label>
+          <span>{{ selectedLog.username || 'System' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Email</label>
+          <span>{{ selectedLog.userEmail || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Role</label>
+          <span>{{ selectedLog.userRole || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Action</label>
+          <span>{{ selectedLog.action }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Action Type</label>
+          <span>{{ selectedLog.actionType }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Resource</label>
+          <span>{{ selectedLog.resource || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Resource ID</label>
+          <span>{{ selectedLog.resourceId || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Status</label>
+          <span class="status-badge" [ngClass]="getStatusColor(selectedLog.status)">
+            {{ selectedLog.status }}
+          </span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Severity</label>
+          <span class="severity-badge" [ngClass]="getSeverityColor(selectedLog.severity)">
+            {{ selectedLog.severity }}
+          </span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Module</label>
+          <span>{{ selectedLog.module || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>IP Address</label>
+          <span>{{ selectedLog.ipAddress || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <label>Session ID</label>
+          <span>{{ selectedLog.sessionId || 'N/A' }}</span>
+        </div>
+        
+        <div class="detail-item full-width" *ngIf="selectedLog.details">
+          <label>Details</label>
+          <div class="details-content">{{ selectedLog.details }}</div>
+        </div>
+        
+        <div class="detail-item full-width" *ngIf="selectedLog.errorMessage">
+          <label>Error Message</label>
+          <div class="error-content">{{ selectedLog.errorMessage }}</div>
+        </div>
+        
+        <div class="detail-item" *ngIf="selectedLog.durationMs">
+          <label>Duration</label>
+          <span>{{ selectedLog.durationMs }}ms</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

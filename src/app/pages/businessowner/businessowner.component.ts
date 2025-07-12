@@ -24,7 +24,7 @@ export class BusinessDashComponent implements OnInit {
   };
 
   productStats = {
-    sold: 89878
+    sold: 0
   };
 
   constructor(private dashboardService: DashboardService) {}

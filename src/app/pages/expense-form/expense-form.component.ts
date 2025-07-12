@@ -5,19 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, DateAdapter } from '@angular/material/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-
-interface Expense {
-  id?: string;
-  date: string;
-  employeeName: string;
-  position: string;
-  expenseType: string;
-  amount: number;
-  paymentMethod: string;
-  description?: string;
-  receiptUrl?: string;
-}
+import { Expense } from '../../models/expense.model';
+import { ExpenseService } from '../../services/expense.service';
 
 @Component({
   selector: 'app-expense-form',
@@ -30,16 +19,19 @@ export class ExpenseFormComponent implements OnInit {
   expenseForm: FormGroup;
   positions: string[] = ['Sales Manager', 'Marketing Manager', 'Finance Manager', 'HR Manager'];
   expenseTypes: string[] = ['Travel', 'Meals', 'Equipment', 'Office Supplies', 'Campaign'];
-  paymentMethods: string[] = ['Cash', 'Credit Card', 'Debit ԝCard', 'Bank Transfer'];
+  paymentMethods: string[] = ['Cash', 'Credit Card', 'Debit Card', 'Bank Transfer'];
   selectedFile: File | null = null;
 
   recentExpenses: Expense[] = [];
   isLoading = false;
+  loading = false;
+  error = false;
+
 
   constructor(
     private fb: FormBuilder,
     @Inject(DateAdapter) private dateAdapter: DateAdapter<any>,
-    private http: HttpClient
+    private expenseService: ExpenseService
   ) {
     this.expenseForm = this.fb.group({
       position: ['', Validators.required],
@@ -60,20 +52,22 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   loadRecentExpenses(): void {
-    this.isLoading = true;
-    this.http.get<Expense[]>('http://localhost:5241/api/expenses')
-      .subscribe({
-        next: (expenses) => {
-          this.recentExpenses = expenses;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading expenses', error);
-          this.isLoading = false;
-        }
-      });
+    this.loading = true;
+    this.error = false;
+  
+    this.expenseService.getRecentExpenses().subscribe({
+      next: (expenses) => {
+        this.recentExpenses = Array.isArray(expenses) ? expenses.slice(0, 5) : [];
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading expenses', error);
+        this.error = true;
+        this.loading = false;
+      }
+    });
   }
-
+  
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
   }
@@ -86,8 +80,6 @@ export class ExpenseFormComponent implements OnInit {
 
     this.isLoading = true;
     const formData = new FormData();
-
-    // Map camelCase to PascalCase for backend compatibility
     const fieldMap: { [key: string]: string } = {
       date: 'Date',
       employeeName: 'EmployeeName',
@@ -99,56 +91,37 @@ export class ExpenseFormComponent implements OnInit {
       receipt: 'ReceiptFile'
     };
 
-    // Log form values for debugging
-    console.log('Form Values:', this.expenseForm.value);
-
-    // Add form fields to FormData with PascalCase keys
     Object.keys(this.expenseForm.value).forEach(key => {
       if (key !== 'receipt' && this.expenseForm.value[key] != null) {
         if (key === 'date') {
           const dateValue = new Date(this.expenseForm.value[key]);
-          const formattedDate = dateValue.toISOString().split('T')[0]; // yyyy-MM-dd
-          formData.append(fieldMap[key], formattedDate);
+          formData.append(fieldMap[key], dateValue.toISOString().split('T')[0]);
         } else if (key === 'amount') {
-          // Handle amount as string or number
-          const amountValue = typeof this.expenseForm.value[key] === 'string'
-            ? parseFloat(this.expenseForm.value[key])
-            : this.expenseForm.value[key];
-          // Ensure valid number and format to 2 decimal places
+          const amountValue = parseFloat(this.expenseForm.value[key]);
           const amountStr = isNaN(amountValue) ? '0.00' : amountValue.toFixed(2);
-          formData.append(fieldMap[key], amountStr); // Backend parses without "Rs."
+          formData.append(fieldMap[key], amountStr);
         } else {
           formData.append(fieldMap[key], this.expenseForm.value[key]);
         }
       }
     });
 
-    // Add file if selected
     if (this.selectedFile) {
       formData.append('ReceiptFile', this.selectedFile, this.selectedFile.name);
     }
 
-    // Log FormData contents for debugging
-    for (const pair of (formData as any).entries()) {
-      console.log(`FormData: ${pair[0]} = ${pair[1]}`);
-    }
-
-    // Send to backend
-    this.http.post('http://localhost:5241/api/expenses', formData)
-      .subscribe({
-        next: (response) => {
-          console.log('Expense saved successfully', response);
-          this.resetForm();
-          this.loadRecentExpenses();
-          this.isLoading = false;
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error saving expense:', error);
-          console.error('Server error details:', error.error);
-          alert('An error occurred: ' + (error.error?.title || error.error?.detail || error.message || 'Unknown error'));
-          this.isLoading = false;
-        }
-      });
+    this.expenseService.submitExpense(formData).subscribe({
+      next: () => {
+        console.log('Expense saved successfully');
+        this.resetForm();
+        this.loadRecentExpenses();
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        alert('An error occurred: ' + error.message);
+        this.isLoading = false;
+      }
+    });
   }
 
   resetForm(): void {

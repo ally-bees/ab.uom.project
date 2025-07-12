@@ -71,6 +71,83 @@ namespace Backend.Services
             };
         }
 
+        // Get total sales Revenue
+        public async Task<double> GetTotalSalesCostAsync()
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+            return sales.Sum(s=> s.Amount);
+        }
+
+        // Get today sales Revenue
+        public async Task<double> GetTodaySalesRevenueAsync()
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+            return sales
+                .Where(s=> s.SaleDate.Date == DateTime.Today)
+                .Sum(s => s.Amount);
+        }
+
+        public async Task<List<double>> GetMonthlySalesAsync()
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+
+            var now = DateTime.UtcNow;
+            var currentMonth = now.Month;
+            var currentYear = now.Year;
+
+            // Filter sales for current month and year
+            var filteredSales = sales.Where(s =>
+                s.SaleDate.Month == currentMonth &&
+                s.SaleDate.Year == currentYear
+            );
+
+            // Group sales by day and sum the Amount
+            var grouped = filteredSales
+                .GroupBy(s => s.SaleDate.Day)
+                .Select(g => new
+                {
+                    Day = g.Key,
+                    Total = g.Sum(x => x.Amount)  // double sum here
+                })
+                .ToList();
+
+            int daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+            var dailySales = new List<double>(new double[daysInMonth]);  // initialize with zeros
+
+            // Fill the daily sales list with the sums
+            foreach (var item in grouped)
+            {
+                dailySales[item.Day - 1] = item.Total;
+            }
+
+            return dailySales;
+        }
+
+        public async Task<List<double>> GetYearlySalesAsync(int year)
+        {
+            // Load all sales (you can optimize later if needed)
+            var sales = await _mongoDBService.GetAllSalesAsync();
+
+            // Filter sales only in the given year
+            var yearlySales = sales.Where(s => s.SaleDate.Year == year);
+
+            // Initialize list for 12 months (Jan to Dec) with zeros
+            var monthlyTotals = new double[12];
+
+            // Sum amounts grouped by month
+            foreach (var sale in yearlySales)
+            {
+                int monthIndex = sale.SaleDate.Month - 1;
+                monthlyTotals[monthIndex] += sale.Amount;
+            }
+
+            return monthlyTotals.ToList();
+        }
+
+
+
+
+
         // Create a sale
         public async Task CreateSaleAsync(Sale sale)
         {
