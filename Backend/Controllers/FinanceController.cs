@@ -37,6 +37,15 @@ namespace Backend.Controllers
             return Ok(finance);
         }
 
+        // GET finance data by CompanyId
+            [HttpGet("company/{companyId}")]
+            public async Task<ActionResult<List<Finance>>> GetByCompanyId(string companyId)
+            {
+                var finances = await _financeService.GetByCompanyIdAsync(companyId);
+                return Ok(finances);
+            }
+
+
         // Create a new finance entry
         [HttpPost]
         public async Task<ActionResult> Create(Finance finance)

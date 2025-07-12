@@ -26,6 +26,14 @@ namespace Backend.Services
             return await _financeCollection.Find(f => f.Id == id).FirstOrDefaultAsync();
         }
 
+        // Get finance data by companyId
+public async Task<List<Finance>> GetByCompanyIdAsync(string companyId)
+{
+    var filter = Builders<Finance>.Filter.Eq(f => f.CompanyId, companyId);
+    return await _financeCollection.Find(filter).ToListAsync();
+}
+
+
         // Create a new finance entry
         public async Task CreateAsync(Finance finance)
         {

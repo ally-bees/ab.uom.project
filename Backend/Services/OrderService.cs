@@ -29,6 +29,13 @@ namespace Backend.Services
                 .Find(order => order.OrderId == orderId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<Order>> GetByCompanyIdAsync(string companyId)
+        {
+        var filter = Builders<Order>.Filter.Eq(o => o.CompanyId, companyId);
+        return await _ordersCollection.Find(filter).ToListAsync();
+        }
+
         public async Task<Dictionary<string, int>> GetOrderCountsByStatusesAsync(List<string> statuses)
         {
             var filter = Builders<Order>.Filter.In(o => o.Status, statuses);
@@ -67,6 +74,20 @@ namespace Backend.Services
 
             return count;
         }
+
+
+public async Task<Dictionary<string, int>> GetOrderCountsByStatusesAndCompanyAsync(List<string> statuses, string companyId)
+{
+    var orders = await _ordersCollection
+        .Find(o => o.CompanyId == companyId && statuses.Contains(o.Status.ToLower()))
+        .ToListAsync();
+
+    var summary = orders
+        .GroupBy(o => o.Status.ToLower())
+        .ToDictionary(g => g.Key, g => g.Count());
+
+    return summary;
+}
 
 
 

@@ -48,7 +48,8 @@ export class AuthService {
           username: decodedToken.unique_name || decodedToken.username,
           email: decodedToken.email,
           HoneyCombId: decodedToken.HoneyCombId,
-          Role: decodedToken.role || decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || 'User'
+          Role: decodedToken.role || decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || 'User',
+          CompanyId: decodedToken.CompanyId
         };
         console.log('Created user object',user);//debug log
         this.currentUserSubject.next(user);

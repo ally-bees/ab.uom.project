@@ -85,21 +85,22 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
 
   // Load orders from the service and format dates
   private loadOrders(): void {
-    this.orderService.getOrders().subscribe({
-      next: (data) => {
-        this.rowData = data.map(order => ({
-          ...order,
-          orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
-        }));
-        this.filteredRowData = [...this.rowData];
-      },
-      error: (err) => console.error('Order fetch error:', err),
-    });
-  }
+  this.orderService.getOrdersByCompany().subscribe({
+    next: (data) => {
+      this.rowData = data.map(order => ({
+        ...order,
+        orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
+      }));
+      this.filteredRowData = [...this.rowData];
+    },
+    error: (err) => console.error('Order fetch error:', err),
+  });
+}
+
 
   // Load order status summary for the pie chart and counters
   private loadOrderStatusSummary(): void {
-    this.orderService.getOrderStatusSummary().subscribe({
+    this.orderService.getOrderStatusSummaryByCompany().subscribe({
       next: (data) => {
         if (!data || typeof data !== 'object') {
           console.error('Invalid order status format:', data);

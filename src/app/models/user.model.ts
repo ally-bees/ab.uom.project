@@ -4,6 +4,7 @@ export interface User {
     email: string;
     HoneyCombId: string;
     Role: string;
+    CompanyId?: string; 
 }
   
 export interface RegisterRequest {

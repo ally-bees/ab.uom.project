@@ -24,5 +24,14 @@ namespace Backend.Controllers
             var result = await _orderService.GetOrderCountsByStatusesAsync(statuses);
             return Ok(result);
         }
+
+        [HttpGet("summary/company/{companyId}")]
+public async Task<IActionResult> GetOrderStatusSummaryByCompany(string companyId)
+{
+    var statuses = new List<string> { "completed", "pending", "new" };
+    var result = await _orderService.GetOrderCountsByStatusesAndCompanyAsync(statuses, companyId);
+    return Ok(result);
+}
+
     }
 }
