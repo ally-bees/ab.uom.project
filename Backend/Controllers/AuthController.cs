@@ -191,7 +191,7 @@ namespace Backend.Controllers
             try
             {
                 Console.WriteLine($"🔍 Reset password request received");
-                Console.WriteLine($"🔍 Email: {resetPasswordDto.Email}");
+                Console.WriteLine($"🔍 Raw Email: {resetPasswordDto.Email}");
                 Console.WriteLine($"🔍 Token: {resetPasswordDto?.Token}");
                 Console.WriteLine($"🔍 Model State Valid: {ModelState.IsValid}");
 
@@ -215,17 +215,31 @@ namespace Backend.Controllers
                     return BadRequest(new { success = false, message = "Email is required." });
                 }
 
+                // Clean the email - remove any query parameters that might be appended
+                var cleanEmail = resetPasswordDto.Email;
+                if (cleanEmail.Contains('?'))
+                {
+                    cleanEmail = cleanEmail.Split('?')[0];
+                    Console.WriteLine($"🔍 Cleaned Email: {cleanEmail}");
+                }
+
                 // Validate reset token
                 Console.WriteLine("🔍 Validating reset token...");
-                var passwordReset = await _passwordResetService.ValidateResetTokenAsync(resetPasswordDto.Token, resetPasswordDto.Email);
+                Console.WriteLine($"🔍 Using token: {resetPasswordDto.Token}");
+                Console.WriteLine($"🔍 Using clean email: {cleanEmail}");
+                
+                var passwordReset = await _passwordResetService.ValidateResetTokenAsync(resetPasswordDto.Token, cleanEmail);
                 if (passwordReset == null)
                 {
                     Console.WriteLine(" Invalid or expired reset token");
+                    Console.WriteLine($" Attempted to validate token: {resetPasswordDto.Token} for email: {cleanEmail}");
                     return BadRequest(new { success = false, message = "Invalid or expired reset token. Please request a new password reset." });
                 }
 
+                Console.WriteLine($"✅ Token validation successful for user: {passwordReset.UserId}");
+
                 // Get user by email
-                var user = await _userService.GetByEmailAsync(resetPasswordDto.Email);
+                var user = await _userService.GetByEmailAsync(cleanEmail);
                 if (user == null)
                 {
                     Console.WriteLine(" User not found");
