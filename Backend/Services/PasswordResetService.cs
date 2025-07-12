@@ -54,12 +54,42 @@ namespace Backend.Services
 
         public async Task<PasswordReset?> ValidateResetTokenAsync(string token, string email)
         {
+            Console.WriteLine($"🔍 [PasswordResetService] Validating token: {token}");
+            Console.WriteLine($"🔍 [PasswordResetService] For email: {email}");
+            Console.WriteLine($"🔍 [PasswordResetService] Current UTC time: {DateTime.UtcNow}");
+
             var passwordReset = await _passwordResetCollection
                 .Find(pr => pr.ResetToken == token && 
                            pr.Email == email && 
                            !pr.IsUsed && 
                            pr.ExpiresAt > DateTime.UtcNow)
                 .FirstOrDefaultAsync();
+
+            if (passwordReset == null)
+            {
+                Console.WriteLine(" [PasswordResetService] No matching token found, checking all tokens for this email...");
+                
+                // Debug: Check if there are any tokens for this email
+                var allTokensForEmail = await _passwordResetCollection
+                    .Find(pr => pr.Email == email)
+                    .ToListAsync();
+                
+                Console.WriteLine($" [PasswordResetService] Found {allTokensForEmail.Count} tokens for email {email}");
+                
+                foreach (var tokenInfo in allTokensForEmail)
+                {
+                    Console.WriteLine($" [PasswordResetService] Token: {tokenInfo.ResetToken}");
+                    Console.WriteLine($" [PasswordResetService] IsUsed: {tokenInfo.IsUsed}");
+                    Console.WriteLine($" [PasswordResetService] ExpiresAt: {tokenInfo.ExpiresAt}");
+                    Console.WriteLine($" [PasswordResetService] CreatedAt: {tokenInfo.CreatedAt}");
+                    Console.WriteLine($" [PasswordResetService] Expired: {tokenInfo.ExpiresAt <= DateTime.UtcNow}");
+                    Console.WriteLine("---");
+                }
+            }
+            else
+            {
+                Console.WriteLine("✅ [PasswordResetService] Token validation successful");
+            }
 
             return passwordReset;
         }
