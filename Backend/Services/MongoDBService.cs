@@ -18,7 +18,7 @@ namespace Backend.Services
         private readonly IMongoCollection<Expense> _expensesCollection;
         private readonly IMongoCollection<Automation> _automationCollection;
 
-        public MongoDBService(IOptions<MongoDBSettings> mongoDBSettings)
+        public MongoDBService(IOptions<Backend.Models.MongoDBSettings> mongoDBSettings)
         {
             var mongoClient = new MongoClient(mongoDBSettings.Value.ConnectionString);
             _database = mongoClient.GetDatabase(mongoDBSettings.Value.DatabaseName);

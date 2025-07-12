@@ -17,7 +17,7 @@ namespace Backend.Services
     {
         private readonly IMongoCollection<UserDetails> _userDetailsCollection;
 
-        public UserDetailsService(IOptions<MongoDBSettings> mongoDbSettings)
+        public UserDetailsService(IOptions<Backend.Models.MongoDBSettings> mongoDbSettings)
         {
             var mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(mongoDbSettings.Value.UserDetailsdatabase);

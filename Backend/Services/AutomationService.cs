@@ -1,44 +1,48 @@
 using Backend.Models;
+using MongoDB.Driver;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 
 namespace Backend.Services
 {
-   public class AutomationService
-{
-    private readonly MongoDBService _mongoDBService;
-    private readonly IMongoCollection<Automation> _automationCollection;
-
-    public AutomationService(MongoDBService mongoDBService)
+    public class AutomationService
     {
-        _mongoDBService = mongoDBService;
-        _automationCollection = _mongoDBService.GetAutomationCollection();
-    }
+        private readonly IMongoCollection<Automation> _automationCollection;
 
-    public async Task<List<Automation>> GetAllAsync()
-    {
-        return await _automationCollection.Find(_ => true).ToListAsync();
-    }
+        public AutomationService(IOptions<Backend.Models.MongoDBSettings> mongoSettings)
+        {
+            var settings = mongoSettings.Value;
 
-    public async Task<Automation?> GetByIdAsync(string id)
-    {
-        return await _automationCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
-    }
+            var mongoClient = new MongoClient(settings.ConnectionString);
+            var mongoDatabase = mongoClient.GetDatabase(settings.DatabaseName); // or AdminDatabaseName if you want
 
-    public async Task CreateAsync(Automation automation)
-    {
-        await _automationCollection.InsertOneAsync(automation);
-    }
+            _automationCollection = mongoDatabase.GetCollection<Automation>("automation"); // Replace with correct name if needed
+        }
 
-    public async Task UpdateAsync(string id, Automation automation)
-    {
-        await _automationCollection.ReplaceOneAsync(a => a.Id == id, automation);
-    }
+        public async Task<List<Automation>> GetAllAsync()
+        {
+            return await _automationCollection.Find(_ => true).ToListAsync();
+        }
 
-    public async Task DeleteAsync(string id)
-    {
-        await _automationCollection.DeleteOneAsync(a => a.Id == id);
+        public async Task<Automation?> GetByIdAsync(string id)
+        {
+            return await _automationCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateAsync(Automation automation)
+        {
+            await _automationCollection.InsertOneAsync(automation);
+        }
+
+        public async Task UpdateAsync(string id, Automation automation)
+        {
+            await _automationCollection.ReplaceOneAsync(a => a.Id == id, automation);
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            await _automationCollection.DeleteOneAsync(a => a.Id == id);
+        }
     }
-}
 }

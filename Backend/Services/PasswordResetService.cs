@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Security.Cryptography;
 using System.Text;
+//using AuthAPI.Settings;
 
 namespace Backend.Services
 {
@@ -19,7 +20,7 @@ namespace Backend.Services
     {
         private readonly IMongoCollection<PasswordReset> _passwordResetCollection;
 
-        public PasswordResetService(IOptions<MongoDBSettings> mongoDbSettings)
+        public PasswordResetService(IOptions<Backend.Models.MongoDBSettings> mongoDbSettings)
         {
             var settings = mongoDbSettings.Value;
             var mongoClient = new MongoClient(settings.ConnectionString);

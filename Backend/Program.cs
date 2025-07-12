@@ -2,7 +2,7 @@ using System.Net;
 using System.Text;
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
-using AuthAPI.Settings;
+//using AuthAPI.Settings;
 using Backend.Models;
 using Backend.Services;
 using Hangfire;
@@ -14,8 +14,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using QuestPDF.Infrastructure;
 
+
 // Load environment variables if needed (commented out, enable if necessary)
-// DotNetEnv.Env.Load(@"C:\Users\Thilinika\Desktop\Me\New folder\Project new\project new\ab.uom.project\.env");
+DotNetEnv.Env.Load(@"C:\Users\Thilinika\Desktop\Me\New folder\Project new\project new\ab.uom.project\.env");
+Console.WriteLine("✅ EMAIL_USER from .env: " + Environment.GetEnvironmentVariable("EMAIL_USER"));
+
+
+Console.WriteLine("EMAIL_USER = " + Environment.GetEnvironmentVariable("EMAIL_USER"));
+Console.WriteLine("EMAIL_PASSWORD is empty = " + string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD")));
 
 // Set QuestPDF license before anything else
 QuestPDF.Settings.License = LicenseType.Community;
@@ -33,7 +39,7 @@ builder.Configuration
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
 // Configure strongly typed settings objects
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
+builder.Services.Configure<Backend.Models.MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
@@ -41,6 +47,7 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    
     if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.ConnectionString))
         throw new InvalidOperationException("MongoDBSettings are missing or incomplete in the configuration file.");
     return new MongoClient(mongoDbSettings.ConnectionString);
@@ -81,7 +88,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Hangfire configuration
 builder.Services.AddHangfire(config =>
     config.UseMongoStorage(
-        builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>().ConnectionString,
+        builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>().ConnectionString,
         "hangfire-db",
         new MongoStorageOptions
         {
@@ -135,6 +142,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+
 // Add Authorization
 builder.Services.AddAuthorization();
 
@@ -166,6 +175,13 @@ RecurringJob.AddOrUpdate<ReportJobService>(
     "* * * * *"
 );
 
+app.MapGet("/test-env", () =>
+{
+    var user = Environment.GetEnvironmentVariable("EMAIL_USER");
+    var passwordSet = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD"));
+    return Results.Ok(new { EMAIL_USER = user, PasswordSet = passwordSet });
+});
+
 // MongoDB connection test endpoint (diagnostic)
 app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
 {
@@ -182,5 +198,8 @@ app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
         return Results.Problem(detail: ex.Message, title: "Database Connection Error");
     }
 });
+
+app.UseHangfireDashboard();
+
 
 app.Run();

@@ -20,7 +20,7 @@ export class AuthService {
   // Role-based routes
   private roleRoutes: { [key: string]: string } = {
     'Admin': '/admindashboard',
-    'Business Owner': '/testbusinessowner',
+    'Business Owner': '/businessowner/businessownerdashboard',
     'Sales Manager': '/salesmanager',
     'Marketing Manager': '/testmarketingmanager',
     'Inventory Manager': '/testinventorymanager',
@@ -147,13 +147,15 @@ export class AuthService {
     return user ? user.Role : null;
   }
 
-  getRedirectUrl(): string {
+getRedirectUrl(): string {
   const user = this.getCurrentUser();
   console.log('Getting redirect URL for user:', user); // Debug log
   
   if (user && user.Role) {
+    console.log(`User role is: "${user.Role}"`); // New log
+    
     const redirectUrl = this.roleRoutes[user.Role];
-    console.log(`Role: ${user.Role}, Redirect URL: ${redirectUrl}`); // Debug log
+    console.log(`Redirect URL for role: ${redirectUrl}`); // New log
     
     if (redirectUrl) {
       return redirectUrl;
