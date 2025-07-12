@@ -1,5 +1,4 @@
 using Backend.Models;
-using Backend.Models.DTOs;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -18,6 +17,7 @@ namespace Backend.Controllers
             _financeService = financeService;
         }
 
+        // Get all finances
         [HttpGet]
         public async Task<ActionResult<List<Finance>>> Get()
         {
@@ -25,6 +25,7 @@ namespace Backend.Controllers
             return Ok(finances);
         }
 
+        // Get a finance by id
         [HttpGet("{id}")]
         public async Task<ActionResult<Finance>> GetById(string id)
         {
@@ -34,6 +35,39 @@ namespace Backend.Controllers
                 return NotFound();
 
             return Ok(finance);
+        }
+
+        // Create a new finance entry
+        [HttpPost]
+        public async Task<ActionResult> Create(Finance finance)
+        {
+            await _financeService.CreateAsync(finance);
+            return CreatedAtAction(nameof(GetById), new { id = finance.Id }, finance);
+        }
+
+        // Update an existing finance entry
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(string id, Finance finance)
+        {
+            var existingFinance = await _financeService.GetByIdAsync(id);
+            if (existingFinance == null)
+                return NotFound();
+
+            finance.Id = id;
+            await _financeService.UpdateAsync(id, finance);
+            return NoContent();
+        }
+
+        // Delete a finance entry by id
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            var existingFinance = await _financeService.GetByIdAsync(id);
+            if (existingFinance == null)
+                return NotFound();
+
+            await _financeService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }
