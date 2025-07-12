@@ -1,162 +1,257 @@
-/* Container for the sidebar and user management content */
 .user-management-container {
-    display: flex;
-    height: calc(100vh - 60px); /* Adjust height based on header height */
-  }
-  
-  /* Sidebar */
-  app-sidebar {
-    width: 250px; /* Fixed width for the sidebar */
-    background-color: white;
-    border-right: 1px solid #eee;
-    overflow-y: auto; /* Enable scrolling if content overflows */
-  }
-  
-  /* User Management Content */
-  .user-management-content {
-    flex: 1; /* Take up remaining space */
-    padding: 20px;
-    overflow-y: auto; /* Enable scrolling if content overflows */
-  }
-  
-  /* Header */
-  .header {
-    margin-bottom: 20px;
-  }
-  
-  .header h2 {
-    margin: 0;
-    font-size: 24px;
-  }
-  
-  .header .subtitle {
-    margin: 5px 0;
-    color: #666;
-  }
-  
-  /* Actions */
-  .actions {
-    margin-top: 10px;
-  }
-  
-  .add-user-btn {
-    background-color: #00b8d4;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-user-btn:hover {
-    background-color: #0095b3;
-  }
-  
-  /* Search Container */
-  .search-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .search-box {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    background-color: #f5f5f5;
-    padding: 8px;
-    border-radius: 4px;
-  }
-  
-  .search-box input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    margin-left: 8px;
-    outline: none;
-  }
-  
-  .filter-btn {
-    background-color: transparent;
-    border: none;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  
-  /* Users Table */
-  .users-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .users-table th,
-  .users-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .users-table th {
-    background-color: #f9f9f9;
-    font-weight: 500;
-  }
-  
-  /* User Cell */
-  .user-cell .user-name {
-    font-weight: 500;
-  }
-  
-  .user-cell .user-email {
-    color: #666;
-    font-size: 14px;
-  }
-  
-  /* Status Badge */
-  .status-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-  
-  .status-badge.active {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  /* Action Button */
-  .action-btn {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  }
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 32px 0;
+}
 
+.top-nav {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 32px;
+  padding: 0 40px;
+}
 
-  .dropdown-container {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown-menu {
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 6px;
-    z-index: 1000;
-    right: 0;
-    top: 100%;
-    min-width: 100px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .delete-btn {
-    background: transparent;
-    border: none;
-    color: red;
-    cursor: pointer;
-    padding: 5px;
-    font-size: 14px;
-    width: 100%;
-    text-align: left;
-  }
-  
+.top-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 28px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #222;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.top-nav .nav-btn.active {
+  background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,198,251,0.10);
+}
+
+.user-management-content {
+  width: 100%;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+  padding: 32px 36px 28px 36px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #222;
+}
+
+.header .subtitle {
+  margin: 4px 0 0 0;
+  color: #7f8c8d;
+  font-size: 15px;
+}
+
+.actions {
+  margin-top: 0;
+}
+
+.add-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,198,251,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.add-user-btn:hover {
+  background: linear-gradient(90deg, #005bea 0%, #00c6fb 100%);
+  box-shadow: 0 4px 16px rgba(0,198,251,0.15);
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f5f7fa;
+  border-radius: 16px;
+  padding: 10px 16px;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.03);
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  margin-left: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+.filter-btn {
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.04);
+  transition: background 0.2s;
+  font-size: 18px;
+}
+
+.filter-btn:hover {
+  background: #e3eafc;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.04);
+}
+
+.users-table th,
+.users-table td {
+  padding: 16px 14px;
+  text-align: left;
+}
+
+.users-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #222;
+  font-size: 15px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.users-table tbody tr {
+  transition: background 0.2s;
+}
+
+.users-table tbody tr:nth-child(even) {
+  background: #f7fafc;
+}
+
+.users-table tbody tr:hover {
+  background: #e3eafc;
+}
+
+.user-cell .user-name {
+  font-weight: 600;
+  color: #222;
+}
+
+.user-cell .user-email {
+  color: #7f8c8d;
+  font-size: 13px;
+}
+
+.status-badge {
+  padding: 6px 18px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #39ffb0;
+  color: #222;
+  display: inline-block;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.04);
+}
+
+.status-badge.active {
+  background: #39ffb0;
+  color: #222;
+}
+
+.status-badge.inactive {
+  background: #ffe29a;
+  color: #b8860b;
+}
+
+.status-badge.suspended {
+  background: #ffbaba;
+  color: #c0392b;
+}
+
+.action-cell {
+  position: relative;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: #7f8c8d;
+  border-radius: 50%;
+  padding: 6px;
+  transition: background 0.2s;
+}
+
+.action-btn:hover {
+  background: #e3eafc;
+}
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 8px 0;
+  z-index: 1000;
+  right: 0;
+  top: 110%;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.12);
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 15px;
+  width: 100%;
+  text-align: left;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.delete-btn:hover {
+  background: #fdecea;
+}

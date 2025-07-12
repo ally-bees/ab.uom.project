@@ -4,6 +4,7 @@ using AuthAPI.Services;
 using AuthAPI.Settings;
 using Backend.Models;
 using Backend.Services;
+using Backend.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -130,6 +131,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
+app.UseAuditLogging(); // Add audit logging middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
