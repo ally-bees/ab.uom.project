@@ -1,7 +1,17 @@
+
 import { Routes } from '@angular/router';
+import {
+  authGuard,
+  adminGuard,
+  businessOwnerGuard,
+  salesManagerGuard,
+  marketingManagerGuard,
+  inventoryManagerGuard
+} from './guards/auth.guard';
+
 import { SalesDashboardComponent } from './pages/sales-dashboard/sales-dashboard.component';
 import { OrderSummaryComponent } from './pages/order-summary/order-summary.component';
-import { PrintReportComponent } from './pages/print-report/print-report.component'
+import { PrintReportComponent } from './pages/print-report/print-report.component';
 import { InventoryDashboardComponent } from './pages/inventory-dashboard/inventory-dashboard.component';
 import { BusinessDashComponent } from './pages/businessowner/businessowner.component';
 import { LoginComponent } from './login/login.component';
@@ -16,108 +26,91 @@ import { MarketingAnalyticsDashboardComponent } from './pages/marketing-analytic
 import { FinanceComponent } from './pages/finance/finance.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ShippingDashboardComponent } from './pages/shipping-dashboard/shipping-dashboard.component';
-import { SalesMainpageComponent } from "./mainpage/sales-mainpage/sales-mainpage.component";
+import { SalesMainpageComponent } from './mainpage/sales-mainpage/sales-mainpage.component';
+import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
+import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 import { ExpenseFormComponent } from './pages/expense-form/expense-form.component';
 import { DashboardComponent } from './adminpart/dashboard/dashboard.component';
 import { customerinsightComponent } from './pages/customer-insight/customer-insight.component';
 import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.component';
-import { InventoryMainpageComponent } from './mainpage/inventory-mainpage/inventory-mainpage.component';
-import { BusinessMainpageComponent } from './mainpage/business-mainpage/bussiness-mainpage.component';
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
-import { AuditpageComponent } from './pages/auditpage/auditpage.component'
-import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
-import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
-import { DemographicComponent } from './components/demographic/demographic.component';
-import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
-import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
-import { CustomersupportComponent } from './pages/customersupport/customersupport.component';
-import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
-import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
-import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
-import { ChatpanelinvenComponent } from './components/chatpanelinven/chatpanelinven.component';
-import { IMchatpanelComponent } from './components/imchatpanel/imchatpanel.component';
-import { IMcustomersupportComponent } from './pages/imcustomersupport/imcustomersupport.component';
-import { BochatpanelComponent } from './components/bochatpanel/bochatpanel.component';
-import { MhchatpanelComponent } from './components/mhchatpanel/mhchatpanel.component';
-import { BocustomersupportComponent } from './pages/bocustomersupport/bocustomersupport.component';
-import { MhcustomersupportComponent } from './pages/mhcustomersupport/mhcustomersupport.component';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 
 export const routes: Routes = [
-  {
-    path: 'salesmanager',
-    component: SalesMainpageComponent,
-    children: [
+  // Default route
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  // Auth routes
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: 'forget-password', component: ForgetPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+
+  // Admin-only routes
+  { path: 'admindashboard', component: DashboardComponent, canActivate: [adminGuard] },
+  { path: 'systemconfig', component: SystemConfigComponent, canActivate: [adminGuard] },
+  { path: 'auditlogs', component: AuditLogsComponent, canActivate: [adminGuard] },
+  { path: 'usermanagement', component: UserManagementComponent, canActivate: [adminGuard] },
+
+  // Business owner
+  { path: 'testbusinessowner', component: TestbusinessDashboardComponent, canActivate: [businessOwnerGuard] },
+
+// Sales Manager with child routes
+{
+  path: 'salesmanager',
+  component: SalesMainpageComponent,
+  canActivate: [salesManagerGuard],
+  children: [
       { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      { 
-      path: 'customerinsight',
-      component: customerinsightComponent,
-      children: [
-        { path: '', redirectTo: 'demographic', pathMatch: 'full' },
-        { path: 'demographic', component: DemographicComponent },
-        { path: 'purchase-behavior', component: PurchasebehaveComponent },
-        { path: 'retention-analysis', component: RetentionanalComponent }
-      ]
-    },
+      { path:'customerinsight',component:customerinsightComponent},
       { path: 'printreport', component: PrintReportComponent },
-      {path: 'expense-form', component: ExpenseFormComponent},
-       { 
-      path: 'customersupport',
-      component: CustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: ChatpanelComponent }
-      ]
-    }
+      {path: 'expense-form', component: ExpenseFormComponent}
+
     ]
   },
+
+  // Inventory Manager with child routes
   {
-    path: 'inventoryManager',
-    component: InventoryMainpageComponent,
+    path: 'testinventorymanager',
+    component: TestinventoryDashboardComponent,
+    canActivate: [inventoryManagerGuard],
     children: [
       { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {path: 'expense-form', component: ExpenseFormComponent},
-      { 
-      path: 'app-imcustomersupport',
-      component: IMcustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'app-imchatpanel', component: IMchatpanelComponent }
-      ]
-    }
+      {path: 'expense-form', component: ExpenseFormComponent}
     ]
   },
+
+  // Marketing Manager
   {
-    path: 'marketingManager',
-    component: MarketingDashboardComponent,
+    path: 'testmarketingmanager',
+    component: TestmarketingDashboardComponent,
+    canActivate: [marketingManagerGuard]
+  },
+
+  {
+    path: 'businessowner',
+    component: BusinessMainpageComponent,
+    canActivate: [businessOwnerGuard],
     children: [
-      { path: '', redirectTo: 'marketing', pathMatch: 'full' },
-      { path: 'sales', component: SalesComponent },
-      { path:'customerinsight',component:customerinsightComponent},
+      { path: '', redirectTo: 'businessownerdashboard', pathMatch: 'full' },
+      { path: 'businessownerdashboard', component: BusinessDashComponent },
+      { path: 'finance', component: FinanceComponent },
+      { path: 'inventory', component: InventoryComponent },
+      { path: 'schedule', component: ScheduleComponent },
+      { path: 'shipping', component: ShippingDashboardComponent },
+      { path : 'sales', component: SalesComponent },
+      { path: 'customerinsight', component: customerinsightComponent },
+      { path: 'order', component: OrderSummaryComponent },
       { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
-      { 
-      path: 'mh-customersupport',
-      component: MhcustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: MhchatpanelComponent }
-      ]
-    }
 
     ]
   },
@@ -133,6 +126,7 @@ export const routes: Routes = [
   {path: 'bussinessownerdash', component: BusinessDashComponent}, 
   {path: 'finance', component: FinanceComponent},
   {path: 'schedule', component: ScheduleComponent},
+  {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path:'customerinsight',component:customerinsightComponent},
   {path: 'expense-form', component: ExpenseFormComponent},

@@ -8,5 +8,6 @@ namespace AuthAPI.Models.DTOs
         public string Email { get; set; }
         public string HoneyCombId { get; set; }
         public string Role { get; set; }
+        public string? CompanyId { get; set; }
     }
 }

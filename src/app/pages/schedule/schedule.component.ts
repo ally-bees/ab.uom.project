@@ -14,13 +14,14 @@ import { AutomationService, Automation } from '../../services/automation.service
 export class ScheduleComponent implements OnInit {
   form: FormGroup;
   activeAutomations: Automation[] = [];
-  editingAutomationId: number | null = null;
+  editingAutomationId: string | null = null;
   daysOfMonth: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
   constructor(
     private fb: FormBuilder,
     private automationService: AutomationService
   ) {
+    // Initialize the reactive form with nested form groups for report, schedule, and recipient details
     this.form = this.fb.group({
       report: this.fb.group({
         reportType: ['', Validators.required],
@@ -42,20 +43,24 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  // Called on component initialization - loads existing automation records
   ngOnInit(): void {
     this.loadAutomations();
   }
 
+  // Fetch the list of active automations from the service
   loadAutomations(): void {
     this.automationService.getAutomations().subscribe(data => {
       this.activeAutomations = data;
     });
   }
 
+  // Handles form submission to create or update an automation
   onSubmit(): void {
     if (this.form.valid) {
       const formValue = this.form.value;
 
+      // Prepare the payload by combining form data
       const automationData = {
         ...formValue.report,
         ...formValue.schedule,
@@ -66,10 +71,12 @@ export class ScheduleComponent implements OnInit {
           : null
       };
 
+      // Determine whether to add a new automation or update an existing one
       const request$ = this.editingAutomationId !== null
         ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
         : this.automationService.addAutomation(automationData);
 
+      // Submit the request and reload automations on success
       request$.subscribe({
         next: () => {
           this.loadAutomations();
@@ -82,8 +89,9 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
+  // Populate the form fields with data from the selected automation for editing
   editAutomation(automation: Automation): void {
-    this.editingAutomationId = automation.id;
+    this.editingAutomationId = automation.id.toString();
 
     this.form.patchValue({
       report: {
@@ -106,15 +114,18 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  deleteAutomation(id: number): void {
-    this.automationService.deleteAutomation(id).subscribe(() => {
-      this.loadAutomations();
-      if (this.editingAutomationId === id) {
-        this.resetForm();
-      }
-    });
-  }
+  // Delete an automation and reset the form if it was being edited
+deleteAutomation(id: string): void {
+  this.automationService.deleteAutomation(String(id)).subscribe(() => {
+    this.loadAutomations();
+    if (this.editingAutomationId === id) {
+      this.resetForm();
+    }
+  });
+}
 
+
+  // Reset the form to default values and clear edit state
   resetForm(): void {
     this.form.reset({
       report: {
@@ -138,6 +149,7 @@ export class ScheduleComponent implements OnInit {
     this.editingAutomationId = null;
   }
 
+  // Cancel the edit or form interaction and reset form to initial state
   cancel(): void {
     this.resetForm();
   }

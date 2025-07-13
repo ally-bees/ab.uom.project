@@ -1,35 +1,96 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { PrintReportService } from '../../services/printreport.service';
+import { FormsModule } from '@angular/forms';
+
+import html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-print-report',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './print-report.component.html',
-  styleUrl: './print-report.component.css'
+  styleUrls: ['./print-report.component.css']
 })
-export class PrintReportComponent {
-  reportType: string = 'Sales Report'; // Default report type
-  exportFormat: string = 'PDF Document (.pdf)'; // Default export format
-  startDate: string = '01/12/2024'; // Default start date
-  endDate: string = '31/12/2024'; // Default end date
-  pageOrientation: string = 'Portrait'; // Default page orientation
-  orders: any[] = [ // Sample order data - replace with your actual data
-    { orderId: '00001A', customerId: 'CA67890', orderDate: '19/12/2024', amount: '1900.00', city: 'Galle', status: 'Completed' },
-    { orderId: '00002B', customerId: 'CA67891', orderDate: '19/12/2024', amount: '566.00', city: 'Colombo', status: 'Pending' },
-    { orderId: '00003C', customerId: 'CA67892', orderDate: '20/12/2024', amount: '5002.00', city: 'Kaluthara', status: 'Completed' },
-    { orderId: '00004D', customerId: 'CA67893', orderDate: '21/12/2024', amount: '5621.33', city: 'Mathara', status: 'Completed' },
-    { orderId: '00005E', customerId: 'CA67894', orderDate: '22/12/2024', amount: '1230.00', city: 'Galle', status: 'Rejected' },
-    { orderId: '00005E', customerId: 'CA67894', orderDate: '22/12/2024', amount: '1230.00', city: 'Galle', status: 'Completed' },
-  ];
+export class PrintReportComponent implements OnInit {
+  reportType: string = '';
+  exportFormat: string = '';
+  startDate: string = '';
+  endDate: string = '';
+  pageOrientation: string = 'Portrait';
 
-  generateReport() {
-    console.log('Generating report...');
+  tableColumns: string[] = [];
+  tableData: any[] = [];
+  filteredData: any[] = [];
+
+  filterStartDate: string = '';
+  filterEndDate: string = '';
+
+  constructor(
+    private printReportService: PrintReportService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const state = this.printReportService.getReportData();
+    console.log('Received State in Print Report:', state);
+
+    if (state) {
+      this.reportType = state['reportType'] || 'General Report';
+      this.exportFormat = state['exportFormat'] || 'PDF Document (.pdf)';
+      this.startDate = state['startDate'] || '';
+      this.endDate = state['endDate'] || '';
+      this.pageOrientation = state['pageOrientation'] || 'Portrait';
+      this.tableColumns = state['tableColumns'] || [];
+      this.tableData = state['tableData'] || [];
+      this.filteredData = [...this.tableData];
+      this.filterStartDate = this.startDate;
+      this.filterEndDate = this.endDate;
+    }
   }
 
-  cancel() {
-    console.log('Cancelling report generation...');
+  applyFilters(): void {
+    if (!this.filterStartDate || !this.filterEndDate) {
+      this.filteredData = [...this.tableData];
+      return;
+    }
+
+    const start = new Date(this.filterStartDate);
+    const end = new Date(this.filterEndDate);
+
+    this.filteredData = this.tableData.filter(row => {
+      const dateStr = row['Order Date'] || row['OrderDate'] || row['orderDate'];
+      const rowDate = new Date(dateStr);
+      return rowDate >= start && rowDate <= end;
+    });
+
+    // Update heading date range
+    this.startDate = this.filterStartDate;
+    this.endDate = this.filterEndDate;
+  }
+
+ generateReport(): void {
+  const element = document.getElementById('reportContent');
+  if (!element) {
+    console.error('Report content element not found!');
+    return;
+  }
+
+  const opt = {
+    margin:       0.5,
+    filename:     `${this.reportType.replace(/\s+/g, '_')}_${this.startDate}_${this.endDate}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: this.pageOrientation.toLowerCase() },
+    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf().from(element).set(opt).save();
+}
+
+  cancel(): void {
+    this.printReportService.clearReportData();
+    this.router.navigate(['/finance']);
   }
 }

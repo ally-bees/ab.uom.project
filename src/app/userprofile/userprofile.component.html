@@ -1,17 +1,20 @@
 <div class="settings-container">
-    <h1 class="settings-title">Settings</h1>
-    
+    <h1 class="settings-title">{{profileForm.value.userName+"\'s "}}Profile</h1>
+     
     <div class="profile-container">
       <div class="sidebar">
         <div class="profile-image-container">
-          <img src="assets/profile-placeholder.jpg" alt="Profile Image" class="profile-image" />
-          <button class="camera-button">
+          <img [src]="imageSrc" alt="Profile Image" class="profile-image" />
+        
+          <button class="camera-button" (click)="triggerFileInput()">
             <i class="camera-icon">📷</i>
           </button>
+        
+          <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
         </div>
         
         <div class="profile-info">
-          <h2 class="profile-name">Mobina Mirbagheri</h2>
+          <h2 class="profile-name">{{profileForm.value.firstName+" "}}{{profileForm.value.lastName}}</h2>
           <p class="profile-status">Your account is ready, you can now update your profile with more details.</p>
         </div>
         
@@ -25,6 +28,8 @@
           </button>
         </div>
       </div>
+
+      
       
       <div class="main-content">
         <div class="content-header">
@@ -51,7 +56,7 @@
                   </div>
                   
                   <div class="form-group">
-                    <label for="lastName">Second Name</label>
+                    <label for="lastName">Last Name</label>
                     <input 
                       type="text" 
                       id="lastName" 
@@ -70,21 +75,24 @@
                     formControlName="userName" 
                     class="form-control" 
                     placeholder="User Name"
+                    readonly
                   />
                 </div>
                 
                 <div class="form-group full-width">
-                  <label for="dateOfBirth">Date of birth</label>
+                  <label for="dateOfBirth">Date of Birth</label>
                   <div class="date-input-container">
                     <input 
-                      type="text" 
+                      type="date" 
                       id="dateOfBirth" 
                       formControlName="dateOfBirth" 
-                      class="form-control" 
-                      placeholder="Enter Value"
+                      class="form-control"
+                      [max]="maxDate"
+                      [min]="minDate"
                     />
-                    <button type="button" class="calendar-button">📅</button>
+                    <!-- <button type="button" class="calendar-button" (click)="openDatePicker()">📅</button> -->
                   </div>
+                  
                 </div>
                 
                 <div class="form-group full-width">
@@ -110,6 +118,7 @@
                     formControlName="email" 
                     class="form-control" 
                     placeholder="Enter valid email"
+                    readonly
                   />
                 </div>
                 
@@ -134,17 +143,13 @@
                 
                 <div class="form-group full-width">
                   <label for="country">Country</label>
-                  <select 
+                  <input 
+                    type="text" 
                     id="country" 
                     formControlName="country" 
-                    class="form-control"
-                  >
-                    <option value="" disabled selected>Select</option>
-                    <option value="us">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="ca">Canada</option>
-                    <option value="au">Australia</option>
-                  </select>
+                    class="form-control" 
+                    placeholder="Sri Lanka"
+                  />
                 </div>
                 
                 <div class="form-group full-width">
@@ -161,7 +166,22 @@
             </div>
             
             <div class="form-actions">
-              <button type="submit" class="save-button">Save</button>
+              <button 
+                type="submit" 
+                class="save-button" 
+                (click)="onSave()" 
+                [disabled]="isLoading"
+              >
+                <span *ngIf="!isLoading">Save Changes</span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin"></i> Saving...
+                </span>
+              </button>
+              <div class="save-status" *ngIf="saveMessage">
+                <div class="alert" [class.alert-success]="saveSuccess" [class.alert-error]="!saveSuccess">
+                    {{ saveMessage }}
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -170,6 +190,8 @@
         <div *ngIf="activeSection !== 'Edit Profile'" class="placeholder-content">
           <p>{{ activeSection }} content goes here</p>
         </div>
+
       </div>
     </div>
   </div>
+ 

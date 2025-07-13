@@ -34,6 +34,14 @@ namespace Backend.Controllers
             return Ok(order);
         }
 
+        [HttpGet("company/{companyId}")]
+public async Task<ActionResult<List<Order>>> GetByCompanyId(string companyId)
+{
+    var orders = await _orderService.GetByCompanyIdAsync(companyId); // ✅ fixed name
+    return Ok(orders);
+}
+
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] OrderCreateDTO dto)
         {
