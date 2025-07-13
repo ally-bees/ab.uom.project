@@ -78,7 +78,6 @@ export const routes: Routes = [
   {path: 'bussinessownerdash', component: BusinessDashComponent}, 
   {path: 'finance', component: FinanceComponent},
   {path: 'schedule', component: ScheduleComponent},
-  {path: 'shipping', component: ShippingDashboardComponent},
   {path:'admindashboard',component:DashboardComponent},
   {path:'customerinsight',component:customerinsightComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
