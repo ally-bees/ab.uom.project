@@ -43,17 +43,19 @@ import { BochatpanelComponent } from './components/bochatpanel/bochatpanel.compo
 import { MhchatpanelComponent } from './components/mhchatpanel/mhchatpanel.component';
 import { BocustomersupportComponent } from './pages/bocustomersupport/bocustomersupport.component';
 import { MhcustomersupportComponent } from './pages/mhcustomersupport/mhcustomersupport.component';
+import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 
 export const routes: Routes = [
   {
-  path: 'salesmanager',
-  component: SalesMainpageComponent,
-  children: [
-    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
-    { path: 'salesdashboard', component: SalesDashboardComponent },
-    { path: 'sales', component: SalesComponent },
-    { path: 'order', component: OrderSummaryComponent },
-    { 
+    path: 'salesmanager',
+    component: SalesMainpageComponent,
+    children: [
+      { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+      { path: 'salesdashboard', component: SalesDashboardComponent },
+      { path: 'sales', component: SalesComponent },
+      { path: 'order', component: OrderSummaryComponent },
+      { 
       path: 'customerinsight',
       component: customerinsightComponent,
       children: [
@@ -63,9 +65,9 @@ export const routes: Routes = [
         { path: 'retention-analysis', component: RetentionanalComponent }
       ]
     },
-    { path: 'printreport', component: PrintReportComponent },
-    { path: 'expense-form', component: ExpenseFormComponent },
-    { 
+      { path: 'printreport', component: PrintReportComponent },
+      {path: 'expense-form', component: ExpenseFormComponent},
+       { 
       path: 'customersupport',
       component: CustomersupportComponent,
       children: [
@@ -75,42 +77,8 @@ export const routes: Routes = [
         { path: 'Messaging-app', component: ChatpanelComponent }
       ]
     }
-  ]
-},
-/*{
-  path: 'businessowner',
-  component: SalesMainpageComponent,
-  children: [
-    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
-    { 
-      path: 'bo-customersupport',
-      component: BocustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'app-bochatpanel', component: BochatpanelComponent }
-      ]
-    }
-  ]
-},
-{
-  path: 'markethead',
-  component: SalesMainpageComponent,
-  children: [
-    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
-    { 
-      path: 'mh-customersupport',
-      component: MhcustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: MhchatpanelComponent }
-      ]
-    }
-  ]
-},*/
+    ]
+  },
   {
     path: 'inventoryManager',
     component: InventoryMainpageComponent,
@@ -131,7 +99,27 @@ export const routes: Routes = [
       ]
     }
     ]
-    
+  },
+  {
+    path: 'marketingManager',
+    component: MarketingDashboardComponent,
+    children: [
+      { path: '', redirectTo: 'marketing', pathMatch: 'full' },
+      { path: 'sales', component: SalesComponent },
+      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+      { 
+      path: 'mh-customersupport',
+      component: MhcustomersupportComponent,
+      children: [
+        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+        { path: 'chatbot', component: AimessagepanelComponent },
+        { path: 'social-connect', component: SocialmessagepanelComponent },
+        { path: 'Messaging-app', component: MhchatpanelComponent }
+      ]
+    }
+
+    ]
   },
   { path: 'order-summary', component: OrderSummaryComponent},
   {path: 'printreport', component:PrintReportComponent},
@@ -155,26 +143,26 @@ export const routes: Routes = [
   {path: 'stats', component: StatsCardComponent},
   {path: 'Top', component: TopSellingTableComponent},
   {path: 'expense-form', component: ExpenseFormComponent},
-  { 
-    path: 'auditpage', 
-    component: AuditorpageComponent, // The parent container
-    children: [
-      { path: '', component: AuditdashboardComponent },
-      {path: 'audit', component:AuditpageComponent}
-    ]
-   },
-   { 
-      path: 'customersupport',
-      component: CustomersupportComponent,
+  { path: '**', redirectTo: 'salesdashboard' },
+  {path: 'courier', component: CourierDashboardComponent},
+  {path: 'marketing', component: MarketingDashboardComponent},
+];
+
+/*{
+  path: 'businessowner',
+  component: SalesMainpageComponent,
+  children: [
+    { path: '', redirectTo: 'salesdashboard', pathMatch: 'full' },
+    { 
+      path: 'bo-customersupport',
+      component: BocustomersupportComponent,
       children: [
         { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
         { path: 'chatbot', component: AimessagepanelComponent },
         { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: ChatpanelComponent }
+        { path: 'app-bochatpanel', component: BochatpanelComponent }
       ]
-    },
-  {path: 'app-chatpanelinven', component: ChatpanelinvenComponent},
-  { path: '**', redirectTo: 'salesdashboard' }
-];
+    }
+  ]
+},*/
 
-// updated

@@ -4,48 +4,45 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-couriersidebar',
+  selector: 'app-marketingsidebar',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './couriersidebar.component.html',
-  styleUrls: ['./couriersidebar.component.css']
+  templateUrl: './marketingsidebar.component.html',
+  styleUrls: ['./marketingsidebar.component.css']
 })
-export class CouriersidebarComponent {
+export class MarketingsidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
-      { id: 'sales', label: 'Sales', icon: 'fa-chart-line',route: 'courier/' },
-      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart',route: 'courier/'},
-      { id: 'products', label: 'Products', icon: 'fa-box', route: 'courier/' },
-      { id: 'courier', label: 'Courier', icon: 'fa-shipping-fast' ,route: 'courier/'},
-      { id: 'finance', label: 'Finance', icon: 'fa-money-bill-wave' ,route: 'courier/'},
-      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users', route: 'courier/customerinsight' },
-      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'courier/' },
+      { id: 'sales', label: 'Sales', icon: 'fa-chart-line',route: 'marketing/analytics' },
+      { id: 'customer-insights', label: 'Customer Insights', icon: 'fa-users',route: 'marketing/analytics' },
+      { id: 'marketing-analytics', label: 'Marketing Analytics', icon: 'fa-bullhorn', route: 'marketing/analytics' },
     ]}
   ];
 
   activeMenuItem: string = 'reports';
-
+  
   constructor(private router: Router) {}
-
+  
   toggleExpand(menuItem: any): void {
     menuItem.expanded = !menuItem.expanded;
   }
-
+  
   setActive(id: string, route?: string): void {
     this.activeMenuItem = id;
     if (route) {
       this.router.navigate([route]);
     }
   }
-   goToDashboard(): void {
+
+  goToDashboard(): void {
     this.activeMenuItem = 'dashboard';
     this.router.navigate(['businessowner/businessownerdashboard']);
-  } 
-
-   scheduleReport(): void {
+  }  
+  
+  scheduleReport(): void {
     // Logic for schedule report
     console.log('Schedule report clicked');
-    this.router.navigate(['courier/schedule']);
+    this.router.navigate(['businessowner/schedule']);
   }
   
   pendingRequest(): void {

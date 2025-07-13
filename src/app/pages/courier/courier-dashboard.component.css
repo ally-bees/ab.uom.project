@@ -1,11 +1,11 @@
 .container {
-  max-width: 1200px;
+  max-width: 1200px; /* Centers content within a max width */
   margin: 0 auto;
   display: flex;
 }
 
 .courier-container {
-  background-color: #f5f6fa;
+  background-color: #f5f6fa; /* Light background for content area */
   padding: 20px;
   font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
@@ -13,11 +13,11 @@
 /* Section title */
 .section-title h2 {
   margin: 0 0 20px;
-  font-size: 18px;
+  font-size: 28px;
   color: #333;
 }
 
-/* Filters row */
+/* Filters row for search and date inputs */
 .filters-row {
   display: flex;
   flex-wrap: wrap;
@@ -25,6 +25,7 @@
   gap: 15px;
   margin-bottom: 20px;
 }
+
 .search-container {
   position: relative;
   width: 300px;
@@ -50,9 +51,11 @@
 }
 
 .date-range {
+  margin-left: 100px;
   display: flex;
-  gap: 225px;
+  gap: 125px;
   flex-wrap: wrap;
+  height: 38px;
 }
 
 .date-input {
@@ -76,12 +79,7 @@
   font-size: 14px;
 }
 
-.date-input .material-icons {
-  color: #777;
-  font-size: 18px;
-}
-
-/* Summary section */
+/* Summary section styles */
 .summary-section {
   display: flex;
   flex-wrap: wrap;
@@ -100,24 +98,34 @@
 
 .stat-row {
   display: flex;
+  align-items: center;
   margin-bottom: 10px;
+  margin-top: 15px;
   font-size: 15px;
 }
 
 .stat-label {
-  flex: 1;
   color: #555;
+  min-width: 160px;
+  text-align: left;
 }
 
 .stat-value {
   font-weight: 500;
   color: #333;
+  min-width: 40px;
+  text-align: right;
+  display: inline-block;
 }
 
 .pie-chart {
   flex: 1;
+  justify-content: center;
+  align-items: center;
   position: relative;
   height: 200px;
+  min-width: 180px;
+  margin-left: -1000px; /* Adjust layout visually */
 }
 
 .chart-legend {
@@ -132,7 +140,7 @@
 .legend-item {
   display: flex;
   align-items: relative;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .legend-color {
@@ -142,6 +150,7 @@
   border-radius: 2px;
 }
 
+/* Pie chart legend colors by status */
 .legend-color.pending {
   background-color: #f9e559;
 }
@@ -158,13 +167,13 @@
   color: #555;
 }
 
-/* Recent deliveries */
+/* Table for recent deliveries */
 .recent-deliveries {
   background-color: white;
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .recent-deliveries h3 {
@@ -179,13 +188,18 @@
 
 table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 600px;
+  border-collapse: collapse;
 }
 
 thead tr {
-  background-color: #00bcd4;
+  background-color: #00BCD4;
   color: white;
+  font-size: 15px;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
 }
 
 th {
@@ -199,41 +213,86 @@ td {
   border-top: 1px solid #f0f0f0;
 }
 
-/*tbody tr {
-  background-color: #e0f7fa;
+.stat-divider {
+  width: 20%;
+  height: 2px;
+  background: #222;
+  margin: 4px 0 12px 0;
+  border-radius: 1px;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #b2ebf2;
+/* Alternating row background color */
+tbody td:nth-child(odd) {
+  background-color: #e3f6fc;
 }
 
+/* Responsive styles for medium screens */
+@media (max-width: 900px) {
+  table {
+    min-width: 500px;
+    font-size: 13px;
+  }
+  .container {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .courier-container {
+    padding: 10px;
+  }
+  .summary-section {
+    flex-direction: column;
+    gap: 20px;
+  }
 
-tbody td:nth-child(even),
-thead th:nth-child(even) {
-  background-color: #b2ebf2;
+  /* Hide side navigation on smaller screens */
+  app-couriersidebar,
+  .couriersidebar,
+  .sidebar,
+  .side-nav {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    padding: 0 !important;
+  }
 }
 
-
-
-.status {
-  font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 3px;
+/* Responsive styles for small screens */
+@media (max-width: 600px) {
+  table {
+    min-width: 400px;
+    font-size: 12px;
+  }
+  th, td {
+    padding: 8px 6px;
+  }
+  .filters-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .summary-section {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  .pie-chart {
+    height: 120px;
+    min-width: 120px;
+  }
+  .recent-deliveries h3 {
+    font-size: 18px;
+  }
+  .print-report button {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+  .courier-container {
+    padding: 5px;
+  }
 }
 
-.status.completed {
-  background-color: white;
-}
-
-.status.pending {
-  background-color: white;
-}
-
-.status.rejected {
-  background-color: white;
-}
-
-/* Print report button */
+/* Print report button styling */
 .print-report {
   display: flex;
   justify-content: center;
@@ -244,13 +303,14 @@ thead th:nth-child(even) {
   background-color: #00bcd4;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   border-radius: 5px;
   display: flex;
   align-items: center;
   gap: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  width: 19%;
   transition: background-color 0.3s;
 }
 
@@ -258,16 +318,18 @@ thead th:nth-child(even) {
   background-color: #0097a7;
 }
 
-/* Responsive tweaks using media queries */
+.print-report button svg {
+  vertical-align: middle;
+}
+
+/* Responsive tweaks */
 @media (max-width: 768px) {
   .section-title h2 {
     font-size: 18px;
   }
-
   .summary-section {
     flex-direction: column;
   }
-
   .chart-legend {
     position: static;
     flex-direction: row;
@@ -275,7 +337,6 @@ thead th:nth-child(even) {
     gap: 10px;
     margin-top: 10px;
   }
-
   .recent-deliveries h3 {
     font-size: 18px;
   }
@@ -286,19 +347,66 @@ thead th:nth-child(even) {
     flex-direction: column;
     gap: 10px;
   }
-
   .date-range {
     gap: 10px;
     flex-direction: column;
   }
-
   .summary-section {
     padding: 10px;
   }
-
   .table-container {
     overflow-x: auto;
   }
+  .summary-section {
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+  }
+  .pie-chart {
+    height: 100px;
+    min-width: 100px;
+  }
+  .delivery-stats, .pie-chart, .chart-legend {
+    min-width: 0;
+    width: 100%;
+    flex: unset;
+  }
+  .recent-deliveries {
+    padding: 8px;
+  }
+  .table-container {
+    padding: 0;
+  }
+  .search-container {
+    width: 100%;
+    min-width: 0;
+  }
+  .date-range {
+    margin-left: 0;
+    gap: 8px;
+    height: auto;
+  }
 }
 
-
+/* Print-specific styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #report-section, #report-section * {
+    visibility: visible;
+  }
+  #report-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+  }
+  app-couriersidebar, .couriersidebar, .sidebar, .side-nav {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .print-report {
+    display: none !important;
+  }
+}

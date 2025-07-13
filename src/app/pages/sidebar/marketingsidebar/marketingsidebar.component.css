@@ -125,7 +125,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 10px;
     border: none;
     border-radius: 5px;
@@ -141,16 +141,16 @@
       color: white;
 
       &:hover {
-        background-color: darken(#00b8d4, 5%);
+        background-color: #555;
       }
     }
 
     &.pending-btn {
-      background-color: #f0f0f0;
-      color: #555;
+      background-color: #00b8d4;
+      color: white;
 
       &:hover {
-        background-color: darken(#f0f0f0, 5%);
+        background-color: #555;
       }
     }
 
