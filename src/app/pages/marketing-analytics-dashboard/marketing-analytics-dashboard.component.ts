@@ -14,6 +14,7 @@ import { forkJoin } from 'rxjs';
 import { Inject } from '@angular/core';
 import { MarketingCampaignService, CampaignPerformance } from '../../services/campaign.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MarketingDashboardService } from '../../services/marketing-dashboard.service';
 
 @Component({
   selector: 'app-marketing-analytics-dashboard',
@@ -85,17 +86,25 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
   // Add this property for the modal
   showAllCampaigns = false;
 
+  customerCount: number = 0;
+
   constructor(
     private salesService: SalesService,
     private courierService: CourierService,
     private orderService: OrdersService,
-    private marketingCampaignService: MarketingCampaignService
+    private marketingCampaignService: MarketingCampaignService,
+    private marketingService: MarketingDashboardService
   ) {}
 
   ngOnInit(): void {
     this.loadInitialData();
     this.loadChartData();
     this.loadCampaignData(); // Add this
+
+    this.marketingService.getCustomerCount().subscribe({
+      next: count => this.customerCount = count,
+      error: () => this.customerCount = 0
+    });
   }
 
   ngAfterViewInit(): void {

@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using QuestPDF.Infrastructure;
+using Hangfire.MemoryStorage; // Or Hangfire.SqlServer if you're using SQL Server
 
 
 // Load environment variables if needed (commented out, enable if necessary)
@@ -57,7 +58,9 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
     var mongoClient = sp.GetRequiredService<IMongoClient>();
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
-    return mongoClient.GetDatabase(mongoDbSettings.DatabaseName ?? "ab-uom");
+    if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.DatabaseName))
+        throw new InvalidOperationException("MongoDBSettings or DatabaseName is missing in the configuration file.");
+    return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
 });
 
 // Register backend services
@@ -109,10 +112,19 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
 // Add Authorization
 builder.Services.AddAuthorization();
+
+// Add Hangfire services
+builder.Services.AddHangfire(config => 
+{
+    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+          .UseSimpleAssemblyNameTypeSerializer()
+          .UseRecommendedSerializerSettings()
+          .UseMemoryStorage(); // Or use SQL Server for production
+});
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -155,7 +167,10 @@ app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
     try
     {
         var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
-        var database = mongoClient.GetDatabase(mongoDbSettings.DatabaseName ?? "ab-uom");
+        var databaseName = mongoDbSettings != null && !string.IsNullOrEmpty(mongoDbSettings.DatabaseName)
+            ? mongoDbSettings.DatabaseName
+            : "ab-uom";
+        var database = mongoClient.GetDatabase(databaseName);
         var collectionNames = await database.ListCollectionNamesAsync();
         var collections = await collectionNames.ToListAsync();
         return Results.Ok(new { Connected = true, Collections = collections });

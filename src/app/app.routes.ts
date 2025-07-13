@@ -38,6 +38,10 @@ import { StatsCardComponent } from './components/stats-card/stats-card.component
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
+import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
+import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
+import { ResetPasswordComponent } from './adminpart/reset-password/reset-password.component';
 
 export const routes: Routes = [
   // Default route
@@ -46,8 +50,8 @@ export const routes: Routes = [
   // Auth routes
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'forget-password', component: ForgetPasswordComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
+ // { path: 'forget-password', component: ForgetPasswordComponent },
+  //{ path: 'reset-password', component: ForgetPasswordComponent },
 
   // Admin-only routes
   { path: 'admindashboard', component: DashboardComponent, canActivate: [adminGuard] },
@@ -56,7 +60,7 @@ export const routes: Routes = [
   { path: 'usermanagement', component: UserManagementComponent, canActivate: [adminGuard] },
 
   // Business owner
-  { path: 'testbusinessowner', component: TestbusinessDashboardComponent, canActivate: [businessOwnerGuard] },
+  { path: 'testbusinessowner', component: BusinessDashComponent, canActivate: [businessOwnerGuard] },
 
 // Sales Manager with child routes
 {
@@ -78,7 +82,7 @@ export const routes: Routes = [
   // Inventory Manager with child routes
   {
     path: 'testinventorymanager',
-    component: TestinventoryDashboardComponent,
+    component: InventoryDashboardComponent,
     canActivate: [inventoryManagerGuard],
     children: [
       { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
@@ -92,7 +96,7 @@ export const routes: Routes = [
   // Marketing Manager
   {
     path: 'testmarketingmanager',
-    component: TestmarketingDashboardComponent,
+    component: MarketingDashboardComponent,
     canActivate: [marketingManagerGuard]
   },
 

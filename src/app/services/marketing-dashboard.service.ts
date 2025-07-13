@@ -60,6 +60,10 @@ export class MarketingDashboardService {
     return this.http.get<any>(`${this.apiUrl}/campaigns/customers`);
   }
 
+  getCustomerCount(): Observable<number> {
+    return this.http.get<number>('http://localhost:5241/api/customercount/count');
+  }
+
   getCampaigns(): Observable<Campaign[]> {
     return this.http.get<Campaign[]>('http://localhost:5241/api/campaign');
   }
