@@ -10,6 +10,10 @@
   margin: 20px auto;
 }
 
+label{
+  font-size: large;
+}
+
 .chat-header {
   padding: 20px;
   text-align: left;
