@@ -68,6 +68,17 @@ namespace Backend.Controller
             return Ok(result);
         }
 
+        [HttpPost("monthly-purchase-by-product")]
+        public async Task<IActionResult> GetMonthlyPurchase([FromBody] ProductPurchaseRequest request)
+        {
+            if (string.IsNullOrEmpty(request.ProductId) || request.Year <= 0)
+                return BadRequest("Invalid productId or year.");
+
+            var data = await _mongoDbCustomerinsightService.GetMonthlyPurchaseByProductAsync(request.ProductId, request.Year);
+
+            return Ok(data);
+        }
+
         //just to operate with database 
         //not for application
 
