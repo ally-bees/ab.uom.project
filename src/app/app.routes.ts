@@ -94,7 +94,8 @@ export const routes: Routes = [
         ]
       },
       { path: 'printreport', component: PrintReportComponent },
-      { path: 'expense-form', component: ExpenseFormComponent }
+      { path: 'expense-form', component: ExpenseFormComponent },
+      { path: 'schedule', component: ScheduleComponent },
     ]
   },
 

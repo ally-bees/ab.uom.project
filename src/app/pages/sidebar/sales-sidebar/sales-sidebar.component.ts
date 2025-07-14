@@ -44,7 +44,7 @@ export class SMSidebarComponent {
   scheduleReport(): void {
     // Logic for schedule report
     console.log('Schedule report clicked');
-    this.router.navigate(['schedule']);
+    this.router.navigate(['salesmanager/schedule']);
   }
   
   pendingRequest(): void {
