@@ -160,7 +160,8 @@ public class AuthService
                     Username = user.Username,
                     Email = user.Email,
                     HoneyCombId = user.HoneyCombId,
-                    Role = user.Roles
+                    Role = user.Roles,
+                    CompanyId = user.CompanyId
                 }
             };
         }
@@ -186,6 +187,7 @@ public class AuthService
             new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim("username", user.Username),
             new Claim("HoneyCombId", user.HoneyCombId),
+            new Claim("CompanyId", user.CompanyId ?? ""),
             new Claim(ClaimTypes.Role, user.Roles)
         };
 

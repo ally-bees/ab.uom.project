@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    public class MongoDbCustomerInsightService 
+    public class MongoDbCustomerInsightService
     {
         private readonly IMongoCollection<Customerr> _CollectionCus;
         private readonly IMongoCollection<Order> _CollectionOrdet;
@@ -18,8 +18,8 @@ namespace Backend.Services
         {
             var settings = mongoDBSettings.Value;
 
-            var client = new MongoClient(settings.ConnectionString);    
-            var database = client.GetDatabase(settings.DatabaseName); 
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
 
             _CollectionOrdet = database.GetCollection<Order>("orders");
             _CollectionCus = database.GetCollection<Customerr>("customers");
@@ -196,6 +196,36 @@ namespace Backend.Services
 
 
         }
+
+        //just to operate with database 
+        //not for application
+
+
+        public async Task CreateAsync(Customerr customer)
+        {
+            await _CollectionCus.InsertOneAsync(customer);
+        }
+
+        public async Task<Customerr> GetByCustomerIdAsync(string customerId)
+        {
+            var filter = Builders<Customerr>.Filter.Eq(x => x.Customer_id, customerId);
+            return await _CollectionCus.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> UpdateAsync(string customerId, Customerr updatedCustomer)
+        {
+            var filter = Builders<Customerr>.Filter.Eq(x => x.Customer_id, customerId);
+            var result = await _CollectionCus.ReplaceOneAsync(filter, updatedCustomer);
+            return result.IsAcknowledged && result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteAsync(string customerId)
+        {
+            var filter = Builders<Customerr>.Filter.Eq(x => x.Customer_id, customerId);
+            var result = await _CollectionCus.DeleteOneAsync(filter);
+            return result.IsAcknowledged && result.DeletedCount > 0;
+        }
+
 
     }
    

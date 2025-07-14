@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-business-owner-sidebar',
@@ -27,7 +28,7 @@ export class BOSidebarComponent {
   
   activeMenuItem: string = 'reports';
   
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
   
   toggleExpand(menuItem: any): void {
     menuItem.expanded = !menuItem.expanded;
@@ -58,9 +59,17 @@ export class BOSidebarComponent {
   }
   
   logout(): void {
-    // Logic for logout
-    console.log('Logout clicked');
-    // Implement logout logic here
-    this.router.navigate(['/login']);
-  }
+  console.log('Logout clicked');
+
+  // ✅ Clear all stored auth/user data
+  localStorage.clear();
+  sessionStorage.clear();
+
+  // ✅ Optionally reset your user subject (if you use BehaviorSubject in AuthService)
+  // this.authService.setCurrentUser(null); // Only if applicable
+
+  // ✅ Navigate to login page
+  this.router.navigate(['/login']);
+}
+
 }

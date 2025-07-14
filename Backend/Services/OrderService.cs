@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using Backend.Models;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,6 +29,13 @@ namespace Backend.Services
                 .Find(order => order.OrderId == orderId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<Order>> GetByCompanyIdAsync(string companyId)
+        {
+        var filter = Builders<Order>.Filter.Eq(o => o.CompanyId, companyId);
+        return await _ordersCollection.Find(filter).ToListAsync();
+        }
+
         public async Task<Dictionary<string, int>> GetOrderCountsByStatusesAsync(List<string> statuses)
         {
             var filter = Builders<Order>.Filter.In(o => o.Status, statuses);
@@ -43,6 +51,45 @@ namespace Backend.Services
 
             return group.ToDictionary(x => x.Status, x => x.Count);
         }
+
+        public async Task<double> GetTodayOrdersAsync()
+        {
+            var bsonOrders = await _ordersCollection.Find(_ => true).ToListAsync();
+
+            // Parse manually from raw BSON to get the correct orderDate string
+            var today = DateTime.Today;
+            int count = 0;
+
+            foreach (var bsonOrder in bsonOrders)
+            {
+                var rawDoc = bsonOrder.ToBsonDocument();
+                var orderDateValue = rawDoc.GetValue("orderDate", null);
+
+                if (orderDateValue != null && DateTime.TryParse(orderDateValue.ToString(), out var parsedDate))
+                {
+                    if (parsedDate.Date == today)
+                        count++;
+                }
+            }
+
+            return count;
+        }
+
+
+public async Task<Dictionary<string, int>> GetOrderCountsByStatusesAndCompanyAsync(List<string> statuses, string companyId)
+{
+    var orders = await _ordersCollection
+        .Find(o => o.CompanyId == companyId && statuses.Contains(o.Status.ToLower()))
+        .ToListAsync();
+
+    var summary = orders
+        .GroupBy(o => o.Status.ToLower())
+        .ToDictionary(g => g.Key, g => g.Count());
+
+    return summary;
+}
+
+
 
 
         // Create a new order

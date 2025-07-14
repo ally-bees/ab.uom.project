@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AutomationService, Automation } from '../../services/automation.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-schedule',
@@ -14,13 +15,15 @@ import { AutomationService, Automation } from '../../services/automation.service
 export class ScheduleComponent implements OnInit {
   form: FormGroup;
   activeAutomations: Automation[] = [];
-  editingAutomationId: number | null = null;
+  editingAutomationId: string | null = null;
   daysOfMonth: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
   constructor(
     private fb: FormBuilder,
-    private automationService: AutomationService
+    private automationService: AutomationService,
+    private authService: AuthService
   ) {
+    // Initialize the reactive form with nested form groups for report, schedule, and recipient details
     this.form = this.fb.group({
       report: this.fb.group({
         reportType: ['', Validators.required],
@@ -42,48 +45,60 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  // Called on component initialization - loads existing automation records
   ngOnInit(): void {
     this.loadAutomations();
   }
 
+  // Fetch the list of active automations from the service
   loadAutomations(): void {
     this.automationService.getAutomations().subscribe(data => {
       this.activeAutomations = data;
     });
   }
 
+  // Handles form submission to create or update an automation
   onSubmit(): void {
-    if (this.form.valid) {
-      const formValue = this.form.value;
+  if (this.form.valid) {
+    const formValue = this.form.value;
 
-      const automationData = {
-        ...formValue.report,
-        ...formValue.schedule,
-        ...formValue.recipient,
-        dayOfWeek: formValue.schedule.dayOfWeek || null,
-        dayOfMonth: formValue.schedule.dayOfMonth
-          ? parseInt(formValue.schedule.dayOfMonth, 10)
-          : null
-      };
-
-      const request$ = this.editingAutomationId !== null
-        ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
-        : this.automationService.addAutomation(automationData);
-
-      request$.subscribe({
-        next: () => {
-          this.loadAutomations();
-          this.resetForm();
-        },
-        error: err => {
-          console.error('Automation error:', err);
-        }
-      });
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('No logged-in user found.');
+      return;
     }
-  }
 
+    const automationData = {
+      companyId: currentUser.CompanyId,
+      honeyCombId: currentUser.HoneyCombId,
+      ...formValue.report,
+      ...formValue.schedule,
+      ...formValue.recipient,
+      dayOfWeek: formValue.schedule.dayOfWeek || null,
+      dayOfMonth: formValue.schedule.dayOfMonth
+        ? parseInt(formValue.schedule.dayOfMonth, 10)
+        : null
+    };
+
+    const request$ = this.editingAutomationId !== null
+      ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
+      : this.automationService.addAutomation(automationData);
+
+    request$.subscribe({
+      next: () => {
+        this.loadAutomations();
+        this.resetForm();
+      },
+      error: err => {
+        console.error('Automation error:', err);
+      }
+    });
+  }
+}
+
+  // Populate the form fields with data from the selected automation for editing
   editAutomation(automation: Automation): void {
-    this.editingAutomationId = automation.id;
+    this.editingAutomationId = automation.id.toString();
 
     this.form.patchValue({
       report: {
@@ -106,15 +121,18 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  deleteAutomation(id: number): void {
-    this.automationService.deleteAutomation(id).subscribe(() => {
-      this.loadAutomations();
-      if (this.editingAutomationId === id) {
-        this.resetForm();
-      }
-    });
-  }
+  // Delete an automation and reset the form if it was being edited
+deleteAutomation(id: string): void {
+  this.automationService.deleteAutomation(String(id)).subscribe(() => {
+    this.loadAutomations();
+    if (this.editingAutomationId === id) {
+      this.resetForm();
+    }
+  });
+}
 
+
+  // Reset the form to default values and clear edit state
   resetForm(): void {
     this.form.reset({
       report: {
@@ -138,6 +156,7 @@ export class ScheduleComponent implements OnInit {
     this.editingAutomationId = null;
   }
 
+  // Cancel the edit or form interaction and reset form to initial state
   cancel(): void {
     this.resetForm();
   }

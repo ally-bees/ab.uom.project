@@ -34,6 +34,14 @@ namespace Backend.Controllers
             return Ok(order);
         }
 
+        [HttpGet("company/{companyId}")]
+public async Task<ActionResult<List<Order>>> GetByCompanyId(string companyId)
+{
+    var orders = await _orderService.GetByCompanyIdAsync(companyId); // ✅ fixed name
+    return Ok(orders);
+}
+
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] OrderCreateDTO dto)
         {
@@ -55,6 +63,14 @@ namespace Backend.Controllers
             await _orderService.CreateOrderAsync(order);
             return CreatedAtAction(nameof(GetByOrderId), new { orderId = order.OrderId }, order);
         }
+
+        [HttpGet("today-orders")]
+        public async Task<IActionResult> GetTodayOrdersCount()
+        {
+            var orders_count = await _orderService.GetTodayOrdersAsync();
+            return Ok(orders_count);
+        }
+
 
         [HttpPut("{orderId}")]
         public async Task<IActionResult> Update(string orderId, [FromBody] OrderCreateDTO dto)

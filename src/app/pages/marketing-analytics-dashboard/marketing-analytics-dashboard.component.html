@@ -1,150 +1,144 @@
 <app-header></app-header>
 
-  <div>
+<div class="dashboard-container">
+  <app-analyticssidebar></app-analyticssidebar>
+  <div class="dashboard-content">
 
-    <div class="dashboard-container">
-      <app-analyticssidebar></app-analyticssidebar>
-      <div class="dashboard-content">
-      <!-- Top Stats Row -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-label">Available to withdraw</div>
-          <div class="stat-value">${{revenue | number:'1.2-2'}}</div>
-          <div class="stat-metric">
-            <span class="trend-up">↑ {{revenueGrowth}}%</span>
-            <span class="stat-period">Week of {{weekDate}}</span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-label">Today Revenue</div>
-          <div class="stat-value">${{todayRevenue | number:'1.2-2'}}</div>
-          <div class="stat-metric">
-            <span class="trend-down">↓ {{todayRevenueChange}}%</span>
-            <div class="stat-period">{{todayOrders}} Orders</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-label">Today Sessions</div>
-          <div class="stat-value">{{todaySessions}}k</div>
-          <div class="stat-metric">
-            <span class="trend-up">↑ {{todaySessionsChange}}%</span>
-            <div class="stat-period">{{todayVisitors}} Visitors</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-label">Subscribers</div>
-          <div class="stat-value">{{subscribers | number}}</div>
-          <div class="stat-metric">
-            <span class="trend-up">↑ {{subscribersChange}}%</span>
-            <div class="stat-period">${{averageOrder}} Average Order</div>
-          </div>
+    <!-- Top Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Available to withdraw</div>
+        <div class="stat-value">${{ revenue | number:'1.2-2' }}</div>
+        <div class="stat-metric">
+          <span class="trend-up">↑ {{ revenueGrowth }}%</span>
+          <span class="stat-period">Week of {{ weekDate }}</span>
         </div>
       </div>
 
-      <!-- Middle Row -->
-      <div class="middle-row">
-        <!-- Sales Funnel -->
-        <div class="chart-card sales-funnel">
-          <div class="card-header">
-            <h2>Sales Funnel</h2>
-            <div class="period-selector">
-              <span>This Month</span>
-              <span class="dropdown-icon">▼</span>
-            </div>
-          </div>
-          <div class="chart-container">
-            <canvas #salesFunnelChart></canvas>
-          </div>
-        </div>
-
-        <!-- Device Category -->
-        <div class="chart-card device-category">
-          <div class="card-header">
-            <h2>Device Category</h2>
-          </div>
-          <div class="device-stats">
-            <div class="device-row">
-              <div class="device-icon mobile"></div>
-              <div class="device-name">Mobile</div>
-              <div class="device-percentage">{{mobilePercentage}}%</div>
-            </div>
-            <div class="device-row">
-              <div class="device-icon desktop"></div>
-              <div class="device-name">Desktop</div>
-              <div class="device-percentage">{{desktopPercentage}}%</div>
-            </div>
-            <div class="device-row">
-              <div class="device-icon tablet"></div>
-              <div class="device-name">Tablet</div>
-              <div class="device-percentage">{{tabletPercentage}}%</div>
-            </div>
-          </div>
+      <div class="stat-card">
+        <div class="stat-label">Today Revenue</div>
+        <div class="stat-value">${{ todayRevenue | number:'1.2-2' }}</div>
+        <div class="stat-metric">
+          <span class="trend-down">↓ {{ todayRevenueChange }}%</span>
+          <div class="stat-period">{{ todayOrders }} Orders</div>
         </div>
       </div>
 
-      <!-- Bottom Row -->
-      <div class="bottom-row">
-        <!-- Campaign Performance -->
-        <div class="chart-card campaign-performance">
-          <div class="card-header">
-            <h2>Campaign Performance</h2>
-            <div class="see-all">See All</div>
-          </div>
-          <table class="campaign-table">
-            <thead>
-              <tr>
-                <th>Campaign</th>
-                <th>Impressions</th>
-                <th>Clicks</th>
-                <th>CPC</th>
-                <th>Spend</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let campaign of campaigns">
-                <td>
-                  <div class="campaign-info">
-                    <div class="campaign-icon" [ngStyle]="{'background-color': campaign.color}">
-                      <span>{{campaign.icon}}</span>
-                    </div>
-                    <span>{{campaign.name}}</span>
-                  </div>
-                </td>
-                <td>{{campaign.impressions}}</td>
-                <td>{{campaign.clicks}}%</td>
-                <td>${{campaign.cpc}}</td>
-                <td>${{campaign.spend}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Top Countries -->
-        <div class="chart-card top-countries">
-          <div class="card-header">
-            <h2>Top Countries</h2>
-          </div>
-          <div class="countries-list">
-            <div class="country-row" *ngFor="let country of topCountries">
-              <div class="country-flag" [ngClass]="country.code.toLowerCase()"></div>
-              <div class="country-name">{{country.name}}</div>
-              <div class="country-percentage">{{country.percentage}}%</div>
-            </div>
-          </div>
+      <div class="stat-card">
+        <div class="stat-label">Today Sessions</div>
+        <div class="stat-value">{{ todaySessions }}</div>
+        <div class="stat-metric">
+          <span class="trend-up">↑ {{ todaySessionsChange }}%</span>
+          <div class="stat-period">{{ todayVisitors }} Visitors</div>
         </div>
       </div>
 
-      <!-- Print Report Button -->
-      <div class="print-container">
-        <button class="print-button" (click)="printReport()">Print Report</button>
+      <div class="stat-card">
+        <div class="stat-label">Subscribers</div>
+        <div class="stat-value">{{ subscribers | number }}</div>
+        <div class="stat-metric">
+          <span class="trend-up">↑ {{ subscribersChange }}%</span>
+          <div class="stat-period">${{ averageOrder }} Average Order</div>
+        </div>
       </div>
     </div>
+
+    <!-- Sales Funnel + Device Category -->
+    <div class="middle-row">
+      <div class="chart-card sales-funnel">
+        <div class="card-header">
+          <h2>Sales Funnel</h2>
+          <div class="period-selector">
+            <select [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas #salesFunnelChart></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card device-category">
+        <div class="card-header">
+          <h2>Device Category</h2>
+        </div>
+        <div class="device-stats">
+          <div class="device-row">
+            <div class="device-icon mobile"></div>
+            <div class="device-name">Mobile</div>
+            <div class="device-percentage">{{ mobilePercentage }}%</div>
+          </div>
+          <div class="device-row">
+            <div class="device-icon desktop"></div>
+            <div class="device-name">Desktop</div>
+            <div class="device-percentage">{{ desktopPercentage }}%</div>
+          </div>
+          <div class="device-row">
+            <div class="device-icon tablet"></div>
+            <div class="device-name">Tablet</div>
+            <div class="device-percentage">{{ tabletPercentage }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campaigns + Top Countries -->
+    <div class="bottom-row">
+      <div class="chart-card campaign-performance">
+        <div class="card-header">
+          <h2>Campaign Performance</h2>
+          <div class="see-all">See All</div>
+        </div>
+        <table class="campaign-table">
+          <thead>
+            <tr>
+              <th>Campaign</th>
+              <th>Impressions</th>
+              <th>Clicks</th>
+              <th>CPC</th>
+              <th>Spend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let campaign of campaigns">
+              <td>
+                <div class="campaign-info">
+                  <div class="campaign-icon" [ngStyle]="{ 'background-color': campaign.color }">
+                    <span>{{ campaign.icon }}</span>
+                  </div>
+                  <span>{{ campaign.name }}</span>
+                </div>
+              </td>
+              <td>{{ campaign.impressions }}</td>
+              <td>{{ campaign.clicks }}%</td>
+              <td>${{ campaign.cpc }}</td>
+              <td>${{ campaign.spend }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-card top-countries">
+        <div class="card-header">
+          <h2>Top Countries</h2>
+        </div>
+        <div class="countries-list">
+          <div class="country-row" *ngFor="let country of topCountries">
+            <div class="country-flag" [ngClass]="country.code.toLowerCase()"></div>
+            <div class="country-name">{{ country.name }}</div>
+            <div class="country-percentage">{{ country.percentage }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Print -->
+    <div class="print-container">
+      <button class="print-button" (click)="printReport()">Print Report</button>
     </div>
   </div>
+</div>
 
 <app-footer></app-footer>
-
-

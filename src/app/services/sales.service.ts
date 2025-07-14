@@ -24,11 +24,25 @@ export class SalesService {
     return this.http.get<any>(`${this.apiUrl}/Sales/summary`);
   }
 
+  getMonthlySalesData(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Sales/monthly`);
+  }
+
+  getYearlySalesData(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Sales/year-data`);
+  }
+
   getSalesSummarybyDate(startDate: string, endDate: string): Observable<SalesSummary> {
     return this.http.get<SalesSummary>(`${this.apiUrl}/Sales/summary?startDate=${startDate}&endDate=${endDate}`);
   }
 
- 
+  getTotalSalesRevenue(): Observable<number>{
+    return this.http.get<number>(`${this.apiUrl}/Sales/total-revenue`);
+  }
+
+  getTodaySalesRevenue(): Observable<number>{
+    return this.http.get<number>(`${this.apiUrl}/Sales/today-cost`);
+  }
 
   getSalesByYear(year: number): Observable<Sale[]> {
     // Assuming you have an API endpoint to fetch sales for a specific year.

@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
-using AuthAPI.Settings;
+//using AuthAPI.Settings;
 using Backend.Models;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
@@ -12,7 +12,7 @@ namespace Backend.Services
     {
         private readonly IMongoCollection<HoneycombUser> _honeycombCollection;
 
-        public HoneycombService(IOptions<MongoDBSettings> mongoDbSettings)
+        public HoneycombService(IOptions<Backend.Models.MongoDBSettings> mongoDbSettings)
         {
             var mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(mongoDbSettings.Value.AdminDatabaseName); 

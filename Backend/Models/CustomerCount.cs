@@ -4,5 +4,6 @@ namespace Backend.Models
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
+        public string? CompanyId { get; set; }
     }
 }

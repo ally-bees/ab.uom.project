@@ -6,8 +6,11 @@ import { AgGridModule } from 'ag-grid-angular';
 import { Chart, ChartConfiguration } from 'chart.js';
 import { ColDef, GridApi, GridReadyEvent, GridOptions } from 'ag-grid-community';
 
-import { OrderService, Order } from '../../services/ordersummary.service'; // Adjust path as needed
+import { OrderService } from '../../services/ordersummary.service';
+import { PrintReportService } from '../../services/printreport.service';
+import { Order } from '../../models/ordersummery.model'; 
 
+// Interface to represent order status with count
 interface OrderStatus {
   status: string;
   count: number;
@@ -22,8 +25,11 @@ interface OrderStatus {
   styleUrl: './order-summary.component.css',
 })
 export class OrderSummaryComponent implements OnInit, AfterViewInit {
+  // Data for ag-grid and filtered results
   rowData: Order[] = [];
   filteredRowData: Order[] = [];
+
+  // Column definitions for ag-grid
   columnDefs: ColDef<Order>[] = [
     { field: 'orderId', headerName: 'Order ID', sortable: true },
     { field: 'customerId', headerName: 'Customer ID', sortable: true },
@@ -32,17 +38,21 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     { field: 'status', headerName: 'Status', sortable: true },
   ];
 
+  // Date range for filtering
   fromDate: string = '';
   toDate: string = '';
 
+  // Order status counts
   totalOrders: number = 0;
   pendingOrders: number = 0;
   completedOrders: number = 0;
 
+  // Grid configuration
   defaultColDef = { resizable: true, flex: 1 };
   gridOptions: GridOptions<Order> = {};
   private gridApi!: GridApi<Order>;
 
+  // Chart and summary data
   private chart: Chart | undefined;
   private orderStatusData: OrderStatus[] = [];
   showPrintDialog = false;
@@ -50,51 +60,60 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
   constructor(
     private orderService: OrderService,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private printReportService: PrintReportService
   ) {}
 
+  // Lifecycle hook - called on component initialization
   ngOnInit(): void {
     this.loadOrders();
     this.loadOrderStatusSummary();
   }
 
+  // Lifecycle hook - called after view is initialized
   ngAfterViewInit(): void {
     if (this.orderStatusData.length > 0) {
       this.createPieChart(this.orderStatusData);
     }
   }
 
+  // Called when ag-grid is ready
   onGridReady(params: GridReadyEvent<Order>): void {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
   }
 
+  // Load orders from the service and format dates
   private loadOrders(): void {
-    this.orderService.getOrders().subscribe({
-      next: (data) => {
-        this.rowData = data.map(order => ({
-          ...order,
-          orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
-        }));
-        this.filteredRowData = [...this.rowData];
-      },
-      error: (err) => console.error('Order fetch error:', err),
-    });
-  }
+  this.orderService.getOrdersByCompany().subscribe({
+    next: (data) => {
+      this.rowData = data.map(order => ({
+        ...order,
+        orderDate: this.datePipe.transform(order.orderDate, 'yyyy-MM-dd') || ''
+      }));
+      this.filteredRowData = [...this.rowData];
+    },
+    error: (err) => console.error('Order fetch error:', err),
+  });
+}
 
+
+  // Load order status summary for the pie chart and counters
   private loadOrderStatusSummary(): void {
-    this.orderService.getOrderStatusSummary().subscribe({
+    this.orderService.getOrderStatusSummaryByCompany().subscribe({
       next: (data) => {
         if (!data || typeof data !== 'object') {
           console.error('Invalid order status format:', data);
           return;
         }
 
+        // Extract and count order statuses
         this.pendingOrders = data['pending'] || 0;
         this.completedOrders = data['completed'] || 0;
         const newOrders = data['new'] || 0;
         this.totalOrders = this.pendingOrders + this.completedOrders + newOrders;
 
+        // Convert summary object to array for chart
         const statusArray: OrderStatus[] = Object.entries(data).map(([status, count]) => ({
           status,
           count,
@@ -107,6 +126,7 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // Apply date range filter to order data
   applyDateFilter(): void {
     if (this.fromDate && this.toDate) {
       const from = new Date(this.fromDate);
@@ -119,6 +139,7 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
 
       this.filteredRowData = filtered;
 
+      // Generate status summary for filtered data
       const statusSummary: { [key: string]: number } = {};
       filtered.forEach(order => {
         const status = order.status.toLowerCase();
@@ -133,18 +154,21 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
       const newOrders = statusSummary['new'] || 0;
       this.totalOrders = this.pendingOrders + this.completedOrders + newOrders;
 
+      // Convert summary to array for pie chart
       const summaryArray: OrderStatus[] = Object.keys(statusSummary).map(key => ({
         status: key,
         count: statusSummary[key]
       }));
       this.createPieChart(summaryArray);
     } else {
+      // Reset filters and reload all data
       this.loadOrders();
       this.loadOrderStatusSummary();
       this.filteredRowData = this.rowData;
     }
   }
 
+  // Create pie chart with Chart.js
   private createPieChart(data: OrderStatus[]): void {
     const ctx = document.getElementById('orderStatusPieChart') as HTMLCanvasElement;
     if (!ctx || data.length === 0) return;
@@ -153,6 +177,7 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     const counts = data.map(s => s.count);
     const backgroundColors = labels.map(label => this.getColorForStatus(label));
 
+    // Destroy existing chart before creating a new one
     if (this.chart) this.chart.destroy();
 
     const config: ChartConfiguration<'pie'> = {
@@ -175,6 +200,7 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     this.chart = new Chart(ctx, config);
   }
 
+  // Get color based on order status
   private getColorForStatus(status: string | undefined): string {
     const statusLowerCase = (status || '').trim().toLowerCase();
     switch (statusLowerCase) {
@@ -185,12 +211,42 @@ export class OrderSummaryComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Navigate to the print report route
   printReport(): void {
-    console.log('Print Report button clicked');
-    this.router.navigate(['/businessowner/printreport']);
+  if (!this.filteredRowData || this.filteredRowData.length === 0) {
+    alert('No data available to print.');
+    return;
   }
 
-  closePrintDialog(): void {
-    this.showPrintDialog = false;
-  }
+  const tableColumns = ['Order ID', 'Customer ID', 'Order Date', 'Amount', 'Status'];
+
+  const tableData = this.filteredRowData.map(order => ({
+    'Order ID': order.orderId,
+    'Customer ID': order.customerId,
+    'Order Date': order.orderDate, // Already formatted via DatePipe
+    'Amount': order.totalAmount.toFixed(2),
+    'Status': order.status
+  }));
+
+  const reportPayload = {
+    reportType: 'Order Summary Report',
+    exportFormat: 'PDF Document (.pdf)',
+    startDate: this.fromDate,
+    endDate: this.toDate,
+    pageOrientation: 'Portrait',
+    tableColumns,
+    tableData
+  };
+
+  console.log('📄 Order Report Payload:', reportPayload);
+
+  // Save to shared service
+  this.printReportService.setReportData(reportPayload);
+
+  // Navigate to the report preview
+  this.router.navigate(['/businessowner/printreport'], {
+    state: reportPayload
+  });
+}
+
 }

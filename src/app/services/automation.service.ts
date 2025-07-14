@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface Automation {
     id: number;
+    companyId: string;
+  honeyCombId: string;
     reportType: string;
     format: string;
     frequency: string;
@@ -34,12 +36,12 @@ export class AutomationService {
     return this.http.post<Automation>(this.baseUrl, automation);
   }
 
-  deleteAutomation(id: number): Observable<void> {
+  deleteAutomation(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
   // filepath: automation.service.ts
 updateAutomation(id: string, automationData: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/automations/${id}`, automationData);
+    return this.http.put<any>(`${this.baseUrl}/${id}`, automationData);
   }
 }
