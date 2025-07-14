@@ -7,10 +7,9 @@
       <h2>Report Configuration</h2>
       <label>Report Type:</label>
       <select formControlName="reportType">
-        <option value="sales">Sales Report</option>
-        <option value="inventory">Inventory Report</option>
-        <option value="financial">Financial Report</option>
-        <option value="analytics">Analytics Report</option>
+        <option *ngFor="let report of allowedReportTypes" [value]="report.value">
+          {{ report.label }}
+        </option>
       </select>
 
       <label>Export Format:</label>

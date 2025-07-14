@@ -44,5 +44,10 @@ namespace Backend.Services
         {
             await _automationCollection.DeleteOneAsync(a => a.Id == id);
         }
+        public async Task<List<Automation>> GetByCompanyIdAsync(string companyId)
+{
+    return await _automationCollection.Find(a => a.CompanyId == companyId).ToListAsync();
+}
+
     }
 }

@@ -74,8 +74,7 @@ export const routes: Routes = [
       { path: 'order', component: OrderSummaryComponent },
       { path:'customerinsight',component:customerinsightComponent},
       { path: 'printreport', component: PrintReportComponent },
-      {path: 'expense-form', component: ExpenseFormComponent}
-
+      { path: 'expense-form', component: ExpenseFormComponent }
     ]
   },
 
