@@ -108,7 +108,7 @@ onSubmit(): void {
     }
   });
 
-  // ✅ Append CompanyId and HoneyCombId
+  // ✅ App CompanyId and HoneyCombId
   const currentUser = this.authService.getCurrentUser();
   if (currentUser) {
     if (currentUser.CompanyId != null) {
