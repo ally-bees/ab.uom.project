@@ -38,7 +38,7 @@ namespace Backend.Services
         private readonly IMongoCollection<ApiKeyConfiguration> _apiKeyCollection;
         private readonly IMongoDatabase _database;
 
-        public SystemConfigurationService(IOptions<MongoDBSettings> mongoDbSettings)
+        public SystemConfigurationService(IOptions<Backend.Models.MongoDBSettings> mongoDbSettings)
         {
             var settings = mongoDbSettings.Value;
             var mongoClient = new MongoClient(settings.ConnectionString);
