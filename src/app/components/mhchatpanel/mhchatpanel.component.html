@@ -1,1 +1,88 @@
-<p>mhchatpanel works!</p>
+<div class="receiver-buttons">
+  <button *ngFor="let person of receivers" class="circle-button" 
+          [class.active]="receiver === person.name"
+          (click)="setReceiver(person.name)" 
+          [disabled]="receiver === person.name">
+    <img [src]="person.image" [alt]="person.name" />
+    <label>{{ person.name }}</label>
+  </button>
+</div>
+
+
+<div class="chat-container">
+  <div class="chat-header">
+    <h2>{{ receiver }}</h2>
+  </div>
+
+  <div class="chat-messages" #messagesContainer>
+    <div *ngFor="let message of messages" class="message-wrapper"
+      [ngClass]="{'sent': message.sender === sender, 'received': message.sender !== sender}">
+
+      <div class="message-bubble" [ngClass]="{'completed': message.isCompleted}">
+        <div class="avatar">
+          <div class="avatar-circle">
+            <img [src]="getPersonImage(message.sender)" [alt]="message.sender" class="avatar-image" />
+          </div>
+          <div *ngIf="message.isCompleted" class="check-mark">✓</div>
+        </div>
+
+        <div class="messagedisplay">
+          <div class="message-content">
+            {{ message.text }}
+            <span *ngIf="message.isEdited" class="edited-indicator">(edited)</span>
+          </div>
+          <div class="lowermessage">
+            <div class="message-timestamp">
+              {{ message.timestamp | date:'short' }}
+            </div>
+            <div class="message-actions">
+              <i class="fas fa-edit" title="Edit" (click)="onEditMessage(message)"></i>
+              <i class="fas fa-trash-alt" title="Delete" (click)="onDeleteMessage(message)"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Mode Indicator -->
+  <div *ngIf="editMode" class="edit-mode-bar">
+    <span>Editing message...</span>
+    <button (click)="cancelEdit()" class="cancel-button">Cancel</button>
+  </div>
+
+  <div class="chat-input">
+    <div class="input-wrapper">
+      <input 
+        type="text" 
+        [placeholder]="editMode ? 'Edit your message...' : 'Type a message...'"
+        [(ngModel)]="currentMessage" 
+        (keyup.enter)="sendMessage()"
+        (keyup.escape)="cancelEdit()"
+        class="message-input"
+        [class.edit-mode]="editMode">
+      <button 
+        (click)="sendMessage()" 
+        class="send-button"
+        [class.edit-mode]="editMode">
+        <svg *ngIf="!editMode" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor" />
+        </svg>
+        <svg *ngIf="editMode" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Success/Error Popup -->
+<div *ngIf="showPopup" class="popup-overlay" [@slideIn]>
+  <div class="popup-content" [ngClass]="popupType">
+    <div class="popup-icon">
+      <i *ngIf="popupType === 'success'" class="fas fa-check-circle"></i>
+      <i *ngIf="popupType === 'error'" class="fas fa-exclamation-circle"></i>
+    </div>
+    <div class="popup-message">{{ popupMessage }}</div>
+  </div>
+</div>

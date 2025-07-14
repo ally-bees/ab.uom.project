@@ -55,28 +55,28 @@ export const routes: Routes = [
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
-      { 
-      path: 'customerinsight',
-      component: customerinsightComponent,
-      children: [
-        { path: '', redirectTo: 'demographic', pathMatch: 'full' },
-        { path: 'demographic', component: DemographicComponent },
-        { path: 'purchase-behavior', component: PurchasebehaveComponent },
-        { path: 'retention-analysis', component: RetentionanalComponent }
-      ]
-    },
+      {
+        path: 'customerinsight',
+        component: customerinsightComponent,
+        children: [
+          { path: '', redirectTo: 'demographic', pathMatch: 'full' },
+          { path: 'demographic', component: DemographicComponent },
+          { path: 'purchase-behavior', component: PurchasebehaveComponent },
+          { path: 'retention-analysis', component: RetentionanalComponent }
+        ]
+      },
       { path: 'printreport', component: PrintReportComponent },
-      {path: 'expense-form', component: ExpenseFormComponent},
-       { 
-      path: 'customersupport',
-      component: CustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: ChatpanelComponent }
-      ]
-    }
+      { path: 'expense-form', component: ExpenseFormComponent },
+      {
+        path: 'customersupport',
+        component: CustomersupportComponent,
+        children: [
+          { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+          { path: 'chatbot', component: AimessagepanelComponent },
+          { path: 'social-connect', component: SocialmessagepanelComponent },
+          { path: 'Messaging-app', component: ChatpanelComponent }
+        ]
+      }
     ]
   },
   {
@@ -87,17 +87,17 @@ export const routes: Routes = [
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent },
-      {path: 'expense-form', component: ExpenseFormComponent},
-      { 
-      path: 'app-imcustomersupport',
-      component: IMcustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'app-imchatpanel', component: IMchatpanelComponent }
-      ]
-    }
+      { path: 'expense-form', component: ExpenseFormComponent },
+      {
+        path: 'app-imcustomersupport',
+        component: IMcustomersupportComponent,
+        children: [
+          { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+          { path: 'chatbot', component: AimessagepanelComponent },
+          { path: 'social-connect', component: SocialmessagepanelComponent },
+          { path: 'app-imchatpanel', component: IMchatpanelComponent }
+        ]
+      }
     ]
   },
   {
@@ -106,46 +106,46 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'marketing', pathMatch: 'full' },
       { path: 'sales', component: SalesComponent },
-      { path:'customerinsight',component:customerinsightComponent},
+      { path: 'customerinsight', component: customerinsightComponent },
       { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
-      { 
-      path: 'mh-customersupport',
-      component: MhcustomersupportComponent,
-      children: [
-        { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
-        { path: 'chatbot', component: AimessagepanelComponent },
-        { path: 'social-connect', component: SocialmessagepanelComponent },
-        { path: 'Messaging-app', component: MhchatpanelComponent }
-      ]
-    }
+      {
+        path: 'mh-customersupport',
+        component: MhcustomersupportComponent,
+        children: [
+          { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+          { path: 'chatbot', component: AimessagepanelComponent },
+          { path: 'social-connect', component: SocialmessagepanelComponent },
+          { path: 'app-mhchatpanel', component: MhchatpanelComponent }
+        ]
+      }
 
     ]
   },
-  { path: 'order-summary', component: OrderSummaryComponent},
-  {path: 'printreport', component:PrintReportComponent},
-  { path:'login', component:LoginComponent},
-  {path:'signup',component:SignupComponent},
-  {path:'userprofile',component:UserProfileComponent},
-  {path:'systemconfig',component:SystemConfigComponent},
-  {path:'auditlogs',component:AuditLogsComponent},
-  {path:'usermanagement',component:UserManagementComponent},
-  {path:'analytics',component:MarketingAnalyticsDashboardComponent},
-  {path: 'bussinessownerdash', component: BusinessDashComponent}, 
-  {path: 'finance', component: FinanceComponent},
-  {path: 'schedule', component: ScheduleComponent},
-  {path: 'shipping', component: ShippingDashboardComponent},
-  {path:'admindashboard',component:DashboardComponent},
-  {path:'customerinsight',component:customerinsightComponent},
-  {path: 'expense-form', component: ExpenseFormComponent},
-  {path: 'salesmainpage', component: SalesMainpageComponent},
-  {path: 'sales-heatmap', component: SalesHeatmapComponent},
-  {path: 'top-selling', component: TopSellingComponent},
-  {path: 'stats', component: StatsCardComponent},
-  {path: 'Top', component: TopSellingTableComponent},
-  {path: 'expense-form', component: ExpenseFormComponent},
+  { path: 'order-summary', component: OrderSummaryComponent },
+  { path: 'printreport', component: PrintReportComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: 'userprofile', component: UserProfileComponent },
+  { path: 'systemconfig', component: SystemConfigComponent },
+  { path: 'auditlogs', component: AuditLogsComponent },
+  { path: 'usermanagement', component: UserManagementComponent },
+  { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
+  { path: 'bussinessownerdash', component: BusinessDashComponent },
+  { path: 'finance', component: FinanceComponent },
+  { path: 'schedule', component: ScheduleComponent },
+  { path: 'shipping', component: ShippingDashboardComponent },
+  { path: 'admindashboard', component: DashboardComponent },
+  { path: 'customerinsight', component: customerinsightComponent },
+  { path: 'expense-form', component: ExpenseFormComponent },
+  { path: 'salesmainpage', component: SalesMainpageComponent },
+  { path: 'sales-heatmap', component: SalesHeatmapComponent },
+  { path: 'top-selling', component: TopSellingComponent },
+  { path: 'stats', component: StatsCardComponent },
+  { path: 'Top', component: TopSellingTableComponent },
+  { path: 'expense-form', component: ExpenseFormComponent },
   { path: '**', redirectTo: 'salesdashboard' },
-  {path: 'courier', component: CourierDashboardComponent},
-  {path: 'marketing', component: MarketingDashboardComponent},
+  { path: 'courier', component: CourierDashboardComponent },
+  { path: 'marketing', component: MarketingDashboardComponent },
 ];
 
 /*{

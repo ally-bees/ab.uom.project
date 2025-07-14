@@ -134,60 +134,55 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   sendMessage(): void {
-    if (!this.currentMessage.trim()) return;
+  if (!this.currentMessage.trim()) return;
 
-    if (this.editMode && this.editingMessageId) {
-      // Edit existing message
-      this.chatService.updateMessage(this.editingMessageId, this.currentMessage).subscribe({
-        next: () => {
-          // Update local message immediately for instant feedback
-          const msg = this.messages.find(m => m.id === this.editingMessageId);
-          if (msg) {
-            msg.text = this.currentMessage;
-            msg.isEdited = true;
-          }
-
-          // Reset edit state
-          this.resetEditMode();
-          this.showSuccessPopup('Message updated successfully!');
-        },
-        error: err => {
-          console.error('Edit failed', err);
-          this.showErrorPopup('Failed to update message. Please try again.');
+  if (this.editMode && this.editingMessageId) {
+    // Edit existing message
+    this.chatService.updateMessage(this.editingMessageId, this.currentMessage).subscribe({
+      next: () => {
+        const msg = this.messages.find(m => m.id === this.editingMessageId);
+        if (msg) {
+          msg.text = this.currentMessage;
+          msg.isEdited = true;
         }
-        
-      });
-      this.cancelEdit();
-      return;
-    }
 
-    // Send new message
-    const newMsg: ChatMessage = {
-      text: this.currentMessage,
-      sender: this.sender,
-      receiver: this.receiver,
-      timestamp: new Date()
-    };
-
-    // Add message immediately to UI for instant feedback
-    this.messages.push(newMsg);
-    this.sortMessages();
-    this.shouldScrollToBottom = true;
-    this.currentMessage = '';
-
-    // Send to backend (this will save to DB and broadcast via SignalR)
-    this.chatService.sendMessage(newMsg).subscribe({
-      next: (response) => {
-        console.log('Message sent successfully');
+        this.showSuccessPopup('Message updated successfully!');
+        this.resetEditMode();
       },
       error: err => {
-        console.error('HTTP send error', err);
-        // Remove the message from UI if sending failed
-        this.messages = this.messages.filter(m => m !== newMsg);
-        this.showErrorPopup('Failed to send message. Please try again.');
+        console.error('Edit failed', err);
+        this.showErrorPopup('Failed to update message. Please try again.');
       }
     });
+
+    return; // ✅ important to exit after editing
   }
+
+  // === SEND NEW MESSAGE LOGIC ===
+  const newMsg: ChatMessage = {
+    text: this.currentMessage,
+    sender: this.sender,
+    receiver: this.receiver,
+    timestamp: new Date()
+  };
+
+  this.messages.push(newMsg);
+  this.sortMessages();
+  this.shouldScrollToBottom = true;
+  this.currentMessage = '';
+
+  this.chatService.sendMessage(newMsg).subscribe({
+    next: (response) => {
+      console.log('Message sent successfully');
+    },
+    error: err => {
+      console.error('HTTP send error', err);
+      this.messages = this.messages.filter(m => m !== newMsg);
+      this.showErrorPopup('Failed to send message. Please try again.');
+    }
+  });
+}
+
 
   setReceiver(newReceiver: string): void {
     if (this.receiver !== newReceiver) {
