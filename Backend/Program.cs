@@ -2,44 +2,37 @@ using System.Net;
 using System.Text;
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
-//using AuthAPI.Settings;
+// using AuthAPI.Settings; // If JwtSettings/EmailSettings are here, ensure correct namespace
 using Backend.Models;
 using Backend.Services;
 using Hangfire;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration;
-using MongoDB.Driver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Hangfire.MemoryStorage; // Or Hangfire.SqlServer if you're using SQL Server
 
-
-// Load environment variables if needed (commented out, enable if necessary)
 DotNetEnv.Env.Load(@"C:\Users\Thilinika\Desktop\Me\New folder\Project new\project new\ab.uom.project\.env");
 Console.WriteLine("✅ EMAIL_USER from .env: " + Environment.GetEnvironmentVariable("EMAIL_USER"));
-
-
-Console.WriteLine("EMAIL_USER = " + Environment.GetEnvironmentVariable("EMAIL_USER"));
 Console.WriteLine("EMAIL_PASSWORD is empty = " + string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD")));
 
-// Set QuestPDF license before anything else
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add configuration files including local overrides
+// === Load Configuration Files ===
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-// Use TLS 1.2
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-// Configure strongly typed settings objects
+// === Strongly Typed Configuration Bindings ===
 builder.Services.Configure<Backend.Models.MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -48,9 +41,8 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
-    
-    if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.ConnectionString))
-        throw new InvalidOperationException("MongoDBSettings are missing or incomplete in the configuration file.");
+    if (mongoDbSettings?.ConnectionString == null)
+        throw new InvalidOperationException("MongoDB connection string is not configured.");
     return new MongoClient(mongoDbSettings.ConnectionString);
 });
 
@@ -63,21 +55,56 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
     return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
 });
 
-// Register backend services
+// === Register Backend Services ===
 builder.Services.AddSingleton<MongoDBService>();
+builder.Services.AddSingleton<MongoDbCustomerInsightService>();
+builder.Services.AddSingleton<Auditservice>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
-builder.Services.AddSingleton<CourierService>(); 
-builder.Services.AddSingleton<CampaignService>();
-builder.Services.AddSingleton<MongoService>();
+builder.Services.AddSingleton<FinanceService>();
+builder.Services.AddSingleton<AutomationService>();
+builder.Services.AddSingleton<ReportGenerator>();
+builder.Services.AddSingleton<ReportJobService>();
+
+// Additional backend services (from dev branch)
+builder.Services.AddSingleton<MongoDbCustomerInsightService>();
+builder.Services.AddSingleton<Auditservice>();
+
+// Auth & User services
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddSingleton<UserManagementService>();
+builder.Services.AddSingleton<IPasswordResetService, PasswordResetService>();
+builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
+builder.Services.AddScoped<HoneycombService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Hangfire configuration
+builder.Services.AddHangfire(config =>
+    config.UseMongoStorage(
+        builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>().ConnectionString,
+        "hangfire-db",
+        new MongoStorageOptions
+        {
+            MigrationOptions = new MongoMigrationOptions
+            {
+                MigrationStrategy = new MigrateMongoMigrationStrategy(),
+                // BackupStrategy = new CollectionMongoBackupStrategy() // optional
+            }
+        }
+    )
+);
+builder.Services.AddHangfireServer();
+
+// Add controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure CORS for Angular app
+// === CORS Configuration ===
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
@@ -88,7 +115,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// JWT Authentication setup
+// === JWT Authentication ===
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 if (jwtSettings == null)
     throw new InvalidOperationException("JWT settings are not configured properly.");
@@ -112,6 +139,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+
 // Add Authorization
 builder.Services.AddAuthorization();
 
@@ -128,7 +157,7 @@ builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
-// Middleware pipeline
+// === Middleware ===
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -136,24 +165,24 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAngularApp");
-
-app.UseAuthentication();  // <--- IMPORTANT: add Authentication middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
+// === Map Controllers ===
 app.MapControllers();
 
-// Hangfire dashboard
+// === Hangfire Dashboard ===
 app.UseHangfireDashboard();
 
-// Schedule recurring job for reports
+// === Recurring Report Job ===
 RecurringJob.AddOrUpdate<ReportJobService>(
     "check-and-send-reports",
     job => job.ProcessScheduledReportsAsync(),
     "* * * * *"
 );
 
+// === Diagnostic Endpoints ===
 app.MapGet("/test-env", () =>
 {
     var user = Environment.GetEnvironmentVariable("EMAIL_USER");
@@ -161,7 +190,6 @@ app.MapGet("/test-env", () =>
     return Results.Ok(new { EMAIL_USER = user, PasswordSet = passwordSet });
 });
 
-// MongoDB connection test endpoint (diagnostic)
 app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
 {
     try
@@ -180,8 +208,5 @@ app.MapGet("/test-database-connection", async (IMongoClient mongoClient) =>
         return Results.Problem(detail: ex.Message, title: "Database Connection Error");
     }
 });
-
-app.UseHangfireDashboard();
-
 
 app.Run();

@@ -46,5 +46,8 @@ namespace Backend.Models
 
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    public string CompanyId { get; set; }
+    public string HoneyCombId { get; set; }
 }
 }

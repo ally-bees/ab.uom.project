@@ -121,5 +121,12 @@ namespace Backend.Services
             
             await _mongoDBService.DeleteExpenseAsync(id);
         }
+
+       public async Task<List<Expense>> GetExpensesByCompanyIdAsync(string companyId)
+{
+    return await _mongoDBService.GetExpensesByCompanyIdAsync(companyId);
+}
+
+
     }
 }

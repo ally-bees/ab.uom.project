@@ -29,20 +29,26 @@ export class BusinessDashComponent implements OnInit {
 
   constructor(private dashboardService: DashboardService) {}
 
-  ngOnInit(): void {
-    this.dashboardService.getCustomerCount().subscribe({
-      next: (count) => this.customerStats.count = count,
-      error: (err) => console.error('Failed to load customer count', err)
-    });
-    this.dashboardService.getIncomeTotal().subscribe({
-      next: (total) => this.incomeStats.amount = total,
-      error: (err) => console.error('Failed to load income total', err)
-    });
-    this.dashboardService.getTotalProductsSold().subscribe({
-      next: (sold) => this.productStats.sold = sold,
-      error: (err) => console.error('Failed to load products sold', err)
-    });
-  }
+ // dashboard.component.ts
+
+ngOnInit(): void {
+  const companyId = localStorage.getItem('companyId') || '';
+
+  this.dashboardService.getCustomerCount().subscribe({
+    next: (count) => this.customerStats.count = count,
+    error: (err) => console.error('Failed to load customer count', err)
+  });
+
+  this.dashboardService.getIncomeTotal().subscribe({
+    next: (total) => this.incomeStats.amount = total,
+    error: (err) => console.error('Failed to load income total', err)
+  });
+
+  this.dashboardService.getTotalProductsSold().subscribe({
+    next: (sold) => this.productStats.sold = sold,
+    error: (err) => console.error('Failed to load products sold', err)
+  });
+}
 
   scheduleReport(): void {
     console.log('Schedule report clicked');

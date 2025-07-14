@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, DateAdapter } from '@angular/material/core';
 import { Expense } from '../../models/expense.model';
 import { ExpenseService } from '../../services/expense.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-expense-form',
@@ -31,7 +32,8 @@ export class ExpenseFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     @Inject(DateAdapter) private dateAdapter: DateAdapter<any>,
-    private expenseService: ExpenseService
+    private expenseService: ExpenseService,
+    private authService: AuthService
   ) {
     this.expenseForm = this.fb.group({
       position: ['', Validators.required],
@@ -72,57 +74,69 @@ export class ExpenseFormComponent implements OnInit {
     this.selectedFile = event.target.files[0];
   }
 
-  onSubmit(): void {
-    if (this.expenseForm.invalid) {
-      console.log('Form is invalid:', this.expenseForm.errors);
-      return;
-    }
-
-    this.isLoading = true;
-    const formData = new FormData();
-    const fieldMap: { [key: string]: string } = {
-      date: 'Date',
-      employeeName: 'EmployeeName',
-      position: 'Position',
-      expenseType: 'ExpenseType',
-      amount: 'Amount',
-      paymentMethod: 'PaymentMethod',
-      description: 'Description',
-      receipt: 'ReceiptFile'
-    };
-
-    Object.keys(this.expenseForm.value).forEach(key => {
-      if (key !== 'receipt' && this.expenseForm.value[key] != null) {
-        if (key === 'date') {
-          const dateValue = new Date(this.expenseForm.value[key]);
-          formData.append(fieldMap[key], dateValue.toISOString().split('T')[0]);
-        } else if (key === 'amount') {
-          const amountValue = parseFloat(this.expenseForm.value[key]);
-          const amountStr = isNaN(amountValue) ? '0.00' : amountValue.toFixed(2);
-          formData.append(fieldMap[key], amountStr);
-        } else {
-          formData.append(fieldMap[key], this.expenseForm.value[key]);
-        }
-      }
-    });
-
-    if (this.selectedFile) {
-      formData.append('ReceiptFile', this.selectedFile, this.selectedFile.name);
-    }
-
-    this.expenseService.submitExpense(formData).subscribe({
-      next: () => {
-        console.log('Expense saved successfully');
-        this.resetForm();
-        this.loadRecentExpenses();
-        this.isLoading = false;
-      },
-      error: (error: any) => {
-        alert('An error occurred: ' + error.message);
-        this.isLoading = false;
-      }
-    });
+onSubmit(): void {
+  if (this.expenseForm.invalid) {
+    console.log('Form is invalid:', this.expenseForm.errors);
+    return;
   }
+
+  this.isLoading = true;
+  const formData = new FormData();
+  const fieldMap: { [key: string]: string } = {
+    date: 'Date',
+    employeeName: 'EmployeeName',
+    position: 'Position',
+    expenseType: 'ExpenseType',
+    amount: 'Amount',
+    paymentMethod: 'PaymentMethod',
+    description: 'Description',
+    receipt: 'ReceiptFile'
+  };
+
+  Object.keys(this.expenseForm.value).forEach(key => {
+    if (key !== 'receipt' && this.expenseForm.value[key] != null) {
+      if (key === 'date') {
+        const dateValue = new Date(this.expenseForm.value[key]);
+        formData.append(fieldMap[key], dateValue.toISOString().split('T')[0]);
+      } else if (key === 'amount') {
+        const amountValue = parseFloat(this.expenseForm.value[key]);
+        const amountStr = isNaN(amountValue) ? '0.00' : amountValue.toFixed(2);
+        formData.append(fieldMap[key], amountStr);
+      } else {
+        formData.append(fieldMap[key], this.expenseForm.value[key]);
+      }
+    }
+  });
+
+  // ✅ App CompanyId and HoneyCombId
+  const currentUser = this.authService.getCurrentUser();
+  if (currentUser) {
+    if (currentUser.CompanyId != null) {
+      formData.append('CompanyId', String(currentUser.CompanyId));
+    }
+    if (currentUser.HoneyCombId != null) {
+      formData.append('HoneyCombId', String(currentUser.HoneyCombId));
+    }
+  }
+
+  if (this.selectedFile) {
+    formData.append('ReceiptFile', this.selectedFile, this.selectedFile.name);
+  }
+
+  this.expenseService.submitExpense(formData).subscribe({
+    next: () => {
+      console.log('Expense saved successfully');
+      this.resetForm();
+      this.loadRecentExpenses();
+      this.isLoading = false;
+    },
+    error: (error: any) => {
+      alert('An error occurred: ' + error.message);
+      this.isLoading = false;
+    }
+  });
+}
+
 
   resetForm(): void {
     this.expenseForm.reset();

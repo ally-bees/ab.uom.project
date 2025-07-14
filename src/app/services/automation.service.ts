@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface Automation {
     id: number;
+    companyId: string;
+  honeyCombId: string;
     reportType: string;
     format: string;
     frequency: string;

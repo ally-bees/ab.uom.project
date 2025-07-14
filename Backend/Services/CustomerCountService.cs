@@ -19,5 +19,11 @@ namespace Backend.Services
         {
             return await _customers.CountDocumentsAsync(FilterDefinition<Customer>.Empty);
         }
-    }
+
+        public async Task<long> GetCustomerCountByCompanyAsync(string companyId)
+        {
+            var filter = Builders<Customer>.Filter.Eq(c => c.CompanyId, companyId);
+            return await _customers.CountDocumentsAsync(filter);
+        }
+        }
 }

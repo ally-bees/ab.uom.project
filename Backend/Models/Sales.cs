@@ -24,5 +24,8 @@ namespace Backend.Models
 
         [BsonElement("amount")]
         public required double Amount { get; set; }
+
+        [BsonElement("CompanyId")]
+        public string? CompanyId { get; set; }
     }
 }

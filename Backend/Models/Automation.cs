@@ -44,5 +44,11 @@ namespace Backend.Models
 
         [BsonElement("notifyOnFailure")]
         public bool NotifyOnFailure { get; set; }
+
+        [BsonElement("CompanyId")]
+        public string? CompanyId { get; set; }
+
+
+    public string HoneyCombId { get; set; }
     }
 }

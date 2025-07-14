@@ -1,50 +1,154 @@
 <div class="audit-logs-container">
-  <!-- Sidebar -->
-
   <!-- Audit Logs Content -->
   <div class="audit-logs-content">
     <div class="header">
-      <h2>Audit Logs</h2>
-      <p class="subtitle">View system activity and error logs</p>
+      <div class="header-left">
+        <h2>Audit Logs</h2>
+        <p class="subtitle">View system activity and security logs</p>
+      </div>
       
       <div class="actions">
-        <button class="export-btn" (click)="exportLogs()">
+        <button class="export-btn" (click)="exportLogs()" [disabled]="loading">
           <i class="icon download-icon"></i> Export Logs
         </button>
       </div>
     </div>
+
+    <!-- Statistics Cards -->
+    <div class="statistics-cards" *ngIf="statistics && getObjectKeys(statistics).length > 0">
+      <div class="stat-card" *ngFor="let stat of statistics | keyvalue">
+        <div class="stat-value">{{stat.value}}</div>
+        <div class="stat-label">{{stat.key}}</div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="error">
+      <i class="icon error-icon"></i>
+      <span>{{error}}</span>
+      <button class="retry-btn" (click)="loadLogs()">Retry</button>
+    </div>
     
-    <div class="search-container">
+    <!-- Filters -->
+    <div class="filters-container">
       <div class="search-box">
         <i class="icon search-icon"></i>
-        <input type="text" placeholder="Search logs" [(ngModel)]="searchText">
+        <input 
+          type="text" 
+          placeholder="Search logs..." 
+          [(ngModel)]="searchText"
+          (keyup.enter)="onSearch()">
       </div>
-      <button class="filter-btn">
-        <i class="icon filter-icon"></i>
+      
+      <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All Statuses</option>
+        <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+      </select>
+      
+      <select class="filter-select" [(ngModel)]="selectedCategory" (change)="onFilterChange()">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+      </select>
+      
+      <input 
+        type="date" 
+        class="date-input" 
+        [(ngModel)]="fromDate" 
+        (change)="onFilterChange()"
+        placeholder="From Date">
+      
+      <input 
+        type="date" 
+        class="date-input" 
+        [(ngModel)]="toDate" 
+        (change)="onFilterChange()"
+        placeholder="To Date">
+      
+      <button class="clear-btn" (click)="clearFilters()">
+        <i class="icon clear-icon"></i> Clear
       </button>
     </div>
     
-    <table class="logs-table">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>User</th>
-          <th>TimeStamp</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let log of logs">
-          <td>{{log.action}}</td>
-          <td>{{log.user}}</td>
-          <td>{{log.timestamp}}</td>
-          <td>
-            <span class="status-badge" [ngClass]="log.status.toLowerCase()">
-              {{log.status}}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner"></div>
+      <span>Loading audit logs...</span>
+    </div>
+    
+    <!-- Logs Table -->
+    <div class="table-container" *ngIf="!loading && !error">
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Action</th>
+            <th>User</th>
+            <th>Status</th>
+            <th>Category</th>
+            <th>Severity</th>
+            <th>IP Address</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of logs" class="log-row">
+            <td class="timestamp-cell">{{formatDate(log.timestamp)}}</td>
+            <td class="action-cell">{{log.action}}</td>
+            <td class="user-cell">{{log.user}}</td>
+            <td class="status-cell">
+              <span class="status-badge" [ngClass]="getStatusClass(log.status)">
+                {{log.status}}
+              </span>
+            </td>
+            <td class="category-cell">{{log.category}}</td>
+            <td class="severity-cell">
+              <span class="severity-badge" [ngClass]="getSeverityClass(log.severity)">
+                {{log.severity}}
+              </span>
+            </td>
+            <td class="ip-cell">{{log.ipAddress || 'N/A'}}</td>
+            <td class="details-cell" [title]="log.details">
+              {{log.details ? (log.details.length > 50 ? log.details.substring(0, 50) + '...' : log.details) : 'N/A'}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="logs.length === 0">
+        <i class="icon empty-icon"></i>
+        <h3>No audit logs found</h3>
+        <p>No logs match your current search criteria.</p>
+      </div>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loading && totalPages > 1">
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === 1" 
+        (click)="onPageChange(currentPage - 1)">
+        Previous
+      </button>
+      
+      <button 
+        *ngFor="let page of getPaginationArray()" 
+        class="page-btn" 
+        [class.active]="page === currentPage"
+        (click)="onPageChange(page)">
+        {{page}}
+      </button>
+      
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === totalPages" 
+        (click)="onPageChange(currentPage + 1)">
+        Next
+      </button>
+      
+      <div class="pagination-info">
+        Showing {{(currentPage - 1) * pageSize + 1}} to {{mathMin(currentPage * pageSize, totalCount)}} of {{totalCount}} logs
+      </div>
+    </div>
   </div>
 </div>

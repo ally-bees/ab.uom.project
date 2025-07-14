@@ -127,6 +127,14 @@ namespace Backend.Services
         public async Task DeleteExpenseAsync(string id) =>
             await _expensesCollection.DeleteOneAsync(e => e.Id == id);
 
+        public async Task<List<Expense>> GetExpensesByCompanyIdAsync(string companyId)
+{
+    var collection = _database.GetCollection<Expense>("expenses");
+    var filter = Builders<Expense>.Filter.Eq(e => e.CompanyId, companyId);
+    return await collection.Find(filter).ToListAsync();
+}
+
+
         // Automation methods
         public async Task<List<Automation>> GetAllAutomationsAsync() =>
             await _automationCollection.Find(_ => true).ToListAsync();

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AutomationService, Automation } from '../../services/automation.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-schedule',
@@ -19,7 +20,8 @@ export class ScheduleComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private automationService: AutomationService
+    private automationService: AutomationService,
+    private authService: AuthService
   ) {
     // Initialize the reactive form with nested form groups for report, schedule, and recipient details
     this.form = this.fb.group({
@@ -57,37 +59,42 @@ export class ScheduleComponent implements OnInit {
 
   // Handles form submission to create or update an automation
   onSubmit(): void {
-    if (this.form.valid) {
-      const formValue = this.form.value;
+  if (this.form.valid) {
+    const formValue = this.form.value;
 
-      // Prepare the payload by combining form data
-      const automationData = {
-        ...formValue.report,
-        ...formValue.schedule,
-        ...formValue.recipient,
-        dayOfWeek: formValue.schedule.dayOfWeek || null,
-        dayOfMonth: formValue.schedule.dayOfMonth
-          ? parseInt(formValue.schedule.dayOfMonth, 10)
-          : null
-      };
-
-      // Determine whether to add a new automation or update an existing one
-      const request$ = this.editingAutomationId !== null
-        ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
-        : this.automationService.addAutomation(automationData);
-
-      // Submit the request and reload automations on success
-      request$.subscribe({
-        next: () => {
-          this.loadAutomations();
-          this.resetForm();
-        },
-        error: err => {
-          console.error('Automation error:', err);
-        }
-      });
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('No logged-in user found.');
+      return;
     }
+
+    const automationData = {
+      companyId: currentUser.CompanyId,
+      honeyCombId: currentUser.HoneyCombId,
+      ...formValue.report,
+      ...formValue.schedule,
+      ...formValue.recipient,
+      dayOfWeek: formValue.schedule.dayOfWeek || null,
+      dayOfMonth: formValue.schedule.dayOfMonth
+        ? parseInt(formValue.schedule.dayOfMonth, 10)
+        : null
+    };
+
+    const request$ = this.editingAutomationId !== null
+      ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
+      : this.automationService.addAutomation(automationData);
+
+    request$.subscribe({
+      next: () => {
+        this.loadAutomations();
+        this.resetForm();
+      },
+      error: err => {
+        console.error('Automation error:', err);
+      }
+    });
   }
+}
 
   // Populate the form fields with data from the selected automation for editing
   editAutomation(automation: Automation): void {
