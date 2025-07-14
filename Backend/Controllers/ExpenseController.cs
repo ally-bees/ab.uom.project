@@ -79,7 +79,9 @@ namespace Backend.Controllers
                     Amount = amount,
                     Date = date,
                     PaymentMethod = expenseDTO.PaymentMethod,
-                    Description = expenseDTO.Description
+                    Description = expenseDTO.Description,
+                    CompanyId = expenseDTO.CompanyId,
+    HoneyCombId = expenseDTO.HoneyCombId
                 };
 
                 // Create the expense in the service
@@ -164,6 +166,14 @@ namespace Backend.Controllers
             return NoContent();
         }
 
+        [HttpGet("company/{companyId}")]
+public async Task<ActionResult<List<Expense>>> GetByCompanyId(string companyId)
+{
+    var expenses = await _expenseService.GetExpensesByCompanyIdAsync(companyId);
+    return Ok(expenses);
+}
+
+
         [HttpGet("receipts/{fileName}")]
         public async Task<IActionResult> GetReceipt(string fileName)
         {
@@ -187,5 +197,8 @@ namespace Backend.Controllers
         public string PaymentMethod { get; set; }
         public string? Description { get; set; }
         public IFormFile? ReceiptFile { get; set; }
+        public string CompanyId { get; set; }
+public string HoneyCombId { get; set; }
+
     }
 }
