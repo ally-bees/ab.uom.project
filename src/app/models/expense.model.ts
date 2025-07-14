@@ -8,5 +8,7 @@ export interface Expense {
     paymentMethod: string;
     description?: string;
     receiptUrl?: string;
+    companyId?: string; // Added CompanyId
+    honeyCombId?: string; // Added HoneyCombId
   }
   
