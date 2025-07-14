@@ -33,6 +33,29 @@ export class SalesComponent implements OnInit {
 
   // Filtered data used in charts and table
   filteredData: Sale[] = [];
+  page: number = 1;
+  pageSize: number = 15;
+
+  get totalPages() {
+    return Math.ceil(this.filteredData.length / this.pageSize);
+  }
+
+  get pagedFilteredData() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.filteredData.slice(start, start + this.pageSize);
+  }
+
+  nextPage() {
+    if (this.page < this.totalPages) {
+      this.page++;
+    }
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
 
   // Column definitions for AG Grid
   columnDefs: ColDef<Sale>[] = [
@@ -362,6 +385,7 @@ export class SalesComponent implements OnInit {
     this.updatePieCharts();
     this.updateComparisonChart();
     this.updateDailySalesChart();
+    this.page = 1; // Reset to first page on filter change
   }
 
   onSearchChange(event: Event): void {
