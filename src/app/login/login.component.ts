@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -16,14 +16,29 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loading = false;
   error = '';
+  successMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    // Check for success message from password reset
+    this.route.queryParams.subscribe(params => {
+      if (params['message']) {
+        this.successMessage = params['message'];
+        console.log('🔍 Success message from reset:', this.successMessage);
+        
+        // Clear the message after 5 seconds
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 5000);
+      }
+    });
+
     // If already logged in, redirect to appropriate dashboard
     if (this.authService.isLoggedIn()) {
       const redirectUrl = this.authService.getRedirectUrl();
@@ -43,8 +58,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // Clear previous error
+    // Clear previous messages
     this.error = '';
+    this.successMessage = '';
 
     // Return if form is invalid
     if (this.loginForm.invalid) {
