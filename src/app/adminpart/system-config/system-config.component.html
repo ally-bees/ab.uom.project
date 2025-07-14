@@ -1,56 +1,478 @@
 <div class="system-config-container">
-  <!-- Sidebar -->
-
-  <!-- System Config Content -->
   <div class="system-config-content">
+    <!-- Header -->
     <div class="header">
       <h2>System Configuration</h2>
-      <p class="subtitle">Manage system-wide settings and authentication</p>
+      <p class="subtitle">Manage system-wide settings and security</p>
     </div>
 
-    <div class="config-section">
-      <h3>Authentication Method</h3>
+    <!-- Loading & Messages -->
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner"></div>
+      <span>Loading system configuration...</span>
+    </div>
 
-      <div class="config-item">
-        <div class="config-info">
-          <h4>Two-Factor Authentication (2FA)</h4>
-          <p>Require 2FA for all admin users</p>
-        </div>
-        <div class="config-actions">
-          <span class="toggle" [class.enabled]="twoFactorEnabled" (click)="toggleTwoFactor()">
-            {{ twoFactorEnabled ? 'Enabled' : 'Disabled' }}
-          </span>
-          <button class="settings-btn">
+    <div *ngIf="error" class="alert alert-error">
+      {{ error }}
+      <button (click)="clearMessages()" class="close-btn">&times;</button>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+      <button (click)="clearMessages()" class="close-btn">&times;</button>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'security'"
+        (click)="setActiveTab('security')">
+        <i class="icon security-icon"></i>
+        Security Settings
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'api'"
+        (click)="setActiveTab('api')">
+        <i class="icon api-icon"></i>
+        API Management
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'health'"
+        (click)="setActiveTab('health')">
+        <i class="icon health-icon"></i>
+        System Health
+      </button>
+    </div>
+
+    <!-- Security Settings Tab -->
+    <div *ngIf="activeTab === 'security'" class="tab-content">
+      <div class="config-section">
+        <div class="section-header">
+          <h3>Authentication & Security</h3>
+          <button class="btn btn-primary" (click)="openSecurityModal()">
             <i class="icon settings-icon"></i>
+            Configure Security
           </button>
         </div>
-      </div>
 
-      <div class="config-item">
-        <div class="config-info">
-          <h4>Role-Based Access Control (RBAC)</h4>
-          <p>Manage role-based permissions</p>
-        </div>
-        <div class="config-actions">
-          <button class="settings-btn">
-            <i class="icon settings-icon"></i>
-          </button>
+        <div class="config-grid">
+          <!-- Two-Factor Authentication -->
+          <div class="config-card">
+            <div class="config-info">
+              <h4>Two-Factor Authentication (2FA)</h4>
+              <p>Require 2FA for all admin users</p>
+              <span class="config-status" [class]="securitySettings?.twoFactorEnabled ? 'enabled' : 'disabled'">
+                {{ securitySettings?.twoFactorEnabled ? 'Enabled' : 'Disabled' }}
+              </span>
+            </div>
+            <div class="config-actions">
+              <button 
+                class="toggle-switch" 
+                [class.enabled]="securitySettings?.twoFactorEnabled"
+                (click)="toggleTwoFactor()">
+                <span class="toggle-slider"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Session Timeout -->
+          <div class="config-card">
+            <div class="config-info">
+              <h4>Session Timeout</h4>
+              <p>Automatic logout after inactivity</p>
+              <span class="config-value">{{ securitySettings?.sessionTimeoutMinutes }} minutes</span>
+            </div>
+            <div class="config-actions">
+              <button class="btn btn-secondary" (click)="openSecurityModal()">
+                <i class="icon edit-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Login Attempts -->
+          <div class="config-card">
+            <div class="config-info">
+              <h4>Max Login Attempts</h4>
+              <p>Lock account after failed attempts</p>
+              <span class="config-value">{{ securitySettings?.maxLoginAttempts }} attempts</span>
+            </div>
+            <div class="config-actions">
+              <button class="btn btn-secondary" (click)="openSecurityModal()">
+                <i class="icon edit-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Password Policy -->
+          <div class="config-card">
+            <div class="config-info">
+              <h4>Password Policy</h4>
+              <p>Password requirements and expiry</p>
+              <div class="policy-details">
+                <span class="policy-item">Min Length: {{ securitySettings?.passwordPolicy?.minLength }}</span>
+                <span class="policy-item" *ngIf="securitySettings?.passwordPolicy?.requireUppercase">Uppercase Required</span>
+                <span class="policy-item" *ngIf="securitySettings?.passwordPolicy?.requireNumbers">Numbers Required</span>
+              </div>
+            </div>
+            <div class="config-actions">
+              <button class="btn btn-secondary" (click)="openSecurityModal()">
+                <i class="icon edit-icon"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="config-section">
-      <h3>API Configuration</h3>
-
-      <div class="api-key-container">
-        <label>API Key</label>
-        <div class="key-input-group">
-          <input type="password" [value]="apiKey" readonly />
-          <button class="regenerate-btn" (click)="regenerateApiKey()">
-            Regenerate
+    <!-- API Management Tab -->
+    <div *ngIf="activeTab === 'api'" class="tab-content">
+      <div class="config-section">
+        <div class="section-header">
+          <h3>API Key Management</h3>
+          <button class="btn btn-primary" (click)="openCreateApiKeyModal()">
+            <i class="icon add-icon"></i>
+            Create API Key
           </button>
         </div>
+
+        <div class="api-keys-table">
+          <div class="table-header">
+            <span>Key Name</span>
+            <span>Key Value</span>
+            <span>Status</span>
+            <span>Created</span>
+            <span>Last Used</span>
+            <span>Actions</span>
+          </div>
+
+          <div *ngFor="let apiKey of apiKeys" class="table-row">
+            <span class="key-name">{{ apiKey.keyName }}</span>
+            <span class="key-value">
+              <code>{{ apiKey.keyValue }}</code>
+              <button class="copy-btn" (click)="copyToClipboard(apiKey.keyValue)">
+                <i class="icon copy-icon"></i>
+              </button>
+            </span>
+            <span class="key-status" [class]="apiKey.isActive ? 'active' : 'inactive'">
+              {{ apiKey.isActive ? 'Active' : 'Inactive' }}
+            </span>
+            <span class="key-date">{{ formatDate(apiKey.createdAt) }}</span>
+            <span class="key-date">{{ apiKey.lastUsed ? formatDate(apiKey.lastUsed) : 'Never' }}</span>
+            <div class="key-actions">
+              <button 
+                class="btn btn-warning btn-sm" 
+                (click)="regenerateApiKey(apiKey.id!)"
+                [disabled]="!apiKey.isActive">
+                <i class="icon refresh-icon"></i>
+                Regenerate
+              </button>
+              <button 
+                class="btn btn-danger btn-sm" 
+                (click)="revokeApiKey(apiKey.id!)"
+                [disabled]="!apiKey.isActive">
+                <i class="icon delete-icon"></i>
+                Revoke
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="apiKeys.length === 0" class="no-data">
+            <i class="icon info-icon"></i>
+            <span>No API keys found. Create your first API key to get started.</span>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- System Health Tab -->
+    <div *ngIf="activeTab === 'health'" class="tab-content">
+      <div class="config-section">
+        <div class="section-header">
+          <h3>System Health & Monitoring</h3>
+          <button class="btn btn-secondary" (click)="loadSystemConfiguration()">
+            <i class="icon refresh-icon"></i>
+            Refresh
+          </button>
+        </div>
+
+        <div class="health-grid" *ngIf="systemHealth">
+          <!-- Database Status -->
+          <div class="health-card">
+            <div class="health-icon database-icon" [class]="getHealthStatusClass(systemHealth.databaseConnected)">
+              <i class="icon db-icon"></i>
+            </div>
+            <div class="health-info">
+              <h4>Database</h4>
+              <span class="health-status" [class]="getHealthStatusClass(systemHealth.databaseConnected)">
+                {{ getHealthStatusText(systemHealth.databaseConnected) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Email Service Status -->
+          <div class="health-card">
+            <div class="health-icon email-icon" [class]="getHealthStatusClass(systemHealth.emailServiceConnected)">
+              <i class="icon email-icon"></i>
+            </div>
+            <div class="health-info">
+              <h4>Email Service</h4>
+              <span class="health-status" [class]="getHealthStatusClass(systemHealth.emailServiceConnected)">
+                {{ getHealthStatusText(systemHealth.emailServiceConnected) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Active Users -->
+          <div class="health-card">
+            <div class="health-icon users-icon">
+              <i class="icon users-icon"></i>
+            </div>
+            <div class="health-info">
+              <h4>Active Users</h4>
+              <span class="health-value">{{ systemHealth.activeUsers }}</span>
+            </div>
+          </div>
+
+          <!-- Last Backup -->
+          <div class="health-card">
+            <div class="health-icon backup-icon">
+              <i class="icon backup-icon"></i>
+            </div>
+            <div class="health-info">
+              <h4>Last Backup</h4>
+              <span class="health-value">{{ formatDate(systemHealth.lastBackup) }}</span>
+            </div>
+          </div>
+
+          <!-- Memory Usage -->
+          <div class="health-card">
+            <div class="health-icon memory-icon">
+              <i class="icon memory-icon"></i>
+            </div>
+            <div class="health-info">
+              <h4>Memory Usage</h4>
+              <span class="health-value">{{ systemHealth.memoryUsagePercent.toFixed(1) }}%</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="systemHealth.memoryUsagePercent"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CPU Usage -->
+          <div class="health-card">
+            <div class="health-icon cpu-icon">
+              <i class="icon cpu-icon"></i>
+            </div>
+            <div class="health-info">
+              <h4>CPU Usage</h4>
+              <span class="health-value">{{ systemHealth.cpuUsagePercent.toFixed(1) }}%</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="systemHealth.cpuUsagePercent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Settings Modal -->
+  <div *ngIf="showSecurityModal" class="modal-overlay" (click)="closeSecurityModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Security Settings</h3>
+        <button class="close-btn" (click)="closeSecurityModal()">&times;</button>
+      </div>
+      
+      <form [formGroup]="securityForm" (ngSubmit)="saveSecuritySettings()">
+        <div class="modal-body">
+          <!-- Two-Factor Authentication -->
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                formControlName="twoFactorEnabled">
+              <span class="checkmark"></span>
+              Enable Two-Factor Authentication
+            </label>
+          </div>
+
+          <!-- Session Timeout -->
+          <div class="form-group">
+            <label for="sessionTimeout">Session Timeout (minutes)</label>
+            <input 
+              id="sessionTimeout"
+              type="number" 
+              formControlName="sessionTimeoutMinutes"
+              min="15"
+              max="480"
+              class="form-control">
+            <small class="form-help">Users will be logged out after this period of inactivity</small>
+          </div>
+
+          <!-- Max Login Attempts -->
+          <div class="form-group">
+            <label for="maxAttempts">Maximum Login Attempts</label>
+            <input 
+              id="maxAttempts"
+              type="number" 
+              formControlName="maxLoginAttempts"
+              min="3"
+              max="10"
+              class="form-control">
+          </div>
+
+          <!-- Lockout Duration -->
+          <div class="form-group">
+            <label for="lockoutDuration">Lockout Duration (minutes)</label>
+            <input 
+              id="lockoutDuration"
+              type="number" 
+              formControlName="lockoutDurationMinutes"
+              min="5"
+              max="1440"
+              class="form-control">
+          </div>
+
+          <!-- Password Policy -->
+          <div formGroupName="passwordPolicy" class="form-section">
+            <h4>Password Policy</h4>
+            
+            <div class="form-group">
+              <label for="minLength">Minimum Length</label>
+              <input 
+                id="minLength"
+                type="number" 
+                formControlName="minLength"
+                min="6"
+                max="50"
+                class="form-control">
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="requireUppercase">
+                <span class="checkmark"></span>
+                Require Uppercase Letters
+              </label>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="requireLowercase">
+                <span class="checkmark"></span>
+                Require Lowercase Letters
+              </label>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="requireNumbers">
+                <span class="checkmark"></span>
+                Require Numbers
+              </label>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="requireSpecialChars">
+                <span class="checkmark"></span>
+                Require Special Characters
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="expiryDays">Password Expiry (days)</label>
+              <input 
+                id="expiryDays"
+                type="number" 
+                formControlName="passwordExpiryDays"
+                min="30"
+                max="365"
+                class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeSecurityModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!securityForm.valid || loading">
+            <span *ngIf="loading" class="spinner-sm"></span>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create API Key Modal -->
+  <div *ngIf="showApiKeyModal" class="modal-overlay" (click)="closeApiKeyModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create API Key</h3>
+        <button class="close-btn" (click)="closeApiKeyModal()">&times;</button>
+      </div>
+      
+      <form [formGroup]="apiKeyForm" (ngSubmit)="onCreateApiKey()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="keyName">Key Name</label>
+            <input 
+              id="keyName"
+              type="text" 
+              formControlName="keyName"
+              placeholder="Enter a descriptive name for this API key"
+              class="form-control">
+            <small class="form-help">Choose a name that helps you identify this key's purpose</small>
+          </div>
+
+          <div class="form-group">
+            <label for="expiresAt">Expiry Date (Optional)</label>
+            <input 
+              id="expiresAt"
+              type="datetime-local" 
+              formControlName="expiresAt"
+              class="form-control">
+            <small class="form-help">Leave empty for keys that don't expire</small>
+          </div>
+
+          <div class="form-group">
+            <label>Permissions</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" value="read">
+                <span class="checkmark"></span>
+                Read Access
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="write">
+                <span class="checkmark"></span>
+                Write Access
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" value="admin">
+                <span class="checkmark"></span>
+                Admin Access
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeApiKeyModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!apiKeyForm.valid || loading">
+            <span *ngIf="loading" class="spinner-sm"></span>
+            Create API Key
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

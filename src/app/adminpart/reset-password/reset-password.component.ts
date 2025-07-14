@@ -1,114 +1,11 @@
 
-// import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// import { AuthService } from '../../services/auth.service'; // adjust path as needed
-// import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-// import { CommonModule } from '@angular/common';
 
-// @Component({
-//   selector: 'app-reset-password',
-//   standalone: true,
-//   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-//   templateUrl: './reset-password.component.html',
-//   styleUrls: ['./reset-password.component.css']
-// })
-// export class ResetPasswordComponent implements OnInit {
-//   resetForm: FormGroup;
-//   submitted = false;
-//   loading = false;
-//   successMessage = '';
-//   errorMessage = '';
-//   token: string = '';
-//   tokenInvalid = false;
-
-//   constructor(
-//     private fb: FormBuilder, 
-//     private authService: AuthService, 
-//     private route: ActivatedRoute,
-//     private router: Router
-//   ) {
-//     this.resetForm = this.fb.group({
-//       password: ['', [Validators.required, Validators.minLength(6)]],
-//       confirmPassword: ['', Validators.required]
-//     }, {
-//       validators: this.passwordMatchValidator
-//     });
-//   }
-
-//   ngOnInit(): void {
-//     // Get token from the URL query parameters
-//     this.route.queryParams.subscribe(params => {
-//       if (params['token']) {
-//         this.token = params['token'];
-//       } else {
-//         // If no token is provided, show error
-//         this.tokenInvalid = true;
-//         this.errorMessage = 'Invalid password reset link. Please request a new one.';
-//       }
-//     });
-//   }
-
-//   // Custom validator to check if passwords match
-//   passwordMatchValidator(formGroup: FormGroup) {
-//     const password = formGroup.get('password')?.value;
-//     const confirmPassword = formGroup.get('confirmPassword')?.value;
-
-//     if (password !== confirmPassword) {
-//       formGroup.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-//       return { passwordMismatch: true };
-//     } else {
-//       formGroup.get('confirmPassword')?.setErrors(null);
-//       return null;
-//     }
-//   }
-
-//   get password() {
-//     return this.resetForm.get('password');
-//   }
-
-//   get confirmPassword() {
-//     return this.resetForm.get('confirmPassword');
-//   }
-
-//   onSubmit() {
-//     this.submitted = true;
-//     if (this.resetForm.invalid || this.tokenInvalid) {
-//       return;
-//     }
-
-//     this.loading = true;
-//     const data = {
-//       token: this.token,
-//       newPassword: this.password?.value
-//     };
-
-//     this.authService.resetPassword(data).subscribe({
-//       next: (response: any) => {
-//         this.successMessage = 'Password has been reset successfully!';
-//         this.loading = false;
-//         this.errorMessage = '';
-        
-//         // Redirect to login page after 3 seconds
-//         setTimeout(() => {
-//           this.router.navigate(['/login']);
-//         }, 3000);
-//       },
-//       error: (err) => {
-//         this.errorMessage = err.error?.message || 'Something went wrong. Please try again.';
-//         this.loading = false;
-//         this.successMessage = '';
-//       }
-//     });
-//   }
-// }
-
-
-// reset-password.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PasswordResetService } from '../../services/password-reset.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-reset-password',
@@ -117,7 +14,7 @@ import { PasswordResetService } from '../../services/password-reset.service';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit, OnDestroy {
   resetForm: FormGroup;
   loading = false;
   submitted = false;
@@ -126,12 +23,14 @@ export class ResetPasswordComponent implements OnInit {
   tokenInvalid = false;
   resetToken = '';
   email = '';
+  private redirectTimer: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private passwordResetService: PasswordResetService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.resetForm = this.formBuilder.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -218,10 +117,16 @@ export class ResetPasswordComponent implements OnInit {
         this.loading = false;
         this.successMessage = 'Password reset successfully! Redirecting to login...';
         
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 3000);
+        // Clear any cached auth data to ensure clean state
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        
+        // Redirect to login after 2 seconds with a more reliable method
+        this.redirectTimer = setTimeout(() => {
+          this.performRedirect();
+        }, 2000);
       },
       error: (error) => {
         console.error('❌ Password reset error:', error);
@@ -238,6 +143,51 @@ export class ResetPasswordComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.redirectTimer) {
+      clearTimeout(this.redirectTimer);
+    }
+  }
+
+  private performRedirect(): void {
+    console.log('🔍 Performing redirect to login...');
+    
+    // Method 1: Try Angular router with replace
+    this.router.navigate(['/login'], { 
+      replaceUrl: true,
+      queryParams: { 
+        message: 'Password reset successful. Please login with your new password.' 
+      }
+    }).then((navigationSuccess) => {
+      console.log('🔍 Angular navigation success:', navigationSuccess);
+      if (navigationSuccess) {
+        // Clear the current route from history
+        this.location.replaceState('/login');
+        // Small delay then reload to ensure clean state
+        setTimeout(() => {
+          console.log('🔍 Reloading page for clean state...');
+          window.location.reload();
+        }, 100);
+      } else {
+        this.fallbackRedirect();
+      }
+    }).catch((error) => {
+      console.error('❌ Angular navigation error:', error);
+      this.fallbackRedirect();
+    });
+  }
+
+  private fallbackRedirect(): void {
+    console.log('🔍 Using fallback redirect method...');
+    // Clear any authentication data
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Direct URL navigation as fallback
+    window.location.href = window.location.origin + '/login?message=' + 
+      encodeURIComponent('Password reset successful. Please login with your new password.');
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {

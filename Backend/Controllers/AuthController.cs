@@ -3,6 +3,7 @@
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
 using Backend.Services;
+using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -16,13 +17,15 @@ namespace Backend.Controllers
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly HoneycombService _honeycombService;
+        private readonly IAuditLogService _auditLogService;
 
         public AuthController(
             AuthService authService,
             IEmailService emailService,
             UserService userService,
             IPasswordResetService passwordResetService,
-            HoneycombService honeycombService
+            HoneycombService honeycombService,
+            IAuditLogService auditLogService
             )
         {
             _authService = authService;
@@ -30,6 +33,7 @@ namespace Backend.Controllers
             _userService = userService;
             _passwordResetService = passwordResetService;
             _honeycombService = honeycombService;
+            _auditLogService = auditLogService;
         }
 
         [HttpPost("register")]
@@ -95,6 +99,15 @@ namespace Backend.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    await _auditLogService.LogAsync(
+                        AuditActions.LoginFailed,
+                        loginDto.Email ?? "Unknown",
+                        AuditStatus.Failed,
+                        "Invalid model state",
+                        "Authentication",
+                        AuditSeverity.Warning,
+                        AuditCategory.Authentication
+                    );
                     return BadRequest(ModelState);
                 }
 
@@ -102,13 +115,41 @@ namespace Backend.Controllers
 
                 if (!result.Success)
                 {
+                    await _auditLogService.LogAsync(
+                        AuditActions.LoginFailed,
+                        loginDto.Email ?? "Unknown",
+                        AuditStatus.Failed,
+                        result.Message,
+                        "Authentication",
+                        AuditSeverity.Warning,
+                        AuditCategory.Authentication
+                    );
                     return Unauthorized(result);
                 }
+
+                await _auditLogService.LogAsync(
+                    AuditActions.Login,
+                    loginDto.Email ?? "Unknown",
+                    AuditStatus.Success,
+                    "User successfully logged in",
+                    "Authentication",
+                    AuditSeverity.Info,
+                    AuditCategory.Authentication
+                );
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
+                await _auditLogService.LogAsync(
+                    AuditActions.LoginFailed,
+                    loginDto?.Email ?? "Unknown",
+                    AuditStatus.Error,
+                    $"Login exception: {ex.Message}",
+                    "Authentication",
+                    AuditSeverity.Error,
+                    AuditCategory.Authentication
+                );
                 Console.WriteLine($"Login error: {ex.Message}");
                 return StatusCode(500, new { Success = false, Message = "An internal server error occurred." });
             }
@@ -148,43 +189,6 @@ namespace Backend.Controllers
             }
         }
 
-        // [HttpPost("reset-password")]
-        // public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
-        // {
-        //     try
-        //     {
-        //         if (!ModelState.IsValid)
-        //         {
-        //             return BadRequest(ModelState);
-        //         }
-
-        //         // Validate reset token
-        //         var passwordReset = await _passwordResetService.ValidateResetTokenAsync(resetPasswordDto.Token, resetPasswordDto.Email);
-        //         if (passwordReset == null)
-        //         {
-        //             return BadRequest(new { success = false, message = "Invalid or expired reset token." });
-        //         }
-
-        //         // Update user password using AuthService
-        //         var result = await _authService.ResetPasswordAsync(resetPasswordDto.Token, resetPasswordDto.NewPassword);
-        //         if (!result)
-        //         {
-        //             return BadRequest(new { success = false, message = "Failed to reset password." });
-        //         }
-
-        //         // Mark token as used
-        //         await _passwordResetService.MarkTokenAsUsedAsync(resetPasswordDto.Token);
-
-        //         return Ok(new { success = true, message = "Password has been reset successfully." });
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine($"Reset password error: {ex.Message}");
-        //         return StatusCode(500, new { success = false, message = "An error occurred while resetting your password." });
-        //     }
-        // }
-
-        // Controllers/AuthController.cs
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {

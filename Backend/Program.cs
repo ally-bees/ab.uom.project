@@ -37,6 +37,8 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    if (mongoDbSettings?.ConnectionString == null)
+        throw new InvalidOperationException("MongoDB connection string is not configured.");
     return new MongoClient(mongoDbSettings.ConnectionString);
 });
 
@@ -71,6 +73,13 @@ builder.Services.AddSingleton<UserManagementService>();
 builder.Services.AddSingleton<IPasswordResetService, PasswordResetService>();
 builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
 builder.Services.AddScoped<HoneycombService>();
+
+// System Configuration Service
+builder.Services.AddSingleton<ISystemConfigurationService, SystemConfigurationService>();
+
+// Audit Log Service
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IAuditLogService, AuditLogService>();
 
 builder.Services.AddCors(options =>
 {
