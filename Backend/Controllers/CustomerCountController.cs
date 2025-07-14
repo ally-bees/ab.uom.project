@@ -16,10 +16,14 @@ namespace Backend.Controllers
         }
 
         [HttpGet("count")]
-        public async Task<IActionResult> GetCustomerCount()
+        public async Task<IActionResult> GetCustomerCount([FromQuery] string companyId)
         {
-            var count = await _customerService.GetCustomerCountAsync();
+            if (string.IsNullOrWhiteSpace(companyId))
+                return BadRequest("Company ID is required.");
+
+            var count = await _customerService.GetCustomerCountByCompanyAsync(companyId);
             return Ok(count);
         }
+
     }
 }

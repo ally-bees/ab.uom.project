@@ -26,7 +26,10 @@ public class ReportGenerator
     public async Task GenerateAndSendAsync(Automation automation)
     {
         var collection = _mongoService.GetCollectionByType(automation.ReportType);
-        var reportData = await collection.Find(_ => true).ToListAsync();
+
+         var filter = Builders<BsonDocument>.Filter.Eq("CompanyId", automation.CompanyId);
+
+        var reportData = await collection.Find(filter).ToListAsync(); // ✅ correct
 
         byte[] fileBytes;
         string fileName;

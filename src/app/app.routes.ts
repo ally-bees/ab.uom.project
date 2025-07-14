@@ -135,6 +135,7 @@ export const routes: Routes = [
       { path: 'order', component: OrderSummaryComponent },
       { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
       { path: 'printreport', component: PrintReportComponent },
+      {path : 'expense-form', component: ExpenseFormComponent },
       // Add more pages for the business owner here
     ]
   },
