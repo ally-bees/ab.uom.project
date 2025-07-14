@@ -64,5 +64,12 @@ namespace Backend.Controllers
             await _automationService.DeleteAsync(id);
             return NoContent();
         }
+        [HttpGet("company/{companyId}")]
+public async Task<ActionResult<List<Automation>>> GetByCompanyId(string companyId)
+{
+    var automations = await _automationService.GetByCompanyIdAsync(companyId);
+    return Ok(automations);
+}
+
     }
 }

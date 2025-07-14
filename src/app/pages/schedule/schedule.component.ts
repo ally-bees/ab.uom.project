@@ -52,9 +52,18 @@ export class ScheduleComponent implements OnInit {
 
   // Fetch the list of active automations from the service
   loadAutomations(): void {
-    this.automationService.getAutomations().subscribe(data => {
+    const currentUser = this.authService.getCurrentUser();
+if (currentUser?.CompanyId) {
+  this.automationService.getAutomationsByCompany(currentUser.CompanyId).subscribe({
+    next: data => {
       this.activeAutomations = data;
-    });
+    },
+    error: err => {
+      console.error('Failed to load automations:', err);
+    }
+  });
+}
+
   }
 
   // Handles form submission to create or update an automation

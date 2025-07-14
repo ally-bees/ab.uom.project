@@ -44,4 +44,9 @@ export class AutomationService {
 updateAutomation(id: string, automationData: any): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/${id}`, automationData);
   }
+
+  getAutomationsByCompany(companyId: string): Observable<Automation[]> {
+  return this.http.get<Automation[]>(`${this.baseUrl}/company/${companyId}`);
+}
+
 }
