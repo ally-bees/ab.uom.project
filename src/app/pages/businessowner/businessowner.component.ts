@@ -29,7 +29,7 @@ export class BusinessDashComponent implements OnInit {
 
   constructor(private dashboardService: DashboardService) {}
 
- // dashboard.component.ts
+ //  dashboard.component.ts
 
 ngOnInit(): void {
   const companyId = localStorage.getItem('companyId') || '';
