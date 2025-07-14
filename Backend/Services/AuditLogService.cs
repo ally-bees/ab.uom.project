@@ -21,7 +21,7 @@ namespace Backend.Services
         private readonly IMongoCollection<AuditLog> _auditLogsCollection;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuditLogService(IOptions<MongoDBSettings> mongoDBSettings, IHttpContextAccessor httpContextAccessor)
+        public AuditLogService(IOptions<Backend.Models.MongoDBSettings> mongoDBSettings, IHttpContextAccessor httpContextAccessor)
         {
             var settings = mongoDBSettings.Value;
             var client = new MongoClient(settings.ConnectionString);

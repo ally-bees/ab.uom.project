@@ -11,7 +11,7 @@ namespace Backend.Services
     public class Auditservice
     {
         private readonly IMongoCollection<Table> _CollectionAudit;
-        public Auditservice(IOptions<MongoDBSettings> mongoDBSettings)
+        public Auditservice(IOptions<Backend.Models.MongoDBSettings> mongoDBSettings)
         {
             var settings = mongoDBSettings.Value;
 
