@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 
-DotNetEnv.Env.Load(@"C:\Users\Thilinika\Desktop\Me\New folder\Project new\project new\ab.uom.project\.env");
+DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", ".env"));
 Console.WriteLine("✅ EMAIL_USER from .env: " + Environment.GetEnvironmentVariable("EMAIL_USER"));
 Console.WriteLine("EMAIL_PASSWORD is empty = " + string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD")));
 
@@ -87,6 +87,7 @@ builder.Services.AddHangfire(config =>
         "hangfire-db",
         new MongoStorageOptions
         {
+            CheckConnection = false, // Disable connection ping check
             MigrationOptions = new MongoMigrationOptions
             {
                 MigrationStrategy = new MigrateMongoMigrationStrategy()
@@ -149,6 +150,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// === Static Files ===
+app.UseStaticFiles(); // Enable serving static files from wwwroot
+
 app.UseCors("AllowAngularApp");
 app.UseAuthentication();
 app.UseAuthorization();

@@ -5,17 +5,7 @@
         <img src="assets/logo.jpg" alt="Logo">
         <span class="logo-text">InstaDash</span>
       </div>
-      <!-- <button class="menu-button">
-        <i class="menu-icon"></i>
-      </button> -->
     </div>
-<!-- 
-    <div class="search-container">
-      <div class="search-box">
-        <i class="search-icon"></i>
-        <input type="text" placeholder="Search here...">
-      </div>
-    </div> -->
 
     <div class="header-right">
       <button class="icon-button primary">
@@ -29,8 +19,8 @@
       <button class="icon-button tertiary">
         <i class="grid-icon"></i>
       </button>
-      <div class="profile">
-        <img src="assets/profile.jpg" alt="Profile Picture">
+      <div class="profile" (click)="navigateToProfile()">
+        <img [src]="getProfileImageSrc()" alt="Profile Picture" class="profile-image" title="Click to view profile">
       </div>
     </div>
   </header>

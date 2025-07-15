@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Backend.Models
 {
+    [BsonIgnoreExtraElements] // Ignore fields that don't exist in the model
     public class SystemConfiguration
     {
         [BsonId]
@@ -40,6 +41,7 @@ namespace Backend.Models
         public string? ValidationRules { get; set; }
     }
 
+    [BsonIgnoreExtraElements] // Ignore fields that don't exist in the model
     public class ApiKeyConfiguration
     {
         [BsonId]
@@ -71,14 +73,12 @@ namespace Backend.Models
         public string CreatedBy { get; set; } = string.Empty;
     }
 
+    [BsonIgnoreExtraElements] // Ignore fields that don't exist in the model (like removed twoFactorEnabled)
     public class SecuritySettings
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-        
-        [BsonElement("twoFactorEnabled")]
-        public bool TwoFactorEnabled { get; set; } = false;
         
         [BsonElement("passwordPolicy")]
         public PasswordPolicy PasswordPolicy { get; set; } = new PasswordPolicy();
@@ -99,6 +99,7 @@ namespace Backend.Models
         public string ModifiedBy { get; set; } = string.Empty;
     }
 
+    [BsonIgnoreExtraElements] // Ignore fields that don't exist in the model
     public class PasswordPolicy
     {
         [BsonElement("minLength")]

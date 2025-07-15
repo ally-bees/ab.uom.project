@@ -29,6 +29,9 @@ namespace Backend.Services
         
         // System Health
         Task<SystemHealthDto> GetSystemHealthAsync();
+        
+        // Cleanup method
+        Task CleanupDeprecatedFieldsAsync();
     }
 
     public class SystemConfigurationService : ISystemConfigurationService
@@ -38,22 +41,23 @@ namespace Backend.Services
         private readonly IMongoCollection<ApiKeyConfiguration> _apiKeyCollection;
         private readonly IMongoDatabase _database;
 
-        public SystemConfigurationService(IOptions<Backend.Models.MongoDBSettings> mongoDbSettings)
+        public SystemConfigurationService(IMongoDatabase database)
         {
-            var settings = mongoDbSettings.Value;
-            var mongoClient = new MongoClient(settings.ConnectionString);
-            _database = mongoClient.GetDatabase(settings.DatabaseName);
+            _database = database;
             
             _configCollection = _database.GetCollection<SystemConfiguration>("systemConfigurations");
             _securityCollection = _database.GetCollection<SecuritySettings>("securitySettings");
             _apiKeyCollection = _database.GetCollection<ApiKeyConfiguration>("apiKeys");
-            
-            // Initialize default configurations
-            _ = InitializeDefaultConfigurationsAsync();
         }
 
         public async Task<SystemConfigurationSummaryDto> GetSystemConfigurationSummaryAsync()
         {
+            // Clean up deprecated fields on first access
+            await CleanupDeprecatedFieldsAsync();
+            
+            // Initialize default configurations if needed
+            await InitializeDefaultConfigurationsAsync();
+            
             var summary = new SystemConfigurationSummaryDto
             {
                 SecuritySettings = await GetSecuritySettingsAsync(),
@@ -135,38 +139,89 @@ namespace Backend.Services
         // Security Settings Implementation
         public async Task<SecuritySettingsDto> GetSecuritySettingsAsync()
         {
-            var settings = await _securityCollection.Find(_ => true).FirstOrDefaultAsync();
-            
-            if (settings == null)
+            try
             {
-                settings = new SecuritySettings();
-                await _securityCollection.InsertOneAsync(settings);
-            }
-
-            return new SecuritySettingsDto
-            {
-                Id = settings.Id,
-                TwoFactorEnabled = settings.TwoFactorEnabled,
-                SessionTimeoutMinutes = settings.SessionTimeoutMinutes,
-                MaxLoginAttempts = settings.MaxLoginAttempts,
-                LockoutDurationMinutes = settings.LockoutDurationMinutes,
-                PasswordPolicy = new PasswordPolicyDto
+                var settings = await _securityCollection.Find(_ => true).FirstOrDefaultAsync();
+                
+                if (settings == null)
                 {
-                    MinLength = settings.PasswordPolicy.MinLength,
-                    RequireUppercase = settings.PasswordPolicy.RequireUppercase,
-                    RequireLowercase = settings.PasswordPolicy.RequireLowercase,
-                    RequireNumbers = settings.PasswordPolicy.RequireNumbers,
-                    RequireSpecialChars = settings.PasswordPolicy.RequireSpecialChars,
-                    PasswordExpiryDays = settings.PasswordPolicy.PasswordExpiryDays
+                    settings = new SecuritySettings
+                    {
+                        SessionTimeoutMinutes = 60,
+                        MaxLoginAttempts = 5,
+                        LockoutDurationMinutes = 30,
+                        PasswordPolicy = new PasswordPolicy
+                        {
+                            MinLength = 8,
+                            RequireUppercase = true,
+                            RequireLowercase = true,
+                            RequireNumbers = true,
+                            RequireSpecialChars = true,
+                            PasswordExpiryDays = 90
+                        }
+                    };
+                    await _securityCollection.InsertOneAsync(settings);
                 }
-            };
+
+                // Ensure PasswordPolicy is not null
+                if (settings.PasswordPolicy == null)
+                {
+                    settings.PasswordPolicy = new PasswordPolicy
+                    {
+                        MinLength = 8,
+                        RequireUppercase = true,
+                        RequireLowercase = true,
+                        RequireNumbers = true,
+                        RequireSpecialChars = true,
+                        PasswordExpiryDays = 90
+                    };
+                }
+
+                return new SecuritySettingsDto
+                {
+                    Id = settings.Id,
+                    SessionTimeoutMinutes = settings.SessionTimeoutMinutes,
+                    MaxLoginAttempts = settings.MaxLoginAttempts,
+                    LockoutDurationMinutes = settings.LockoutDurationMinutes,
+                    PasswordPolicy = new PasswordPolicyDto
+                    {
+                        MinLength = settings.PasswordPolicy.MinLength,
+                        RequireUppercase = settings.PasswordPolicy.RequireUppercase,
+                        RequireLowercase = settings.PasswordPolicy.RequireLowercase,
+                        RequireNumbers = settings.PasswordPolicy.RequireNumbers,
+                        RequireSpecialChars = settings.PasswordPolicy.RequireSpecialChars,
+                        PasswordExpiryDays = settings.PasswordPolicy.PasswordExpiryDays
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the error and create default settings
+                Console.WriteLine($"Error retrieving security settings: {ex.Message}");
+                
+                // Return default security settings if there's an error
+                return new SecuritySettingsDto
+                {
+                    SessionTimeoutMinutes = 60,
+                    MaxLoginAttempts = 5,
+                    LockoutDurationMinutes = 30,
+                    PasswordPolicy = new PasswordPolicyDto
+                    {
+                        MinLength = 8,
+                        RequireUppercase = true,
+                        RequireLowercase = true,
+                        RequireNumbers = true,
+                        RequireSpecialChars = true,
+                        PasswordExpiryDays = 90
+                    }
+                };
+            }
         }
 
         public async Task<SecuritySettingsDto> UpdateSecuritySettingsAsync(SecuritySettingsDto securityDto, string modifiedBy)
         {
             var filter = Builders<SecuritySettings>.Filter.Empty;
             var update = Builders<SecuritySettings>.Update
-                .Set(s => s.TwoFactorEnabled, securityDto.TwoFactorEnabled)
                 .Set(s => s.SessionTimeoutMinutes, securityDto.SessionTimeoutMinutes)
                 .Set(s => s.MaxLoginAttempts, securityDto.MaxLoginAttempts)
                 .Set(s => s.LockoutDurationMinutes, securityDto.LockoutDurationMinutes)
@@ -193,7 +248,6 @@ namespace Backend.Services
             return new SecuritySettingsDto
             {
                 Id = updatedSettings.Id,
-                TwoFactorEnabled = updatedSettings.TwoFactorEnabled,
                 SessionTimeoutMinutes = updatedSettings.SessionTimeoutMinutes,
                 MaxLoginAttempts = updatedSettings.MaxLoginAttempts,
                 LockoutDurationMinutes = updatedSettings.LockoutDurationMinutes,
@@ -337,6 +391,23 @@ namespace Backend.Services
             health.CpuUsagePercent = new Random().NextDouble() * 20 + 10; // Mock: 10-30%
 
             return health;
+        }
+
+        // Clean up method to remove deprecated fields from existing documents
+        public async Task CleanupDeprecatedFieldsAsync()
+        {
+            try
+            {
+                // Remove twoFactorEnabled field from all SecuritySettings documents
+                var updateDefinition = Builders<SecuritySettings>.Update.Unset("twoFactorEnabled");
+                await _securityCollection.UpdateManyAsync(_ => true, updateDefinition);
+                
+                Console.WriteLine("✅ Cleaned up deprecated twoFactorEnabled fields from SecuritySettings");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ Error cleaning up deprecated fields: {ex.Message}");
+            }
         }
 
         // Private helper methods
