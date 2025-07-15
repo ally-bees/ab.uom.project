@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers
 {
+    public class ProfileImageUrlRequest
+    {
+        public string ImageUrl { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     [Authorize] 
@@ -153,8 +157,15 @@ namespace Backend.Controllers
                     return BadRequest(new { success = false, message = "File size too large. Maximum size is 5MB." });
                 }
 
+                // Ensure wwwroot exists
+                var wwwrootPath = Path.Combine(_environment.ContentRootPath, "wwwroot");
+                if (!Directory.Exists(wwwrootPath))
+                {
+                    Directory.CreateDirectory(wwwrootPath);
+                }
+
                 // Create uploads directory if it doesn't exist
-                var uploadsDir = Path.Combine(_environment.WebRootPath, "uploads", "profiles");
+                var uploadsDir = Path.Combine(wwwrootPath, "uploads", "profiles");
                 if (!Directory.Exists(uploadsDir))
                 {
                     Directory.CreateDirectory(uploadsDir);
@@ -176,12 +187,19 @@ namespace Backend.Controllers
                 if (userDetails != null)
                 {
                     // Delete old image if exists
-                    if (!string.IsNullOrEmpty(userDetails.ProfileImage))
+                    if (!string.IsNullOrEmpty(userDetails.ProfileImage) && !userDetails.ProfileImage.StartsWith("http"))
                     {
-                        var oldImagePath = Path.Combine(_environment.WebRootPath, userDetails.ProfileImage.TrimStart('/'));
+                        var oldImagePath = Path.Combine(wwwrootPath, userDetails.ProfileImage.TrimStart('/'));
                         if (System.IO.File.Exists(oldImagePath))
                         {
-                            System.IO.File.Delete(oldImagePath);
+                            try
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Could not delete old image: {ex.Message}");
+                            }
                         }
                     }
 
@@ -199,6 +217,75 @@ namespace Backend.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Upload image error: {ex.Message}");
+                return StatusCode(500, new { success = false, message = "Internal server error", error = ex.Message });
+            }
+        }
+
+        // POST: api/userprofile/user/image-url/{userId}
+        [HttpPost("user/image-url/{userId}")]
+        public async Task<IActionResult> SetProfileImageUrl(string userId, [FromBody] ProfileImageUrlRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.ImageUrl))
+                {
+                    return BadRequest(new { success = false, message = "Image URL is required" });
+                }
+
+                // Basic URL validation
+                if (!Uri.TryCreate(request.ImageUrl, UriKind.Absolute, out var uri))
+                {
+                    return BadRequest(new { success = false, message = "Invalid URL format" });
+                }
+
+                // Optional: Validate that URL is from allowed domains or is a valid image URL
+                var allowedDomains = new[] { "drive.google.com", "imgur.com", "unsplash.com", "pexels.com", "picsum.photos" };
+                if (!allowedDomains.Any(domain => uri.Host.Contains(domain)) && !request.ImageUrl.Contains("images") && !request.ImageUrl.Contains("photo"))
+                {
+                    Console.WriteLine($"Warning: Image URL from non-standard domain: {uri.Host}");
+                }
+
+                // Update user details with image URL
+                var userDetails = await _userDetailsService.GetByUserIdAsync(userId);
+
+                if (userDetails != null)
+                {
+                    // Delete old local image if exists (don't delete if it's a URL)
+                    if (!string.IsNullOrEmpty(userDetails.ProfileImage) && !userDetails.ProfileImage.StartsWith("http"))
+                    {
+                        var wwwrootPath = Path.Combine(_environment.ContentRootPath, "wwwroot");
+                        var oldImagePath = Path.Combine(wwwrootPath, userDetails.ProfileImage.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Could not delete old image: {ex.Message}");
+                            }
+                        }
+                    }
+
+                    userDetails.ProfileImage = request.ImageUrl;
+                    await _userDetailsService.UpdateAsync(userId, userDetails);
+
+                    return Ok(new 
+                    { 
+                        success = true, 
+                        message = "Profile image URL saved successfully", 
+                        imagePath = request.ImageUrl 
+                    });
+                }
+                else
+                {
+                    return NotFound(new { success = false, message = "User details not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Set image URL error: {ex.Message}");
                 return StatusCode(500, new { success = false, message = "Internal server error", error = ex.Message });
             }
         }

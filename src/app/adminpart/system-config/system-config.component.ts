@@ -37,7 +37,6 @@ export class SystemConfigComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {
     this.securityForm = this.formBuilder.group({
-      twoFactorEnabled: [false],
       sessionTimeoutMinutes: [60, [Validators.required, Validators.min(15), Validators.max(480)]],
       maxLoginAttempts: [5, [Validators.required, Validators.min(3), Validators.max(10)]],
       lockoutDurationMinutes: [30, [Validators.required, Validators.min(5), Validators.max(1440)]],
@@ -94,7 +93,6 @@ export class SystemConfigComponent implements OnInit {
   populateSecurityForm(): void {
     if (this.securitySettings) {
       this.securityForm.patchValue({
-        twoFactorEnabled: this.securitySettings.twoFactorEnabled,
         sessionTimeoutMinutes: this.securitySettings.sessionTimeoutMinutes,
         maxLoginAttempts: this.securitySettings.maxLoginAttempts,
         lockoutDurationMinutes: this.securitySettings.lockoutDurationMinutes,
@@ -111,13 +109,6 @@ export class SystemConfigComponent implements OnInit {
   }
 
   // Security Settings Methods
-  toggleTwoFactor(): void {
-    if (this.securitySettings) {
-      this.securitySettings.twoFactorEnabled = !this.securitySettings.twoFactorEnabled;
-      this.updateSecuritySettings();
-    }
-  }
-
   openSecurityModal(): void {
     this.populateSecurityForm();
     this.showSecurityModal = true;
@@ -159,7 +150,6 @@ export class SystemConfigComponent implements OnInit {
       const formValue = this.securityForm.value;
       this.securitySettings = {
         ...this.securitySettings,
-        twoFactorEnabled: formValue.twoFactorEnabled,
         sessionTimeoutMinutes: formValue.sessionTimeoutMinutes,
         maxLoginAttempts: formValue.maxLoginAttempts,
         lockoutDurationMinutes: formValue.lockoutDurationMinutes,

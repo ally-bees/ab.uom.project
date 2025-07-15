@@ -69,4 +69,11 @@ export class UserService {
       headers: headers
     });
   }
+
+  // Set profile image URL
+  setProfileImageUrl(userId: string, imageUrl: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/user/image-url/${userId}`, { imageUrl }, {
+      headers: this.getHeaders()
+    });
+  }
 }
