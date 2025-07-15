@@ -51,7 +51,6 @@ namespace Backend.Models.DTOs
     public class SecuritySettingsDto
     {
         public string? Id { get; set; }
-        public bool TwoFactorEnabled { get; set; } = false;
         public PasswordPolicyDto PasswordPolicy { get; set; } = new PasswordPolicyDto();
         public int SessionTimeoutMinutes { get; set; } = 60;
         public int MaxLoginAttempts { get; set; } = 5;

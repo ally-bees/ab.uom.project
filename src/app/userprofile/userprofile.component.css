@@ -288,4 +288,110 @@
 .fa-spinner {
   margin-right: 5px;
 }
-  
+
+.image-upload-options {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  gap: 5px;
+}
+
+.camera-button, .url-button {
+  width: 35px;
+  height: 35px;
+  background-color: #10b981;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.camera-button:hover, .url-button:hover {
+  background-color: #059669;
+}
+
+.url-button {
+  background-color: #3b82f6;
+}
+
+.url-button:hover {
+  background-color: #2563eb;
+}
+
+.camera-icon, .link-icon {
+  font-size: 16px;
+  color: white;
+}
+
+.image-url-input {
+  position: absolute;
+  top: 130px;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.url-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.url-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.apply-url-btn, .cancel-url-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.apply-url-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.apply-url-btn:hover {
+  background-color: #059669;
+}
+
+.cancel-url-btn {
+  background-color: #6b7280;
+  color: white;
+}
+
+.cancel-url-btn:hover {
+  background-color: #4b5563;
+}
+
+.url-help {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 4px;
+  display: block;
+}

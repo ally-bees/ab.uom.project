@@ -38,6 +38,7 @@ namespace Backend.Models
         public string PhoneNumber { get; set; } = string.Empty;
         
         [BsonElement("dateOfBirth")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime? DateOfBirth { get; set; }
         
         [BsonElement("country")]
@@ -57,5 +58,10 @@ namespace Backend.Models
         
         [BsonElement("updatedAt")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    public class ProfileImageUrlRequest
+    {
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

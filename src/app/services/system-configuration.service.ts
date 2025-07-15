@@ -24,7 +24,6 @@ export interface SystemConfig {
 
 export interface SecuritySettings {
   id?: string;
-  twoFactorEnabled: boolean;
   passwordPolicy: PasswordPolicy;
   sessionTimeoutMinutes: number;
   maxLoginAttempts: number;
@@ -240,6 +239,9 @@ export class SystemConfigurationService {
 
   private handleError = (error: HttpErrorResponse) => {
     console.error('🔍 SystemConfigurationService Error:', error);
+    console.error('🔍 Error Status:', error.status);
+    console.error('🔍 Error Message:', error.message);
+    console.error('🔍 Error Body:', error.error);
     
     let errorMessage = 'An unexpected error occurred';
     
@@ -256,6 +258,8 @@ export class SystemConfigurationService {
         errorMessage = 'Access denied. You do not have permission to perform this action.';
       } else if (error.status === 404) {
         errorMessage = 'Resource not found.';
+      } else if (error.status === 500) {
+        errorMessage = error.error?.message || 'Internal server error occurred.';
       } else if (error.error && error.error.message) {
         errorMessage = error.error.message;
       } else {

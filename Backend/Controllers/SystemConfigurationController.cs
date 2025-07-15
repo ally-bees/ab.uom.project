@@ -38,13 +38,15 @@ namespace Backend.Controllers
         {
             try
             {
+                _logger.LogInformation("Getting system configuration summary");
                 var summary = await _systemConfigService.GetSystemConfigurationSummaryAsync();
+                _logger.LogInformation("System configuration summary retrieved successfully");
                 return Ok(new { success = true, data = summary });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving system configuration summary");
-                return StatusCode(500, new { success = false, message = "Error retrieving system configuration" });
+                _logger.LogError(ex, "Error retrieving system configuration summary: {Message}", ex.Message);
+                return StatusCode(500, new { success = false, message = $"Error retrieving system configuration: {ex.Message}" });
             }
         }
 

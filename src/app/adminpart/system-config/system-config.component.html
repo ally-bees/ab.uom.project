@@ -59,25 +59,6 @@
         </div>
 
         <div class="config-grid">
-          <!-- Two-Factor Authentication -->
-          <div class="config-card">
-            <div class="config-info">
-              <h4>Two-Factor Authentication (2FA)</h4>
-              <p>Require 2FA for all admin users</p>
-              <span class="config-status" [class]="securitySettings?.twoFactorEnabled ? 'enabled' : 'disabled'">
-                {{ securitySettings?.twoFactorEnabled ? 'Enabled' : 'Disabled' }}
-              </span>
-            </div>
-            <div class="config-actions">
-              <button 
-                class="toggle-switch" 
-                [class.enabled]="securitySettings?.twoFactorEnabled"
-                (click)="toggleTwoFactor()">
-                <span class="toggle-slider"></span>
-              </button>
-            </div>
-          </div>
-
           <!-- Session Timeout -->
           <div class="config-card">
             <div class="config-info">
@@ -289,17 +270,6 @@
       
       <form [formGroup]="securityForm" (ngSubmit)="saveSecuritySettings()">
         <div class="modal-body">
-          <!-- Two-Factor Authentication -->
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                formControlName="twoFactorEnabled">
-              <span class="checkmark"></span>
-              Enable Two-Factor Authentication
-            </label>
-          </div>
-
           <!-- Session Timeout -->
           <div class="form-group">
             <label for="sessionTimeout">Session Timeout (minutes)</label>
