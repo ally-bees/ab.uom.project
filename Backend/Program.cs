@@ -15,7 +15,7 @@ using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Hangfire.MemoryStorage; // Or Hangfire.SqlServer if you're using SQL Server
 
-DotNetEnv.Env.Load(@"C:\Users\Thilinika\Desktop\Me\New folder\Project new\project new\ab.uom.project\.env");
+DotNetEnv.Env.Load(@"C:\Users\pramu\OneDrive\Desktop\git_projects\ab.uom.project\.env");
 Console.WriteLine("✅ EMAIL_USER from .env: " + Environment.GetEnvironmentVariable("EMAIL_USER"));
 Console.WriteLine("EMAIL_PASSWORD is empty = " + string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD")));
 
