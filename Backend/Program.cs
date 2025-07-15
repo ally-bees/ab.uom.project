@@ -2,7 +2,6 @@ using System.Net;
 using System.Text;
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
-// using AuthAPI.Settings; // If JwtSettings/EmailSettings are here, ensure correct namespace
 using Backend.Models;
 using Backend.Services;
 using Hangfire;
@@ -15,6 +14,7 @@ using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 
 DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", ".env"));
+//DotNetEnv.Env.Load(@"C:\Users\pramu\OneDrive\Desktop\git_projects\ab.uom.project\.env");
 Console.WriteLine("✅ EMAIL_USER from .env: " + Environment.GetEnvironmentVariable("EMAIL_USER"));
 Console.WriteLine("EMAIL_PASSWORD is empty = " + string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD")));
 

@@ -129,7 +129,7 @@
         <ag-grid-angular
           style="width: 100%; height: 600px;"
           class="ag-theme-alpine"
-          [rowData]="filteredData"
+          [rowData]="pagedFilteredData"
           [columnDefs]="columnDefs"
           [defaultColDef]="defaultColDef"
           [gridOptions]="gridOptions"
@@ -137,6 +137,12 @@
         >
         </ag-grid-angular>
       </div>
+      </div>
+
+      <div class="pagination-controls" *ngIf="filteredData.length > pageSize" style="text-align:center; margin: 12px 0;">
+        <button (click)="prevPage()" [disabled]="page === 1">&lt;&lt;</button>
+        <span>Page {{ page }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="page === totalPages">&gt;&gt;</button>
       </div>
 
       <div class="print-section">
