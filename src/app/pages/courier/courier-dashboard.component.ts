@@ -34,9 +34,15 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   // All delivery data (used for filtering/searching)
   allDeliveries: Courier[] = [];
 
+  // Company ID for filtering deliveries
+  companyId: string = '';
+
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
+    // Get companyId from localStorage/session or set a default for testing
+    this.companyId = localStorage.getItem('companyId') || '';
+
     // Initialize default date range (last 6 months)
     const today = new Date();
     const weekAgo = new Date();
@@ -46,13 +52,13 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     this.toDate = today.toISOString().slice(0, 10);
 
     // Load recent deliveries (limit 10)
-    this.courierService.getRecentDeliveries(10).subscribe(data => {
+    this.courierService.getRecentDeliveries(10, this.companyId).subscribe(data => {
       this.recentDeliveries = data;
       this.allDeliveries = data; // Backup for search
     });
 
     // Load all deliveries and derive recent deliveries from it
-    this.courierService.getAllCouriers().subscribe(data => {
+    this.courierService.getAllCouriers(this.companyId).subscribe(data => {
       this.allDeliveries = data;
       this.recentDeliveries = data.slice(-10).reverse(); 
     });
@@ -63,8 +69,8 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
 
   // Fetch delivery summary statistics based on selected date range
   fetchSummary(): void {
-    if (this.fromDate && this.toDate) {
-      this.courierService.getSummary(this.fromDate, this.toDate).subscribe(data => {
+    if (this.fromDate && this.toDate && this.companyId) {
+      this.courierService.getSummary(this.fromDate, this.toDate, this.companyId).subscribe(data => {
         this.summary = data;
         this.updatePieChart(); // Refresh chart with new data
       });

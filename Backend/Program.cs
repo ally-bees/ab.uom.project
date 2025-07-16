@@ -82,10 +82,17 @@ builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
 builder.Services.AddScoped<HoneycombService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// Register CourierService for dependency injection
+builder.Services.AddScoped<CourierService>();
+
 // Hangfire configuration
 builder.Services.AddHangfire(config =>
+{
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>();
+    if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.ConnectionString))
+        throw new InvalidOperationException("MongoDB connection string is not configured for Hangfire.");
     config.UseMongoStorage(
-        builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>().ConnectionString,
+        mongoDbSettings.ConnectionString,
         "hangfire-db",
         new MongoStorageOptions
         {
@@ -96,8 +103,8 @@ builder.Services.AddHangfire(config =>
                 // BackupStrategy = new CollectionMongoBackupStrategy() // optional
             }
         }
-    )
-);
+    );
+});
 builder.Services.AddHangfireServer();
 
 // Add controllers and Swagger

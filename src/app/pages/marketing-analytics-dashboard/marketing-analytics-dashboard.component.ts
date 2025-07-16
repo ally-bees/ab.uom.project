@@ -138,7 +138,9 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
       error: (error) => console.error("Error fetching today's sales revenue:", error)
     });
 
-    this.courierService.getTopCountries().subscribe({
+    // Replace 'yourCompanyId' with the actual company ID variable or value
+    const companyId = 'yourCompanyId'; // TODO: Replace with actual company ID source
+    this.courierService.getTopCountries(companyId).subscribe({
       next: (data) => {
         this.topCountries = data.map((item) => ({
           name: item.name,

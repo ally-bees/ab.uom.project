@@ -53,6 +53,8 @@ import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.compone
 import { DemographicComponent } from './components/demographic/demographic.component';
 import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
+import { Component } from 'ag-grid-community';
+import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
 
 export const routes: Routes = [
   // Default route
@@ -163,6 +165,6 @@ export const routes: Routes = [
   { path: 'terms-of-service', component: TermsOfServiceComponent },
 
   // Catch-all redirect
-  { path: '**', redirectTo: 'login' }
+  { path: 'courier', component: CourierDashboardComponent },
+  { path: '**', redirectTo: 'login' },
 ];
-

@@ -31,19 +31,23 @@ export class CourierService {
   constructor(private http: HttpClient) {}
 
   // Fetch summary statistics between a given date range
-  getSummary(from: string, to: string): Observable<any> {
-    const params = new HttpParams().set('from', from).set('to', to);
+  getSummary(from: string, to: string, companyId: string): Observable<any> {
+    const params = new HttpParams()
+      .set('from', from)
+      .set('to', to)
+      .set('companyId', companyId);
     return this.http.get(`${this.baseUrl}/summary`, { params });
   }
 
-  // Get top 3 contries 
-  getTopCountries(): Observable<{ name: string, code: string, percentage: number }[]> {
-    return this.http.get<any>(`${this.baseUrl}/top-countries`).pipe(
+  // Get top 3 countries 
+  getTopCountries(companyId: string): Observable<{ name: string, code: string, percentage: number }[]> {
+    const params = new HttpParams().set('companyId', companyId);
+    return this.http.get<any>(`${this.baseUrl}/top-nations`, { params }).pipe(
       map(data => {
         return data.map((country: any) => {
           return {
             name: country.name,
-            code: country.code.toLowerCase(), // Ensure lowercase
+            code: country.code ? country.code.toLowerCase() : '', // Ensure lowercase
             percentage: country.percentage
           };
         });
@@ -59,16 +63,16 @@ export class CourierService {
       })
     );
   }
-  
 
   // Fetch a limited number of recent deliveries (default = 6)
-  getRecentDeliveries(count = 6): Observable<Courier[]> {
-    const params = new HttpParams().set('count', count);
+  getRecentDeliveries(count = 6, companyId: string): Observable<Courier[]> {
+    const params = new HttpParams().set('count', count).set('companyId', companyId);
     return this.http.get<Courier[]>(`${this.baseUrl}/recent`, { params });
   }
 
   // Fetch the full list of courier records
-  getAllCouriers(): Observable<Courier[]> {
-    return this.http.get<Courier[]>(`${this.baseUrl}/all`);
+  getAllCouriers(companyId: string): Observable<Courier[]> {
+    const params = new HttpParams().set('companyId', companyId);
+    return this.http.get<Courier[]>(`${this.baseUrl}/all`, { params });
   }
 }
