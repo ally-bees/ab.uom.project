@@ -82,5 +82,50 @@ namespace Backend.Services
                 Rejected = courier.Count(c => c.Status == "rejected") // Count of rejected or failed deliveries.
             };
         }
+
+        public async Task<List<object>> GetTopCountriesAsync(string companyId)
+        {
+            var filter = Builders<Courier>.Filter.Eq("CompanyId", companyId);
+            var couriers = await _courierCollection.Find(filter).ToListAsync();
+            
+            // Group by destination (assuming destination contains country info)
+            var countryGroups = couriers
+                .Where(c => !string.IsNullOrEmpty(c.Destination))
+                .GroupBy(c => ExtractCountry(c.Destination))
+                .Where(g => !string.IsNullOrEmpty(g.Key))
+                .Select(g => new { Country = g.Key, Count = g.Count() })
+                .OrderByDescending(g => g.Count)
+                .Take(3)
+                .ToList();
+
+            // Calculate percentages
+            int total = countryGroups.Sum(g => g.Count);
+            
+            return countryGroups
+                .Select(x => new { 
+                    name = x.Country,
+                    percentage = total > 0 ? Math.Round((x.Count * 100.0) / total, 2) : 0
+                })
+                .ToList<object>();
+        }
+
+        // Helper method to extract country from address
+        private string ExtractCountry(string destination)
+        {
+            // This is a simplified implementation - in a real app you would have more
+            // sophisticated parsing logic based on your data format
+            
+            // Assuming destination might contain country at the end after a comma
+            if (string.IsNullOrEmpty(destination)) return string.Empty;
+            
+            var parts = destination.Split(',');
+            if (parts.Length > 0)
+            {
+                // Try to get the last part as country and trim whitespace
+                return parts[parts.Length - 1].Trim();
+            }
+            
+            return destination.Trim();
+        }
     }
 }

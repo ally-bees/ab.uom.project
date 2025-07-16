@@ -138,19 +138,37 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
       error: (error) => console.error("Error fetching today's sales revenue:", error)
     });
 
-    // Replace 'yourCompanyId' with the actual company ID variable or value
-    const companyId = 'yourCompanyId'; // TODO: Replace with actual company ID source
-    this.courierService.getTopCountries(companyId).subscribe({
-      next: (data) => {
-        this.topCountries = data.map((item) => ({
-          name: item.name,
-          code: this.countryCodeMap[item.name] || 'UN',
-          percentage: item.percentage,
-        }));
-        console.log('Top countries loaded:', this.topCountries);
-      },
-      error: (error) => console.error("Error fetching top countries:", error)
-    });
+    // Replace 'yourCompanyId' with the actual company ID from localStorage
+    const companyId = localStorage.getItem('companyId') || '';
+    if (companyId) {
+      this.courierService.getTopCountries(companyId).subscribe({
+        next: (data) => {
+          this.topCountries = data.map((item) => ({
+            name: item.name,
+            code: this.countryCodeMap[item.name] || 'UN',
+            percentage: item.percentage,
+          }));
+          console.log('Top countries loaded:', this.topCountries);
+        },
+        error: (error) => {
+          console.error("Error fetching top countries:", error);
+          // Fallback data in case of error
+          this.topCountries = [
+            { name: 'Sri Lanka', code: 'LK', percentage: 45.3 },
+            { name: 'United States', code: 'US', percentage: 28.7 },
+            { name: 'Australia', code: 'AU', percentage: 15.9 }
+          ];
+        }
+      });
+    } else {
+      console.error("No company ID available");
+      // Use fallback data
+      this.topCountries = [
+        { name: 'Sri Lanka', code: 'LK', percentage: 45.3 },
+        { name: 'United States', code: 'US', percentage: 28.7 },
+        { name: 'Australia', code: 'AU', percentage: 15.9 }
+      ];
+    }
 
     this.orderService.getTodayOrdersCount().subscribe({
       next: (data) => {

@@ -3,6 +3,7 @@ using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Controllers
@@ -86,6 +87,37 @@ namespace Backend.Controllers
 
             await _courierService.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Courier>>> Search([FromQuery] string searchTerm, [FromQuery] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+                return BadRequest("CompanyId is required");
+
+            if (string.IsNullOrEmpty(searchTerm))
+                return await GetAllCouriers(companyId);
+
+            var allCouriers = await _courierService.GetAllByCompanyIdAsync(companyId);
+            var filteredCouriers = allCouriers.Where(c =>
+                (c.Id != null && c.Id.ToLower().Contains(searchTerm.ToLower())) ||
+                (c.OrderId != null && c.OrderId.ToLower().Contains(searchTerm.ToLower())) ||
+                (c.CourierId != null && c.CourierId.ToLower().Contains(searchTerm.ToLower())) ||
+                (c.Destination != null && c.Destination.ToLower().Contains(searchTerm.ToLower())) ||
+                (c.Status != null && c.Status.ToLower().Contains(searchTerm.ToLower()))
+            ).ToList();
+
+            return Ok(filteredCouriers);
+        }
+
+        [HttpGet("top-countries")]
+        public async Task<ActionResult<IEnumerable<object>>> GetTopCountries([FromQuery] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+                return BadRequest("CompanyId is required");
+                
+            var result = await _courierService.GetTopCountriesAsync(companyId);
+            return Ok(result);
         }
     }
 }

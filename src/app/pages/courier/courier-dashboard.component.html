@@ -9,120 +9,173 @@
       <h2><b>Courier Summary</b></h2>
     </div>
 
-    <!-- Filter Inputs: Search and Date Range -->
-    <div class="filters-row">
-      <div class="search-container">
-        <!-- Search input for courier or order ID -->
-        <input type="text" placeholder="Search by Courier ID or Order ID..." [(ngModel)]="searchTerm" (keyup.enter)="searchDeliveries()" />
-        <!-- Trigger search manually -->
-        <button class="search-btn" (click)="searchDeliveries()">
-          <span class="material-icons">search</span>
+    <!-- Loading spinner -->
+    <div class="loading-indicator" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading data...</p>
+    </div>
+
+    <!-- Error message -->
+    <div class="error-message" *ngIf="hasError">
+      <p><i class="material-icons">error</i> {{errorMessage}}</p>
+      <button (click)="loadData()">Try Again</button>
+    </div>
+
+    <div *ngIf="!isLoading && !hasError">
+      <!-- Filter Inputs: Search and Date Range -->
+      <div class="filters-row">
+        <div class="search-container">
+          <!-- Search input for courier or order ID -->
+          <input type="text" placeholder="Search anything..." [(ngModel)]="searchTerm" (keyup.enter)="searchDeliveries()" />
+          <!-- Trigger search manually -->
+          <button class="search-btn" (click)="searchDeliveries()">
+            <span class="material-icons">search</span>
+          </button>
+        </div>
+
+        <!-- Date filter inputs -->
+        <div class="date-range">
+          <div class="date-input">
+            <label>From : </label>
+            <input type="date" [(ngModel)]="fromDate" (change)="fetchSummary()" />
+          </div>
+          <div class="date-input">
+            <label>To : </label>
+            <input type="date" [(ngModel)]="toDate" (change)="fetchSummary()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery summary stats and pie chart -->
+      <div class="summary-section">
+        <div class="delivery-stats">
+          <!-- Total deliveries -->
+          <div class="stat-row total-row">
+            <span class="stat-label"><b>Total Deliveries</b></span>
+            <span class="stat-value">: {{summary.total || 0}}</span>
+          </div>
+          <div class="stat-divider"></div>
+
+          <!-- Breakdown by status -->
+          <div class="stat-row">
+            <span class="stat-label">Pending Deliveries</span>
+            <span class="stat-value">: {{summary.pending || 0}}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Completed Deliveries</span>
+            <span class="stat-value">: {{summary.completed || 0}}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Rejected Deliveries</span>
+            <span class="stat-value">: {{summary.rejected || 0}}</span>
+          </div>
+        </div>
+
+        <!-- Pie chart for delivery status -->
+        <div class="pie-chart">
+          <canvas #deliveryPieChart></canvas>
+          <!-- Chart legend -->
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color pending"></span>
+              <span class="legend-text">Pending Deliveries</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color completed"></span>
+              <span class="legend-text">Completed Deliveries</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color rejected"></span>
+              <span class="legend-text">Rejected Deliveries</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- List of recent deliveries in table format -->
+      <div class="recent-deliveries">
+        <h3>Recent Deliveries</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Delivery ID</th>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Estimated to</th>
+                <th>City</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let delivery of recentDeliveries">
+                <td>{{delivery?.courierId || 'N/A'}}</td>
+                <td>{{delivery?.orderId || 'N/A'}}</td>
+                <td>{{delivery?.date ? (delivery.date | date:'dd/MM/yyyy') : 'N/A'}}</td>
+                <td>{{delivery?.estimateDate ? (delivery.estimateDate | date:'dd/MM/yyyy') : 'N/A'}}</td>
+                <td>{{delivery?.destination || 'N/A'}}</td>
+                <td>
+                  <span class="status" [ngClass]="getStatusClass(delivery?.status)">
+                    {{delivery?.status || 'N/A'}}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="no-data-message" *ngIf="recentDeliveries.length === 0">
+            No courier data available for the selected period.
+          </div>
+        </div>
+      </div>
+
+      <!-- Button to print summary report -->
+      <div class="print-report">
+        <button (click)="printReport()">
+          Print Report
+          <span class="material-icons">print</span>
         </button>
       </div>
-
-      <!-- Date filter inputs -->
-      <div class="date-range">
-        <div class="date-input">
-          <label>From : </label>
-          <input type="date" [(ngModel)]="fromDate" (change)="fetchSummary()" />
-        </div>
-        <div class="date-input">
-          <label>To : </label>
-          <input type="date" [(ngModel)]="toDate" (change)="fetchSummary()" />
-        </div>
-      </div>
     </div>
 
-    <!-- Delivery summary stats and pie chart -->
-    <div class="summary-section">
-      <div class="delivery-stats">
-        <!-- Total deliveries -->
-        <div class="stat-row total-row">
-          <span class="stat-label"><b>Total Deliveries</b></span>
-          <span class="stat-value">: {{summary.total || 0}}</span>
+    <!-- Search results modal popup -->
+    <div class="modal-overlay" *ngIf="showSearchResults" (click)="closeSearchModal($event)">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Search Results</h3>
+          <button class="close-button" (click)="closeSearchModal()">×</button>
         </div>
-        <div class="stat-divider"></div>
-
-        <!-- Breakdown by status -->
-        <div class="stat-row">
-          <span class="stat-label">Pending Deliveries</span>
-          <span class="stat-value">: {{summary.pending || 0}}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Completed Deliveries</span>
-          <span class="stat-value">: {{summary.completed || 0}}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Rejected Deliveries</span>
-          <span class="stat-value">: {{summary.rejected || 0}}</span>
-        </div>
-      </div>
-
-      <!-- Pie chart for delivery status -->
-      <div class="pie-chart">
-        <canvas #deliveryPieChart></canvas>
-        <!-- Chart legend -->
-        <div class="chart-legend">
-          <div class="legend-item">
-            <span class="legend-color pending"></span>
-            <span class="legend-text">Pending Deliveries</span>
+        <div class="modal-body">
+          <div *ngIf="searchResults.length === 0" class="no-results">
+            No couriers found matching "{{searchTerm}}".
           </div>
-          <div class="legend-item">
-            <span class="legend-color completed"></span>
-            <span class="legend-text">Completed Deliveries</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-color rejected"></span>
-            <span class="legend-text">Rejected Deliveries</span>
+          <div *ngIf="searchResults.length > 0" class="search-results-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Delivery ID</th>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Destination</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let result of searchResults" (click)="selectCourier(result)" class="selectable-row">
+                  <td>{{result?.courierId || 'N/A'}}</td>
+                  <td>{{result?.orderId || 'N/A'}}</td>
+                  <td>{{ result?.date ? (result.date | date:'dd/MM/yyyy') : 'N/A' }}</td>
+                  <td>{{result?.destination || 'N/A'}}</td>
+                  <td>
+                    <span class="status" [ngClass]="getStatusClass(result?.status)">
+                      {{result?.status || 'N/A'}}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- List of recent deliveries in table format -->
-    <div class="recent-deliveries">
-      <h3>Recent Deliveries</h3>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Delivery ID</th>
-              <th>Order ID</th>
-              <th>Order Date</th>
-              <th>Estimated to</th>
-              <th>City</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let delivery of recentDeliveries">
-              <td>{{delivery?.courierId}}</td>
-              <td>{{delivery?.orderId}}</td>
-              <td>{{delivery?.date | date:'dd/MM/yyyy'}}</td>
-              <td>{{delivery?.estimateDate | date:'dd/MM/yyyy'}}</td>
-              <td>{{delivery?.destination}}</td>
-              <td>
-                <span class="status" [ngClass]="getStatusClass(delivery?.status)">
-                  {{delivery?.status}}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Button to print summary report -->
-    <div class="print-report">
-      <button (click)="printReport()">
-        Print Report
-        <span class="material-icons">print</span>
-      </button>
-    </div>
-
-    <!-- Hidden or print-only section for exportable report content -->
-    <div id="report-section">
-      <!-- your summary, table, etc. -->
     </div>
   </div>
 </div>

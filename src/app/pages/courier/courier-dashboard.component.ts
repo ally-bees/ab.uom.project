@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { CourierService, Courier } from '../../services/courier.service';
+import { CourierService, Courier, CourierSummaryDto } from '../../services/courier.service';
 import { Chart } from 'chart.js';
 import { HeaderComponent } from "../header/header.component";
 import { CouriersidebarComponent } from "../sidebar/couriersidebar/couriersidebar.component";
@@ -19,7 +19,7 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('deliveryPieChart') deliveryPieChartRef!: ElementRef<HTMLCanvasElement>;
 
   // Summary statistics for deliveries
-  summary: any = {};
+  summary: CourierSummaryDto = { total: 0, pending: 0, completed: 0, rejected: 0 };
   // List of recent deliveries to display in table
   recentDeliveries: Courier[] = [];
   // Pie chart instance
@@ -37,30 +37,55 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   // Company ID for filtering deliveries
   companyId: string = '';
 
+  // Search results modal
+  showSearchResults: boolean = false;
+  searchResults: Courier[] = [];
+
+  // Loading states
+  isLoading: boolean = false;
+  hasError: boolean = false;
+  errorMessage: string = '';
+
   constructor(private courierService: CourierService) {}
 
   ngOnInit(): void {
-    // Get companyId from localStorage/session or set a default for testing
+    // Get companyId from localStorage
     this.companyId = localStorage.getItem('companyId') || '';
+    if (!this.companyId) {
+      console.error('No companyId found in localStorage');
+      this.hasError = true;
+      this.errorMessage = 'Authentication error: No company ID found. Please log in again.';
+      return;
+    }
 
-    // Initialize default date range (last 6 months)
+    // Initialize default date range (last 30 days)
     const today = new Date();
-    const weekAgo = new Date();
-    weekAgo.setDate(today.getDate() - 180);
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
 
-    this.fromDate = weekAgo.toISOString().slice(0, 10);
-    this.toDate = today.toISOString().slice(0, 10);
+    this.fromDate = thirtyDaysAgo.toISOString().split('T')[0];
+    this.toDate = today.toISOString().split('T')[0];
 
-    // Load recent deliveries (limit 10)
-    this.courierService.getRecentDeliveries(10, this.companyId).subscribe(data => {
-      this.recentDeliveries = data;
-      this.allDeliveries = data; // Backup for search
-    });
+    this.loadData();
+  }
 
-    // Load all deliveries and derive recent deliveries from it
-    this.courierService.getAllCouriers(this.companyId).subscribe(data => {
-      this.allDeliveries = data;
-      this.recentDeliveries = data.slice(-10).reverse(); 
+  loadData(): void {
+    this.isLoading = true;
+    this.hasError = false;
+
+    // Load recent deliveries
+    this.courierService.getRecentDeliveries(10, this.companyId).subscribe({
+      next: (data) => {
+        this.recentDeliveries = data;
+        this.allDeliveries = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching recent deliveries:', err);
+        this.hasError = true;
+        this.errorMessage = 'Failed to load recent deliveries. Please try again later.';
+        this.isLoading = false;
+      }
     });
 
     // Fetch summary data for current date range
@@ -70,16 +95,51 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   // Fetch delivery summary statistics based on selected date range
   fetchSummary(): void {
     if (this.fromDate && this.toDate && this.companyId) {
-      this.courierService.getSummary(this.fromDate, this.toDate, this.companyId).subscribe(data => {
-        this.summary = data;
-        this.updatePieChart(); // Refresh chart with new data
+      this.isLoading = true;
+      this.courierService.getSummary(this.fromDate, this.toDate, this.companyId).subscribe({
+        next: (data) => {
+          this.summary = data;
+          this.updatePieChart();
+          this.isLoading = false;
+
+          // Also fetch all couriers for this date range to display
+          this.loadCouriersForDateRange();
+        },
+        error: (err) => {
+          console.error('Error fetching summary:', err);
+          this.hasError = true;
+          this.errorMessage = 'Failed to load summary data. Please try again later.';
+          this.isLoading = false;
+        }
       });
     }
   }
 
+  // Load all couriers for the selected date range
+  loadCouriersForDateRange(): void {
+    // Ideally, you would have a backend endpoint that filters by date range
+    // For now, we'll fetch all and filter client-side
+    this.courierService.getAllCouriers(this.companyId).subscribe({
+      next: (data) => {
+        const fromDate = new Date(this.fromDate);
+        const toDate = new Date(this.toDate);
+        toDate.setHours(23, 59, 59, 999); // Include the entire day
+
+        // Filter couriers within the date range
+        this.recentDeliveries = data.filter(courier => {
+          const courierDate = courier.date ? new Date(courier.date) : null;
+          return courierDate && courierDate >= fromDate && courierDate <= toDate;
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching couriers for date range:', err);
+      }
+    });
+  }
+
   ngAfterViewInit(): void {
     // Draw the chart after view has initialized
-    this.updatePieChart();
+    setTimeout(() => this.updatePieChart(), 500);
   }
 
   // Method to (re)draw the pie chart
@@ -113,7 +173,10 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false }
+          legend: { 
+            display: false,
+            position: 'right'
+          }
         }
       }
     });
@@ -134,19 +197,44 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     window.print();
   }
 
-  // Search deliveries by courier ID or order ID
+  // Search deliveries - show popup with results
   searchDeliveries(): void {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      // Reset to last 10 if search is cleared
-      this.recentDeliveries = this.allDeliveries.slice(-10).reverse();
+    if (!this.searchTerm.trim()) {
+      this.showSearchResults = false;
       return;
     }
 
-    // Filter by courierId or orderId matching search term
-    this.recentDeliveries = this.allDeliveries.filter(delivery =>
-      (delivery.courierId && delivery.courierId.toLowerCase().includes(term)) ||
-      (delivery.orderId && delivery.orderId.toLowerCase().includes(term))
-    );
+    this.isLoading = true;
+    
+    // Use the backend search endpoint
+    this.courierService.searchCouriers(this.searchTerm, this.companyId).subscribe({
+      next: (results) => {
+        this.searchResults = results;
+        this.showSearchResults = true;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Search error:', err);
+        this.hasError = true;
+        this.errorMessage = 'Search failed. Please try again.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Close the search results modal
+  closeSearchModal(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showSearchResults = false;
+  }
+
+  // Select a courier from search results
+  selectCourier(courier: Courier): void {
+    // Here you could implement logic to focus on the selected courier
+    // or navigate to a courier detail page
+    console.log('Selected courier:', courier);
+    this.closeSearchModal();
   }
 }
