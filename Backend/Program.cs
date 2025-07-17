@@ -10,13 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
 // Configure MongoDB settings
-builder.Services.Configure<MongoDBSettings>(
+builder.Services.Configure<Backend.Models.MongoDBSettings>(
     builder.Configuration.GetSection("MongoDBSettings"));
 
 // Register IMongoClient and IMongoDatabase
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
-    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>();
+    Console.WriteLine($"MongoDB Connection String: {mongoDbSettings?.ConnectionString ?? "NULL"}");
+Console.WriteLine($"MongoDB Database Name: {mongoDbSettings?.DatabaseName ?? "NULL"}");
+
     if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.ConnectionString))
     {
         throw new InvalidOperationException("MongoDBSettings or ConnectionString is not configured properly.");
@@ -44,7 +47,7 @@ builder.Services.AddSingleton<ExpenseService>();
 builder.Services.AddSingleton<CourierService>(); 
 builder.Services.AddSingleton<CampaignService>();
 builder.Services.AddSingleton<MongoService>();
-builder.Services.AddSingleton<CampaignService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
