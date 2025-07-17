@@ -25,11 +25,21 @@ public class ReportGenerator
 
     public async Task GenerateAndSendAsync(Automation automation)
     {
+
+        
         var collection = _mongoService.GetCollectionByType(automation.ReportType);
 
          var filter = Builders<BsonDocument>.Filter.Eq("CompanyId", automation.CompanyId);
 
         var reportData = await collection.Find(filter).ToListAsync(); // ✅ correct
+
+        Console.WriteLine($"[DEBUG] ReportType: {automation.ReportType}");
+Console.WriteLine($"[DEBUG] CompanyId: '{automation.CompanyId}'");
+var count = await collection.CountDocumentsAsync(filter);
+Console.WriteLine($"[DEBUG] Count of documents matching filter: {count}");
+
+Console.WriteLine($"[DEBUG] Fetched {reportData.Count} documents");
+
 
         byte[] fileBytes;
         string fileName;
@@ -76,62 +86,67 @@ public class ReportGenerator
     }
 
     private byte[] GeneratePdf(List<BsonDocument> data, out string fileName)
+{
+    fileName = "Report.pdf";
+    var keys = data.Count > 0 ? data[0].Names.ToList() : new List<string>();
+
+    var doc = Document.Create(container =>
     {
-        fileName = "Report.pdf";
-        var keys = data.Count > 0 ? data[0].Names.ToList() : new List<string>();
-
-        var doc = Document.Create(container =>
+        container.Page(page =>
         {
-            container.Page(page =>
+            page.Margin(30);
+            page.Size(PageSizes.A4);
+            page.PageColor(Colors.White);
+            page.DefaultTextStyle(x => x.FontSize(12));
+
+            if (keys.Count == 0)
             {
-                page.Margin(30);
-                page.Size(PageSizes.A4);
-                page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(12));
+                // Render some message instead of table when no data
+                page.Content().Text("No data available to generate report.");
+                return;
+            }
 
-                page.Content().Table(table =>
+            page.Content().Table(table =>
+            {
+                table.ColumnsDefinition(columns =>
                 {
-                    table.ColumnsDefinition(columns =>
-                    {
-                        foreach (var _ in keys)
-                            columns.RelativeColumn();
-                    });
+                    foreach (var _ in keys)
+                        columns.RelativeColumn();
+                });
 
-                    if (keys.Count == 0) return;
-
-                    table.Header(header =>
+                table.Header(header =>
+                {
+                    foreach (var key in keys)
                     {
-                        foreach (var key in keys)
-                        {
-                            header.Cell().Element(CellStyle).Text(key).SemiBold().FontSize(12);
-                        }
-                    });
-
-                    foreach (var doc in data)
-                    {
-                        foreach (var key in keys)
-                        {
-                            var value = doc.Contains(key) ? doc[key]?.ToString() ?? "" : "";
-                            table.Cell().Element(CellStyle).Text(value);
-                        }
-                    }
-
-                    static IContainer CellStyle(IContainer container)
-                    {
-                        return container
-                            .Border(1)
-                            .BorderColor(Colors.Grey.Lighten2)
-                            .Padding(5)
-                            .AlignLeft();
+                        header.Cell().Element(CellStyle).Text(key).SemiBold().FontSize(12);
                     }
                 });
+
+                foreach (var doc in data)
+                {
+                    foreach (var key in keys)
+                    {
+                        var value = doc.Contains(key) ? doc[key]?.ToString() ?? "" : "";
+                        table.Cell().Element(CellStyle).Text(value);
+                    }
+                }
+
+                static IContainer CellStyle(IContainer container)
+                {
+                    return container
+                        .Border(1)
+                        .BorderColor(Colors.Grey.Lighten2)
+                        .Padding(5)
+                        .AlignLeft();
+                }
             });
         });
+    });
 
-        using var ms = new MemoryStream();
-        doc.GeneratePdf(ms);
-        return ms.ToArray();
-    }
+    using var ms = new MemoryStream();
+    doc.GeneratePdf(ms);
+    return ms.ToArray();
+}
 
     private async Task SendEmailAsync(string recipientEmail, string subject, string message, byte[] attachment, string filename)
     {
@@ -142,6 +157,8 @@ public class ReportGenerator
 
             Console.WriteLine($"[DEBUG] EMAIL_USER: '{emailUser}'");
             Console.WriteLine($"[DEBUG] EMAIL_PASSWORD is null or empty: {string.IsNullOrEmpty(emailPassword)}");
+
+            
 
             if (string.IsNullOrEmpty(emailUser) || string.IsNullOrEmpty(emailPassword))
                 throw new InvalidOperationException("Email credentials are missing in environment variables.");

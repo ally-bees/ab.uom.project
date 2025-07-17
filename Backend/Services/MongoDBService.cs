@@ -163,7 +163,7 @@ namespace Backend.Services
             {
                 "sales" => _database.GetCollection<BsonDocument>("sales"),
                 "inventory" => _database.GetCollection<BsonDocument>("inventory"),
-                "financial" => _database.GetCollection<BsonDocument>("financial"),
+                "financial" => _database.GetCollection<BsonDocument>("finance"),
                 "analytics" => _database.GetCollection<BsonDocument>("analytics"),
                 _ => throw new Exception("Invalid report type")
             };
