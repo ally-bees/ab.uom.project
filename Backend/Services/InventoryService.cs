@@ -42,13 +42,14 @@ namespace Backend.Services
         // ✅ New method for top-selling products
         public async Task<List<Inventory>> GetBestSellingProductsAsync(int limit = 10)
         {
-            var orders = await _orderCollection.Find(_ => true).ToListAsync();
+            var orders = await _orderCollection.Find(_ => true).ToListAsync() ?? new List<Order>();
 
             var productSales = new Dictionary<string, int>();
 
             foreach (var order in orders)
             {
-                foreach (var detail in order.OrderDetails)
+                var orderDetails = order.OrderDetails ?? new List<OrderDetail>();
+                foreach (var detail in orderDetails)
                 {
                     if (productSales.ContainsKey(detail.ProductId))
                         productSales[detail.ProductId] += detail.Quantity;
@@ -67,7 +68,7 @@ namespace Backend.Services
             var products = await _inventoryCollection.Find(filter).ToListAsync();
 
             // Optional: sort by sales count
-            products = products.OrderByDescending(p => productSales[p.ProductId]).ToList();
+            products = products.OrderByDescending(p => productSales.ContainsKey(p.ProductId) ? productSales[p.ProductId] : 0).ToList();
 
             return products;
         }

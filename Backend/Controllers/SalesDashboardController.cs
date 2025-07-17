@@ -24,12 +24,12 @@ namespace Backend.Controllers
        [HttpGet]
 public async Task<IActionResult> GetDashboardData()
 {
-    var sales = await _mongoDBService.GetAllSalesAsync();
-    var orders = await _mongoDBService.GetAllOrdersAsync();
-    var inventory = await _mongoDBService.GetAllInventoryAsync();
+    var sales = await _mongoDBService.GetAllSalesAsync() ?? new List<Sale>();
+    var orders = await _mongoDBService.GetAllOrdersAsync() ?? new List<Order>();
+    var inventory = await _mongoDBService.GetAllInventoryAsync() ?? new List<Inventory>();
 
     var totalRevenue = sales.Sum(s => s.Amount);
-    var totalItems = orders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+    var totalItems = orders.Sum(o => (o.OrderDetails ?? new List<OrderDetail>()).Sum(od => od.Quantity));
     var totalOrders = orders.Count;
 
     var viewModel = new SalesViewModel
