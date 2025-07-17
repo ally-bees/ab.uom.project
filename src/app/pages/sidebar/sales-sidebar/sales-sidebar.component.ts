@@ -54,9 +54,12 @@ export class SMSidebarComponent {
   }
   
   logout(): void {
-    // Logic for logout
     console.log('Logout clicked');
-    // Implement logout logic here
+  
+    //  Clear all stored auth/user data
+    localStorage.clear();
+    sessionStorage.clear();
+  
     this.router.navigate(['/login']);
   }
 }

@@ -1,3 +1,22 @@
+<div class="date-filter" style="margin-bottom: 1rem;">
+  <div class="date-group">
+    <span>From:</span>
+    <input
+      type="date"
+      [(ngModel)]="startDate"
+      (change)="onDateChange()"
+    />
+  </div>
+  <div class="date-group" style="margin-left: 1rem;">
+    <span>To:</span>
+    <input
+      type="date"
+      [(ngModel)]="endDate"
+      (change)="onDateChange()"
+    />
+  </div>
+</div>
+
 <div class="stats-card" *ngIf="!loading && !error">
   <div class="card total-sales">
     <h3>Total Revenue <span class="last-30-days">(Last 30 Days)</span></h3>
@@ -9,7 +28,7 @@
   </div>
   <div class="card total-items">
     <h3>Total Items Sold <span class="last-30-days">(Last 30 Days)</span></h3>
-    <p>{{ salesData?.totalItems ?? 'N/A' }}</p> <!-- Handle undefined case -->
+    <p>{{ salesData?.totalItems ?? 'N/A' }}</p>
   </div>
 </div>
 

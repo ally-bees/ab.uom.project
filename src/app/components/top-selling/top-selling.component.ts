@@ -16,6 +16,29 @@ import { InventoryService } from '../../services/inventory.service';
 export class TopSellingComponent implements OnInit {
   topSellingProducts: product[] = [];
   productLimit: number = 10; // Default to 10
+  page: number = 1;
+  pageSize: number = 10;
+
+  get pagedProducts() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.topSellingProducts.slice(start, start + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.topSellingProducts.length / this.pageSize);
+  }
+
+  nextPage() {
+    if (this.page < this.totalPages) {
+      this.page++;
+    }
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
 
   constructor(private inventoryService: InventoryService) {}
 

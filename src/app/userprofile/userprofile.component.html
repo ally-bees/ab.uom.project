@@ -4,13 +4,36 @@
     <div class="profile-container">
       <div class="sidebar">
         <div class="profile-image-container">
-          <img [src]="imageSrc" alt="Profile Image" class="profile-image" />
+          <img [src]="getImageSrc()" alt="Profile Image" class="profile-image" />
         
-          <button class="camera-button" (click)="triggerFileInput()">
-            <i class="camera-icon">📷</i>
-          </button>
+          <div class="image-upload-options">
+            <button class="camera-button" (click)="triggerFileInput()" title="Upload from device">
+              <i class="camera-icon">📷</i>
+            </button>
+            
+            <button class="url-button" (click)="toggleImageUrlInput()" title="Use image URL">
+              <i class="link-icon">🔗</i>
+            </button>
+          </div>
         
           <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+          
+          <!-- Image URL Input -->
+          <div class="image-url-input" *ngIf="showImageUrlInput">
+            <input 
+              type="url" 
+              [(ngModel)]="imageUrlInput" 
+              placeholder="Enter image URL (e.g., from Google Drive, Imgur, etc.)"
+              class="url-input"
+            />
+            <div class="url-buttons">
+              <button class="apply-url-btn" (click)="setImageFromUrl()">Apply</button>
+              <button class="cancel-url-btn" (click)="toggleImageUrlInput()">Cancel</button>
+            </div>
+            <small class="url-help">
+              Tip: Right-click on any image online and select "Copy image address" to get the URL
+            </small>
+          </div>
         </div>
         
         <div class="profile-info">

@@ -7,12 +7,18 @@
   <button (click)="loadTopSellingProducts()">Load</button>
 
   <ul class="product-list">
-    <li *ngFor="let product of topSellingProducts; let i = index" 
+    <li *ngFor="let product of pagedProducts; let i = index" 
         [ngStyle]="{
-          'background-color': getProductBackgroundColor(i), 
-          'color': getTextColor(getProductBackgroundColor(i))
+          'background-color': getProductBackgroundColor(i + (page - 1) * pageSize), 
+          'color': getTextColor(getProductBackgroundColor(i + (page - 1) * pageSize))
         }">
       {{ product.name }}
     </li>
   </ul>
+
+  <div class="pagination-controls" *ngIf="topSellingProducts.length > pageSize">
+    <button (click)="prevPage()" [disabled]="page === 1">&lt;&lt;</button>
+    <span>Page {{ page }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="page === totalPages">&gt;&gt;</button>
+  </div>
 </div>

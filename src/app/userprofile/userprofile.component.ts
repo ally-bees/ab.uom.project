@@ -1,12 +1,12 @@
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
-//import { UserService } from '../services/user.service';
 import { UserService } from '../services/userProfile.service';
+import { ProfileImageService } from '../services/profile-image.service';
 
 export interface UserDetails {
   id?: string;
@@ -27,7 +27,7 @@ export interface UserDetails {
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,MatFormFieldModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatFormFieldModule],
   templateUrl: './userprofile.component.html',
   styleUrls: ['./userprofile.component.css']
 })
@@ -50,10 +50,15 @@ export class UserProfileComponent implements OnInit {
     { name: 'Logout', active: false }
   ];
 
+  // New properties for image URL option
+  showImageUrlInput = false;
+  imageUrlInput = '';
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private userService : UserService,
+    private profileImageService: ProfileImageService,
     private router: Router
   ) {
     this.profileForm = this.fb.group({
@@ -85,9 +90,11 @@ export class UserProfileComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       
-      if (user) {
-        // Populate the form with user data
-        // Assuming the username contains first and last name separated by space
+      if (user && user.id) {
+        // Load user details from the backend
+        this.loadUserProfile(user.id);
+        
+        // Populate the form with basic user data
         const nameParts = user.username.split(' ');
         const firstName = nameParts[0] || '';
         const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
@@ -113,7 +120,7 @@ export class UserProfileComponent implements OnInit {
           userName: userDetails.userName,
           phoneCountryCode: userDetails.phoneCountryCode,
           phoneNumber: userDetails.phoneNumber,
-          dateOfBirth: userDetails.dateOfBirth,
+          dateOfBirth: userDetails.dateOfBirth ? new Date(userDetails.dateOfBirth).toISOString().split('T')[0] : '',
           country: userDetails.country,
           address: userDetails.address,
           city: userDetails.city
@@ -121,11 +128,18 @@ export class UserProfileComponent implements OnInit {
 
         // Set profile image if exists
         if (userDetails.profileImage) {
-          this.imageSrc = userDetails.profileImage;
+          if (userDetails.profileImage.startsWith('http')) {
+            this.imageSrc = userDetails.profileImage; // External URL
+            this.profileImageService.updateProfileImage(userDetails.profileImage);
+          } else {
+            this.imageSrc = `http://localhost:5241${userDetails.profileImage}`; // Local file
+            this.profileImageService.updateProfileImage(`http://localhost:5241${userDetails.profileImage}`);
+          }
         }
       },
       error: (error) => {
         console.log('No existing user details found, using defaults');
+        // If no user details exist, that's okay - they can create new ones
       }
     });
   }
@@ -180,6 +194,12 @@ export class UserProfileComponent implements OnInit {
         next: (response) => {
           console.log('Profile image uploaded successfully:', response);
           this.showSuccessMessage('Profile and image saved successfully!');
+          // Update navbar with the new image URL
+          if (response.imageUrl) {
+            const fullImageUrl = response.imageUrl.startsWith('http') ? 
+              response.imageUrl : `http://localhost:5241${response.imageUrl}`;
+            this.profileImageService.updateProfileImage(fullImageUrl);
+          }
           this.selectedFile = null;
           this.isLoading = false;
         },
@@ -215,15 +235,6 @@ export class UserProfileComponent implements OnInit {
     // This will trigger the native date picker
     document.getElementById('dateOfBirth')?.click();
   }
-
-  // onSave() {
-  //   if (this.profileForm.valid) {
-  //     console.log('Form submitted', this.profileForm.value);
-  //     // Here you would typically call a service to update the profile
-  //   } else {
-  //     this.markFormGroupTouched(this.profileForm);
-  //   }
-  // }
  
   markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
@@ -249,8 +260,14 @@ export class UserProfileComponent implements OnInit {
   }
 
   navigateToDashboard() {
-    // Navigate to the dashboard 
-    this.router.navigate(['/dashboard']);
+    // Navigate based on user role
+    if (this.currentUser && this.currentUser.Role) {
+      const redirectUrl = this.authService.getRedirectUrl();
+      this.router.navigate([redirectUrl]);
+    } else {
+      // Default dashboard if no role is found
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   logout() {
@@ -296,11 +313,81 @@ export class UserProfileComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        this.showErrorMessage('Please select a valid image file (JPG, PNG, or GIF)');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.showErrorMessage('File size too large. Maximum size is 5MB.');
+        return;
+      }
+      
+      this.selectedFile = file; // Store the selected file
+      
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imageSrc = e.target.result; // base64 image preview
+        // Update the navbar profile image immediately with preview
+        this.profileImageService.updateProfileImage(e.target.result);
       };
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  toggleImageUrlInput(): void {
+    this.showImageUrlInput = !this.showImageUrlInput;
+    if (!this.showImageUrlInput) {
+      this.imageUrlInput = '';
+    }
+  }
+
+  setImageFromUrl(): void {
+    if (this.imageUrlInput && this.currentUser) {
+      // Validate URL format
+      try {
+        new URL(this.imageUrlInput);
+      } catch (e) {
+        this.showErrorMessage('Please enter a valid URL');
+        return;
+      }
+
+      this.isLoading = true;
+      this.userService.setProfileImageUrl(this.currentUser.id!, this.imageUrlInput).subscribe({
+        next: (response) => {
+          console.log('Profile image URL saved successfully:', response);
+          this.imageSrc = this.imageUrlInput;
+          // Update navbar with the new image URL
+          this.profileImageService.updateProfileImage(this.imageUrlInput);
+          this.showSuccessMessage('Profile image updated successfully!');
+          this.showImageUrlInput = false;
+          this.imageUrlInput = '';
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error setting image URL:', error);
+          this.showErrorMessage('Failed to update profile image. Please try again.');
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.showErrorMessage('Please enter a valid image URL');
+    }
+  }
+
+  // Updated image source handling
+  getImageSrc(): string {
+    if (this.imageSrc.startsWith('http')) {
+      return this.imageSrc; // External URL
+    } else if (this.imageSrc.startsWith('/uploads')) {
+      return `http://localhost:5241${this.imageSrc}`; // Local file
+    } else {
+      return this.imageSrc; // Base64 or default
     }
   }
 }

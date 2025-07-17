@@ -34,9 +34,7 @@ namespace Backend.Controllers
 
             var viewModel = new SalesViewModel
             {
-                Sales = sales,
-                RelatedOrders = orders,
-                RelatedInventory = inventory,
+                
                 TotalRevenue = totalRevenue,
                 TotalItems = totalItems,
                 TotalOrders = totalOrders

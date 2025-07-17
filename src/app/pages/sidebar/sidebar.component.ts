@@ -50,6 +50,15 @@ export class SidebarComponent {
 
   logout(): void {
     console.log('Logout clicked');
+  
+    //  Clear all stored auth/user data
+    localStorage.clear();
+    sessionStorage.clear();
+  
+    //  Optionally reset your user subject (if you use BehaviorSubject in AuthService)
+    // this.authService.setCurrentUser(null); // Only if applicable
+  
+    //  Navigate to login page
     this.router.navigate(['/login']);
   }
 }
