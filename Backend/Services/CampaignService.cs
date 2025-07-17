@@ -9,12 +9,12 @@ namespace Backend.Services
     {
         private readonly IMongoCollection<Campaign> _campaigns;
 
+        // Inject the shared IMongoDatabase directly
         public CampaignService(IMongoDatabase database)
         {
             _campaigns = database.GetCollection<Campaign>("campaigns");
         }
 
-        // Get all campaigns
         public async Task<List<Campaign>> GetAllAsync() =>
             await _campaigns.Find(_ => true).ToListAsync();
     }

@@ -32,17 +32,31 @@ builder.Configuration
 
 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-// === Strongly Typed Configuration Bindings ===
+
 builder.Services.Configure<Backend.Models.MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+builder.Services.Configure<Backend.Models.MongoDBSettings>(
+    builder.Configuration.GetSection("MongoDBSettings"));
+
+
 // === MongoDB Setup ===
 builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
+
     var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
     if (mongoDbSettings?.ConnectionString == null)
         throw new InvalidOperationException("MongoDB connection string is not configured.");
+    var mongoDbSettings = builder.Configuration.GetSection("MongoDBSettings").Get<Backend.Models.MongoDBSettings>();
+    Console.WriteLine($"MongoDB Connection String: {mongoDbSettings?.ConnectionString ?? "NULL"}");
+Console.WriteLine($"MongoDB Database Name: {mongoDbSettings?.DatabaseName ?? "NULL"}");
+
+    if (mongoDbSettings == null || string.IsNullOrEmpty(mongoDbSettings.ConnectionString))
+    {
+        throw new InvalidOperationException("MongoDBSettings or ConnectionString is not configured properly.");
+    }
+
     return new MongoClient(mongoDbSettings.ConnectionString);
 });
 

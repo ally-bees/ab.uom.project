@@ -36,5 +36,8 @@ namespace Backend.Models
 
         [BsonElement("date")]
         public DateTime Date { get; set; }
+
+        [BsonElement("CompanyId")]
+        public string? CompanyId { get; set; }
     }
 }
