@@ -21,27 +21,30 @@ namespace Backend.Controllers
         }
 
         // Get all sales, orders, and inventory data
-        [HttpGet]
-        public async Task<IActionResult> GetDashboardData()
-        {
-            var sales = await _mongoDBService.GetAllSalesAsync();
-            var orders = await _mongoDBService.GetAllOrdersAsync();
-            var inventory = await _mongoDBService.GetAllInventoryAsync();
+       [HttpGet]
+public async Task<IActionResult> GetDashboardData()
+{
+    var sales = await _mongoDBService.GetAllSalesAsync();
+    var orders = await _mongoDBService.GetAllOrdersAsync();
+    var inventory = await _mongoDBService.GetAllInventoryAsync();
 
-            var totalRevenue = sales.Sum(s => s.Amount);
-            var totalItems = orders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
-            var totalOrders = orders.Count;
+    var totalRevenue = sales.Sum(s => s.Amount);
+    var totalItems = orders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+    var totalOrders = orders.Count;
 
-            var viewModel = new SalesViewModel
-            {
-                
-                TotalRevenue = totalRevenue,
-                TotalItems = totalItems,
-                TotalOrders = totalOrders
-            };
+    var viewModel = new SalesViewModel
+    {
+        Sales = sales,
+        RelatedOrders = orders,
+        RelatedInventory = inventory,
+        TotalRevenue = totalRevenue,
+        TotalItems = totalItems,
+        TotalOrders = totalOrders
+    };
 
-            return Ok(viewModel);
-        }
+    return Ok(viewModel);
+}
+
 
         // Get dashboard data within a date range
         [HttpGet("date-range")]
