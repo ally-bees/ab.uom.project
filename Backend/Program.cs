@@ -74,6 +74,7 @@ builder.Services.AddSingleton<IPasswordResetService, PasswordResetService>();
 builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
 builder.Services.AddScoped<HoneycombService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
 
 // === System Services ===
 builder.Services.AddSingleton<ISystemConfigurationService, SystemConfigurationService>();

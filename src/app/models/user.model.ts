@@ -19,9 +19,21 @@ export interface LoginRequest {
     password: string;
 }
   
+export interface OtpVerifyRequest {
+    email: string;
+    otpCode: string;
+    purpose: string;
+}
+
+export interface OtpRequest {
+    email: string;
+    purpose: string;
+}
+
 export interface AuthResponse {
     success: boolean;
-    token: string;
+    token?: string;
     message: string;
-    user: User;
+    user?: User;
+    requiresOtpVerification?: boolean;
 }
