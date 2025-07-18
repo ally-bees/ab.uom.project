@@ -68,8 +68,15 @@ export class SalesService {
     return this.http.delete<void>(`${this.apiUrl}/Sales/${id}`);
   }
 
-  getDashboardData(): Observable<SalesViewModel> {
-    return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard`);
+  getDashboardData(companyId?: string): Observable<SalesViewModel> {
+    if (!companyId) {
+      companyId = this.authService.getCurrentUser()?.CompanyId;
+    }
+    if (companyId) {
+      return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard?companyId=${companyId}`);
+    } else {
+      return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard`);
+    }
   }
 
   getDashboardDataByCompanyId(): Observable<SalesViewModel> {
@@ -85,5 +92,9 @@ export class SalesService {
       throw new Error('User company ID is not available.');
     }
     return this.http.get<Sale[]>(`${this.apiUrl}/Sales/company/${companyId}`);
+  }
+
+  getCompanySalesComparison(month: string) {
+    return this.http.get<{ companyId: string, totalSales: number }[]>(`${this.apiUrl}/SalesDashboard/company-sales-comparison?month=${month}`);
   }
 }
