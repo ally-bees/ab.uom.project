@@ -97,4 +97,16 @@ export class SalesService {
   getCompanySalesComparison(month: string) {
     return this.http.get<{ companyId: string, totalSales: number }[]>(`${this.apiUrl}/SalesDashboard/company-sales-comparison?month=${month}`);
   }
+
+  getDashboardDataForCompanyWithDateRange(startDate: string, endDate: string): Observable<SalesViewModel> {
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    if (!companyId) {
+      throw new Error('User company ID is not available.');
+    }
+    let url = `${this.apiUrl}/SalesDashboard/company/${companyId}`;
+    if (startDate && endDate) {
+      url += `?startDate=${startDate}&endDate=${endDate}`;
+    }
+    return this.http.get<SalesViewModel>(url);
+  }
 }

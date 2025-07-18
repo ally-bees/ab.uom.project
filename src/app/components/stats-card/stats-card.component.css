@@ -7,11 +7,6 @@
 }
 /* Card container */
 .stats-card {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 1.5%;
-  margin-bottom: 20px;
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -20,7 +15,6 @@
 /* Each stat card */
 .card {
   background-color: #f9f9f9;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease-in-out;
@@ -100,13 +94,13 @@ div[ng-reflect-ng-if="error"] {
 }
 
 .card h3 {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
   color: #555;
 }
 
 .card p {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #007bff;
 }
@@ -114,4 +108,31 @@ div[ng-reflect-ng-if="error"] {
   font-size: 12px;
   font-weight: normal;
   color: #888;
+}
+
+.card-revenue {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-left: 6px solid #2196f3;
+}
+
+.card-orders {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-left: 6px solid #43a047;
+}
+
+.card-items {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-left: 6px solid #fb8c00;
+}
+
+.card-revenue p {
+  color: #1565c0;
+}
+
+.card-orders p {
+  color: #2e7d32;
+}
+
+.card-items p {
+  color: #ef6c00;
 }

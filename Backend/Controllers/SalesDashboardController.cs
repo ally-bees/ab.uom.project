@@ -150,5 +150,45 @@ public async Task<IActionResult> GetDashboardData()
 
             return Ok(result);
         }
+
+        [HttpGet("company/{companyId}")]
+        public async Task<IActionResult> GetDashboardDataByCompanyId(string companyId, [FromQuery] string? startDate = null, [FromQuery] string? endDate = null)
+        {
+            DateTime? start = null, end = null;
+            if (!string.IsNullOrEmpty(startDate))
+                start = DateTime.Parse(startDate);
+            if (!string.IsNullOrEmpty(endDate))
+                end = DateTime.Parse(endDate);
+
+            var sales = (await _mongoDBService.GetAllSalesAsync() ?? new List<Sale>())
+                .Where(s => s.CompanyId == companyId &&
+                    (!start.HasValue || s.SaleDate >= start.Value) &&
+                    (!end.HasValue || s.SaleDate <= end.Value))
+                .ToList();
+            var orders = (await _mongoDBService.GetAllOrdersAsync() ?? new List<Order>())
+                .Where(o => o.CompanyId == companyId &&
+                    (!start.HasValue || o.OrderDate >= start.Value) &&
+                    (!end.HasValue || o.OrderDate <= end.Value))
+                .ToList();
+            var inventory = (await _mongoDBService.GetAllInventoryAsync() ?? new List<Inventory>())
+                .Where(i => i.CompanyId == companyId)
+                .ToList();
+
+            var totalRevenue = sales.Sum(s => s.Amount);
+            var totalItems = orders.Sum(o => (o.OrderDetails ?? new List<OrderDetail>()).Sum(od => od.Quantity));
+            var totalOrders = orders.Count;
+
+            var viewModel = new SalesViewModel
+            {
+                Sales = sales,
+                RelatedOrders = orders,
+                RelatedInventory = inventory,
+                TotalRevenue = totalRevenue,
+                TotalItems = totalItems,
+                TotalOrders = totalOrders
+            };
+
+            return Ok(viewModel);
+        }
     }
 }
