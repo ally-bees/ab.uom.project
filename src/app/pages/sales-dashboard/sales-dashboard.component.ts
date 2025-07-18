@@ -35,7 +35,6 @@ export class SalesDashboardComponent implements OnInit {
     responsive: true,
     plugins: {
       legend: { display: false },
-      title: { display: true, text: 'Company Sales Comparison (For Selected Month)' }
     },
     scales: { x: {}, y: { beginAtZero: true } }
   };
@@ -86,7 +85,7 @@ export class SalesDashboardComponent implements OnInit {
         datasets: [{
           label: 'Total Sales',
           data: data.map(d => d.totalSales),
-          backgroundColor: data.map(d => d.companyId === userCompanyId ? '#ff7043' : '#42a5f5')
+          backgroundColor: data.map(d => d.companyId === userCompanyId ? '#00b8d4' : '#aeaeae')
         }]
       };
     });

@@ -7,8 +7,10 @@
           <img [src]="getImageSrc()" alt="Profile Image" class="profile-image" />
         
           <div class="image-upload-options">
-            <button class="camera-button" (click)="triggerFileInput()" title="Upload from device">
-              <i class="camera-icon">📷</i>
+            <button class="camera-button" style="background-color: #00b8d4;" (click)="triggerFileInput()" title="Upload from device">
+              <svg class="camera-icon" viewBox="0 0 24 24">
+                <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2A3.2 3.2 0 1 1 12 10a3.2 3.2 0 0 1 0 6.4zM20 5h-3.2l-1.1-1.7A2 2 0 0 0 14 2h-4a2 2 0 0 0-1.7 1.3L7.2 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 14H4V7h4.05l1.83-2.83A.5.5 0 0 1 10 4h4a.5.5 0 0 1 .42.17L15.95 7H20v12z"/>
+              </svg>
             </button>
             
             <button class="url-button" (click)="toggleImageUrlInput()" title="Use image URL">

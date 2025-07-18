@@ -5,45 +5,7 @@
       <h3>Sales Summary</h3>
     </div>
     <app-stats-card></app-stats-card>
-    <div class="company-sales-bar-chart" style="margin: 2rem 0; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); padding: 2rem;">
-      <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-        <label for="monthInput" style="font-weight: 600; margin-right: 1rem;">Select Month:</label>
-        <input id="monthInput" type="month" [(ngModel)]="selectedMonth" (change)="onMonthChange()" style="padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem;" />
-      </div>
-      <h4 style="margin-bottom: 1rem;">Sales Comparison with Other Companies</h4>
-      <canvas baseChart
-        [data]="companySalesChartData"
-        [options]="companySalesChartOptions"
-        [type]="'bar'">
-      </canvas>
-      <div style="margin-top: 2rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 1rem;">
-        <span style="font-weight: 600; font-size: 1.1rem; display: flex; align-items: center;">
-          Sales Access
-          <span (click)="showAccessInfo = true" style="margin-left: 8px; cursor: pointer; color: #777777; font-size: 1.2em; border-radius: 50%; border: 1px solid #ababab; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; background: #c5c5c5;">i</span>
-        </span>
-        <label class="switch">
-          <input type="checkbox" [checked]="userSalesAccessValue === 1" (change)="toggleSalesAccess()">
-          <span class="slider round"></span>
-        </label>
-      </div>
-      <div *ngIf="showAccessInfo" class="access-info-popup" (clickOutside)="showAccessInfo = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; z-index: 1000;">
-        <div style="background: #fff; border-radius: 12px; max-width: 480px; padding: 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.18); position: relative;">
-          <button (click)="showAccessInfo = false" style="position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #888;">&times;</button>
-          <p style="color:#0c0c0c; font-weight: 600;">If Sales Access is ON:</p>
-          <p style="color:#5a5a5a">
-            You’ll be able to view monthly sales totals of other companies and see how your company compares in the sales comparison bar graph. It gives you valuable insights and helps you understand your market position.
-          </p>
-          <p style="color:#131313; font-weight: 600;">If Sales Access is OFF:</p>
-          <p style="color:#5a5a5a">
-            Your company’s sales data will remain private, and others won’t be able to view it. However, you also won’t appear in the comparison graph and won’t be able to see other companies’ sales either.
-          </p>
-          <p style="color:#005875; font-weight: 600;">Pro Tip – The Trick:</p>
-          <p style="color:#49b2b8">
-            You can turn it ON temporarily, check how your company compares with others, and then turn it OFF again to keep your data private. It’s a smart way to get insights without giving up full privacy.
-          </p>
-        </div>
-      </div>
-    </div>
+    
   </div>
   <div class="row">
     <div class="left-section">
@@ -51,6 +13,51 @@
     </div>
     <div class="right-section">
       <app-sales-heatmap></app-sales-heatmap>
+    </div>
+  </div>
+
+
+
+  <div class="company-sales-bar-chart" style="margin: 0rem 0; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); padding: 2rem;align-items: center;text-align: center;">
+      
+    <h4  topic style="margin-bottom: 1rem; font-weight: 700; font-size:27px;">Sales Comparison with Other Companies</h4>
+    <div style="align-items: center;">
+      <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+        <label for="monthInput" style="font-weight: 600; margin-right: 1rem;">Select Month:</label>
+        <input id="monthInput" type="month" [(ngModel)]="selectedMonth" (change)="onMonthChange()" style="padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem;" />
+      </div>
+    </div>
+    <canvas baseChart
+      [data]="companySalesChartData"
+      [options]="companySalesChartOptions"
+      [type]="'bar'">
+    </canvas>
+    <div style="margin-top: 2rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+      <span style="font-weight: 600; font-size: 1.2rem; display: flex; align-items: center;">
+        Sales Access
+        <span (click)="showAccessInfo = true" class="info-icon">i</span>
+      </span>
+      <label class="switch">
+        <input type="checkbox" [checked]="userSalesAccessValue === 1" (change)="toggleSalesAccess()">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div *ngIf="showAccessInfo" class="access-info-popup">
+      <div class="popup-content">
+        <button (click)="showAccessInfo = false" class="close-btn">&times;</button>
+        <p style="color:#0c0c0c; font-weight: 600;">If Sales Access is ON:</p>
+        <p style="color:#5a5a5a">
+          You’ll be able to view monthly sales totals of other companies and see how your company compares in the sales comparison bar graph. It gives you valuable insights and helps you understand your market position.
+        </p>
+        <p style="color:#131313; font-weight: 600;">If Sales Access is OFF:</p>
+        <p style="color:#5a5a5a">
+          Your company’s sales data will remain private, and others won’t be able to view it. However, you also won’t appear in the comparison graph and won’t be able to see other companies’ sales either.
+        </p>
+        <p class="pro-tip">Pro Tip – The Trick:</p>
+        <p style="color:#49b2b8">
+          You can turn it ON temporarily, check how your company compares with others, and then turn it OFF again to keep your data private. It’s a smart way to get insights without giving up full privacy.
+        </p>
+      </div>
     </div>
   </div>
 </div>
