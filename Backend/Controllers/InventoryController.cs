@@ -2,6 +2,7 @@ using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Backend.Controllers
 {
@@ -66,6 +67,14 @@ namespace Backend.Controllers
         {
             var topProducts = await _inventoryService.GetBestSellingProductsAsync(limit);
             return Ok(topProducts);
+        }
+
+        [HttpGet("company/{companyId}")]
+        public async Task<IActionResult> GetByCompanyId(string companyId)
+        {
+            var inventory = await _inventoryService.GetAllAsync();
+            var filteredInventory = inventory.Where(i => i.CompanyId == companyId).ToList();
+            return Ok(filteredInventory);
         }
 
 

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Sale } from '../models/sale.model';
 import { SalesViewModel } from '../models/sale.model';
 import { product } from '../models/product.model';
+import { AuthService } from './auth.service'; 
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { product } from '../models/product.model';
 export class InventoryService {
   private apiUrl = 'http://localhost:5241/api/Inventory'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { } 
 
 
   getAllProducts(): Observable<product[]> {
@@ -51,5 +52,14 @@ export class InventoryService {
  
   getBestSellingProducts(limit: number = 5): Observable<product[]> {
     return this.http.get<product[]>(`${this.apiUrl}/bestselling?limit=${limit}`);
+  }
+
+  getInventoryByCompany(): Observable<product[]> {
+    // You may need to inject AuthService in the constructor if not already present
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    if (!companyId) {
+      throw new Error('User company ID is not available.');
+    }
+    return this.http.get<product[]>(`${this.apiUrl}/company/${companyId}`);
   }
 }
