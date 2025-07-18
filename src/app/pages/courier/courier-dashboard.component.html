@@ -1,4 +1,35 @@
-  <div class="courier-container">
+<!-- Popup modal table for couriers in selected date range -->
+<div *ngIf="showDateRangeResults" class="modal">
+  <div class="modal-content">
+    <button (click)="closeDateRangeModal()">Close</button>
+    <h3>Couriers in Selected Date Range</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Courier ID</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Estimate Date</th>
+          <th>Destination</th>
+          <th>Company ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let courier of dateRangeResults">
+          <td>{{ courier.orderId }}</td>
+          <td>{{ courier.courierId }}</td>
+          <td>{{ courier.status }}</td>
+          <td>{{ courier.date | date }}</td>
+          <td>{{ courier.estimateDate | date }}</td>
+          <td>{{ courier.destination }}</td>
+          <td>{{ courier.companyId }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="courier-container">
     <!-- Page Title -->
     <div class="section-title">
       <h2><b>Courier Summary</b></h2>
@@ -40,6 +71,11 @@
           </div>
         </div>
       </div>
+
+      <div>
+        <!-- Button to show popup table for selected date range -->
+         <button (click)="loadCouriersForDateRange()">Show Couriers in Date Range</button>
+        </div>
 
       <!-- Delivery summary stats and pie chart -->
       <div class="summary-section">
@@ -169,6 +205,42 @@
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date range results modal popup (single, full details) -->
+    <div class="modal-overlay" *ngIf="showDateRangeResults" (click)="closeDateRangeModal($event)">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Date Range Results</h3>
+          <button class="close-button" (click)="closeDateRangeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Courier ID</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Estimate Date</th>
+                <th>Destination</th>
+                <th>Company ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let courier of dateRangeResults">
+                <td>{{ courier.orderId }}</td>
+                <td>{{ courier.courierId }}</td>
+                <td>{{ courier.status }}</td>
+                <td>{{ courier.date | date }}</td>
+                <td>{{ courier.estimateDate | date }}</td>
+                <td>{{ courier.destination }}</td>
+                <td>{{ courier.companyId }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

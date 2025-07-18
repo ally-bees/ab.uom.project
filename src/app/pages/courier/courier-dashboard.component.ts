@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule]
 })
 export class CourierDashboardComponent implements OnInit, AfterViewInit {
+  showDateRangeResults: boolean = false;
+  dateRangeResults: Courier[] = [];
   // Reference to the pie chart canvas element
   @ViewChild('deliveryPieChart') deliveryPieChartRef!: ElementRef<HTMLCanvasElement>;
 
@@ -76,6 +78,18 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   // Fetch delivery summary statistics based on selected date range
   fetchSummary(): void {
     if (this.fromDate && this.toDate && this.companyId) {
+      const from = new Date(this.fromDate);
+      const to = new Date(this.toDate);
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      if (to > today) {
+        alert('To date cannot be ahead of today.');
+        return;
+      }
+      if (to < from) {
+        alert('To date cannot be before From date.');
+        return;
+      }
       this.isLoading = true;
       this.courierService.getSummary(this.fromDate, this.toDate, this.companyId).subscribe({
         next: (data) => {
@@ -127,19 +141,26 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
 
   // Load all couriers for the selected date range
   loadCouriersForDateRange(): void {
-    // Ideally, you would have a backend endpoint that filters by date range
-    // For now, we'll fetch all and filter client-side
+    const fromDate = new Date(this.fromDate);
+    const toDate = new Date(this.toDate);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    if (toDate > today) {
+      alert('To date cannot be ahead of today.');
+      return;
+    }
+    if (toDate < fromDate) {
+      alert('To date cannot be before From date.');
+      return;
+    }
     this.courierService.getAllCouriers(this.companyId).subscribe({
       next: (data) => {
-        const fromDate = new Date(this.fromDate);
-        const toDate = new Date(this.toDate);
-        toDate.setHours(23, 59, 59, 999); // Include the entire day
-
-        // Filter couriers within the date range
-        this.recentDeliveries = data.filter(courier => {
+        const results = data.filter(courier => {
           const courierDate = courier.date ? new Date(courier.date) : null;
           return courierDate && courierDate >= fromDate && courierDate <= toDate;
         });
+        this.dateRangeResults = results;
+        this.showDateRangeResults = true;
       },
       error: (err) => {
         console.error('Error fetching couriers for date range:', err);
@@ -148,8 +169,10 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Draw the chart after view has initialized
-    setTimeout(() => this.updatePieChart(), 500);
+    // Draw the chart after view has initialized and summary data is loaded
+    if (this.summary && (this.summary.pending > 0 || this.summary.completed > 0 || this.summary.rejected > 0)) {
+      this.updatePieChart();
+    }
   }
 
   // Method to (re)draw the pie chart
@@ -238,6 +261,14 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       event.stopPropagation();
     }
     this.showSearchResults = false;
+  }
+
+  // Close the date range results modal
+  closeDateRangeModal(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showDateRangeResults = false;
   }
 
   // Select a courier from search results
