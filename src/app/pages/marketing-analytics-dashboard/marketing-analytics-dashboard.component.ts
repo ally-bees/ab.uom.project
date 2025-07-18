@@ -21,8 +21,8 @@ import { MarketingDashboardService } from '../../services/marketing-dashboard.se
   templateUrl: './marketing-analytics-dashboard.component.html',
   styleUrls: ['./marketing-analytics-dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, HttpClientModule, HeaderComponent, FooterComponent, 
-            AnalyticssidebarComponent, FormsModule]
+  imports: [CommonModule, HttpClientModule,
+             FormsModule]
 })
 export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('salesFunnelChart') salesFunnelChart!: ElementRef;
