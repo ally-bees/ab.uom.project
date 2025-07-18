@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Services;
+using System.Globalization;
 
 namespace Backend.Controllers
 {
@@ -121,6 +123,32 @@ public async Task<IActionResult> GetDashboardData()
             };
 
             return Ok(viewModel);
+        }
+
+        [HttpGet("company-sales-comparison")]
+        public async Task<IActionResult> GetCompanySalesComparison([FromQuery] string month)
+        {
+            // Parse month (format: YYYY-MM)
+            if (!DateTime.TryParseExact(month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var monthStart))
+                return BadRequest("Invalid month format. Use YYYY-MM.");
+            var monthEnd = monthStart.AddMonths(1);
+
+            // Get all companies with salesAccessValue == 1
+            var salesAccessService = HttpContext.RequestServices.GetService(typeof(SalesAccessService)) as SalesAccessService;
+            if (salesAccessService == null) return StatusCode(500, "SalesAccessService not available");
+            var accessList = await salesAccessService.GetAllAsync();
+            var allowedCompanies = accessList.Where(a => a.SalesAccessValue == 1).Select(a => a.CompanyId).ToList();
+
+            // Get all sales
+            var allSales = await _mongoDBService.GetAllSalesAsync();
+            var result = allowedCompanies.Select(companyId => new {
+                companyId,
+                totalSales = allSales
+                    .Where(s => s.CompanyId == companyId && s.SaleDate >= monthStart && s.SaleDate < monthEnd)
+                    .Sum(s => s.Amount)
+            }).ToList();
+
+            return Ok(result);
         }
     }
 }
