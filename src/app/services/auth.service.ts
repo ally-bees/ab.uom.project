@@ -1,8 +1,7 @@
-
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
-import { User, RegisterRequest, LoginRequest, AuthResponse } from '../models/user.model';
+import { User, RegisterRequest, LoginRequest, AuthResponse, OtpVerifyRequest, OtpRequest } from '../models/user.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -195,6 +194,33 @@ getRedirectUrl(): string {
   resetPassword(data: any): Observable<any> {
     return this.http.post(`${this.authUrl}/reset-password`, data)
       .pipe(catchError(this.handleError));
+  }
+
+  // OTP-related methods
+  initiateRegistration(registerData: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.authUrl}/initiate-registration`, registerData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  completeRegistration(otpData: OtpVerifyRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.authUrl}/complete-registration`, otpData)
+      .pipe(
+        tap(response => {
+          if (response && response.success && response.token) {
+            this.storeAuthData(response);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  resendOtp(otpRequest: OtpRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.authUrl}/resend-otp`, otpRequest)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   private handleError = (error: HttpErrorResponse) => {

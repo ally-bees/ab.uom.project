@@ -1,5 +1,3 @@
-
-
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
 using Backend.Services;
@@ -302,6 +300,60 @@ namespace Backend.Controllers
             {
                 return BadRequest(new { success = false, message = ex.Message, details = ex.ToString() });
             }
+        }
+
+        [HttpPost("initiate-registration")]
+        public async Task<IActionResult> InitiateRegistration([FromBody] RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authService.InitiateRegistrationAsync(registerDto);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("complete-registration")]
+        public async Task<IActionResult> CompleteRegistration([FromBody] OtpVerifyDto otpVerifyDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authService.CompleteRegistrationAsync(otpVerifyDto);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOtp([FromBody] OtpRequestDto otpRequestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authService.ResendOtpAsync(otpRequestDto);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         public class TestEmailRequest
