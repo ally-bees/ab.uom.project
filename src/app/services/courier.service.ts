@@ -33,6 +33,15 @@ export interface TopCountryResult {
   providedIn: 'root'
 }) // Makes this service globally available
 export class CourierService {
+  // Fetch couriers for the current user's company
+  getCouriersByCurrentUser(authService: { getCurrentUser: () => any }): Observable<Courier[]> {
+    const companyId = authService.getCurrentUser()?.CompanyId;
+    if (!companyId) {
+      throw new Error('User company ID is not available.');
+    }
+    let params = new HttpParams().set('companyId', companyId);
+    return this.http.get<Courier[]>(`${this.baseUrl}/all`, { params });
+  }
   // Base URL for all courier-related API endpoints
   private baseUrl = environment.apiUrl + '/api/courier';
 
@@ -96,3 +105,4 @@ export class CourierService {
     return this.http.get<TopCountryResult[]>(`${this.baseUrl}/top-countries`, { params });
   }
 }
+

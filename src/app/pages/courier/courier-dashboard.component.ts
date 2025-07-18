@@ -1,9 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CourierService, Courier, CourierSummaryDto } from '../../services/courier.service';
+import { AuthService } from '../../services/auth.service';
 import { Chart } from 'chart.js';
-import { HeaderComponent } from "../header/header.component";
-import { CouriersidebarComponent } from "../sidebar/couriersidebar/couriersidebar.component";
-import { FooterComponent } from "../../footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -12,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-courier',
   templateUrl: './courier-dashboard.component.html',
   styleUrls: ['./courier-dashboard.component.css'],
-  imports: [HeaderComponent, CouriersidebarComponent, FooterComponent, CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule]
 })
 export class CourierDashboardComponent implements OnInit, AfterViewInit {
   // Reference to the pie chart canvas element
@@ -45,16 +43,15 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   hasError: boolean = false;
   errorMessage: string = '';
-
-  constructor(private courierService: CourierService) {}
+  constructor(private courierService: CourierService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Get companyId from localStorage
-    this.companyId = localStorage.getItem('companyId') || '';
+    // Get companyId from AuthService only
+    // You must inject AuthService in the constructor: constructor(private courierService: CourierService, private authService: AuthService) {}
+    this.companyId = this.authService.getCurrentUser()?.CompanyId || '';
     if (!this.companyId) {
-      console.error('No companyId found in localStorage');
       this.hasError = true;
-      this.errorMessage = 'Authentication error: No company ID found. Please log in again.';
+      this.errorMessage = 'No company ID found for current user.';
       return;
     }
 
@@ -66,30 +63,14 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     this.fromDate = thirtyDaysAgo.toISOString().split('T')[0];
     this.toDate = today.toISOString().split('T')[0];
 
-    this.loadData();
+    // Fetch summary, recent deliveries, and all couriers for dashboard
+    this.fetchSummary();
+    this.fetchRecentDeliveries();
+    this.fetchAllCouriers();
   }
 
   loadData(): void {
-    this.isLoading = true;
-    this.hasError = false;
-
-    // Load recent deliveries
-    this.courierService.getRecentDeliveries(10, this.companyId).subscribe({
-      next: (data) => {
-        this.recentDeliveries = data;
-        this.allDeliveries = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching recent deliveries:', err);
-        this.hasError = true;
-        this.errorMessage = 'Failed to load recent deliveries. Please try again later.';
-        this.isLoading = false;
-      }
-    });
-
-    // Fetch summary data for current date range
-    this.fetchSummary();
+    // Deprecated: replaced by individual fetch methods
   }
 
   // Fetch delivery summary statistics based on selected date range
@@ -101,9 +82,6 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
           this.summary = data;
           this.updatePieChart();
           this.isLoading = false;
-
-          // Also fetch all couriers for this date range to display
-          this.loadCouriersForDateRange();
         },
         error: (err) => {
           console.error('Error fetching summary:', err);
@@ -113,6 +91,38 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  fetchRecentDeliveries(): void {
+    this.isLoading = true;
+    this.courierService.getRecentDeliveries(10, this.companyId).subscribe({
+      next: (data) => {
+        this.recentDeliveries = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching recent deliveries:', err);
+        this.hasError = true;
+        this.errorMessage = 'Failed to load recent deliveries. Please try again later.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  fetchAllCouriers(): void {
+    this.isLoading = true;
+    this.courierService.getAllCouriers(this.companyId).subscribe({
+      next: (data) => {
+        this.allDeliveries = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching all couriers:', err);
+        this.hasError = true;
+        this.errorMessage = 'Failed to load all couriers. Please try again later.';
+        this.isLoading = false;
+      }
+    });
   }
 
   // Load all couriers for the selected date range

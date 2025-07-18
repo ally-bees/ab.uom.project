@@ -53,6 +53,8 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 // === Register Backend Services ===
+builder.Services.AddSingleton<MongoService>();
+builder.Services.AddScoped<CourierService>();
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<Auditservice>();
