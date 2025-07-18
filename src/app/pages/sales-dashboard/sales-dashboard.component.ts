@@ -44,6 +44,7 @@ export class SalesDashboardComponent implements OnInit {
   endDate: string = '';
   userSalesAccessValue: number | null = null;
   userCompanyId: string | null = null;
+  showAccessInfo = false;
 
   constructor(
     private salesService: SalesService,
