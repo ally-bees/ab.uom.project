@@ -47,7 +47,7 @@
   width: 24px;
   height: 24px;
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #007bff;
+  border-top: 3px solid #7ECBD1;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -122,9 +122,21 @@
 }
 
 .tab-button.active {
+  color: #7ECBD1;
+  border-bottom-color: #7ECBD1;
   background-color: white;
-  color: #007bff;
-  border-bottom-color: #007bff;
+}
+
+.tab-button .icon {
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+}
+
+.tab-button.active {
+  color: #7ECBD1;
+  border-bottom-color: #7ECBD1;
+  background-color: white;
 }
 
 /* Tab Content */
@@ -209,7 +221,7 @@
 
 .config-value {
   font-weight: 600;
-  color: #007bff;
+  color: #7ECBD1;
 }
 
 .policy-details {
@@ -330,7 +342,7 @@
 }
 
 .copy-btn:hover {
-  color: #007bff;
+  color: #7ECBD1;
 }
 
 .key-status {
@@ -416,7 +428,7 @@
 }
 
 .health-icon:not(.status-healthy):not(.status-unhealthy) {
-  background-color: #007bff;
+  background-color: #7ECBD1;
 }
 
 .health-info h4 {
@@ -441,7 +453,7 @@
 }
 
 .health-value {
-  color: #007bff;
+  color: #7ECBD1;
 }
 
 .progress-bar {
@@ -455,7 +467,7 @@
 
 .progress-fill {
   height: 100%;
-  background-color: #007bff;
+  background-color: #7ECBD1;
   transition: width 0.3s ease;
 }
 
@@ -475,12 +487,12 @@
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #7ECBD1;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
+  background-color: #69b1b6;
 }
 
 .btn-secondary {
@@ -594,8 +606,8 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: #7ECBD1;
+  box-shadow: 0 0 0 3px rgba(126, 203, 209, 0.1);
 }
 
 .form-help {
@@ -646,8 +658,8 @@
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #7ECBD1;
+  border-color: #7ECBD1;
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
@@ -669,34 +681,86 @@
   animation: spin 1s linear infinite;
 }
 
-/* Icons - You can replace these with actual icon fonts */
+/* Icons - Using FontAwesome icon classes */
 .icon {
   width: 16px;
   height: 16px;
   display: inline-block;
-}
-
-.icon::before {
-  content: '⚙️';
   font-size: 16px;
 }
 
-.security-icon::before { content: '🔒'; }
-.api-icon::before { content: '🔑'; }
-.health-icon::before { content: '💚'; }
-.settings-icon::before { content: '⚙️'; }
-.edit-icon::before { content: '✏️'; }
-.add-icon::before { content: '➕'; }
-.copy-icon::before { content: '📋'; }
-.refresh-icon::before { content: '🔄'; }
-.delete-icon::before { content: '🗑️'; }
-.info-icon::before { content: 'ℹ️'; }
-.db-icon::before { content: '💽'; }
-.email-icon::before { content: '📧'; }
-.users-icon::before { content: '👥'; }
-.backup-icon::before { content: '💾'; }
-.memory-icon::before { content: '🧠'; }
-.cpu-icon::before { content: '🖥️'; }
+.icon::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: '\f013'; /* fa-cog */
+}
+
+.security-icon::before { 
+  content: '\f023'; /* fa-lock */
+}
+
+.api-icon::before { 
+  content: '\f084'; /* fa-key */
+}
+
+.health-icon::before { 
+  content: '\f004'; /* fa-heart */
+  color: #28a745;
+}
+
+.settings-icon::before { 
+  content: '\f013'; /* fa-cog */
+}
+
+.edit-icon::before { 
+  content: '\f044'; /* fa-edit */
+}
+
+.add-icon::before { 
+  content: '\f067'; /* fa-plus */
+}
+
+.copy-icon::before { 
+  content: '\f0c5'; /* fa-copy */
+}
+
+.refresh-icon::before { 
+  content: '\f021'; /* fa-sync */
+}
+
+.delete-icon::before { 
+  content: '\f1f8'; /* fa-trash */
+  color: #dc3545;
+}
+
+.info-icon::before { 
+  content: '\f05a'; /* fa-info-circle */
+  color: #17a2b8;
+}
+
+.db-icon::before { 
+  content: '\f1c0'; /* fa-database */
+}
+
+.email-icon::before { 
+  content: '\f0e0'; /* fa-envelope */
+}
+
+.users-icon::before { 
+  content: '\f0c0'; /* fa-users */
+}
+
+.backup-icon::before { 
+  content: '\f019'; /* fa-download */
+}
+
+.memory-icon::before { 
+  content: '\f538'; /* fa-memory */
+}
+
+.cpu-icon::before { 
+  content: '\f108'; /* fa-desktop */
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
