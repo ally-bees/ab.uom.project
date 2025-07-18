@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import {
   authGuard,
@@ -139,6 +138,7 @@ export const routes: Routes = [
       { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
       { path: 'printreport', component: PrintReportComponent },
       {path : 'expense-form', component: ExpenseFormComponent },
+      { path: 'courier', component: CourierDashboardComponent },
       // Add more pages for the business owner here
     ]
   },
@@ -165,6 +165,5 @@ export const routes: Routes = [
   { path: 'terms-of-service', component: TermsOfServiceComponent },
 
   // Catch-all redirect
-  { path: 'courier', component: CourierDashboardComponent },
   { path: '**', redirectTo: 'login' },
 ];
