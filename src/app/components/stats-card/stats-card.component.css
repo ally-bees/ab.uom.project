@@ -94,6 +94,7 @@ div[ng-reflect-ng-if="error"] {
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   padding: 1.5rem;
+  padding-bottom: 1.8rem;
   text-align: center;
 }
 
@@ -106,7 +107,6 @@ div[ng-reflect-ng-if="error"] {
 .card p {
   font-size: 2rem;
   font-weight: bold;
-  color: #007bff;
 }
 .last-30-days {
   font-size: 12px;
@@ -130,13 +130,17 @@ div[ng-reflect-ng-if="error"] {
 }
 
 .total-sales p {
-  color: #3487e6;
+  color: #0095c7;
 }
 
 .total-orders p {
   color: #228c28;
+  font-size: 2.2rem;
+
 }
 
 .total-items p {
   color: #ec8836;
+  font-size: 2.2rem;
+
 }
