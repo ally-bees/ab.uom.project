@@ -38,9 +38,9 @@ namespace Backend.Controllers
         {
             try
             {
-                _logger.LogInformation("Getting system configuration summary");
+                _logger.LogDebug("Getting system configuration summary");
                 var summary = await _systemConfigService.GetSystemConfigurationSummaryAsync();
-                _logger.LogInformation("System configuration summary retrieved successfully");
+                _logger.LogDebug("System configuration summary retrieved successfully");
                 return Ok(new { success = true, data = summary });
             }
             catch (Exception ex)

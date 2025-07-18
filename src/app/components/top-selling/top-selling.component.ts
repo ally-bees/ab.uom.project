@@ -5,11 +5,12 @@ import { AgGridModule } from 'ag-grid-angular';
 import { NgChartsModule } from 'ng2-charts';     
 import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-top-selling',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgGridModule, NgChartsModule], // Include common Angular modules required for forms and structure
+  imports: [CommonModule, FormsModule, AgGridModule, NgChartsModule],
   templateUrl: './top-selling.component.html',
   styleUrls: ['./top-selling.component.css']
 })
@@ -40,19 +41,20 @@ export class TopSellingComponent implements OnInit {
     }
   }
 
-  constructor(private inventoryService: InventoryService) {}
+  constructor(private inventoryService: InventoryService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadTopSellingProducts();
   }
 
   loadTopSellingProducts(): void {
-    this.inventoryService.getBestSellingProducts(this.productLimit).subscribe({
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    this.inventoryService.getInventoryByCompany().subscribe({
       next: (products) => {
-        this.topSellingProducts = products;
+        this.topSellingProducts = products.slice(0, this.productLimit);
       },
       error: (err) => {
-        console.error('Error fetching top-selling products', err);
+        console.error('Error fetching company products', err);
       }
     });
   }

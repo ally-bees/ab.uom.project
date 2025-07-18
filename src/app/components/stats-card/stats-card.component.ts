@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { SalesService } from '../../services/sales.service';
 
 // Define SalesViewModel interface
 interface SalesViewModel {
@@ -10,6 +12,7 @@ interface SalesViewModel {
   totalCustomers?: number;
   totalRevenue: number;
   totalItems?: number; 
+  sales?: any[];
 }
 
 @Component({
@@ -27,7 +30,11 @@ export class StatsCardComponent implements OnInit {
   loading: boolean = true;
   error: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private salesService: SalesService
+  ) {}
 
   ngOnInit(): void {
     if (!this.startDate || !this.endDate) {
@@ -46,14 +53,12 @@ export class StatsCardComponent implements OnInit {
   }
   
   fetchSalesData(): void {
-    const params = new HttpParams()
-      .set('startDate', this.startDate!)
-      .set('endDate', this.endDate!);
-
-    this.http.get<SalesViewModel>('http://localhost:5241/api/SalesDashboard/date-range', { params })
-      .subscribe({
+    this.loading = true;
+    this.error = false;
+    if (this.startDate && this.endDate) {
+      this.salesService.getDashboardDataForCompanyWithDateRange(this.startDate, this.endDate).subscribe({
         next: (data) => {
-          this.salesData = data; 
+          this.salesData = data;
           this.loading = false;
         },
         error: (err) => {
@@ -62,5 +67,8 @@ export class StatsCardComponent implements OnInit {
           this.loading = false;
         }
       });
+    } else {
+      this.loading = false;
+    }
   }
 }

@@ -1,12 +1,31 @@
 
-<div class="status-card">
+<div class="status-card" [class.loading]="isLoading" [class.error]="hasError" [class]="'status-' + status">
   <div class="card-content">
-    <div class="card-header">{{title}}</div>
-    <div class="card-value">{{userCount}}</div>
-    <div class="card-subtitle">{{subtitle}}</div>
+    <div class="card-header">
+      <span class="card-title">{{ title }}</span>
+      <div class="card-actions" *ngIf="title === 'Active Users'">
+        <button class="refresh-btn" (click)="refreshData()" [disabled]="isLoading" title="Refresh">
+          <i class="fas fa-sync-alt" [class.spinning]="isLoading"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="card-value">
+      <span class="value-text" *ngIf="!isLoading">{{ displayValue }}</span>
+      <div class="loading-spinner" *ngIf="isLoading">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+      <div class="trend-indicator" *ngIf="trend !== 'neutral' && percentage && !isLoading">
+        <i [class]="getTrendIcon()"></i>
+        <span class="percentage">{{ percentage }}%</span>
+      </div>
+    </div>
+    
+    <div class="card-subtitle">{{ subtitle }}</div>
   </div>
-  <div class="card-icon">
-    <i class="icon" [ngClass]="icon"></i>
+  
+  <div class="card-icon" [class]="'icon-' + status">
+    <i [class]="getIconClass()"></i>
   </div>
 </div>
 

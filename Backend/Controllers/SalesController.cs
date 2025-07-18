@@ -2,6 +2,8 @@ using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace Backend.Controllers
 {
@@ -66,6 +68,14 @@ namespace Backend.Controllers
         {
             var sales = await _salesService.GetSalesByYearAsync(year);
             return Ok(sales);
+        }
+
+        [HttpGet("company/{companyId}")]
+        public async Task<IActionResult> GetByCompanyId(string companyId)
+        {
+            var sales = await _salesService.GetAllSalesAsync();
+            var filteredSales = sales.Where(s => s.CompanyId == companyId).ToList();
+            return Ok(filteredSales);
         }
 
 
