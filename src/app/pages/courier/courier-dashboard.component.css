@@ -89,11 +89,17 @@
   margin-bottom: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   gap: 20px;
+  justify-content: space-between;
 }
 
-.delivery-stats, .pie-chart {
+.delivery-stats {
   flex: 1 1 300px;
   min-width: 260px;
+}
+
+.pie-chart {
+  flex: 1 1 400px;
+  min-width: 300px;
 }
 
 .stat-row {
@@ -119,38 +125,63 @@
 }
 
 .pie-chart {
-  flex: 1;
-  justify-content: center;
-  align-items: center;
   position: relative;
-  height: 200px;
-  min-width: 180px;
-  margin-left: -1000px; /* Adjust layout visually */
+  height: 300px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 15px;
+  /* Ensure chart is visible even when modals are showing */
+  z-index: 1;
 }
 
-.chart-legend {
+.chart-with-legend {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.chart-container {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas#deliveryPieChart {
+  margin: 0 auto;
+  display: block;
+  /* Ensure chart is visible */
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.chart-custom-legend {
+  width: 30%;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 30px;
-  right: 20px;
-  gap: 5px;
+  gap: 10px;
 }
 
 .legend-item {
   display: flex;
-  align-items: relative;
-  font-size: 15px;
+  align-items: center;
+  font-size: 14px;
 }
 
 .legend-color {
-  width: 12px;
-  height: 12px;
-  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
   border-radius: 2px;
 }
 
-/* Pie chart legend colors by status */
 .legend-color.pending {
   background-color: #f9e559;
 }
@@ -164,7 +195,20 @@
 }
 
 .legend-text {
-  color: #555;
+  color: #333;
+}
+
+.chart-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Table for recent deliveries */

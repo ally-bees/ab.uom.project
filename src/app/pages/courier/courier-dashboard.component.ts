@@ -1,9 +1,12 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CourierService, Courier, CourierSummaryDto } from '../../services/courier.service';
 import { AuthService } from '../../services/auth.service';
-import { Chart } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Register all Chart.js components
+Chart.register(...registerables);
 
 @Component({
   standalone: true,
@@ -77,24 +80,64 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
 
   // Fetch delivery summary statistics based on selected date range
   fetchSummary(): void {
-    if (this.fromDate && this.toDate && this.companyId) {
+    // If dates are not properly set, don't fetch data
+    if (!this.fromDate || !this.toDate) {
+      // Don't show alerts here to avoid multiple alerts when dates change
+      // Clear any existing data since date range is invalid
+      this.summary = {
+        total: 0,
+        pending: 0,
+        completed: 0,
+        rejected: 0
+      };
+      return;
+    }
+    
+    if (this.companyId) {
       const from = new Date(this.fromDate);
       const to = new Date(this.toDate);
+      
+      // Set time to end of day for to date to include full day
+      to.setHours(23, 59, 59, 999);
+      
       const today = new Date();
-      today.setHours(0,0,0,0);
+      today.setHours(23, 59, 59, 999); // Set to end of today
+      
       if (to > today) {
-        alert('To date cannot be ahead of today.');
-        return;
+        // Only show error if the date is actually in the future (after today)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        
+        if (to >= tomorrow) {
+          alert('Please check the date range: To date cannot be in the future.');
+          // Clear data for invalid date range
+          this.summary = {
+            total: 0,
+            pending: 0,
+            completed: 0,
+            rejected: 0
+          };
+          return;
+        }
       }
+      
       if (to < from) {
-        alert('To date cannot be before From date.');
+        alert('Please check the date range: To date cannot be before From date.');
+        // Clear data for invalid date range
+        this.summary = {
+          total: 0,
+          pending: 0,
+          completed: 0,
+          rejected: 0
+        };
         return;
       }
       this.isLoading = true;
       this.courierService.getSummary(this.fromDate, this.toDate, this.companyId).subscribe({
         next: (data) => {
           this.summary = data;
-          this.updatePieChart();
+          this.ensureChartVisible(); // Use ensureChartVisible for consistency
           this.isLoading = false;
         },
         error: (err) => {
@@ -102,6 +145,11 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
           this.hasError = true;
           this.errorMessage = 'Failed to load summary data. Please try again later.';
           this.isLoading = false;
+          
+          // Ensure pie chart is visible even after error
+          setTimeout(() => {
+            this.ensureChartVisible();
+          }, 100);
         }
       });
     }
@@ -141,74 +189,171 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
 
   // Load all couriers for the selected date range
   loadCouriersForDateRange(): void {
+    // Check if dates are selected
+    if (!this.fromDate || !this.toDate) {
+      // Only show an error if both dates are not selected
+      if (!this.fromDate && !this.toDate) {
+        alert('Please check the date range: Both From and To dates are required.');
+        return;
+      } else if (!this.fromDate) {
+        alert('Please check the date range: From date is required.');
+        return;
+      } else {
+        alert('Please check the date range: To date is required.');
+        return;
+      }
+    }
+    
     const fromDate = new Date(this.fromDate);
     const toDate = new Date(this.toDate);
+    
+    // Set time to end of day for toDate to include full day
+    toDate.setHours(23, 59, 59, 999);
+    
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(23, 59, 59, 999); // Set to end of today
+    
+    // Validate date range
     if (toDate > today) {
-      alert('To date cannot be ahead of today.');
-      return;
+      // Only show error if the date is actually in the future (after today)
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      
+      if (toDate >= tomorrow) {
+        alert('Please check the date range: To date cannot be in the future.');
+        return;
+      }
     }
+    
     if (toDate < fromDate) {
-      alert('To date cannot be before From date.');
+      alert('Please check the date range: To date cannot be before From date.');
       return;
     }
+    this.isLoading = true;
     this.courierService.getAllCouriers(this.companyId).subscribe({
       next: (data) => {
+        this.isLoading = false;
         const results = data.filter(courier => {
           const courierDate = courier.date ? new Date(courier.date) : null;
           return courierDate && courierDate >= fromDate && courierDate <= toDate;
         });
+        
+        // Check if there are any results in the date range
+        if (results.length === 0) {
+          alert('No couriers found in the selected date range. Please try a different range.');
+          return;
+        }
+        
         this.dateRangeResults = results;
         this.showDateRangeResults = true;
+        
+        // Ensure pie chart is visible after loading date range results
+        setTimeout(() => {
+          this.ensureChartVisible();
+        }, 150);
       },
       error: (err) => {
+        this.isLoading = false;
         console.error('Error fetching couriers for date range:', err);
+        alert('Failed to fetch data. Please try again.');
       }
     });
   }
 
   ngAfterViewInit(): void {
-    // Draw the chart after view has initialized and summary data is loaded
-    if (this.summary && (this.summary.pending > 0 || this.summary.completed > 0 || this.summary.rejected > 0)) {
+    // Always draw the chart after view has initialized
+    setTimeout(() => {
       this.updatePieChart();
-    }
+    }, 100);
   }
 
   // Method to (re)draw the pie chart
   updatePieChart(): void {
-    if (!this.deliveryPieChartRef) return;
+    console.log('Updating pie chart...');
+    
+    // Don't update if we're in the middle of loading data
+    if (this.isLoading) {
+      console.log('Loading in progress, will update chart later');
+      return;
+    }
+    
+    if (!this.deliveryPieChartRef) {
+      console.log('Pie chart reference not found - waiting');
+      setTimeout(() => this.updatePieChart(), 500);
+      return;
+    }
+    
     const canvas = this.deliveryPieChartRef.nativeElement;
+    
+    // Make sure canvas is visible and has dimensions
+    if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
+      console.log('Canvas has zero dimensions, retry later');
+      setTimeout(() => this.updatePieChart(), 200);
+      return;
+    }
+    
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      console.log('Could not get canvas context');
+      return;
+    }
 
     // Destroy previous chart if exists
     if (this.pieChart) {
       this.pieChart.destroy();
     }
 
+    console.log('Creating pie chart with data:', this.summary);
+    
+    // Get data values for the chart
+    const pendingValue = this.summary?.pending || 0;
+    const completedValue = this.summary?.completed || 0;
+    const rejectedValue = this.summary?.rejected || 0;
+    
+    // Check if all values are zero
+    const allZero = pendingValue === 0 && completedValue === 0 && rejectedValue === 0;
+    
     // Create new pie chart with delivery stats
     this.pieChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Pending Deliveries', 'Completed Deliveries', 'Rejected Deliveries'],
+        labels: ['Pending', 'Completed', 'Rejected'],
         datasets: [{
-          data: [
-            this.summary?.pending || 0,
-            this.summary?.completed || 0,
-            this.summary?.rejected || 0
-          ],
+          data: allZero ? [1, 1, 1] : [pendingValue, completedValue, rejectedValue], // Use placeholder values if all are zero
           backgroundColor: ['#f9e559', '#4caf50', '#f44336'],
-          borderWidth: 0
+          borderWidth: 2,
+          borderColor: '#ffffff'
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: {
+          duration: 1000
+        },
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 30,
+            left: 0,
+            right: 0
+          }
+        },
         plugins: {
           legend: { 
-            display: false,
-            position: 'right'
+            display: false  // Hiding built-in legend as we use a custom one
+          },
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: (context) => {
+                // Get the actual values regardless of what's shown in the chart
+                const values = [pendingValue, completedValue, rejectedValue];
+                const actualValue = values[context.dataIndex];
+                return context.label + ': ' + actualValue;
+              }
+            }
           }
         }
       }
@@ -245,12 +390,22 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
         this.searchResults = results;
         this.showSearchResults = true;
         this.isLoading = false;
+        
+        // Make sure the pie chart is still visible and updated
+        setTimeout(() => {
+          this.ensureChartVisible();
+        }, 100);
       },
       error: (err) => {
         console.error('Search error:', err);
         this.hasError = true;
         this.errorMessage = 'Search failed. Please try again.';
         this.isLoading = false;
+        
+        // Ensure pie chart is still visible even if search fails
+        setTimeout(() => {
+          this.ensureChartVisible();
+        }, 100);
       }
     });
   }
@@ -261,6 +416,11 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       event.stopPropagation();
     }
     this.showSearchResults = false;
+    
+    // Ensure pie chart is redrawn after closing the search modal
+    setTimeout(() => {
+      this.ensureChartVisible();
+    }, 100);
   }
 
   // Close the date range results modal
@@ -269,6 +429,11 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       event.stopPropagation();
     }
     this.showDateRangeResults = false;
+    
+    // Ensure pie chart is visible after closing date range results
+    setTimeout(() => {
+      this.ensureChartVisible();
+    }, 100);
   }
 
   // Select a courier from search results
@@ -277,5 +442,29 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     // or navigate to a courier detail page
     console.log('Selected courier:', courier);
     this.closeSearchModal();
+    
+    // Ensure the pie chart is visible after selection
+    setTimeout(() => {
+      this.ensureChartVisible();
+    }, 100);
+  }
+  
+  // Add a method to handle window resize events to ensure chart redraws properly
+  @HostListener('window:resize')
+  onResize() {
+    // Redraw the chart when window is resized
+    setTimeout(() => {
+      this.ensureChartVisible();
+    }, 200);
+  }
+  
+  // Method to make sure chart is visible after any UI changes
+  ensureChartVisible() {
+    if (this.pieChart) {
+      // If chart exists but might be hidden or dimensions changed, redraw it
+      setTimeout(() => {
+        this.updatePieChart();
+      }, 100);
+    }
   }
 }

@@ -63,18 +63,18 @@
         <div class="date-range">
           <div class="date-input">
             <label>From : </label>
-            <input type="date" [(ngModel)]="fromDate" (change)="fetchSummary()" />
+            <input type="date" [(ngModel)]="fromDate" (change)="fetchSummary(); ensureChartVisible()" />
           </div>
           <div class="date-input">
             <label>To : </label>
-            <input type="date" [(ngModel)]="toDate" (change)="fetchSummary()" />
+            <input type="date" [(ngModel)]="toDate" (change)="fetchSummary(); ensureChartVisible()" />
           </div>
         </div>
       </div>
 
       <div>
         <!-- Button to show popup table for selected date range -->
-         <button (click)="loadCouriersForDateRange()">Show Couriers in Date Range</button>
+         <button (click)="loadCouriersForDateRange(); ensureChartVisible()">Show Couriers in Date Range</button>
         </div>
 
       <!-- Delivery summary stats and pie chart -->
@@ -104,20 +104,27 @@
 
         <!-- Pie chart for delivery status -->
         <div class="pie-chart">
-          <canvas #deliveryPieChart></canvas>
-          <!-- Chart legend -->
-          <div class="chart-legend">
-            <div class="legend-item">
-              <span class="legend-color pending"></span>
-              <span class="legend-text">Pending Deliveries</span>
+          <div *ngIf="isLoading" class="chart-loading">
+            <div class="spinner"></div>
+            <p>Loading chart...</p>
+          </div>
+          <div class="chart-with-legend">
+            <div class="chart-container">
+              <canvas #deliveryPieChart width="200" height="200"></canvas>
             </div>
-            <div class="legend-item">
-              <span class="legend-color completed"></span>
-              <span class="legend-text">Completed Deliveries</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color rejected"></span>
-              <span class="legend-text">Rejected Deliveries</span>
+            <div class="chart-custom-legend">
+              <div class="legend-item">
+                <span class="legend-color pending"></span>
+                <span class="legend-text">Pending: {{summary.pending || 0}}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color completed"></span>
+                <span class="legend-text">Completed: {{summary.completed || 0}}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color rejected"></span>
+                <span class="legend-text">Rejected: {{summary.rejected || 0}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -214,7 +221,7 @@
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h3>Date Range Results</h3>
-          <button class="close-button" (click)="closeDateRangeModal()">×</button>
+          <button class="close-button" (click)="closeDateRangeModal(); ensureChartVisible()">×</button>
         </div>
         <div class="modal-body">
           <table>
