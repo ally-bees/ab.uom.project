@@ -48,6 +48,9 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   hasError: boolean = false;
   errorMessage: string = '';
+  
+  // Indicates if there's no data available for the chart
+  noDataAvailable: boolean = false;
   constructor(private courierService: CourierService, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -80,6 +83,9 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
 
   // Fetch delivery summary statistics based on selected date range
   fetchSummary(): void {
+    // Reset the no data flag when starting a new fetch
+    this.noDataAvailable = false;
+    
     // If dates are not properly set, don't fetch data
     if (!this.fromDate || !this.toDate) {
       // Don't show alerts here to avoid multiple alerts when dates change
@@ -90,6 +96,8 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
         completed: 0,
         rejected: 0
       };
+      // Set noDataAvailable since we have no valid date range
+      this.noDataAvailable = true;
       return;
     }
     
@@ -314,6 +322,20 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     // Check if all values are zero
     const allZero = pendingValue === 0 && completedValue === 0 && rejectedValue === 0;
     
+    // Update the noDataAvailable flag
+    this.noDataAvailable = allZero;
+    
+    // Don't create chart if no data is available
+    if (allZero) {
+      console.log('No data available for chart');
+      // Clear any existing chart
+      if (this.pieChart) {
+        this.pieChart.destroy();
+        this.pieChart = undefined;
+      }
+      return;
+    }
+    
     // Create new pie chart with delivery stats
     this.pieChart = new Chart(ctx, {
       type: 'pie',
@@ -460,11 +482,26 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   
   // Method to make sure chart is visible after any UI changes
   ensureChartVisible() {
-    if (this.pieChart) {
-      // If chart exists but might be hidden or dimensions changed, redraw it
+    // Check if we should update the pie chart or show the no data message
+    const pendingValue = this.summary?.pending || 0;
+    const completedValue = this.summary?.completed || 0;
+    const rejectedValue = this.summary?.rejected || 0;
+    
+    // Update the noDataAvailable flag
+    this.noDataAvailable = pendingValue === 0 && completedValue === 0 && rejectedValue === 0;
+    
+    // Only try to show the chart if there's data available
+    if (!this.noDataAvailable) {
       setTimeout(() => {
         this.updatePieChart();
       }, 100);
+    } else {
+      console.log('No data available for chart - showing no data message');
+      // Clear any existing chart
+      if (this.pieChart) {
+        this.pieChart.destroy();
+        this.pieChart = undefined;
+      }
     }
   }
 }

@@ -108,7 +108,10 @@
             <div class="spinner"></div>
             <p>Loading chart...</p>
           </div>
-          <div class="chart-with-legend">
+          <div *ngIf="noDataAvailable" class="chart-no-data">
+            <p>No delivery data available for the selected time range</p>
+          </div>
+          <div *ngIf="!isLoading && !noDataAvailable" class="chart-with-legend">
             <div class="chart-container">
               <canvas #deliveryPieChart width="200" height="200"></canvas>
             </div>
