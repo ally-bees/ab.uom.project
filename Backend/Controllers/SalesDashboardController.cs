@@ -34,15 +34,15 @@ public async Task<IActionResult> GetDashboardData()
     var totalItems = orders.Sum(o => (o.OrderDetails ?? new List<OrderDetail>()).Sum(od => od.Quantity));
     var totalOrders = orders.Count;
 
-    var viewModel = new SalesViewModel
-    {
-        Sales = sales,
-        RelatedOrders = orders,
-        RelatedInventory = inventory,
-        TotalRevenue = totalRevenue,
-        TotalItems = totalItems,
-        TotalOrders = totalOrders
-    };
+            var viewModel = new SalesViewModel
+            {
+                Sales = sales,
+                RelatedOrders = orders,
+                RelatedInventory = inventory,
+                TotalRevenue = totalRevenue,
+                TotalItems = totalItems,
+                TotalOrders = totalOrders
+            };
 
     return Ok(viewModel);
 }

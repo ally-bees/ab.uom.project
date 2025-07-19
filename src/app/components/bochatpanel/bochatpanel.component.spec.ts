@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailgraphComponent } from './detailgraph.component';
+import { BochatpanelComponent } from './bochatpanel.component';
 
-describe('DetailgraphComponent', () => {
-  let component: DetailgraphComponent;
-  let fixture: ComponentFixture<DetailgraphComponent>;
+describe('BochatpanelComponent', () => {
+  let component: BochatpanelComponent;
+  let fixture: ComponentFixture<BochatpanelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetailgraphComponent]
+      imports: [BochatpanelComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DetailgraphComponent);
+    fixture = TestBed.createComponent(BochatpanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
