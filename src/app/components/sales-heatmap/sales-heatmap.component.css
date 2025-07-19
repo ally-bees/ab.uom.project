@@ -45,9 +45,9 @@
   background: #e0e0e0;
 }
 .year-selector button.active {
-  background: #008cff;
+  background: rgb(41, 150, 178);
   color: white;
-  border-color: #008cff;
+  border-color: rgb(41, 150, 178);
   font-weight: 600;
 }
 

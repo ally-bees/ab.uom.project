@@ -16,9 +16,9 @@ import { AuthService } from '../../services/auth.service';
 })
 export class TopSellingComponent implements OnInit {
   topSellingProducts: product[] = [];
-  productLimit: number = 10; // Default to 10
+  productLimit: number = 9; // Default to 9
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 9;
 
   get pagedProducts() {
     const start = (this.page - 1) * this.pageSize;
@@ -61,8 +61,8 @@ export class TopSellingComponent implements OnInit {
 
   // Generate a gradient color for each product based on its index
   getProductBackgroundColor(index: number): string {
-    const startColor = { r: 0, g: 51, b: 102 }; // Dark blue
-    const endColor = { r: 204, g: 224, b: 255 }; // Lightest blue
+    const startColor = { r: 0, g: 154, b: 177 }; // Dark blue rgb(200, 248, 255)
+    const endColor = { r: 200, g: 248, b: 255 }; // Lightest blue rgb(0, 154, 177)
 
     // Calculate the factor based on the index
     const factor = index / (this.productLimit - 1);

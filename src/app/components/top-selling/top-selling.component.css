@@ -1,6 +1,6 @@
 .top-selling-container {
     max-width: 600px;
-    padding: 24px;
+    padding: 20px 24px 5px 24px;
     border-radius: 12px;
     background-color: #ffffff;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -32,7 +32,7 @@
     padding: 8px 16px;
     border: none;
     border-radius: 8px;
-    background-color: #0060c7;
+    background-color: rgb(2, 178, 205);
     color: white;
     font-weight: 500;
     cursor: pointer;
@@ -40,13 +40,13 @@
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: rgb(0, 120, 138);
   }
   
   .product-list {
     list-style-type: none;
     padding: 0;
-    margin-top: 24px;
+    margin-top: 15px;
   }
   
   .product-list li {
