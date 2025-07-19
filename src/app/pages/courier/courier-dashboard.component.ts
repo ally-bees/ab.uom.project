@@ -3,7 +3,12 @@ import { CourierService, Courier, CourierSummaryDto } from '../../services/couri
 import { AuthService } from '../../services/auth.service';
 import { Chart, registerables } from 'chart.js';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { PrintReportService } from '../../services/printreport.service';
+import { Observable, of } from 'rxjs';
+
+// No Angular Material imports needed
 
 // Register all Chart.js components
 Chart.register(...registerables);
@@ -13,7 +18,11 @@ Chart.register(...registerables);
   selector: 'app-courier',
   templateUrl: './courier-dashboard.component.html',
   styleUrls: ['./courier-dashboard.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [
+    CommonModule, 
+    FormsModule,
+    ReactiveFormsModule
+  ]
 })
 export class CourierDashboardComponent implements OnInit, AfterViewInit {
   showDateRangeResults: boolean = false;
@@ -51,11 +60,16 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
   
   // Indicates if there's no data available for the chart
   noDataAvailable: boolean = false;
-  constructor(private courierService: CourierService, private authService: AuthService) {}
+  constructor(
+    private courierService: CourierService, 
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private printReportService: PrintReportService
+  ) {}
 
   ngOnInit(): void {
     // Get companyId from AuthService only
-    // You must inject AuthService in the constructor: constructor(private courierService: CourierService, private authService: AuthService) {}
     this.companyId = this.authService.getCurrentUser()?.CompanyId || '';
     if (!this.companyId) {
       this.hasError = true;
@@ -63,18 +77,27 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Initialize default date range (last 30 days)
-    const today = new Date();
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(today.getDate() - 30);
+    // Check for date parameters in the URL (when returning from report page)
+    this.route.queryParams.subscribe(params => {
+      if (params['fromDate'] && params['toDate']) {
+        console.log('Restoring date range from URL parameters:', params);
+        this.fromDate = params['fromDate'];
+        this.toDate = params['toDate'];
+      } else {
+        // Initialize default date range (last 30 days) if no parameters are present
+        const today = new Date();
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(today.getDate() - 30);
 
-    this.fromDate = thirtyDaysAgo.toISOString().split('T')[0];
-    this.toDate = today.toISOString().split('T')[0];
-
-    // Fetch summary, recent deliveries, and all couriers for dashboard
-    this.fetchSummary();
-    this.fetchRecentDeliveries();
-    this.fetchAllCouriers();
+        this.fromDate = thirtyDaysAgo.toISOString().split('T')[0];
+        this.toDate = today.toISOString().split('T')[0];
+      }
+      
+      // Fetch data with selected date range
+      this.fetchSummary();
+      this.fetchRecentDeliveries();
+      this.fetchAllCouriers();
+    });
   }
 
   loadData(): void {
@@ -392,9 +415,75 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Trigger print functionality
+  // Generate and print courier report in finance style
   printReport(): void {
-    window.print();
+    // Check if data is available to print
+    if (!this.recentDeliveries || this.recentDeliveries.length === 0) {
+      alert('No data available to print.');
+      return;
+    }
+
+    // Format dates for display
+    const fromDateFormatted = this.fromDate ? new Date(this.fromDate).toLocaleDateString() : 'N/A';
+    const toDateFormatted = this.toDate ? new Date(this.toDate).toLocaleDateString() : 'N/A';
+    
+    // Create the table columns and data structure for the print-report component
+    const tableColumns = ['Delivery ID', 'Order ID', 'Order Date', 'Estimated Delivery', 'Destination', 'Status'];
+    
+    // Transform the recentDeliveries into the format expected by the print-report component
+    const tableData = this.recentDeliveries.map(delivery => {
+      const orderDate = delivery.date ? new Date(delivery.date).toLocaleDateString() : 'N/A';
+      const estimateDate = delivery.estimateDate ? new Date(delivery.estimateDate).toLocaleDateString() : 'N/A';
+      
+      // Format the status with the appropriate styling class
+      const status = delivery.status || 'N/A';
+      
+      return {
+        'Delivery ID': delivery.courierId || 'N/A',
+        'Order ID': delivery.orderId || 'N/A',
+        'Order Date': orderDate,
+        'Estimated Delivery': estimateDate,
+        'Destination': delivery.destination || 'N/A',
+        'Status': status
+      };
+    });
+    
+    // Create a report payload that matches what the print-report component expects
+    const reportPayload = {
+      reportType: 'Courier Summary Report',
+      exportFormat: 'PDF Document (.pdf)',
+      startDate: this.fromDate,
+      endDate: this.toDate,
+      pageOrientation: 'Portrait',
+      tableColumns,
+      tableData,
+      // Additional metadata to customize the report
+      companyName: 'Alliance Bees',
+      // Add summary data for the pie chart display
+      summaryData: {
+        pending: this.summary.pending || 0,
+        completed: this.summary.completed || 0,
+        rejected: this.summary.rejected || 0,
+        total: this.summary.total || 0,
+        periodStart: fromDateFormatted,
+        periodEnd: toDateFormatted,
+        // More vibrant chart colors
+        chartColors: {
+          backgroundColor: ['#FFC107', '#4CAF50', '#F44336'], // Vibrant yellow, green, red
+          borderColor: ['#FFD54F', '#81C784', '#E57373'],     // Lighter versions of the same colors
+        }
+      }
+    };
+    
+    console.log('Sending courier report data:', reportPayload);
+    
+    // Store the report data in the PrintReportService
+    this.printReportService.setReportData(reportPayload);
+    
+    // Navigate to the print-report page (same as finance)
+    this.router.navigate(['/businessowner/printreport'], {
+      state: reportPayload
+    });
   }
 
   // Search deliveries - show popup with results
@@ -504,4 +593,6 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
+  // End of component
 }
