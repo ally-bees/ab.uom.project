@@ -53,6 +53,8 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 // === Register Backend Services ===
+builder.Services.AddSingleton<MongoService>();
+builder.Services.AddScoped<CourierService>();
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<Auditservice>();
@@ -65,6 +67,7 @@ builder.Services.AddSingleton<FinanceService>();
 builder.Services.AddSingleton<AutomationService>();
 builder.Services.AddSingleton<ReportGenerator>();
 builder.Services.AddSingleton<ReportJobService>();
+builder.Services.AddSingleton<SalesAccessService>();
 
 // === Auth & User Services ===
 builder.Services.AddSingleton<UserService>();
@@ -74,6 +77,7 @@ builder.Services.AddSingleton<IPasswordResetService, PasswordResetService>();
 builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
 builder.Services.AddScoped<HoneycombService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
 
 // === System Services ===
 builder.Services.AddSingleton<ISystemConfigurationService, SystemConfigurationService>();

@@ -1,21 +1,4 @@
-<div class="date-filter" style="margin-bottom: 1rem;">
-  <div class="date-group">
-    <span>From:</span>
-    <input
-      type="date"
-      [(ngModel)]="startDate"
-      (change)="onDateChange()"
-    />
-  </div>
-  <div class="date-group" style="margin-left: 1rem;">
-    <span>To:</span>
-    <input
-      type="date"
-      [(ngModel)]="endDate"
-      (change)="onDateChange()"
-    />
-  </div>
-</div>
+<!-- Date range filter removed; now handled in sales-dashboard -->
 
 <div class="stats-card" *ngIf="!loading && !error">
   <div class="card total-sales">

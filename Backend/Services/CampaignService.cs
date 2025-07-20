@@ -1,20 +1,21 @@
 using Backend.Models;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Backend.Services
 {
     public class CampaignService
     {
-        private readonly IMongoCollection<Campaign> _campaignsCollection;
+        private readonly IMongoCollection<Campaign> _campaigns;
 
+        // Inject the shared IMongoDatabase directly
         public CampaignService(IMongoDatabase database)
         {
-            _campaignsCollection = database.GetCollection<Campaign>("campaign");
+            _campaigns = database.GetCollection<Campaign>("campaigns");
         }
 
-        public async Task<List<Campaign>> GetAllAsync()
-        {
-            return await _campaignsCollection.Find(campaign => true).ToListAsync(); // Returns all campaign documents.
-        }
+        public async Task<List<Campaign>> GetAllAsync() =>
+            await _campaigns.Find(_ => true).ToListAsync();
     }
 }

@@ -3,24 +3,22 @@
   gap: 1rem;
   justify-content: space-around;
   align-items: end;
-  padding: 1rem;
+  padding: 0rem;
+  margin-bottom: 0;
+  margin-top: 15px;
 }
 /* Card container */
 .stats-card {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 1.5%;
-  margin-bottom: 20px;
   display: grid;
+  margin-bottom: 0;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 /* Each stat card */
 .card {
+  margin-bottom: 0;
   background-color: #f9f9f9;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease-in-out;
@@ -100,13 +98,13 @@ div[ng-reflect-ng-if="error"] {
 }
 
 .card h3 {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
   color: #555;
 }
 
 .card p {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #007bff;
 }
@@ -114,4 +112,31 @@ div[ng-reflect-ng-if="error"] {
   font-size: 12px;
   font-weight: normal;
   color: #888;
+}
+
+.total-sales {
+  background: linear-gradient(135deg, #f9fdff 0%, #d1eaff 100%);
+  border-left: 6px solid #bbdefb;
+}
+
+.total-orders {
+  background: linear-gradient(135deg, #fafffa 0%, #e4f9e4 100%);
+  border-left: 6px solid #c8e6c9;
+}
+
+.total-items {
+  background: linear-gradient(135deg, #fffcf6 0%, #ffeaca 100%);
+  border-left: 6px solid #ffe0b2;
+}
+
+.total-sales p {
+  color: #3487e6;
+}
+
+.total-orders p {
+  color: #228c28;
+}
+
+.total-items p {
+  color: #ec8836;
 }

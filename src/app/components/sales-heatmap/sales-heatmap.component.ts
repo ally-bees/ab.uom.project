@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgChartsModule } from 'ng2-charts';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sales-heatmap',
@@ -23,7 +24,7 @@ export class SalesHeatmapComponent implements OnInit {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  constructor(private salesService: SalesService) {}
+  constructor(private salesService: SalesService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadSalesData(this.selectedYear);
@@ -35,8 +36,13 @@ export class SalesHeatmapComponent implements OnInit {
   }
 
   loadSalesData(year: number): void {
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
     this.salesService.getSalesByYear(year).subscribe((data: any[]) => {
-      this.salesData = data;
+      if (companyId) {
+        this.salesData = data.filter(sale => sale.companyId === companyId);
+      } else {
+        this.salesData = data;
+      }
       this.generateHeatmapData();
     });
   }

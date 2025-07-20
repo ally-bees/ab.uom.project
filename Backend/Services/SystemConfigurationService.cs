@@ -40,6 +40,7 @@ namespace Backend.Services
         private readonly IMongoCollection<SecuritySettings> _securityCollection;
         private readonly IMongoCollection<ApiKeyConfiguration> _apiKeyCollection;
         private readonly IMongoDatabase _database;
+        private static bool _cleanupExecuted = false;
 
         public SystemConfigurationService(IMongoDatabase database)
         {
@@ -52,8 +53,12 @@ namespace Backend.Services
 
         public async Task<SystemConfigurationSummaryDto> GetSystemConfigurationSummaryAsync()
         {
-            // Clean up deprecated fields on first access
-            await CleanupDeprecatedFieldsAsync();
+            // Clean up deprecated fields only once
+            if (!_cleanupExecuted)
+            {
+                await CleanupDeprecatedFieldsAsync();
+                _cleanupExecuted = true;
+            }
             
             // Initialize default configurations if needed
             await InitializeDefaultConfigurationsAsync();
@@ -400,9 +405,13 @@ namespace Backend.Services
             {
                 // Remove twoFactorEnabled field from all SecuritySettings documents
                 var updateDefinition = Builders<SecuritySettings>.Update.Unset("twoFactorEnabled");
-                await _securityCollection.UpdateManyAsync(_ => true, updateDefinition);
+                var result = await _securityCollection.UpdateManyAsync(_ => true, updateDefinition);
                 
-                Console.WriteLine("✅ Cleaned up deprecated twoFactorEnabled fields from SecuritySettings");
+                // Only log if documents were actually updated
+                if (result.ModifiedCount > 0)
+                {
+                    Console.WriteLine($"✅ Cleaned up deprecated twoFactorEnabled fields from {result.ModifiedCount} SecuritySettings documents");
+                }
             }
             catch (Exception ex)
             {
