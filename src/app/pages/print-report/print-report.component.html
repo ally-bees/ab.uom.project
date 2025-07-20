@@ -10,13 +10,6 @@
       <label>End Date:</label>
       <input type="date" [(ngModel)]="filterEndDate" />
     </div>
-    <div class="form-group">
-      <label>Page Orientation:</label>
-      <select [(ngModel)]="pageOrientation">
-        <option value="Portrait">Portrait</option>
-        <option value="Landscape">Landscape</option>
-      </select>
-    </div>
     <button (click)="applyFilters()">Apply Filters</button>
   </div>
 

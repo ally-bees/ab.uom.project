@@ -28,6 +28,7 @@ export class ExpenseFormComponent implements OnInit {
   loading = false;
   error = false;
 
+  today: Date = new Date();  // <-- Added: today's date for max date in datepicker
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +62,7 @@ export class ExpenseFormComponent implements OnInit {
       next: (expenses) => {
         this.recentExpenses = Array.isArray(expenses) ? expenses.slice(0, 5) : [];
         this.isLoading = false;
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error loading expenses', error);
@@ -74,69 +76,68 @@ export class ExpenseFormComponent implements OnInit {
     this.selectedFile = event.target.files[0];
   }
 
-onSubmit(): void {
-  if (this.expenseForm.invalid) {
-    console.log('Form is invalid:', this.expenseForm.errors);
-    return;
-  }
+  onSubmit(): void {
+    if (this.expenseForm.invalid) {
+      console.log('Form is invalid:', this.expenseForm.errors);
+      return;
+    }
 
-  this.isLoading = true;
-  const formData = new FormData();
-  const fieldMap: { [key: string]: string } = {
-    date: 'Date',
-    employeeName: 'EmployeeName',
-    position: 'Position',
-    expenseType: 'ExpenseType',
-    amount: 'Amount',
-    paymentMethod: 'PaymentMethod',
-    description: 'Description',
-    receipt: 'ReceiptFile'
-  };
+    this.isLoading = true;
+    const formData = new FormData();
+    const fieldMap: { [key: string]: string } = {
+      date: 'Date',
+      employeeName: 'EmployeeName',
+      position: 'Position',
+      expenseType: 'ExpenseType',
+      amount: 'Amount',
+      paymentMethod: 'PaymentMethod',
+      description: 'Description',
+      receipt: 'ReceiptFile'
+    };
 
-  Object.keys(this.expenseForm.value).forEach(key => {
-    if (key !== 'receipt' && this.expenseForm.value[key] != null) {
-      if (key === 'date') {
-        const dateValue = new Date(this.expenseForm.value[key]);
-        formData.append(fieldMap[key], dateValue.toISOString().split('T')[0]);
-      } else if (key === 'amount') {
-        const amountValue = parseFloat(this.expenseForm.value[key]);
-        const amountStr = isNaN(amountValue) ? '0.00' : amountValue.toFixed(2);
-        formData.append(fieldMap[key], amountStr);
-      } else {
-        formData.append(fieldMap[key], this.expenseForm.value[key]);
+    Object.keys(this.expenseForm.value).forEach(key => {
+      if (key !== 'receipt' && this.expenseForm.value[key] != null) {
+        if (key === 'date') {
+          const dateValue = new Date(this.expenseForm.value[key]);
+          formData.append(fieldMap[key], dateValue.toISOString().split('T')[0]);
+        } else if (key === 'amount') {
+          const amountValue = parseFloat(this.expenseForm.value[key]);
+          const amountStr = isNaN(amountValue) ? '0.00' : amountValue.toFixed(2);
+          formData.append(fieldMap[key], amountStr);
+        } else {
+          formData.append(fieldMap[key], this.expenseForm.value[key]);
+        }
+      }
+    });
+
+    // Append CompanyId and HoneyCombId if available
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      if (currentUser.CompanyId != null) {
+        formData.append('CompanyId', String(currentUser.CompanyId));
+      }
+      if (currentUser.HoneyCombId != null) {
+        formData.append('HoneyCombId', String(currentUser.HoneyCombId));
       }
     }
-  });
 
-  // ✅ App CompanyId and HoneyCombId
-  const currentUser = this.authService.getCurrentUser();
-  if (currentUser) {
-    if (currentUser.CompanyId != null) {
-      formData.append('CompanyId', String(currentUser.CompanyId));
+    if (this.selectedFile) {
+      formData.append('ReceiptFile', this.selectedFile, this.selectedFile.name);
     }
-    if (currentUser.HoneyCombId != null) {
-      formData.append('HoneyCombId', String(currentUser.HoneyCombId));
-    }
+
+    this.expenseService.submitExpense(formData).subscribe({
+      next: () => {
+        console.log('Expense saved successfully');
+        this.resetForm();
+        this.loadRecentExpenses();
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        alert('An error occurred: ' + error.message);
+        this.isLoading = false;
+      }
+    });
   }
-
-  if (this.selectedFile) {
-    formData.append('ReceiptFile', this.selectedFile, this.selectedFile.name);
-  }
-
-  this.expenseService.submitExpense(formData).subscribe({
-    next: () => {
-      console.log('Expense saved successfully');
-      this.resetForm();
-      this.loadRecentExpenses();
-      this.isLoading = false;
-    },
-    error: (error: any) => {
-      alert('An error occurred: ' + error.message);
-      this.isLoading = false;
-    }
-  });
-}
-
 
   resetForm(): void {
     this.expenseForm.reset();
