@@ -133,12 +133,21 @@ export const routes: Routes = [
       { path: 'schedule', component: ScheduleComponent },
       { path: 'shipping', component: ShippingDashboardComponent },
       { path : 'sales', component: SalesComponent },
-      { path: 'customerinsight', component: customerinsightComponent },
       { path: 'order', component: OrderSummaryComponent },
       { path: 'analytics', component: MarketingAnalyticsDashboardComponent },
       { path: 'printreport', component: PrintReportComponent },
       {path : 'expense-form', component: ExpenseFormComponent },
       { path: 'courier', component: CourierDashboardComponent },
+      { 
+        path: 'customerinsight',
+        component: customerinsightComponent,
+        children: [
+          { path: '', redirectTo: 'demographic', pathMatch: 'full' },
+          { path: 'demographic', component: DemographicComponent },
+          { path: 'purchase-behavior', component: PurchasebehaveComponent },
+          { path: 'retention-analysis', component: RetentionanalComponent }
+        ]
+      },
       // Add more pages for the business owner here
     ]
   },
