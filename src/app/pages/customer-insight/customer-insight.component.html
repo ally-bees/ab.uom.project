@@ -1,19 +1,13 @@
+<div class="main-content">
+  <div class="container">
+    <div class="button-group">
+      <button [routerLink]="[basePath + '/demographic']" routerLinkActive="active">Demographic</button>
+      <button [routerLink]="[basePath + '/purchase-behavior']" routerLinkActive="active">Purchase Behaviour</button>
+      <button [routerLink]="[basePath + '/retention-analysis']" routerLinkActive="active">Retention Analysis</button>
+    </div>
 
-
-      <div class="main-content">
-
-        <div class="container">
-
-          <div class="button-group">
-            <button [routerLink]="['/salesmanager/customerinsight/demographic']" routerLinkActive="active">Demographic</button>
-            <button [routerLink]="['/salesmanager/customerinsight/purchase-behavior']" routerLinkActive="active">Phurchase behaviour</button>
-            <button [routerLink]="['/salesmanager/customerinsight/retention-analysis']" routerLinkActive="active">Retention Analysis</button>
-          </div>
-    
-          <div class="content">
-            <router-outlet></router-outlet>
-          </div>
-        </div>
-      </div>    
-  
-
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

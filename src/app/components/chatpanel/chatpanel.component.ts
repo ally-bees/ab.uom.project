@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AuthService } from '../../services/auth.service'; // adjust path if needed
 
 interface ChatMessage {
   id?: string;
@@ -59,18 +60,37 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   sender = 'SalesManager';
   receiver = 'SalesManager';
-  receivers = [
+  allReceivers = [
     { name: 'SalesManager', image: 'assets/images/sm.jpg' },
     { name: 'BusinessOwner', image: 'assets/images/bo.jpg' },
     { name: 'InventoryManager', image: 'assets/images/im.jpg' },
-    { name: 'MarketingHead', image: 'assets/images/mm.jpg' },
+    { name: 'MarketingHead', image: 'assets/images/mm.jpg' }
   ];
 
-  constructor(private chatService: ChatService) { }
+  receivers: { name: string, image: string }[] = [];
+
+
+  constructor(
+    private chatService: ChatService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    if (user && user.Role) {
+      this.sender = this.mapRoleToSender(user.Role);
+    } else {
+      this.sender = 'UnknownUser';
+    }
+
+    // Pick default receiver (first one that is not sender)
+    const defaultReceiver = this.allReceivers.find(r => r.name !== this.sender)?.name || '';
+
+    this.receiver = defaultReceiver;
+    this.updateReceivers(this.receiver); // setup receiver list
     this.loadMessages();
     this.chatService.startHubConnection(this.sender);
+
 
     this.msgEventSub = this.chatService.messageEvent$.subscribe(event => {
       if (event && this.isRelevantMessage(event.message)) {
@@ -78,6 +98,18 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
   }
+
+  private mapRoleToSender(role: string): string {
+    const map: { [key: string]: string } = {
+      'Sales Manager': 'SalesManager',
+      'Business Owner': 'BusinessOwner',
+      'Inventory Manager': 'InventoryManager',
+      'Marketing Manager': 'MarketingHead'
+    };
+    return map[role] || role.replace(/\s/g, '');
+  }
+
+
 
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
@@ -113,14 +145,14 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.shouldScrollToBottom = true;
         }
         break;
-        
+
       case 'edit':
         const editIndex = this.messages.findIndex(m => m.id === event.message.id);
         if (editIndex !== -1) {
           this.messages[editIndex] = { ...event.message, isEdited: true };
         }
         break;
-        
+
       case 'delete':
         this.messages = this.messages.filter(m => m.id !== event.message.id);
         break;
@@ -134,63 +166,78 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   sendMessage(): void {
-  if (!this.currentMessage.trim()) return;
+    if (!this.currentMessage.trim()) return;
 
-  if (this.editMode && this.editingMessageId) {
-    // Edit existing message
-    this.chatService.updateMessage(this.editingMessageId, this.currentMessage).subscribe({
-      next: () => {
-        const msg = this.messages.find(m => m.id === this.editingMessageId);
-        if (msg) {
-          msg.text = this.currentMessage;
-          msg.isEdited = true;
+    if (this.editMode && this.editingMessageId) {
+      // Edit existing message
+      this.chatService.updateMessage(this.editingMessageId, this.currentMessage).subscribe({
+        next: () => {
+          const msg = this.messages.find(m => m.id === this.editingMessageId);
+          if (msg) {
+            msg.text = this.currentMessage;
+            msg.isEdited = true;
+          }
+
+          this.showSuccessPopup('Message updated successfully!');
+          this.resetEditMode();
+        },
+        error: err => {
+          console.error('Edit failed', err);
+          this.showErrorPopup('Failed to update message. Please try again.');
         }
+      });
 
-        this.showSuccessPopup('Message updated successfully!');
-        this.resetEditMode();
+      return; // ✅ important to exit after editing
+    }
+
+    // === SEND NEW MESSAGE LOGIC ===
+    const newMsg: ChatMessage = {
+      text: this.currentMessage,
+      sender: this.sender,
+      receiver: this.receiver,
+      timestamp: new Date()
+    };
+
+    this.messages.push(newMsg);
+    this.sortMessages();
+    this.shouldScrollToBottom = true;
+    this.currentMessage = '';
+
+    this.chatService.sendMessage(newMsg).subscribe({
+      next: (response) => {
+        console.log('Message sent successfully');
       },
       error: err => {
-        console.error('Edit failed', err);
-        this.showErrorPopup('Failed to update message. Please try again.');
+        console.error('HTTP send error', err);
+        this.messages = this.messages.filter(m => m !== newMsg);
+        this.showErrorPopup('Failed to send message. Please try again.');
       }
     });
-
-    return; // ✅ important to exit after editing
   }
 
-  // === SEND NEW MESSAGE LOGIC ===
-  const newMsg: ChatMessage = {
-    text: this.currentMessage,
-    sender: this.sender,
-    receiver: this.receiver,
-    timestamp: new Date()
-  };
 
-  this.messages.push(newMsg);
-  this.sortMessages();
-  this.shouldScrollToBottom = true;
-  this.currentMessage = '';
-
-  this.chatService.sendMessage(newMsg).subscribe({
-    next: (response) => {
-      console.log('Message sent successfully');
-    },
-    error: err => {
-      console.error('HTTP send error', err);
-      this.messages = this.messages.filter(m => m !== newMsg);
-      this.showErrorPopup('Failed to send message. Please try again.');
-    }
-  });
-}
 
 
   setReceiver(newReceiver: string): void {
-    if (this.receiver !== newReceiver) {
-      this.receiver = newReceiver;
-      this.resetEditMode(); // Cancel any ongoing edit when switching receiver
-      this.loadMessages();
-    }
+  if (this.receiver !== newReceiver) {
+    this.receiver = newReceiver;
+    this.updateReceivers(newReceiver); // refresh the UI list
+    this.resetEditMode();
+    this.loadMessages();
   }
+}
+
+
+  private updateReceivers(highlightReceiver: string): void {
+  this.receivers = this.allReceivers
+    .filter(r => r.name !== this.sender) // remove sender
+    .sort((a, b) =>
+      a.name === highlightReceiver ? -1 :
+      b.name === highlightReceiver ? 1 : 0
+    );
+}
+
+
 
   private scrollToBottom(): void {
     try {
@@ -261,7 +308,7 @@ export class ChatpanelComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.popupTimeout) {
       clearTimeout(this.popupTimeout);
     }
-    
+
     this.popupTimeout = setTimeout(() => {
       this.showPopup = false;
     }, 1000); // Hide after 3 seconds
