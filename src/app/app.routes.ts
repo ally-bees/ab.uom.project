@@ -54,6 +54,10 @@ import { PurchasebehaveComponent } from './components/purchasebehave/purchasebeh
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 import { Component } from 'ag-grid-community';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
+import { CustomersupportComponent } from './pages/customersupport/customersupport.component';
+import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
+import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
+import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
 
 export const routes: Routes = [
   // Default route
@@ -97,6 +101,16 @@ export const routes: Routes = [
       { path: 'printreport', component: PrintReportComponent },
       { path: 'expense-form', component: ExpenseFormComponent },
       { path: 'schedule', component: ScheduleComponent },
+      {
+        path: 'customersupport',
+        component: CustomersupportComponent,
+        children: [
+          { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+          { path: 'chatbot', component: AimessagepanelComponent },
+          { path: 'social-connect', component: SocialmessagepanelComponent },
+          { path: 'Messaging-app', component: ChatpanelComponent }
+        ]
+      }
     ]
   },
 
@@ -110,7 +124,17 @@ export const routes: Routes = [
       { path: 'inventoryDashboard', component: InventoryDashboardComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'order', component: OrderSummaryComponent },
-      { path: 'expense-form', component: ExpenseFormComponent }
+      { path: 'expense-form', component: ExpenseFormComponent },
+      {
+        path: 'customersupport',
+        component: CustomersupportComponent,
+        children: [
+          { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+          { path: 'chatbot', component: AimessagepanelComponent },
+          { path: 'social-connect', component: SocialmessagepanelComponent },
+          { path: 'Messaging-app', component: ChatpanelComponent }
+        ]
+      }
     ]
   },
 
@@ -148,6 +172,16 @@ export const routes: Routes = [
           { path: 'retention-analysis', component: RetentionanalComponent }
         ]
       },
+      {
+        path: 'customersupport',
+        component: CustomersupportComponent,
+        children: [
+          { path: '', redirectTo: 'social-connect', pathMatch: 'full' },
+          { path: 'chatbot', component: AimessagepanelComponent },
+          { path: 'social-connect', component: SocialmessagepanelComponent },
+          { path: 'Messaging-app', component: ChatpanelComponent }
+        ]
+      }
       // Add more pages for the business owner here
     ]
   },
