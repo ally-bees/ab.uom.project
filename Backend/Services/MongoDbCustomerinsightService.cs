@@ -15,17 +15,11 @@ namespace Backend.Services
 
         private readonly IMongoCollection<Inventory> _CollectionInven;
 
-        public MongoDbCustomerInsightService(IOptions<MongoDBSettings> mongoDBSettings)
+        public MongoDbCustomerInsightService(IMongoDatabase database)
         {
-            var settings = mongoDBSettings.Value;
-
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-
             _CollectionOrdet = database.GetCollection<Order>("orders");
             _CollectionCus = database.GetCollection<Customerr>("customers");
             _CollectionInven = database.GetCollection<Inventory>("inventory");
-
         }
 
         public async Task<(string Name, string Location)> GetTopCustomerByOrderCountAsync()

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
+using Backend.Hubs;
 
 DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", ".env"));
 //DotNetEnv.Env.Load(@"C:\Users\pramu\OneDrive\Desktop\git_projects\ab.uom.project\.env");
@@ -60,6 +61,8 @@ builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<Auditservice>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
@@ -83,6 +86,7 @@ builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddSingleton<ISystemConfigurationService, SystemConfigurationService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IAuditLogService, AuditLogService>();
+builder.Services.AddSignalR();
 
 // === Hangfire Configuration ===
 builder.Services.AddHangfire(config =>
@@ -161,6 +165,8 @@ app.UseStaticFiles(); // Enable serving static files from wwwroot
 app.UseCors("AllowAngularApp");
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chatHub");
 
 // === Map Controllers ===
 app.MapControllers();
