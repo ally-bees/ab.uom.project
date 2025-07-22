@@ -2,7 +2,6 @@ using System.Net;
 using System.Text;
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
-// using AuthAPI.Settings; // If JwtSettings/EmailSettings are here, ensure correct namespace
 using Backend.Models;
 using Backend.Services;
 using Hangfire;
@@ -13,8 +12,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
+using Backend.Hubs;
 
 DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", ".env"));
+//DotNetEnv.Env.Load(@"C:\Users\pramu\OneDrive\Desktop\git_projects\ab.uom.project\.env");
 Console.WriteLine("✅ EMAIL_USER from .env: " + Environment.GetEnvironmentVariable("EMAIL_USER"));
 Console.WriteLine("EMAIL_PASSWORD is empty = " + string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EMAIL_PASSWORD")));
 
@@ -53,11 +54,15 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 
 // === Register Backend Services ===
+builder.Services.AddSingleton<MongoService>();
+builder.Services.AddScoped<CourierService>();
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<Auditservice>();
 builder.Services.AddSingleton<SalesService>();
 builder.Services.AddSingleton<CustomerCountService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddSingleton<MongoDbCustomerInsightService>();
 builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
@@ -65,6 +70,7 @@ builder.Services.AddSingleton<FinanceService>();
 builder.Services.AddSingleton<AutomationService>();
 builder.Services.AddSingleton<ReportGenerator>();
 builder.Services.AddSingleton<ReportJobService>();
+builder.Services.AddSingleton<SalesAccessService>();
 
 // === Auth & User Services ===
 builder.Services.AddSingleton<UserService>();
@@ -80,6 +86,7 @@ builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddSingleton<ISystemConfigurationService, SystemConfigurationService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IAuditLogService, AuditLogService>();
+builder.Services.AddSignalR();
 
 // === Hangfire Configuration ===
 builder.Services.AddHangfire(config =>
@@ -158,6 +165,8 @@ app.UseStaticFiles(); // Enable serving static files from wwwroot
 app.UseCors("AllowAngularApp");
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chatHub");
 
 // === Map Controllers ===
 app.MapControllers();

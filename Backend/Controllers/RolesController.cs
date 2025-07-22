@@ -1,3 +1,4 @@
+
 using AuthAPI.Models.DTOs;
 using AuthAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -47,3 +48,4 @@ public class RolesController : ControllerBase
         return Ok(new { Message = "User roles updated successfully" });
     }
 }
+

@@ -37,6 +37,7 @@ app-marketingsidebar {
   align-items: center;
   gap: 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -205,6 +206,148 @@ app-marketingsidebar {
   font-weight: 500;
   color: #374151;
   text-align: center;
+}
+
+/* Campaign Table Section */
+.campaign-table-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6B7280;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.campaign-details-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.campaign-details-table th,
+.campaign-details-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.campaign-details-table th {
+  font-weight: 500;
+  color: #6B7280;
+  background-color: #F9FAFB;
+}
+
+.campaign-details-table tbody tr:hover {
+  background-color: #F9FAFB;
+}
+
+.campaign-details-table tfoot td {
+  background-color: #F9FAFB;
+  font-weight: 500;
+  padding: 14px 12px;
+}
+
+.campaign-details-table tfoot td:last-child {
+  color: #EF4444;
+}
+
+.card.campaigns-card {
+  cursor: pointer;
+}
+
+/* Modal Popup for Campaign Table */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.close-modal-btn:hover {
+  background-color: #F3F4F6;
 }
 
 /* Responsive Design */

@@ -1,7 +1,8 @@
 using Backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MongoDB.Bson; 
+using MongoDB.Bson;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,17 +15,11 @@ namespace Backend.Services
 
         private readonly IMongoCollection<Inventory> _CollectionInven;
 
-        public MongoDbCustomerInsightService(IOptions<MongoDBSettings> mongoDBSettings)
+        public MongoDbCustomerInsightService(IMongoDatabase database)
         {
-            var settings = mongoDBSettings.Value;
-
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-
             _CollectionOrdet = database.GetCollection<Order>("orders");
             _CollectionCus = database.GetCollection<Customerr>("customers");
             _CollectionInven = database.GetCollection<Inventory>("inventory");
-
         }
 
         public async Task<(string Name, string Location)> GetTopCustomerByOrderCountAsync()
@@ -197,6 +192,43 @@ namespace Backend.Services
 
         }
 
+        public async Task<Dictionary<string, decimal>> GetMonthlyPurchaseByProductAsync(string productId, int year)
+        {
+            var start = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var end = new DateTime(year + 1, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var pipeline = new List<BsonDocument>
+    {
+        new BsonDocument("$match", new BsonDocument
+        {
+            { "orderDate", new BsonDocument { { "$gte", start }, { "$lt", end } } }
+        }),
+        new BsonDocument("$unwind", "$orderDetails"),
+        new BsonDocument("$match", new BsonDocument("orderDetails.productId", productId)),
+        new BsonDocument("$group", new BsonDocument
+        {
+            { "_id", new BsonDocument("month", new BsonDocument("$month", "$orderDate")) },
+            { "total", new BsonDocument("$sum", new BsonDocument("$multiply", new BsonArray {
+                "$orderDetails.quantity", "$orderDetails.price"
+            })) }
+        }),
+        new BsonDocument("$sort", new BsonDocument("_id.month", 1))
+    };
+
+            var result = await _CollectionOrdet.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            var monthlyData = new Dictionary<string, decimal>();
+            foreach (var doc in result)
+            {
+                int month = doc["_id"]["month"].AsInt32;
+                decimal total = doc["total"].ToDecimal();
+                string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month);
+                monthlyData[monthName] = total;
+            }
+
+            return monthlyData;
+        }
+
         //just to operate with database 
         //not for application
 
@@ -228,7 +260,7 @@ namespace Backend.Services
 
 
     }
-   
-    
+
+
 }
 

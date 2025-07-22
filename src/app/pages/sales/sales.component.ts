@@ -6,6 +6,10 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { SalesViewModel } from '../../models/sale.model';
 import { SalesService } from '../../services/sales.service';
+import { OrdersService } from '../../services/orders.service';
+import { InventoryService } from '../../services/inventory.service';
+import { Order } from '../../models/order.model';
+import { product } from '../../models/product.model';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 
@@ -14,10 +18,11 @@ interface Sale {
   saleId: string;
   salesDate: string;
   orderId: string;
-  productName: string;
+  productId: string;
   category: string;
   quantity: number;
   price: number;
+  companyId: string;
 }
 
 @Component({
@@ -33,16 +38,39 @@ export class SalesComponent implements OnInit {
 
   // Filtered data used in charts and table
   filteredData: Sale[] = [];
+  page: number = 1;
+  pageSize: number = 15;
+
+  get totalPages() {
+    return Math.ceil(this.filteredData.length / this.pageSize);
+  }
+
+  get pagedFilteredData() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.filteredData.slice(start, start + this.pageSize);
+  }
+
+  nextPage() {
+    if (this.page < this.totalPages) {
+      this.page++;
+    }
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
 
   // Column definitions for AG Grid
   columnDefs: ColDef<Sale>[] = [
     { field: 'saleId', headerName: 'Sale ID', sortable: true },
     { field: 'salesDate', headerName: 'Sales Date', sortable: true },
     { field: 'orderId', headerName: 'Order ID', sortable: true },
-    { field: 'productName', headerName: 'Product Name', sortable: true },
+    { field: 'productId', headerName: 'Product ID', sortable: true },
     { field: 'category', headerName: 'Category', sortable: true },
     { field: 'quantity', headerName: 'Quantity', sortable: true },
-    { field: 'price', headerName: 'Price', sortable: true },
+    { field: 'price', headerName: 'Price', sortable: true, valueFormatter: (params: any) => Number(params.value).toFixed(2) }
   ];
 
   defaultColDef = {
@@ -159,8 +187,12 @@ export class SalesComponent implements OnInit {
   // Track which pie chart is visible in slideshow
   activeChart: 'product' | 'category' = 'category';
 
+  products: product[] = [];
+
   constructor(
     private salesService: SalesService,
+    private ordersService: OrdersService,
+    private inventoryService: InventoryService,
     private router: Router
   ) {}
 
@@ -176,41 +208,46 @@ export class SalesComponent implements OnInit {
     this.loadSalesData();
   }
 
-  // Fetch dashboard data and transform it to flat Sale[] structure
+  // Fetch sales data for the company and transform it for the table
   loadSalesData(): void {
-    this.salesService.getDashboardData().subscribe({
-      next: (data: SalesViewModel) => {
-        const transformedData: Sale[] = [];
-
-        data.sales.forEach((sale) => {
-          sale.orderIds.forEach((orderId) => {
-            const order = data.relatedOrders.find((o) => o.orderId === orderId);
-            if (order) {
-              order.orderDetails.forEach((orderDetail) => {
-                const product = data.relatedInventory.find((p) => p.productId === orderDetail.productId);
-                const productName = product?.name || 'Unknown';
-                const category = product?.category || 'Unknown';
-                const quantity = orderDetail.quantity;
-                const price = orderDetail.price;
-
-                transformedData.push({
-                  saleId: sale.saleId,
-                  salesDate: sale.saleDate ? new Date(sale.saleDate).toISOString().split('T')[0] : 'N/A',
-                  orderId: order.orderId,
-                  productName,
-                  category,
-                  quantity,
-                  price: parseFloat(price.toFixed(2)),
+    // Fetch all orders and products for the company first
+    this.ordersService.getOrdersByCompany().subscribe({
+      next: (orders: Order[]) => {
+        this.inventoryService.getInventoryByCompany().subscribe({
+          next: (products: product[]) => {
+            this.products = products;
+            this.salesService.getSalesByCompanyId().subscribe({
+              next: (sales: any[]) => {
+                this.rowData = [];
+                sales.forEach(sale => {
+                  (sale.orderIds || []).forEach((orderId: string) => {
+                    const order = orders.find(o => o.orderId === orderId);
+                    if (order && order.orderDetails && order.orderDetails.length > 0) {
+                      order.orderDetails.forEach(detail => {
+                        const prod = products.find(p => p.productId === detail.productId);
+                        this.rowData.push({
+                          saleId: sale.saleId,
+                          salesDate: sale.saleDate ? new Date(sale.saleDate).toISOString().split('T')[0] : 'N/A',
+                          orderId,
+                          productId: detail.productId,
+                          category: prod ? prod.category : '',
+                          quantity: detail.quantity,
+                          price: detail.price,
+                          companyId: sale.companyId
+                        });
+                      });
+                    }
+                  });
                 });
-              });
-            }
-          });
+                this.applyFilters();
+              },
+              error: (err) => console.error('Error fetching sales data:', err)
+            });
+          },
+          error: (err) => console.error('Error fetching products:', err)
         });
-
-        this.rowData = transformedData;
-        this.applyFilters(); // triggers chart/table updates
       },
-      error: (err) => console.error('Error fetching sales data:', err),
+      error: (err) => console.error('Error fetching orders:', err)
     });
   }
 
@@ -354,7 +391,8 @@ export class SalesComponent implements OnInit {
       const saleDate = sale.salesDate;
       const matchesDate = (!this.fromDate || saleDate >= this.fromDate) &&
                          (!this.toDate || saleDate <= this.toDate);
-      const matchesSearch = !this.searchQuery || sale.productName.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const productName = this.products.find(p => p.productId === sale.productId)?.name || '';
+      const matchesSearch = !this.searchQuery || productName.toLowerCase().includes(this.searchQuery.toLowerCase());
       return matchesDate && matchesSearch;
     });
 
@@ -362,6 +400,7 @@ export class SalesComponent implements OnInit {
     this.updatePieCharts();
     this.updateComparisonChart();
     this.updateDailySalesChart();
+    this.page = 1; // Reset to first page on filter change
   }
 
   onSearchChange(event: Event): void {
@@ -379,7 +418,8 @@ export class SalesComponent implements OnInit {
     const categoryMap: { [category: string]: number } = {};
 
     this.filteredData.forEach((sale) => {
-      productMap[sale.productName] = (productMap[sale.productName] || 0) + sale.quantity;
+      const productName = this.products.find(p => p.productId === sale.productId)?.name || sale.productId;
+      productMap[productName] = (productMap[productName] || 0) + sale.quantity;
       categoryMap[sale.category] = (categoryMap[sale.category] || 0) + sale.quantity;
     });
 

@@ -5,39 +5,64 @@ import { AgGridModule } from 'ag-grid-angular';
 import { NgChartsModule } from 'ng2-charts';     
 import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-top-selling',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgGridModule, NgChartsModule], // Include common Angular modules required for forms and structure
+  imports: [CommonModule, FormsModule, AgGridModule, NgChartsModule],
   templateUrl: './top-selling.component.html',
   styleUrls: ['./top-selling.component.css']
 })
 export class TopSellingComponent implements OnInit {
   topSellingProducts: product[] = [];
-  productLimit: number = 10; // Default to 10
+  productLimit: number = 9; // Default to 9
+  page: number = 1;
+  pageSize: number = 9;
 
-  constructor(private inventoryService: InventoryService) {}
+  get pagedProducts() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.topSellingProducts.slice(start, start + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.topSellingProducts.length / this.pageSize);
+  }
+
+  nextPage() {
+    if (this.page < this.totalPages) {
+      this.page++;
+    }
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
+
+  constructor(private inventoryService: InventoryService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadTopSellingProducts();
   }
 
   loadTopSellingProducts(): void {
-    this.inventoryService.getBestSellingProducts(this.productLimit).subscribe({
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    this.inventoryService.getInventoryByCompany().subscribe({
       next: (products) => {
-        this.topSellingProducts = products;
+        this.topSellingProducts = products.slice(0, this.productLimit);
       },
       error: (err) => {
-        console.error('Error fetching top-selling products', err);
+        console.error('Error fetching company products', err);
       }
     });
   }
 
   // Generate a gradient color for each product based on its index
   getProductBackgroundColor(index: number): string {
-    const startColor = { r: 0, g: 51, b: 102 }; // Dark blue
-    const endColor = { r: 204, g: 224, b: 255 }; // Lightest blue
+    const startColor = { r: 0, g: 154, b: 177 }; // Dark blue rgb(200, 248, 255)
+    const endColor = { r: 200, g: 248, b: 255 }; // Lightest blue rgb(0, 154, 177)
 
     // Calculate the factor based on the index
     const factor = index / (this.productLimit - 1);

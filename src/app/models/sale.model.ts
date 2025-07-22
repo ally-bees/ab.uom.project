@@ -7,6 +7,7 @@ export interface Sale {
   orderIds: string[];
   saleDate: string;
   amount: number;
+  companyId: string;
 }
 
 export interface SalesViewModel {

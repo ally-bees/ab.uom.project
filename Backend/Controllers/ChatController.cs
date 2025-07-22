@@ -59,7 +59,7 @@ namespace Backend.Controllers
             // Broadcast deletion to all clients via SignalR
             await _hubContext.Clients.All.SendAsync("MessageDeleted", messageToDelete);
 
-            return Ok("Message deleted successfully");
+           return Ok(new { message = "Message deleted successfully" });
         }
 
         [HttpPut("edit/{id}")]
@@ -73,16 +73,24 @@ namespace Backend.Controllers
             if (result.ModifiedCount == 0)
                 return NotFound("Message not found or no changes");
 
-            // Get the updated message to broadcast
+            // Get the updated message from DB
             var updatedMessage = await _chatService.GetMessageByIdAsync(id);
             if (updatedMessage != null)
             {
-                // Broadcast updated message to all clients via SignalR
-                await _hubContext.Clients.All.SendAsync("MessageUpdated", updatedMessage);
+                // ✅ Send event using correct SignalR event name and format
+                await _hubContext.Clients
+                    .Users(new[] { updatedMessage.Sender, updatedMessage.Receiver })
+                    .SendAsync("ReceiveMessageEvent", new
+                    {
+                        type = "edit",
+                        message = updatedMessage
+                    });
             }
 
-            return Ok("Message updated successfully");
+            return Ok(new { message = "Message updated successfully" });
+
         }
+
     }
 
     public class EditMessageRequest

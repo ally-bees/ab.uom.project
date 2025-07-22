@@ -111,6 +111,7 @@ namespace Backend.Services
         {
             return _ordersCollection;
         }
+        
         // Expense methods
         public async Task<List<Expense>> GetAllExpensesAsync() =>
             await _expensesCollection.Find(_ => true).Sort(Builders<Expense>.Sort.Descending(e => e.Date)).Limit(10).ToListAsync();

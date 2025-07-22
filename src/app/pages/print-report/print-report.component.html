@@ -10,31 +10,61 @@
       <label>End Date:</label>
       <input type="date" [(ngModel)]="filterEndDate" />
     </div>
-    <div class="form-group">
-      <label>Page Orientation:</label>
-      <select [(ngModel)]="pageOrientation">
-        <option value="Portrait">Portrait</option>
-        <option value="Landscape">Landscape</option>
-      </select>
-    </div>
     <button (click)="applyFilters()">Apply Filters</button>
   </div>
 
  <div id="reportContent" class="preview-container">
-  <h3>Report Preview</h3>
-  <table *ngIf="filteredData.length > 0">
-    <thead>
-      <tr>
-        <th *ngFor="let col of tableColumns">{{ col }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of filteredData">
-        <td *ngFor="let col of tableColumns">{{ row[col] }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <p *ngIf="filteredData.length === 0">No data available to display.</p>
+  <div class="report-header">
+    <h3>{{ reportType }}</h3>
+    <p class="report-date-range">Period: {{ startDate | date }} - {{ endDate | date }}</p>
+  </div>
+  
+  <!-- Summary section for Courier report -->
+  <div *ngIf="isCourierReport" class="summary-section">
+    <div class="summary-stats">
+      <h4>Delivery Statistics</h4>
+      <div class="stat-item">
+        <span class="stat-label">Pending Deliveries:</span>
+        <span class="stat-value">{{ summaryData?.pending || 0 }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Completed Deliveries:</span>
+        <span class="stat-value">{{ summaryData?.completed || 0 }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Rejected Deliveries:</span>
+        <span class="stat-value">{{ summaryData?.rejected || 0 }}</span>
+      </div>
+      <div class="stat-item total">
+        <span class="stat-label">Total Deliveries:</span>
+        <span class="stat-value">{{ summaryData?.total || 0 }}</span>
+      </div>
+    </div>
+    
+    <div class="chart-container">
+      <canvas id="courierChart" width="300" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <h4>Detailed Data</h4>
+    <table *ngIf="filteredData.length > 0">
+      <thead>
+        <tr>
+          <th *ngFor="let col of tableColumns">{{ col }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of filteredData">
+          <td *ngFor="let col of tableColumns">
+            <span *ngIf="col === 'Status'" [class]="'status ' + getStatusClass(row[col])">{{ row[col] }}</span>
+            <span *ngIf="col !== 'Status'">{{ row[col] }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="filteredData.length === 0" class="no-data">No data available to display.</p>
+  </div>
 </div>
 
 

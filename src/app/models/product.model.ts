@@ -6,4 +6,5 @@ export interface product {
   price: number;
   stockQuantity: number;
   description: string;
+  companyId: string; // Added for company filtering
 }
