@@ -42,10 +42,10 @@
   transition: all 0.3s ease;
 }
 .year-selector button:hover {
-  background: #e0e0e0;
+  background: #d1faff;
 }
 .year-selector button.active {
-  background: #44daff;
+  background: #1eb0d4;
   color: white;
   border-color:  #44daff;
   font-weight: 600;

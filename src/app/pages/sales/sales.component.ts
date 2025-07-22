@@ -203,7 +203,7 @@ export class SalesComponent implements OnInit {
   ngOnInit(): void {
     const today = new Date();
     const from = new Date();
-    from.setDate(today.getDate() - 7); // Use 7 for a week
+    from.setDate(today.getDate() - 30); // Use 7 for a week
 
     this.fromDate = from.toISOString().split('T')[0];
     this.toDate = today.toISOString().split('T')[0];
@@ -413,5 +413,9 @@ export class SalesComponent implements OnInit {
 
   closePrintDialog(): void {
     this.showPrintDialog = false;
+  }
+
+  goToSalesTable(): void {
+    this.router.navigate(['/salesmanager/salesOverveiw']);
   }
 }
