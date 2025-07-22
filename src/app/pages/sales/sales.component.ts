@@ -12,6 +12,7 @@ import { Order } from '../../models/order.model';
 import { product } from '../../models/product.model';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
+import { forkJoin, of } from 'rxjs';
 
 // Sale interface for AG Grid and internal processing
 interface Sale {
@@ -189,6 +190,10 @@ export class SalesComponent implements OnInit {
 
   products: product[] = [];
 
+  // Loading and error state
+  loading: boolean = false;
+  error: string = '';
+
   constructor(
     private salesService: SalesService,
     private ordersService: OrdersService,
@@ -210,44 +215,44 @@ export class SalesComponent implements OnInit {
 
   // Fetch sales data for the company and transform it for the table
   loadSalesData(): void {
-    // Fetch all orders and products for the company first
-    this.ordersService.getOrdersByCompany().subscribe({
-      next: (orders: Order[]) => {
-        this.inventoryService.getInventoryByCompany().subscribe({
-          next: (products: product[]) => {
-            this.products = products;
-            this.salesService.getSalesByCompanyId().subscribe({
-              next: (sales: any[]) => {
-                this.rowData = [];
-                sales.forEach(sale => {
-                  (sale.orderIds || []).forEach((orderId: string) => {
-                    const order = orders.find(o => o.orderId === orderId);
-                    if (order && order.orderDetails && order.orderDetails.length > 0) {
-                      order.orderDetails.forEach(detail => {
-                        const prod = products.find(p => p.productId === detail.productId);
-                        this.rowData.push({
-                          saleId: sale.saleId,
-                          salesDate: sale.saleDate ? new Date(sale.saleDate).toISOString().split('T')[0] : 'N/A',
-                          orderId,
-                          productId: detail.productId,
-                          category: prod ? prod.category : '',
-                          quantity: detail.quantity,
-                          price: detail.price,
-                          companyId: sale.companyId
-                        });
-                      });
-                    }
-                  });
+    this.loading = true;
+    this.error = '';
+    forkJoin({
+      orders: this.ordersService.getOrdersByCompany(),
+      products: this.inventoryService.getInventoryByCompany(),
+      sales: this.salesService.getSalesByCompanyId()
+    }).subscribe({
+      next: ({ orders, products, sales }) => {
+        this.products = products;
+        this.rowData = [];
+        sales.forEach(sale => {
+          (sale.orderIds || []).forEach((orderId: string) => {
+            const order = orders.find(o => o.orderId === orderId);
+            if (order && order.orderDetails && order.orderDetails.length > 0) {
+              order.orderDetails.forEach(detail => {
+                const prod = products.find(p => p.productId === detail.productId);
+                this.rowData.push({
+                  saleId: sale.saleId,
+                  salesDate: sale.saleDate ? new Date(sale.saleDate).toISOString().split('T')[0] : 'N/A',
+                  orderId,
+                  productId: detail.productId,
+                  category: prod ? prod.category : '',
+                  quantity: detail.quantity,
+                  price: detail.price,
+                  companyId: sale.companyId
                 });
-                this.applyFilters();
-              },
-              error: (err) => console.error('Error fetching sales data:', err)
-            });
-          },
-          error: (err) => console.error('Error fetching products:', err)
+              });
+            }
+          });
         });
+        this.applyFilters();
+        this.loading = false;
       },
-      error: (err) => console.error('Error fetching orders:', err)
+      error: (err) => {
+        console.error('Error fetching sales data:', err);
+        this.error = 'Failed to load sales data. Please try again later.';
+        this.loading = false;
+      }
     });
   }
 
