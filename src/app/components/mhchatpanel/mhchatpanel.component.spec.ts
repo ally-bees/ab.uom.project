@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuditorpageComponent } from './auditorpage.component';
+import { MhchatpanelComponent } from './mhchatpanel.component';
 
-describe('AuditorpageComponent', () => {
-  let component: AuditorpageComponent;
-  let fixture: ComponentFixture<AuditorpageComponent>;
+describe('MhchatpanelComponent', () => {
+  let component: MhchatpanelComponent;
+  let fixture: ComponentFixture<MhchatpanelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuditorpageComponent]
+      imports: [MhchatpanelComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AuditorpageComponent);
+    fixture = TestBed.createComponent(MhchatpanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

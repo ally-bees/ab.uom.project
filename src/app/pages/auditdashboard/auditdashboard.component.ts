@@ -5,11 +5,12 @@ import { AuditstatustrackerComponent } from '../../components/auditstatustracker
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FooterComponent } from '../../footer/footer.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-auditdashboard',
   standalone: true,
-  imports: [ PastauditComponent,AuditsummaryComponent,AuditstatustrackerComponent  ],
+  imports: [ PastauditComponent,AuditsummaryComponent,AuditstatustrackerComponent,RouterModule  ],
   templateUrl: './auditdashboard.component.html',
   styleUrl: './auditdashboard.component.css'
 })

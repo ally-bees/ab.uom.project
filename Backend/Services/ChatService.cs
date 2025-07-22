@@ -10,11 +10,8 @@ namespace Backend.Services
     {
         private readonly IMongoCollection<ChatMessage> _messages;
 
-        public ChatService(IOptions<MongoDBSettings> settings)
+        public ChatService(IMongoDatabase database)
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-
             _messages = database.GetCollection<ChatMessage>("messages");
         }
 

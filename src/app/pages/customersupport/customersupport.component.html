@@ -1,18 +1,13 @@
- <!-- salesmanager customersupport -->
-      <div class="main-content">
+<div class="main-content">
+  <div class="container">
+    <div class="button-group">
+      <button [routerLink]="[basePath + '/social-connect']" routerLinkActive="active">Social Connect</button>
+      <button [routerLink]="[basePath + '/chatbot']" routerLinkActive="active">Chatbot</button>
+      <button [routerLink]="[basePath + '/Messaging-app']" routerLinkActive="active">Messaging App</button>
+    </div>
 
-        <div class="container">
-
-          <div class="button-group">
-            <button [routerLink]="['/salesmanager/customersupport/social-connect']" routerLinkActive="active"> social-connect </button>
-            <button [routerLink]="['/salesmanager/customersupport/chatbot']" routerLinkActive="active"> chatbot </button>
-            <button [routerLink]="['/salesmanager/customersupport/Messaging-app']" routerLinkActive="active"> Messaging-app </button>
-          </div>
-    
-          <div class="content">
-            <router-outlet></router-outlet>
-          </div>
-        </div>
-      </div>    
-  
-
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

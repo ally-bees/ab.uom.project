@@ -53,21 +53,26 @@ export class UserManagementComponent implements OnInit {
         status: 'Active',
         
       }));
+      console.log(`Loaded ${this.users.length} users:`, this.users);
     });
   }
 
   filteredUsers(): User[] {
     if (!this.searchText.trim()) {
+      console.log(`Returning all ${this.users.length} users`);
       return this.users;
     }
 
     const lowerSearch = this.searchText.trim().toLowerCase();
 
-    return this.users.filter(user =>
+    const filtered = this.users.filter(user =>
       user.username.toLowerCase().includes(lowerSearch) ||
       user.email.toLowerCase().includes(lowerSearch) ||
       user.roles.toLowerCase().includes(lowerSearch)
     );
+    
+    console.log(`Filtered ${filtered.length} users from ${this.users.length} total`);
+    return filtered;
   }
 
   toggleDropdown(user: User): void {

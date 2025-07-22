@@ -65,27 +65,30 @@
 .date-filter {
   display: flex;
   gap: 15px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-grow: 1;
 }
 
 .date-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px; /* slightly smaller gap for tighter spacing */
   flex-grow: 1;
 }
 
 .date-group span {
+  font-weight: bold;
   white-space: nowrap;
 }
 
 .date-group input {
   flex-grow: 1;
-  padding: 8px 12px;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 14px;
 }
+
 
 /* Order stats and chart - Flex container */
 .stats-chart-wrapper {

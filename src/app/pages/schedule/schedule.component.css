@@ -1,161 +1,174 @@
 body {
-  background-color: #f2f1f6;
-  margin: 0;
-  padding: 30px;
-  font-family: 'Segoe UI', sans-serif;
-}
+    background-color: #f2f1f6;
+    margin: 0;
+    padding: 30px;
+    font-family: 'Segoe UI', sans-serif;
+  }
 
-.automation-container {
-  max-width: 700px;
-  margin: 0 auto;
-  background-color: #fff;
-  padding: 30px 30px 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-}
+  .main-content {
+    flex: 1;
+    padding: 0; /* removed extra padding so automation-container edges align with window */
+    background-color: #f2f1f6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: #1a1a1a;
-}
+  .automation-container {
+    width: 100%; /* full width */
+    max-width: 100%; /* no max-width limit */
+    margin: 0; /* no margin */
+    background-color: #fff;
+    padding: 30px 40px; /* a bit more horizontal padding for inner breathing room */
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+  }
 
-h2 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 25px 0 10px;
-  color: #1a1a1a;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .title {
+    font-size: 28px; /* slightly bigger title */
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+  }
 
-h2::before {
-  content: attr(data-step);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #00c6ff;
-  color: #fff;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 11px;
-  font-weight: bold;
-}
+  h2 {
+    font-size: 18px; /* slightly bigger section headers */
+    font-weight: 600;
+    margin: 30px 0 15px;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #333;
-}
+  h2::before {
+    content: attr(data-step);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #00c6ff;
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 13px;
+    font-weight: bold;
+  }
 
-input[type="text"],
-input[type="email"],
-input[type="time"],
-input[type="date"],
-textarea,
-select {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  background-color: #f9f9f9;
-  transition: border 0.3s ease;
-}
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+  }
 
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #00c6ff;
-  outline: none;
-}
+  input[type="text"],
+  input[type="email"],
+  input[type="time"],
+  input[type="date"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: #f9f9f9;
+    transition: border 0.3s ease;
+    box-sizing: border-box;
+  }
 
-textarea {
-  height: 90px;
-  resize: vertical;
-}
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: #00c6ff;
+    outline: none;
+  }
 
-input[type="checkbox"] {
-  transform: scale(1.1);
-  accent-color: #00c6ff;
-}
+  textarea {
+    height: 110px;
+    resize: vertical;
+  }
 
-label input[type="checkbox"] {
-  margin-right: 8px;
-  vertical-align: middle;
-}
+  input[type="checkbox"] {
+    transform: scale(1.1);
+    accent-color: #00c6ff;
+  }
 
-button[type="submit"] {
-  margin-top: 10px;
-  background-color: #00c6ff;
-  color: white;
-  padding: 10px 22px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
+  label input[type="checkbox"] {
+    margin-right: 10px;
+    vertical-align: middle;
+  }
 
-button[type="submit"]:hover {
-  background-color: #00b5eb;
-}
+  button[type="submit"] {
+    margin-top: 20px;
+    background-color: #00c6ff;
+    color: white;
+    padding: 12px 26px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
 
-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+  button[type="submit"]:hover {
+    background-color: #00b5eb;
+  }
 
-.automation-container button {
-  font-size: 13px;
-}
+  button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 
-.automation-container p {
-  font-size: 14px;
-  color: #333;
-}
+  .automation-container button {
+    font-size: 14px;
+  }
 
-.automation-container strong {
-  color: #1a1a1a;
-}
+  .automation-container p {
+    font-size: 15px;
+    color: #333;
+    margin: 10px 0;
+  }
 
-.automation-container small {
-  color: #777;
-}
+  .automation-container strong {
+    color: #1a1a1a;
+  }
 
-.automation-container h2 {
-  margin-bottom: 12px;
-}
+  .automation-container small {
+    color: #777;
+  }
 
-.automation-container .automation-actions {
-  margin-top: 10px;
-}
+  .automation-container h2 {
+    margin-bottom: 15px;
+  }
 
-.automation-container button:not(:last-child) {
-  margin-right: 10px;
-}
+  .automation-container .automation-actions {
+    margin-top: 15px;
+  }
 
-.automation-container button {
-  padding: 6px 14px;
-  font-size: 13px;
-  border-radius: 6px;
-}
+  .automation-container button:not(:last-child) {
+    margin-right: 15px;
+  }
 
-.automation-container .delete-btn {
-  color: #ff4d4f;
-  background: none;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-}
+  .automation-container button {
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
 
-.automation-container .delete-btn:hover {
-  text-decoration: underline;
-}
+  .automation-container .delete-btn {
+    color: #ff4d4f;
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .automation-container .delete-btn:hover {
+    text-decoration: underline;
+  }
