@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
 using Backend.Services;
+using Backend.Models;
 
 namespace AuthAPI.Services;
 public class AuthService

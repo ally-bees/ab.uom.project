@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Backend.Controllers
 {
@@ -29,7 +30,7 @@ namespace Backend.Controllers
             var inventory = await _mongoDBService.GetAllInventoryAsync();
 
             var totalRevenue = sales.Sum(s => s.Amount);
-            var totalItems = orders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+            var totalItems = orders.Sum(o => (o.OrderDetails ?? Enumerable.Empty<OrderDetail>()).Sum(od => od.Quantity));
             var totalOrders = orders.Count;
 
             var viewModel = new SalesViewModel
@@ -60,7 +61,7 @@ namespace Backend.Controllers
 
                 // Calculate total revenue, total items, and total orders
                 var totalRevenue = sales.Sum(s => s.Amount);
-                var totalItems = sales.Sum(s => s.OrderIds.Count); // Assuming OrderIds holds the count of orders
+                var totalItems = sales.Sum(s => s.OrderIds?.Count ?? 0); // Safely count OrderIds
                 var totalOrders = sales.Count;
 
                 // Return the summary in a structured response
@@ -96,7 +97,7 @@ namespace Backend.Controllers
                 .ToList();
 
             var productIds = relatedOrders
-                .SelectMany(o => o.OrderDetails.Select(od => od.ProductId))
+                .SelectMany(o => (o.OrderDetails ?? Enumerable.Empty<OrderDetail>()).Select(od => od.ProductId))
                 .Distinct()
                 .ToList();
 
@@ -106,7 +107,7 @@ namespace Backend.Controllers
                 .ToList();
 
             var totalRevenue = targetSale.Amount;
-            var totalItems = relatedOrders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+            var totalItems = relatedOrders.Sum(o => (o.OrderDetails ?? Enumerable.Empty<OrderDetail>()).Sum(od => od.Quantity));
             var totalOrders = relatedOrders.Count;
 
             var viewModel = new SalesViewModel
