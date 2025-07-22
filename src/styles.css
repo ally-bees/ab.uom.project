@@ -8,20 +8,8 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
 /* You can add global styles to this file, and also import other style files */
 /* Common styles that can be used across components */
-
-/* Status Card styles */
 .status-card {
   background-color: white;
   border-radius: 12px;
@@ -136,7 +124,7 @@ table td {
 
 /* Button styles */
 .add-user-btn, .export-btn, .regenerate-btn {
-  background-color: #00bcd4;
+  background-color: #7ECBD1;
   color: white;
   border: none;
   border-radius: 8px;
@@ -149,7 +137,7 @@ table td {
 }
 
 .add-user-btn:hover, .export-btn:hover, .regenerate-btn:hover {
-  background-color: #00acc1;
+  background-color: #69b1b6;
 }
 
 .action-btn, .settings-btn {
