@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service'; // Adjust path if needed
 
 interface Sale {
   id: string;
@@ -24,33 +25,42 @@ export class SalesInsightComponent implements OnInit {
   thisMonthLabel: string = '';
   lastMonthLabel: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.fetchSalesData();
   }
 
   fetchSalesData(): void {
-    this.http.get<Sale[]>('http://localhost:5241/api/sales')
-      .subscribe({
-        next: (sales) => {
-          const grouped = this.groupSalesByMonth(sales);
-          const currentMonth = this.getTotalForMonth(grouped, 0);
-          const previousMonth = this.getTotalForMonth(grouped, 1);
-          this.profitPercentage = this.calculateProfitPercentage(currentMonth, previousMonth);
-          this.thisMonthProfit = currentMonth;
-          this.lastMonthProfit = previousMonth;
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
 
-          const today = new Date();
-          const current = new Date(today.getFullYear(), today.getMonth());
-          const previous = new Date(today.getFullYear(), today.getMonth() - 1);
-          this.thisMonthLabel = current.toLocaleString('default', { month: 'long' });
-          this.lastMonthLabel = previous.toLocaleString('default', { month: 'long' });
-        },
-        error: (error) => {
-          console.error('Failed to fetch sales data:', error);
-        }
-      });
+    if (!companyId) {
+      console.error('No company ID found for the current user');
+      return;
+    }
+
+    const url = `http://localhost:5241/api/sales/company/${companyId}`;
+
+    this.http.get<Sale[]>(url).subscribe({
+      next: (sales) => {
+        const grouped = this.groupSalesByMonth(sales);
+        const currentMonth = this.getTotalForMonth(grouped, 0);
+        const previousMonth = this.getTotalForMonth(grouped, 1);
+        this.profitPercentage = this.calculateProfitPercentage(currentMonth, previousMonth);
+        this.thisMonthProfit = currentMonth;
+        this.lastMonthProfit = previousMonth;
+
+        const today = new Date();
+        const current = new Date(today.getFullYear(), today.getMonth());
+        const previous = new Date(today.getFullYear(), today.getMonth() - 1);
+        this.thisMonthLabel = current.toLocaleString('default', { month: 'long' });
+        this.lastMonthLabel = previous.toLocaleString('default', { month: 'long' });
+      },
+      error: (error) => {
+        console.error('Failed to fetch sales data:', error);
+      }
+    });
   }
 
   groupSalesByMonth(sales: Sale[]): Map<string, number> {
