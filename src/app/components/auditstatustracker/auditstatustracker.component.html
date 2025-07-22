@@ -17,7 +17,11 @@
         <div class="stats-card" *ngFor="let card of statusCards">
           <h6>{{ card.month }} {{ card.year }}</h6>
           <p>Last available report <span>--</span></p>
-          <button [routerLink]="['/auditpage/audit']" [queryParams]="{year:card.year,month: card.month}">View Dashboard</button>
+          <button 
+            [routerLink]="['/businessowner/auditpage']" 
+            [queryParams]="{year:card.year,month: card.month}">
+            View Dashboard
+          </button>
         </div>
       </div>
     </div>
