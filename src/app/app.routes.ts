@@ -48,7 +48,6 @@ import { TestmarketingDashboardComponent } from './dashboards/testmarketing-dash
 
 import { AuditpageComponent } from './pages/auditpage/auditpage.component';
 import { AuditdashboardComponent } from './pages/auditdashboard/auditdashboard.component';
-import { AuditorpageComponent } from './mainpage/auditorpage/auditorpage.component';
 import { DemographicComponent } from './components/demographic/demographic.component';
 import { PurchasebehaveComponent } from './components/purchasebehave/purchasebehave.component';
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
@@ -181,7 +180,9 @@ export const routes: Routes = [
           { path: 'social-connect', component: SocialmessagepanelComponent },
           { path: 'Messaging-app', component: ChatpanelComponent }
         ]
-      }
+      },
+      { path: 'auditdashboard', component: AuditdashboardComponent}, 
+      { path: 'auditpage', component: AuditpageComponent }
       // Add more pages for the business owner here
     ]
   },
@@ -197,11 +198,6 @@ export const routes: Routes = [
   { path: 'top-selling', component: TopSellingComponent, canActivate: [authGuard] },
   { path: 'stats', component: StatsCardComponent, canActivate: [authGuard] },
   { path: 'top', component: TopSellingTableComponent, canActivate: [authGuard] },
-
-  // Audit related routes (if needed)
-  { path: 'auditpage', component: AuditpageComponent },
-  { path: 'auditdashboard', component: AuditdashboardComponent },
-  { path: 'auditorpage', component: AuditorpageComponent },
 
   // Policies
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
