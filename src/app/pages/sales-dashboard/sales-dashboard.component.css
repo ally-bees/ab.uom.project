@@ -1,9 +1,10 @@
 .sales-dashboard-container{
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   gap: 1rem;
   padding: 2rem;
-  background-color: #f7f7f7;
+  background-color: hsl(0, 0%, 97%);
   border-radius: 12px;
 }
 
