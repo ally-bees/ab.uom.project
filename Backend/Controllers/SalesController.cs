@@ -21,7 +21,7 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var sales = await _salesService.GetAllSalesAsync();
+            var sales = await _salesService.GetAllSalesAsync(); 
             return Ok(sales);
         }
 
