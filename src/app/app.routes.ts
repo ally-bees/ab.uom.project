@@ -53,6 +53,11 @@ import { PurchasebehaveComponent } from './components/purchasebehave/purchasebeh
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 import { Component } from 'ag-grid-community';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
+import { CustomersupportComponent } from './pages/customersupport/customersupport.component';
+import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
+import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
+import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 
 export const routes: Routes = [
   // Default route
@@ -194,11 +199,11 @@ export const routes: Routes = [
   { path: 'top-selling', component: TopSellingComponent, canActivate: [authGuard] },
   { path: 'stats', component: StatsCardComponent, canActivate: [authGuard] },
   { path: 'top', component: TopSellingTableComponent, canActivate: [authGuard] },
+  { path: 'marketing', component: MarketingDashboardComponent },
 
   // Audit related routes (if needed)
   { path: 'auditpage', component: AuditpageComponent },
   { path: 'auditdashboard', component: AuditdashboardComponent },
-  { path: 'auditorpage', component: AuditorpageComponent },
 
   // Policies
   { path: 'privacy-policy', component: PrivacyPolicyComponent },

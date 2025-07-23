@@ -191,11 +191,31 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
     
     // Navigate back based on report type with query params for date ranges
     if (this.isCourierReport) {
-      // For courier reports, preserve the date ranges in query parameters
-      this.router.navigate(['/courier'], { 
+      // Get the original query params from the report data
+      let searchTerm = '';
+      
+      // Try to get the search term from various sources
+      if (reportData && reportData.searchTerm) {
+        searchTerm = reportData.searchTerm;
+      } else if (window.history.state && window.history.state.searchTerm) {
+        searchTerm = window.history.state.searchTerm;
+      }
+      
+      console.log('Returning to courier dashboard with filters:', {
+        fromDate: this.startDate,
+        toDate: this.endDate,
+        searchTerm: searchTerm,
+        fromCancel: true
+      });
+      
+      // For courier reports, preserve the date ranges and search term in query parameters
+      // Add fromCancel flag to prevent search popup from showing
+      this.router.navigate(['/businessowner/courier'], { 
         queryParams: { 
           fromDate: this.startDate,
-          toDate: this.endDate
+          toDate: this.endDate,
+          searchTerm: searchTerm,
+          fromCancel: true
         }
       });
     } else {
