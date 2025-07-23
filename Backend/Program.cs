@@ -72,6 +72,7 @@ builder.Services.AddSingleton<ReportGenerator>();
 builder.Services.AddSingleton<ReportJobService>();
 builder.Services.AddSingleton<SalesAccessService>();
 builder.Services.AddSingleton<CampaignService>();
+builder.Services.AddSingleton<CustomerService>();
 
 // === Auth & User Services ===
 builder.Services.AddSingleton<UserService>();

@@ -36,5 +36,9 @@ export class OrderService {
     `http://localhost:5241/api/orderstatus/summary/company/${companyId}`
   );
 }
+getCustomerDetails(customerId: string) {
+  return this.http.get<any>(`http://localhost:5241/api/customer/${customerId}`);
+}
+
 
 }
