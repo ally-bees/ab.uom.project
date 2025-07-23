@@ -1,8 +1,8 @@
 .table{
     margin-top: 40px;
-    margin-left: 100px;
+    margin-left: 150px;
     margin-bottom:  40px;
-    width: 1000px;
+    width: 1300px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -10,14 +10,14 @@
 }
 
 h2{
-  font-weight: 400;
+  font-weight: 450;
   font-size: 25px;
   color: #285F83;
 }
 
 .tax-summary-container {
     font-family: Arial, sans-serif;
-    max-width: 1000px;
+    max-width: 1300px;
     padding: 20px;
   }
   
