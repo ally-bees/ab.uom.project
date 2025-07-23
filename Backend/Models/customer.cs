@@ -9,7 +9,11 @@ namespace Backend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; } = null!;     
+        public string? Id { get; set; } = null!;   
+
+        [BsonElement("CompanyId")]
+public string? CompanyId { get; set; }
+  
 
         [BsonElement("customer_id")]
         public string? Customer_id { get; set; }

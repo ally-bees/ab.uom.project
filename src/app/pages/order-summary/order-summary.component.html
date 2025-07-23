@@ -3,17 +3,17 @@
   <div class="orders-card">
     <div class="card-header">
       <h2>Orders Summary</h2>
+    </div>
     <div class="card-body">
 
-        <div class="date-filter">
-          <div class="date-group">
-            <span>From :</span>
-            <input type="date" [(ngModel)]="fromDate" (change)="applyDateFilter()" />
-          </div>
-          <div class="date-group">
-            <span>To :</span>
-            <input type="date" [(ngModel)]="toDate" (change)="applyDateFilter()" />
-          </div>
+      <div class="date-filter">
+        <div class="date-group">
+          <span>From :</span>
+          <input type="date" [(ngModel)]="fromDate" (change)="applyDateFilter()" />
+        </div>
+        <div class="date-group">
+          <span>To :</span>
+          <input type="date" [(ngModel)]="toDate" (change)="applyDateFilter()" />
         </div>
       </div>
 
@@ -66,14 +66,28 @@
         <ag-grid-angular
           style="width: 100%; height: 400px;"
           class="ag-theme-alpine"
-          [rowData]="filteredRowData.length ? filteredRowData : rowData"
+          [rowData]="filteredRowData"
           [columnDefs]="columnDefs"
           [defaultColDef]="defaultColDef"
           [gridOptions]="gridOptions"
           (gridReady)="onGridReady($event)"
         ></ag-grid-angular>
       </div>
-      
+
+      <!-- Customer Detail Popup -->
+      <div class="modal" *ngIf="showCustomerPopup">
+        <div class="modal-content">
+          <span class="close" (click)="showCustomerPopup = false">&times;</span>
+          <h3>Customer Details</h3>
+          <p><strong>ID:</strong> {{ selectedCustomer?.customer_id }}</p>
+          <p><strong>Name:</strong> {{ selectedCustomer?.name }}</p>
+          <p><strong>Location:</strong> {{ selectedCustomer?.location }}</p>
+          <p><strong>Active Date:</strong> {{ selectedCustomer?.active_date }}</p>
+          <p><strong>Estimate Date:</strong> {{ selectedCustomer?.estimate_date }}</p>
+          <p><strong>Status:</strong> {{ selectedCustomer?.status }}</p>
+        </div>
+      </div>
+
       <div class="print-section">
         <button class="print-btn" (click)="printReport()">
           <i class="fa fa-print"></i>
@@ -82,5 +96,4 @@
       </div>
     </div>
   </div>
-
 </div>
