@@ -6,8 +6,9 @@
   padding: 1.2rem 2.5rem;
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  position: fixed;
+  position: sticky;
   top: 0;
+  width: 100vw;
   z-index: 100;
 }
 .logo {
@@ -99,7 +100,7 @@
   flex-wrap: wrap;
   position: relative;
   overflow: hidden;
-  background: url('https://res.cloudinary.com/dfbvnb3vx/image/upload/v1753295171/hero_v3oawi.png') right center/cover no-repeat;
+  background: url('https://res.cloudinary.com/dfbvnb3vx/image/upload/v1753295171/hero_v3oawi.png')  center/cover no-repeat;
 }
 .hero-content {
   max-width: 600px;
