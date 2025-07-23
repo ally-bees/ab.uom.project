@@ -58,10 +58,11 @@ import { CustomersupportComponent } from './pages/customersupport/customersuppor
 import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
 import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
 import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
+import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
   // Default route
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', component: LandingComponent },
 
   // Auth routes
   { path: 'login', component: LoginComponent },
@@ -206,5 +207,5 @@ export const routes: Routes = [
   { path: 'terms-of-service', component: TermsOfServiceComponent },
 
   // Catch-all redirect
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: '' },
 ];
