@@ -54,6 +54,7 @@ import { PurchasebehaveComponent } from './components/purchasebehave/purchasebeh
 import { RetentionanalComponent } from './components/retentionanal/retentionanal.component';
 import { Component } from 'ag-grid-community';
 import { CourierDashboardComponent } from './pages/courier/courier-dashboard.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 
 export const routes: Routes = [
   // Default route
@@ -154,6 +155,7 @@ export const routes: Routes = [
   { path: 'top-selling', component: TopSellingComponent, canActivate: [authGuard] },
   { path: 'stats', component: StatsCardComponent, canActivate: [authGuard] },
   { path: 'top', component: TopSellingTableComponent, canActivate: [authGuard] },
+  { path: 'marketing', component: MarketingDashboardComponent},
 
   // Audit related routes (if needed)
   { path: 'auditpage', component: AuditpageComponent },
