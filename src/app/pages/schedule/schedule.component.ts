@@ -14,12 +14,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ScheduleComponent implements OnInit {
   form: FormGroup;
-  activeAutomations: Automation[] = [];
+  groupedAutomations: { [honeyCombId: string]: Automation[] } = {};
   editingAutomationId: string | null = null;
   daysOfMonth: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
   allowedReportTypes: { label: string; value: string }[] = [];
 
-  // Define role-based report types
   roleBasedReports: { [role: string]: { label: string; value: string }[] } = {
     'Business Owner': [
       { label: 'Sales Report', value: 'sales' },
@@ -81,13 +80,22 @@ export class ScheduleComponent implements OnInit {
     if (currentUser?.CompanyId) {
       this.automationService.getAutomationsByCompany(currentUser.CompanyId).subscribe({
         next: data => {
-          this.activeAutomations = data;
+          this.groupedAutomations = this.groupByHoneyCombId(data);
         },
         error: err => {
           console.error('Failed to load automations:', err);
         }
       });
     }
+  }
+
+  groupByHoneyCombId(data: Automation[]): { [key: string]: Automation[] } {
+    return data.reduce((acc, automation) => {
+      const key = automation.honeyCombId || 'Unknown';
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(automation);
+      return acc;
+    }, {} as { [key: string]: Automation[] });
   }
 
   onSubmit(): void {
