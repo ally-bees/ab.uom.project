@@ -324,7 +324,7 @@ namespace Backend.Services
                 <h2>Verification Code</h2>
                 <p>Your verification code is: <strong>{otpCode}</strong></p>
                 <p>This code expires in 10 minutes.</p>
-                <p>If you didn't request this, please ignore this email.</p>";
+                <p>If you didn't request this, please contact our support team: allybees23@gmail.com</p>";
         }
     }
 }

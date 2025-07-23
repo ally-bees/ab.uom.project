@@ -58,7 +58,7 @@ export class StatsCardComponent implements OnInit {
     if (this.startDate && this.endDate) {
       this.salesService.getDashboardDataForCompanyWithDateRange(this.startDate, this.endDate).subscribe({
         next: (data) => {
-          this.salesData = data;
+          this.salesData = data; 
           this.loading = false;
         },
         error: (err) => {

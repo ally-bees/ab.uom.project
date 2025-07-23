@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'; 
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Sale, SalesViewModel, SalesSummary } from '../models/sale.model';
@@ -19,7 +19,7 @@ export class SalesService {
   getSaleById(id: string): Observable<Sale> {
     return this.http.get<Sale>(`${this.apiUrl}/Sales/${id}`);
   }
-
+  
   getSalesSummary(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/Sales/summary`);
   }
@@ -67,7 +67,7 @@ export class SalesService {
   deleteSale(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/Sales/${id}`);
   }
-
+  
   getDashboardData(companyId?: string): Observable<SalesViewModel> {
     if (!companyId) {
       companyId = this.authService.getCurrentUser()?.CompanyId;
@@ -75,7 +75,7 @@ export class SalesService {
     if (companyId) {
       return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard?companyId=${companyId}`);
     } else {
-      return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard`);
+    return this.http.get<SalesViewModel>(`${this.apiUrl}/SalesDashboard`);
     }
   }
 

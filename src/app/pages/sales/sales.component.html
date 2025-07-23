@@ -5,6 +5,15 @@
     </div>
 
     <div class="card-body">
+      <!-- Loading and Error States -->
+      <div *ngIf="loading" class="loading-spinner" style="text-align:center; margin: 24px 0;">
+        <i class="fa fa-spinner fa-spin fa-2x"></i>
+        <p>Loading sales data...</p>
+      </div>
+      <div *ngIf="error" class="error-message" style="color: #F44336; text-align:center; margin: 16px 0;">
+        <i class="fa fa-exclamation-triangle"></i> {{ error }}
+      </div>
+      <ng-container *ngIf="!loading && !error">
       <!-- Search and Filters -->
       <div class="search-filters">
         <div class="search-box">
@@ -151,6 +160,7 @@
           Print Report
         </button>
       </div>
+      </ng-container>
     </div>
   </div>
 </div>

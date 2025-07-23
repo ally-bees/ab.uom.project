@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
 import { AuthResponse } from '../models/user.model';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -33,7 +34,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +101,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         this.error = err?.error?.message || 'Registration failed. Please try again.';
+        this.notificationService.showError('Registration Failed', this.error);
         this.loading = false;
       }
     });
@@ -121,6 +124,11 @@ export class SignupComponent implements OnInit, OnDestroy {
     // Step 2: Complete registration with OTP verification
     this.authService.completeRegistration(otpData).subscribe({
       next: (response: AuthResponse) => {
+        // Show success notifications
+        this.notificationService.showOtpSuccess();
+        const username = this.signupForm.value.username;
+        this.notificationService.showSignupSuccess(username);
+        
         // Registration successful, redirect based on user role
         const redirectUrl = this.authService.getRedirectUrl();
         console.log('Registration completed successfully, redirecting to:', redirectUrl);
@@ -128,6 +136,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         this.error = err?.error?.message || 'Invalid verification code. Please try again.';
+        this.notificationService.showError('Verification Failed', this.error);
         this.loading = false;
       }
     });
@@ -149,11 +158,12 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.authService.resendOtp(otpRequestData).subscribe({
       next: (response: AuthResponse) => {
         this.startResendCountdown();
+        this.notificationService.showInfo('Verification Code Sent', 'A new verification code has been sent to your email.');
         this.loading = false;
-        // You could show a success message here if desired
       },
       error: (err: any) => {
         this.error = err?.error?.message || 'Failed to resend verification code.';
+        this.notificationService.showError('Resend Failed', this.error);
         this.loading = false;
       }
     });

@@ -1,79 +1,80 @@
 <div class="finance-container">
   <!-- Main content area -->
   <div class="finance-content">
-      <div class="finance-section">
-          <div class="section-header">
-              <h2>Finance Summary</h2>
-              <div class="filters">
-                  <div class="search-box">
-                      <!-- <input type="text" placeholder="Search" [(ngModel)]="searchTerm"> -->
-                      <i class="search-icon"></i>
-                  </div>
-                  <div class="date-filter">
-                    <div class="date-filters">
-                      <label>From:</label>
-                      <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()" />
-                    
-                      <label>To:</label>
-                      <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
-                    </div>
-                  </div>
-              </div>
-          </div>
+    <div class="finance-section">
+      <div class="section-header">
+        <h2>Finance Summary</h2>
+        <div class="filters">
+          <!-- Search box -->
+          <!-- <div class="search-box">
+            <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" />
+            <button class="search-btn">Search</button>
+          </div> -->
 
-          <div class="chart-container">
-              <canvas baseChart
-                  [data]="lineChartData"
-                  [options]="lineChartOptions"
-                  [type]="'line'">
-              </canvas>
+          <!-- Date filter -->
+          <div class="date-filter">
+            <div class="date-filters">
+              <label>From:</label>
+              <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()" />
+              <label>To:</label>
+              <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
+            </div>
           </div>
-
-          <div class="legend-container">
-              <div class="legend-item">
-                  <div class="color-box" style="background-color: #007bff;"></div>
-                  <span>Income</span>
-              </div>
-              <div class="legend-item">
-                  <div class="color-box" style="background-color: #00b894;"></div>
-                  <span>Expenses</span>
-              </div>
-          </div>
+        </div>
       </div>
 
-      <div class="finance-section">
-          <div class="section-header">
-              <h2>Recent Months Summary</h2>
-          </div>
-
-          <div class="table-container" style="max-height: 400px; overflow-y: auto;">
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Order Date</th>
-        <th>Amount</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let invoice of filteredInvoices">
-        <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
-        <td>Rs. {{ invoice.amount | number:'1.0-2' }}</td>
-        <td>
-          <span class="status-badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+      <div class="chart-container">
+        <canvas baseChart
+          [data]="lineChartData"
+          [options]="lineChartOptions"
+          [type]="'line'">
+        </canvas>
       </div>
 
-      <div class="report-button-container">
-          <button class="print-report-btn" (click)="printReport()">
-              Print Report
-              <i class="print-icon"></i>
-          </button>
+      <div class="legend-container">
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #007bff;"></div>
+          <span>Income</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #00b894;"></div>
+          <span>Expenses</span>
+        </div>
       </div>
+    </div>
+
+    <div class="finance-section">
+      <div class="section-header">
+        <h2>Recent Months Summary</h2>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invoice of filteredInvoices">
+              <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
+              <td>Rs. {{ invoice.amount | number:'1.0-2' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="report-button-container">
+      <button class="print-report-btn" (click)="printReport()">
+        Print Report
+        <i class="print-icon"></i>
+      </button>
+    </div>
   </div>
 </div>

@@ -1,85 +1,91 @@
-<div class="automation-container">
-  <h1 class="title">Report Automation</h1>
+<div class="main-content">
+  <div class="automation-container">
+    <h1 class="title">Report Automation</h1>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <!-- Report Configuration -->
-    <div formGroupName="report">
-      <h2>Report Configuration</h2>
-      <label>Report Type:</label>
-      <select formControlName="reportType">
-        <option *ngFor="let report of allowedReportTypes" [value]="report.value">
-          {{ report.label }}
-        </option>
-      </select>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Report Configuration -->
+      <div formGroupName="report">
+        <h2 data-step="1">Report Configuration</h2>
+        <label for="reportType">Report Type:</label>
+        <select id="reportType" formControlName="reportType">
+          <option *ngFor="let report of allowedReportTypes" [value]="report.value">
+            {{ report.label }}
+          </option>
+        </select>
 
-      <label>Export Format:</label>
-      <select formControlName="format">
-        <option value="pdf">PDF</option>
-      </select>
-    </div>
-
-    <!-- Schedule Configuration -->
-    <div formGroupName="schedule">
-      <h2>Schedule Configuration</h2>
-      <label>Frequency:</label>
-      <select formControlName="frequency">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-      </select>
-
-      <label>Time:</label>
-      <input type="time" formControlName="time">
-
-      <div *ngIf="form.get('schedule.frequency')?.value === 'weekly'">
-        <label>Day of Week:</label>
-        <select formControlName="dayOfWeek">
-          <option value="1">Monday</option>
-          <option value="2">Tuesday</option>
-          <option value="3">Wednesday</option>
-          <option value="4">Thursday</option>
-          <option value="5">Friday</option>
-          <option value="6">Saturday</option>
-          <option value="7">Sunday</option>
+        <label for="format">Export Format:</label>
+        <select id="format" formControlName="format">
+          <option value="pdf">PDF</option>
         </select>
       </div>
 
-      <div *ngIf="form.get('schedule.frequency')?.value === 'monthly'">
-        <label>Day of Month:</label>
-        <select formControlName="dayOfMonth">
-          <option *ngFor="let day of daysOfMonth" [value]="day">{{ day }}</option>
+      <!-- Schedule Configuration -->
+      <div formGroupName="schedule">
+        <h2 data-step="2">Schedule Configuration</h2>
+        <label for="frequency">Frequency:</label>
+        <select id="frequency" formControlName="frequency">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
         </select>
+
+        <label for="time">Time:</label>
+        <input type="time" id="time" formControlName="time">
+
+        <div *ngIf="form.get('schedule.frequency')?.value === 'weekly'">
+          <label for="dayOfWeek">Day of Week:</label>
+          <select id="dayOfWeek" formControlName="dayOfWeek">
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+            <option value="7">Sunday</option>
+          </select>
+        </div>
+
+        <div *ngIf="form.get('schedule.frequency')?.value === 'monthly'">
+          <label for="dayOfMonth">Day of Month:</label>
+          <select id="dayOfMonth" formControlName="dayOfMonth">
+            <option *ngFor="let day of daysOfMonth" [value]="day">{{ day }}</option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <!-- Recipient Configuration -->
-    <div formGroupName="recipient">
-      <h2>Recipients</h2>
-      <label>Email Recipients:</label>
-      <input type="email" formControlName="emails" placeholder="Email address">
+      <!-- Recipient Configuration -->
+      <div formGroupName="recipient">
+        <h2 data-step="3">Recipients</h2>
+        <label for="emails">Email Recipients:</label>
+        <input type="email" id="emails" formControlName="emails" placeholder="Email address">
 
-      <label>Email Subject:</label>
-      <input type="text" formControlName="subject" placeholder="Email Subject">
+        <label for="subject">Email Subject:</label>
+        <input type="text" id="subject" formControlName="subject" placeholder="Email Subject">
 
-      <label>Message:</label>
-      <textarea formControlName="message" placeholder="Message body"></textarea>
+        <label for="message">Message:</label>
+        <textarea id="message" formControlName="message" placeholder="Message body"></textarea>
 
-      <label><input type="checkbox" formControlName="notifyOnSuccess"> Notify on Success</label>
-      <label><input type="checkbox" formControlName="notifyOnFailure"> Notify on Failure</label>
-    </div>
+        <!-- <label><input type="checkbox" formControlName="notifyOnSuccess"> Notify on Success</label>
+        <label><input type="checkbox" formControlName="notifyOnFailure"> Notify on Failure</label> -->
+      </div>
 
-    <button type="submit" [disabled]="!form.valid">
-      {{ editingAutomationId !== null ? 'Update' : 'Save' }} Automation
-    </button>
-  </form>
+      <button type="submit" [disabled]="!form.valid">
+        {{ editingAutomationId !== null ? 'Update' : 'Save' }} Automation
+      </button>
+    </form>
 
-  <!-- Active Automations -->
-  <div *ngIf="activeAutomations.length > 0">
-    <h2>Active Automations</h2>
-    <div *ngFor="let automation of activeAutomations">
-      <p><strong>{{ automation.reportType }}</strong> | {{ automation.frequency }} at {{ automation.time }}</p>
-      <button (click)="editAutomation(automation)">Edit</button>
-      <button (click)="deleteAutomation(automation.id.toString())">Delete</button>
+    <!-- Active Automations -->
+    <div *ngIf="activeAutomations.length > 0" style="margin-top:40px;">
+      <h2 data-step="4">Active Automations</h2>
+      <div *ngFor="let automation of activeAutomations" style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+        <p style="margin:0;">
+          <strong>{{ automation.reportType }}</strong> | {{ automation.frequency }} at {{ automation.time }}
+        </p>
+        <div class="automation-actions">
+          <button (click)="editAutomation(automation)">Edit</button>
+          <button class="delete-btn" (click)="deleteAutomation(automation.id.toString())">Delete</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

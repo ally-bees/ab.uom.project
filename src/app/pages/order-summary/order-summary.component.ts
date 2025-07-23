@@ -25,11 +25,11 @@ interface OrderStatus {
   styleUrl: './order-summary.component.css',
 })
 export class OrderSummaryComponent implements OnInit, AfterViewInit {
-  // Data for ag-grid and filtered results
+  // Data for grid and filtered results
   rowData: Order[] = [];
   filteredRowData: Order[] = [];
 
-  // Column definitions for ag-grid
+  // Column definitions for grid
   columnDefs: ColDef<Order>[] = [
     { field: 'orderId', headerName: 'Order ID', sortable: true },
     { field: 'customerId', headerName: 'Customer ID', sortable: true },

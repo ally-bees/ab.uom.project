@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -82,6 +84,10 @@ export class LoginComponent implements OnInit {
         if (response && response.success) {
           console.log('Login successful:', response);
           
+          // Show success notification
+          const username = response.user?.username;
+          this.notificationService.showLoginSuccess(username);
+          
           // Get redirect URL based on user role
           const redirectUrl = this.authService.getRedirectUrl();
           
@@ -91,12 +97,14 @@ export class LoginComponent implements OnInit {
           });
         } else {
           this.error = response?.message || 'Login failed. Please try again.';
+          this.notificationService.showError('Login Failed', this.error);
         }
       },
       error: (error) => {
         this.loading = false;
         console.error('Login error:', error);
         this.error = error.message || 'Login failed. Please check your credentials.';
+        this.notificationService.showError('Login Failed', this.error);
       }
     });
   }
