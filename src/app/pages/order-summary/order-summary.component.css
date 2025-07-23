@@ -397,3 +397,19 @@
     flex-direction: column;
   }
 }
+
+.total-orders {
+  color: #228c28;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.pending-orders {
+  color: #ff9800;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.completed-orders {
+  color: #2196f3;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
