@@ -1,6 +1,7 @@
 .contents{
+    padding-top: 15px;
     display: flex;
-    padding-left: 20px;
+    padding-left: 1px;
 }
 .past{
     padding: 20px;
@@ -50,4 +51,26 @@ line-height: 100%;
 letter-spacing: 0%;
 color: #777777;
 
+}
+
+/* Responsive font scaling and layout tweaks */
+
+@media (max-width: 768px) {
+  .contents {
+    justify-content: flex-start;
+  }
+  .past {
+    flex: 1 1 100%;
+    max-width: 100%;
+    padding: 10px;
+  }
+  .past h2 {
+    font-size: 1.1rem;
+  }
+  .content h3 {
+    font-size: 1.1rem;
+  }
+  .content p {
+    font-size: 0.9rem;
+  }
 }
