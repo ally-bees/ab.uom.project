@@ -3,6 +3,10 @@
 .up{
     margin-top: 40px;
     margin-left: 20px;
+     @media (max-width: 600px) {
+    margin-left: 10px;
+    margin-top: 20px;
+  }
 }
 
 .content{
@@ -10,9 +14,20 @@
     margin-left: 20px;
     display: flex;
     margin-bottom: 40px;
+    /* On smaller screens, stack vertically */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 }
 
 app-pastaudit{
     margin-left: 20px;
     margin-top: 5px;
+     /* Remove left margin on small screens when stacked vertically */
+  @media (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 15px;
+  }
 }

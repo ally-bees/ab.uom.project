@@ -1,29 +1,30 @@
 <div class="summary">
-    <h2>Tax and Fees Summary</h2>
-    <div class="datepicker">
-        
-        <form>
-            <label>from:  </label>
-            <input type="date" id="fromdate" name="fromdate" [(ngModel)]="fromDate" (ngModelChange)="fetchChartData()">
-        </form>
+  <h2>Tax and Fees Summary</h2>
 
-        <form>
-            <label>To:  </label>
-            <input type="date" id="Todate" name="Todate" [(ngModel)]="toDate" (ngModelChange)="fetchChartData()">
-        </form>
-        
-    </div>
+  <div class="datepicker">
+    <form>
+      <label>From: </label>
+      <input type="date" id="fromdate" name="fromdate" [(ngModel)]="fromDate" (ngModelChange)="fetchChartData()">
+    </form>
 
-    <div class="chart">
-            <ag-charts [options]="option1"></ag-charts>
-            <ag-charts [options]="option2"></ag-charts>
-            <ag-charts [options]="option3"></ag-charts>
-        
-    </div>
-    <div class="para">
-        <p>Total Phurchase</p>
-        <p>Total Tax</p>
-        <p>Net Value </p>
-    </div>
+    <form>
+      <label>To: </label>
+      <input type="date" id="Todate" name="Todate" [(ngModel)]="toDate" (ngModelChange)="fetchChartData()">
+    </form>
+  </div>
 
+  <div class="chart">
+    <div class="chart-box">
+      <ag-charts [options]="option1"></ag-charts>
+      <p>Total Purchase</p>
+    </div>
+    <div class="chart-box">
+      <ag-charts [options]="option2"></ag-charts>
+      <p>Total Tax</p>
+    </div>
+    <div class="chart-box">
+      <ag-charts [options]="option3"></ag-charts>
+      <p>Net Value</p>
+    </div>
+  </div>
 </div>

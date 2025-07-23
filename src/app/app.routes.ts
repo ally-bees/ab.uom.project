@@ -35,6 +35,7 @@ import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
+import { SalestableComponent } from './pages/salestable/salestable.component';
 
 import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
 import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
@@ -87,6 +88,7 @@ export const routes: Routes = [
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
+      {path: 'salesOverveiw', component:SalestableComponent},
       { 
         path: 'customerinsight',
         component: customerinsightComponent,

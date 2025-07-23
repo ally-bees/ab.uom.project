@@ -6,8 +6,6 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { SalesViewModel } from '../../models/sale.model';
 import { SalesService } from '../../services/sales.service';
-import { OrdersService } from '../../services/orders.service';
-import { InventoryService } from '../../services/inventory.service';
 import { Order } from '../../models/order.model';
 import { product } from '../../models/product.model';
 import { ChartData, ChartOptions } from 'chart.js';
@@ -20,6 +18,7 @@ interface Sale {
   salesDate: string;
   orderId: string;
   productId: string;
+  productName: string; // <-- Add this line
   category: string;
   quantity: number;
   price: number;
@@ -36,6 +35,7 @@ interface Sale {
 export class SalesComponent implements OnInit {
   // Full data from backend
   rowData: Sale[] = [];
+  previousRowData: Sale[] = [];
 
   // Filtered data used in charts and table
   filteredData: Sale[] = [];
@@ -141,7 +141,7 @@ export class SalesComponent implements OnInit {
       legend: { position: 'bottom' },
       title: {
         display: true,
-        text: 'Monthly Sales Comparison',
+        text: 'According to Selected Date Range',
         font: { size: 16 }
       },
       tooltip: {
@@ -196,16 +196,14 @@ export class SalesComponent implements OnInit {
 
   constructor(
     private salesService: SalesService,
-    private ordersService: OrdersService,
-    private inventoryService: InventoryService,
     private router: Router
   ) {}
 
-  // Initialize with last 30 days by default
+  // Initialize with last 7 days by default
   ngOnInit(): void {
     const today = new Date();
     const from = new Date();
-    from.setDate(today.getDate() - 30);
+    from.setDate(today.getDate() - 30); // Use 7 for a week
 
     this.fromDate = from.toISOString().split('T')[0];
     this.toDate = today.toISOString().split('T')[0];
@@ -217,40 +215,32 @@ export class SalesComponent implements OnInit {
   loadSalesData(): void {
     this.loading = true;
     this.error = '';
+
+    // Calculate previous period
+    const from = new Date(this.fromDate);
+    const to = new Date(this.toDate);
+    const rangeDays = Math.floor((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const prevTo = new Date(from);
+    prevTo.setDate(prevTo.getDate() - 1);
+    const prevFrom = new Date(prevTo);
+    prevFrom.setDate(prevFrom.getDate() - (rangeDays - 1));
+    const prevFromStr = prevFrom.toISOString().split('T')[0];
+    const prevToStr = prevTo.toISOString().split('T')[0];
+
     forkJoin({
-      orders: this.ordersService.getOrdersByCompany(),
-      products: this.inventoryService.getInventoryByCompany(),
-      sales: this.salesService.getSalesByCompanyId()
+      current: this.salesService.getAggregatedSales(this.fromDate, this.toDate),
+      previous: this.salesService.getAggregatedSales(prevFromStr, prevToStr)
     }).subscribe({
-      next: ({ orders, products, sales }) => {
-        this.products = products;
-        this.rowData = [];
-        sales.forEach(sale => {
-          (sale.orderIds || []).forEach((orderId: string) => {
-            const order = orders.find(o => o.orderId === orderId);
-            if (order && order.orderDetails && order.orderDetails.length > 0) {
-              order.orderDetails.forEach(detail => {
-                const prod = products.find(p => p.productId === detail.productId);
-                this.rowData.push({
-                  saleId: sale.saleId,
-                  salesDate: sale.saleDate ? new Date(sale.saleDate).toISOString().split('T')[0] : 'N/A',
-                  orderId,
-                  productId: detail.productId,
-                  category: prod ? prod.category : '',
-                  quantity: detail.quantity,
-                  price: detail.price,
-                  companyId: sale.companyId
-                });
-              });
-            }
-          });
-        });
+      next: ({ current, previous }) => {
+        this.rowData = current;
+        this.previousRowData = previous;
+        this.products = [];
         this.applyFilters();
+        this.updateComparisonChart(); // Only update after data loads
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching sales data:', err);
-        this.error = 'Failed to load sales data. Please try again later.';
+        this.error = 'Failed to load sales data.';
         this.loading = false;
       }
     });
@@ -260,31 +250,12 @@ export class SalesComponent implements OnInit {
   updateComparisonChart(): void {
     if (!this.fromDate || !this.toDate) return;
 
-    const from = new Date(this.fromDate);
-    const to = new Date(this.toDate);
-
-    // Determine length of selected period
-    const rangeDuration = Math.floor((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-
-    // Calculate previous period date range
-    const previousTo = new Date(from);
-    previousTo.setDate(previousTo.getDate() - 1);
-
-    const previousFrom = new Date(previousTo);
-    previousFrom.setDate(previousFrom.getDate() - (rangeDuration - 1));
-
     let currentTotal = 0;
     let previousTotal = 0;
 
     // Sum sales for current and previous date ranges
-    this.rowData.forEach((sale) => {
-      const saleDate = new Date(sale.salesDate);
-      if (saleDate >= from && saleDate <= to) {
-        currentTotal += sale.price;
-      } else if (saleDate >= previousFrom && saleDate <= previousTo) {
-        previousTotal += sale.price;
-      }
-    });
+    currentTotal = this.rowData.reduce((sum, sale) => sum + sale.price, 0);
+    previousTotal = this.previousRowData.reduce((sum, sale) => sum + sale.price, 0);
 
     // Update chart data
     this.comparisonChartData = {
@@ -295,70 +266,43 @@ export class SalesComponent implements OnInit {
         borderWidth: 1
       }]
     };
-
-    // Update tooltip and title
-    this.donutChartOptions = {
-      ...this.donutChartOptions,
-      plugins: {
-        ...this.donutChartOptions.plugins,
-        title: {
-          ...this.donutChartOptions.plugins?.title,
-          text: `Sales Comparison: ${from.toISOString().split('T')[0]} - ${to.toISOString().split('T')[0]} vs Previous`
-        },
-        tooltip: {
-          callbacks: {
-            label: (context) => {
-              const label = context.label || '';
-              const value = Number(context.raw) || 0;
-              const total = (context.dataset.data as number[]).reduce((a, b) => a + b, 0);
-              const percentage = Math.round((value / total) * 100);
-              return `${label}: $${value.toLocaleString()} (${percentage}%)`;
-            },
-            afterLabel: (context) => {
-              if (context.dataIndex === 0) {
-                return `${from.toISOString().split('T')[0]} to ${to.toISOString().split('T')[0]}`;
-              } else {
-                return `${previousFrom.toISOString().split('T')[0]} to ${previousTo.toISOString().split('T')[0]}`;
-              }
-            }
-          }
-        }
-      }
-    };
   }
 
   // Update daily line chart of sales per day
   updateDailySalesChart(): void {
     if (!this.fromDate || !this.toDate) return;
 
-    const from = new Date(this.fromDate);
-    const to = new Date(this.toDate);
-
+    // Prepare a map for daily totals
     const dateMap: { [date: string]: number } = {};
 
-    // Initialize every day with 0
+    // Initialize every day in the range with 0
+    const from = new Date(this.fromDate);
+    const to = new Date(this.toDate);
     const currentDate = new Date(from);
+
     while (currentDate <= to) {
       const dateStr = currentDate.toISOString().split('T')[0];
       dateMap[dateStr] = 0;
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Sum by date
+    // Aggregate sales by date
     this.filteredData.forEach(sale => {
-      const saleDate = sale.salesDate;
+      // Ensure salesDate is in YYYY-MM-DD format
+      const saleDate = (typeof sale.salesDate === 'string')
+        ? sale.salesDate.split('T')[0]
+        : new Date(sale.salesDate).toISOString().split('T')[0];
       if (dateMap.hasOwnProperty(saleDate)) {
         dateMap[saleDate] += sale.price;
       }
     });
 
-    // Convert to MM/DD format
+    // Format labels as MM/DD
     const formatDate = (dateStr: string) => {
       const date = new Date(dateStr);
       return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
     };
 
-    // Update chart
     this.dailySalesChartData = {
       labels: Object.keys(dateMap).map(formatDate),
       datasets: [{
@@ -367,9 +311,10 @@ export class SalesComponent implements OnInit {
       }]
     };
 
-    // Set Y axis bounds
-    const maxValue = Math.max(...Object.values(dateMap));
-    const minValue = Math.min(...Object.values(dateMap));
+    // Optionally, update Y axis bounds
+    const values = Object.values(dateMap);
+    const maxValue = Math.max(...values, 0);
+    const minValue = Math.min(...values, 0);
     const padding = (maxValue - minValue) * 0.1;
 
     this.dailySalesChartOptions = {
@@ -396,14 +341,13 @@ export class SalesComponent implements OnInit {
       const saleDate = sale.salesDate;
       const matchesDate = (!this.fromDate || saleDate >= this.fromDate) &&
                          (!this.toDate || saleDate <= this.toDate);
-      const productName = this.products.find(p => p.productId === sale.productId)?.name || '';
+      const productName = sale.productName || '';
       const matchesSearch = !this.searchQuery || productName.toLowerCase().includes(this.searchQuery.toLowerCase());
       return matchesDate && matchesSearch;
     });
 
-    // Update all charts after filtering
+    // Update only charts that depend on filteredData
     this.updatePieCharts();
-    this.updateComparisonChart();
     this.updateDailySalesChart();
     this.page = 1; // Reset to first page on filter change
   }
@@ -414,7 +358,7 @@ export class SalesComponent implements OnInit {
   }
 
   onDateChange(): void {
-    this.applyFilters();
+    this.loadSalesData(); // This will update everything including the comparison chart
   }
 
   // Generate pie chart data for product and category
@@ -423,7 +367,7 @@ export class SalesComponent implements OnInit {
     const categoryMap: { [category: string]: number } = {};
 
     this.filteredData.forEach((sale) => {
-      const productName = this.products.find(p => p.productId === sale.productId)?.name || sale.productId;
+      const productName = sale.productName || sale.productId;
       productMap[productName] = (productMap[productName] || 0) + sale.quantity;
       categoryMap[sale.category] = (categoryMap[sale.category] || 0) + sale.quantity;
     });
@@ -469,5 +413,9 @@ export class SalesComponent implements OnInit {
 
   closePrintDialog(): void {
     this.showPrintDialog = false;
+  }
+
+  goToSalesTable(): void {
+    this.router.navigate(['/salesmanager/salesOverveiw']);
   }
 }

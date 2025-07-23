@@ -29,6 +29,8 @@
   margin-bottom: 20px;
   overflow: hidden;
   padding: 1.5%;
+  min-height: 100vh;
+
 }
 
 .card-header {

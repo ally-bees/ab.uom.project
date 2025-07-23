@@ -19,7 +19,7 @@ export class PurchasedetailsComponent implements OnInit{
   value3!: Date;
   public options: AgChartOptions = {
     data: [],
-    series: [],
+    series: [] as AgBarSeriesOptions[],
   };
 
   ngOnInit(): void {
@@ -42,8 +42,9 @@ loadChartData(): void {
             type: 'bar',
             xKey: 'location',
             yKey: 'count',
-            yName: 'Customer Count'
-          },
+            yName: 'Customer Count',
+            fills: ['#4caf50'],      // green bars
+          }as AgBarSeriesOptions,
         ],
       };
     });
