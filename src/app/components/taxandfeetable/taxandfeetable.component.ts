@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TaxTableService } from './taxtable.service';
 import { CommonModule } from '@angular/common';
 import { DateRangeService } from '../date-rangeaudit.service';
+import { PrintReportService } from '../../services/printreport.service';
+import { Router } from '@angular/router';
+import { Invoice } from '../../models/invoice.model';
 
 interface TaxRecord {
   date: Date;
@@ -19,19 +22,34 @@ interface TaxRecord {
 @Component({
   selector: 'app-taxandfeetable',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [CommonModule],
   templateUrl: './taxandfeetable.component.html',
   styleUrl: './taxandfeetable.component.css'
 })
 
-export class TaxandfeetableComponent implements OnInit{
+export class TaxandfeetableComponent implements OnInit {
+
+
+
+  fromDate: string | undefined;
+  toDate: string | undefined;
+
+  // Filtered invoices list
+  filteredInvoices: Invoice[] = [];
+
+  // UI state flags
+  loading = false;
+  error = false;
+
 
   taxRecords: TaxRecord[] = [];
-  
+
   constructor(
+    private router: Router,
     private TaxTableService: TaxTableService,
-    private dateRangeService: DateRangeService
-  ) {}
+    private dateRangeService: DateRangeService,
+    private printReportService: PrintReportService,
+  ) { }
 
   ngOnInit(): void {
     this.dateRangeService.currentRange$.subscribe(range => {
@@ -43,13 +61,13 @@ export class TaxandfeetableComponent implements OnInit{
       }
     });
   }
-  
-  
-  
-  getTaxRecords(from?: string, to?: string): 
-  void {
+
+
+
+  getTaxRecords(from?: string, to?: string):
+    void {
     console.log("Calling getTaxRecords with:", from, to);
-  
+
     if (from && to) {
       // Both dates are selected correctly
       this.TaxTableService.getTaxRecords(from, to)
@@ -76,14 +94,51 @@ export class TaxandfeetableComponent implements OnInit{
         );
     }
   }
-  
-  
-            /*.subscribe(function(records) {
-                    this.taxRecords = records;
-              })
-            */
-  
+
+
+  /*.subscribe(function(records) {
+          this.taxRecords = records;
+    })
+  */
+
   printReport(): void {
-    window.print();
+    console.log('Tax Records:', this.taxRecords);
+
+    if (!this.taxRecords || this.taxRecords.length === 0) {
+      alert('No data available to print.');
+      return;
+    }
+
+    const tableColumns = ['Date', 'Audit ID', 'Sales ID', 'Name', 'Value', 'Tax', 'Net Value', 'Status'];
+
+    const tableData = this.taxRecords.map(record => ({
+      'Date': new Date(record.date).toLocaleDateString(),
+      'Audit ID': record.auditId,
+      'Sales ID': record.salesId,
+      'Name': record.name,
+      'Value': record.value.toFixed(2),
+      'Tax': record.tax.toFixed(2),
+      'Net Value': record.netValue.toFixed(2),
+      'Status': record.status ?? 'N/A'
+    }));
+
+    console.log('Table Data to Pass:', tableData);
+
+    const reportPayload = {
+      reportType: 'Tax and Fee Report',
+      exportFormat: 'PDF Document (.pdf)',
+      startDate: this.fromDate,
+      endDate: this.toDate,
+      pageOrientation: 'Portrait',
+      tableColumns,
+      tableData
+    };
+
+    this.router.navigate(['/businessowner/printreport'], {
+      state: reportPayload
+    });
+    this.printReportService.setReportData(reportPayload);
   }
+
+
 }

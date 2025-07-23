@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { DateRangeService } from '../../date-rangeaudit.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { PrintReportService } from '../../../services/printreport.service'; // Adjust path based on your structure
 
 interface tableRecords {
   customer_id: string;
@@ -32,7 +34,12 @@ toDate: string = '';
 
   tableRecords: tableRecords[] = [];
   
-  constructor(private tableservice: tableservice,private dateRangeService: DateRangeService) {
+  constructor(
+    private tableservice: tableservice,
+    private dateRangeService: DateRangeService,
+    private router: Router,
+  private printReportService: PrintReportService
+  ) {
     
    }
   
@@ -79,6 +86,37 @@ toDate: string = '';
   }
 
   printReport(): void {
-    window.print();
+  if (!this.tableRecords || this.tableRecords.length === 0) {
+    alert('No data available to print.');
+    return;
   }
+
+  const tableColumns = ['Customer ID', 'Name', 'Active Date', 'Estimate Date', 'Location', 'Status'];
+
+  const tableData = this.tableRecords.map(record => ({
+    'Customer ID': record.customer_id,
+    'Name': record.name,
+    'Active Date': record.active_date,
+    'Estimate Date': record.estimate_date,
+    'Location': record.location,
+    'Status': record.status
+  }));
+
+  const reportPayload = {
+    reportType: 'Customer Estimate Report',
+    exportFormat: 'PDF Document (.pdf)',
+    startDate: this.fromDate,
+    endDate: this.toDate,
+    pageOrientation: 'Portrait',
+    tableColumns,
+    tableData
+  };
+
+  this.router.navigate(['/businessowner/printreport'], {
+    state: reportPayload
+  });
+
+  this.printReportService.setReportData(reportPayload); // Store data for print page
+}
+
 }

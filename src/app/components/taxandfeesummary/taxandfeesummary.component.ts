@@ -32,7 +32,7 @@ export class TaxandfeesummaryComponent implements OnInit {
 
 
   constructor(private TaxSummaryService:TaxSummaryService,private dateRangeService: DateRangeService,private route: ActivatedRoute) {
-    this.option1 = { data: [], series: [{ type: "donut", angleKey: "amount", innerRadiusRatio: 0.6 , fills: ["#FF5B5B", "#ff5b5b67"]}] };
+    this.option1 = { data: [], series: [{ type: "donut", angleKey: "amount", innerRadiusRatio: 0.6, fills: ["#FF5B5B", "#ff5b5b67"]}] };
     this.option2 = { data: [], series: [{ type: "donut", angleKey: "amount", innerRadiusRatio: 0.6 , fills: ["#00B074", "#00b0754f"] }] };
     this.option3 = { data: [], series: [{ type: "donut", angleKey: "amount", innerRadiusRatio: 0.6 , fills: ["#2D9CDB", "#2d9bdb66"] }] };
    };
