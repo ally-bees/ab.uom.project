@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface DashboardData {
   campaigns: number;
@@ -38,7 +39,7 @@ export interface Campaign {
 export class MarketingDashboardService {
   private apiUrl = 'http://localhost:5241/api/marketingdashboard';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getDashboardData(): Observable<DashboardData> {
     return this.http.get<DashboardData>(`${this.apiUrl}/dashboard`);
@@ -61,7 +62,19 @@ export class MarketingDashboardService {
   }
 
   getCustomerCount(): Observable<number> {
-    return this.http.get<number>('http://localhost:5241/api/customercount/count');
+    // Get company ID from auth service
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
+    
+    console.log('MarketingDashboardService - getCustomerCount - Current User:', currentUser);
+    console.log('MarketingDashboardService - getCustomerCount - Company ID:', companyId);
+    
+    // Hard-coded company ID for testing if none is available
+    const finalCompanyId = companyId || 'C00001'; // Default to a known company ID if none found
+    
+    console.log('MarketingDashboardService - getCustomerCount - Using company ID:', finalCompanyId);
+    
+    return this.http.get<number>(`http://localhost:5241/api/customercount/count?companyId=${finalCompanyId}`);
   }
 
   getCampaigns(): Observable<Campaign[]> {

@@ -180,8 +180,9 @@
 }
 
 .login-link .signin-link {
-  color: #7ECBD1;
+  color: #27bcc7;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .login-link .signin-link:hover {

@@ -119,5 +119,25 @@ namespace Backend.Controllers
             var result = await _courierService.GetTopCountriesAsync(companyId);
             return Ok(result);
         }
+
+        [HttpPost("create-test-data")]
+        public async Task<IActionResult> CreateTestData([FromQuery] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+                return BadRequest("CompanyId is required");
+
+            await _courierService.CreateTestDataForCompanyAsync(companyId);
+            return Ok(new { message = $"Test data created for company {companyId}" });
+        }
+
+        [HttpPost("recreate-test-data")]
+        public async Task<IActionResult> RecreateTestData([FromQuery] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+                return BadRequest("CompanyId is required");
+
+            await _courierService.RecreateTestDataForCompanyAsync(companyId);
+            return Ok(new { message = $"Test data recreated for company {companyId}" });
+        }
     }
 }

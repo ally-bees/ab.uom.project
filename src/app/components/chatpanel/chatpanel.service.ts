@@ -61,7 +61,7 @@ export class ChatService {
       .then(() => {
         console.log('SignalR: connected to chat hub');
       })
-      .catch(err => console.error('SignalR connection error:', err));
+      .catch((err: any) => console.error('SignalR connection error:', err));
 
     // Register to receive new messages
     this.hubConnection.on('ReceiveMessage', (msg: ChatMessage) => {

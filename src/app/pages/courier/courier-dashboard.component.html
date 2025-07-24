@@ -50,32 +50,40 @@
     <div *ngIf="!isLoading && !hasError">
       <!-- Filter Inputs: Search and Date Range -->
       <div class="filters-row">
+        <!-- Search input takes full width -->
         <div class="search-container">
-          <!-- Search input for courier or order ID -->
-          <input type="text" placeholder="Search anything..." [(ngModel)]="searchTerm" (keyup.enter)="searchDeliveries()" />
-          <!-- Trigger search manually -->
+          <input type="text" placeholder="Search couriers..." [(ngModel)]="searchTerm" (keyup.enter)="searchDeliveries()" />
           <button class="search-btn" (click)="searchDeliveries()">
-            <span class="material-icons">search</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
         </div>
-
-        <!-- Date filter inputs -->
+        
+        <!-- Date range section below search -->
         <div class="date-range">
+          <div class="date-range-label">Show Couriers in Date Range:</div>
+          
+          <!-- From date -->
           <div class="date-input">
-            <label>From : </label>
-            <input type="date" [(ngModel)]="fromDate" (change)="fetchSummary(); ensureChartVisible()" />
+            <label>From:</label>
+            <input type="date" id="fromDate" [(ngModel)]="fromDate" (change)="fetchSummary(); ensureChartVisible()" />
           </div>
+          
+          <!-- To date -->
           <div class="date-input">
-            <label>To : </label>
-            <input type="date" [(ngModel)]="toDate" (change)="fetchSummary(); ensureChartVisible()" />
+            <label>To:</label>
+            <input type="date" id="toDate" [(ngModel)]="toDate" (change)="fetchSummary(); ensureChartVisible()" />
           </div>
+          
+          <!-- View button with eye icon -->
+          <button class="view-button" (click)="loadCouriersForDateRange(); ensureChartVisible()">
+            <svg class="eye-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
+            </svg>
+          </button>
         </div>
       </div>
-
-      <div>
-        <!-- Button to show popup table for selected date range -->
-         <button (click)="loadCouriersForDateRange(); ensureChartVisible()">Show Couriers in Date Range</button>
-        </div>
 
       <!-- Delivery summary stats and pie chart -->
       <div class="summary-section">
