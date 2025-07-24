@@ -91,7 +91,7 @@ namespace Backend.Services
             // Group by destination (assuming destination contains country info)
             var countryGroups = couriers
                 .Where(c => !string.IsNullOrEmpty(c.Destination))
-                .GroupBy(c => ExtractCountry(c.Destination))
+                .GroupBy(c => ExtractCountry(c.Destination!))
                 .Where(g => !string.IsNullOrEmpty(g.Key))
                 .Select(g => new { Country = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
@@ -126,6 +126,157 @@ namespace Backend.Services
             }
             
             return destination.Trim();
+        }
+
+        // Create test data for a company (for testing purposes)
+        public async Task CreateTestDataForCompanyAsync(string companyId)
+        {
+            // Check if company already has courier data
+            var existingData = await GetAllByCompanyIdAsync(companyId);
+            if (existingData.Count > 0)
+            {
+                Console.WriteLine($"Company {companyId} already has {existingData.Count} courier records");
+                return;
+            }
+
+            var testCouriers = new List<Courier>
+            {
+                new Courier
+                {
+                    OrderId = "ORD001",
+                    CourierId = "COR001",
+                    Destination = "123 Main St, Colombo, Sri Lanka",
+                    Date = DateTime.UtcNow.AddDays(-5),
+                    EstimateDate = DateTime.UtcNow.AddDays(-2),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD002",
+                    CourierId = "COR002",
+                    Destination = "456 Broadway, New York, United States",
+                    Date = DateTime.UtcNow.AddDays(-4),
+                    EstimateDate = DateTime.UtcNow.AddDays(-1),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD003",
+                    CourierId = "COR003",
+                    Destination = "789 Queen St, Sydney, Australia",
+                    Date = DateTime.UtcNow.AddDays(-3),
+                    EstimateDate = DateTime.UtcNow.AddDays(1),
+                    Status = "pending",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD004",
+                    CourierId = "COR004",
+                    Destination = "321 King St, Toronto, Canada",
+                    Date = DateTime.UtcNow.AddDays(-2),
+                    EstimateDate = DateTime.UtcNow.AddDays(2),
+                    Status = "pending",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD005",
+                    CourierId = "COR005",
+                    Destination = "654 High St, London, United Kingdom",
+                    Date = DateTime.UtcNow.AddDays(-1),
+                    EstimateDate = DateTime.UtcNow.AddDays(3),
+                    Status = "pending",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD006",
+                    CourierId = "COR006",
+                    Destination = "987 Central Ave, Kandy, Sri Lanka",
+                    Date = DateTime.UtcNow,
+                    EstimateDate = DateTime.UtcNow.AddDays(4),
+                    Status = "pending",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD007",
+                    CourierId = "COR007",
+                    Destination = "147 Beach Rd, Perth, Australia",
+                    Date = DateTime.UtcNow.AddDays(-6),
+                    EstimateDate = DateTime.UtcNow.AddDays(-3),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD008",
+                    CourierId = "COR008",
+                    Destination = "258 State St, Chicago, United States",
+                    Date = DateTime.UtcNow.AddDays(-7),
+                    EstimateDate = DateTime.UtcNow.AddDays(-4),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD009",
+                    CourierId = "COR009",
+                    Destination = "101 Marina Bay, Singapore",
+                    Date = DateTime.UtcNow.AddDays(-8),
+                    EstimateDate = DateTime.UtcNow.AddDays(-5),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD010",
+                    CourierId = "COR010",
+                    Destination = "222 Shibuya, Tokyo, Japan",
+                    Date = DateTime.UtcNow.AddDays(-9),
+                    EstimateDate = DateTime.UtcNow.AddDays(-6),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD011",
+                    CourierId = "COR011",
+                    Destination = "333 Connaught Place, New Delhi, India",
+                    Date = DateTime.UtcNow.AddDays(-10),
+                    EstimateDate = DateTime.UtcNow.AddDays(-7),
+                    Status = "completed",
+                    CompanyId = companyId
+                },
+                new Courier
+                {
+                    OrderId = "ORD012",
+                    CourierId = "COR012",
+                    Destination = "444 Champs-Élysées, Paris, France",
+                    Date = DateTime.UtcNow.AddDays(-11),
+                    EstimateDate = DateTime.UtcNow.AddDays(-8),
+                    Status = "completed",
+                    CompanyId = companyId
+                }
+            };
+
+            await _courierCollection.InsertManyAsync(testCouriers);
+            Console.WriteLine($"Created {testCouriers.Count} test courier records for company {companyId}");
+        }
+
+        // Recreate test data for a company (deletes existing and creates new)
+        public async Task RecreateTestDataForCompanyAsync(string companyId)
+        {
+            // Delete existing data for the company
+            var filter = Builders<Courier>.Filter.Eq("CompanyId", companyId);
+            await _courierCollection.DeleteManyAsync(filter);
+            Console.WriteLine($"Deleted existing courier records for company {companyId}");
+
+            // Create new test data
+            await CreateTestDataForCompanyAsync(companyId);
         }
     }
 }

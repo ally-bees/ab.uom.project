@@ -17,6 +17,7 @@ namespace Backend.Services
         private readonly IMongoCollection<Inventory> _inventoryCollection;
         private readonly IMongoCollection<Expense> _expensesCollection;
         private readonly IMongoCollection<Automation> _automationCollection;
+        private readonly IMongoCollection<DeviceCategory> _deviceCategoriesCollection;
 
         public MongoDBService(IOptions<Backend.Models.MongoDBSettings> mongoDBSettings)
         {
@@ -28,6 +29,7 @@ namespace Backend.Services
             _inventoryCollection = _database.GetCollection<Inventory>("inventory");
             _expensesCollection = _database.GetCollection<Expense>("expenses");
             _automationCollection = _database.GetCollection<Automation>("automation");
+            _deviceCategoriesCollection = _database.GetCollection<DeviceCategory>("devicecategories");
 
             // Index creation (optional, keep as you have it)
             var saleIdIndex = Builders<Sale>.IndexKeys.Ascending(s => s.SaleId);
@@ -168,6 +170,30 @@ namespace Backend.Services
                 "analytics" => _database.GetCollection<BsonDocument>("analytics"),
                 _ => throw new Exception("Invalid report type")
             };
+        }
+
+        // DeviceCategory methods
+        public async Task<List<DeviceCategory>> GetAllDeviceCategoriesAsync() =>
+            await _deviceCategoriesCollection.Find(_ => true).ToListAsync();
+
+        public async Task<DeviceCategory> GetDeviceCategoryByIdAsync(string id) =>
+            await _deviceCategoriesCollection.Find(d => d.Id == id).FirstOrDefaultAsync();
+
+        public async Task CreateDeviceCategoryAsync(DeviceCategory deviceCategory) =>
+            await _deviceCategoriesCollection.InsertOneAsync(deviceCategory);
+
+        public async Task CreateManyDeviceCategoriesAsync(List<DeviceCategory> deviceCategories) =>
+            await _deviceCategoriesCollection.InsertManyAsync(deviceCategories);
+
+        public async Task UpdateDeviceCategoryAsync(string id, DeviceCategory deviceCategory) =>
+            await _deviceCategoriesCollection.ReplaceOneAsync(d => d.Id == id, deviceCategory);
+
+        public async Task DeleteDeviceCategoryAsync(string id) =>
+            await _deviceCategoriesCollection.DeleteOneAsync(d => d.Id == id);
+
+        public IMongoCollection<DeviceCategory> GetDeviceCategoriesCollection()
+        {
+            return _deviceCategoriesCollection;
         }
     }
 }

@@ -46,6 +46,41 @@
     </div>
   </div>
 
+  <!-- Summary section for Marketing Analytics report -->
+  <div *ngIf="isMarketingReport" class="summary-section">
+    <div class="summary-stats">
+      <h4>Marketing Analytics Summary</h4>
+      <div class="stat-item">
+        <span class="stat-label">Total Revenue:</span>
+        <span class="stat-value">${{ summaryData?.totalRevenue | number:'1.2-2' }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Today Revenue:</span>
+        <span class="stat-value">${{ summaryData?.todayRevenue | number:'1.2-2' }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Today Orders:</span>
+        <span class="stat-value">{{ summaryData?.todayOrders || 0 }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Total Customers:</span>
+        <span class="stat-value">{{ summaryData?.totalCustomers | number }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Average Order Amount:</span>
+        <span class="stat-value">${{ summaryData?.averageOrderAmount | number:'1.2-2' }}</span>
+      </div>
+      <div class="stat-item total">
+        <span class="stat-label">Active Campaigns:</span>
+        <span class="stat-value">{{ summaryData?.activeCampaigns || 0 }}</span>
+      </div>
+    </div>
+    
+    <div class="chart-container">
+      <canvas id="marketingChart" width="300" height="200"></canvas>
+    </div>
+  </div>
+
   <div class="table-section">
     <h4></h4>
     <table *ngIf="filteredData.length > 0">

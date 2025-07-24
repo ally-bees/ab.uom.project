@@ -58,20 +58,40 @@ app-analyticssidebar {
 
 .stat-metric {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   font-size: 12px;
 }
 
 .stat-period {
   color: #6B7280;
+  margin-bottom: 2px;
 }
 
 .trend-up {
   color: #10B981;
+  font-weight: 600;
 }
 
 .trend-down {
   color: #EF4444;
+  font-weight: 600;
+}
+
+.trend-zero {
+  color: #F59E0B;
+  font-weight: 600;
+}
+
+.growth-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.growth-period {
+  color: #6B7280;
+  font-size: 10px;
 }
 
 /* Middle Row */
@@ -269,6 +289,9 @@ app-analyticssidebar {
   background-size: cover;
   background-position: center;
   border: 1px solid #E5E7EB;
+  margin-right: 12px;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
 }
 
 /* Individual country flags */
@@ -310,6 +333,171 @@ app-analyticssidebar {
 
 .country-flag.fr {
   background-image: url('https://flagcdn.com/w80/fr.png');
+}
+
+/* Additional country flags */
+.country-flag.cn {
+  background-image: url('https://flagcdn.com/w80/cn.png');
+}
+
+.country-flag.br {
+  background-image: url('https://flagcdn.com/w80/br.png');
+}
+
+.country-flag.it {
+  background-image: url('https://flagcdn.com/w80/it.png');
+}
+
+.country-flag.es {
+  background-image: url('https://flagcdn.com/w80/es.png');
+}
+
+.country-flag.nl {
+  background-image: url('https://flagcdn.com/w80/nl.png');
+}
+
+.country-flag.sg {
+  background-image: url('https://flagcdn.com/w80/sg.png');
+}
+
+.country-flag.th {
+  background-image: url('https://flagcdn.com/w80/th.png');
+}
+
+.country-flag.my {
+  background-image: url('https://flagcdn.com/w80/my.png');
+}
+
+.country-flag.id {
+  background-image: url('https://flagcdn.com/w80/id.png');
+}
+
+.country-flag.ph {
+  background-image: url('https://flagcdn.com/w80/ph.png');
+}
+
+.country-flag.vn {
+  background-image: url('https://flagcdn.com/w80/vn.png');
+}
+
+.country-flag.kr {
+  background-image: url('https://flagcdn.com/w80/kr.png');
+}
+
+.country-flag.nz {
+  background-image: url('https://flagcdn.com/w80/nz.png');
+}
+
+.country-flag.za {
+  background-image: url('https://flagcdn.com/w80/za.png');
+}
+
+.country-flag.ae {
+  background-image: url('https://flagcdn.com/w80/ae.png');
+}
+
+.country-flag.sa {
+  background-image: url('https://flagcdn.com/w80/sa.png');
+}
+
+.country-flag.il {
+  background-image: url('https://flagcdn.com/w80/il.png');
+}
+
+.country-flag.ru {
+  background-image: url('https://flagcdn.com/w80/ru.png');
+}
+
+.country-flag.mx {
+  background-image: url('https://flagcdn.com/w80/mx.png');
+}
+
+.country-flag.ar {
+  background-image: url('https://flagcdn.com/w80/ar.png');
+}
+
+.country-flag.cl {
+  background-image: url('https://flagcdn.com/w80/cl.png');
+}
+
+.country-flag.co {
+  background-image: url('https://flagcdn.com/w80/co.png');
+}
+
+.country-flag.pe {
+  background-image: url('https://flagcdn.com/w80/pe.png');
+}
+
+.country-flag.eg {
+  background-image: url('https://flagcdn.com/w80/eg.png');
+}
+
+.country-flag.ng {
+  background-image: url('https://flagcdn.com/w80/ng.png');
+}
+
+.country-flag.ke {
+  background-image: url('https://flagcdn.com/w80/ke.png');
+}
+
+.country-flag.gh {
+  background-image: url('https://flagcdn.com/w80/gh.png');
+}
+
+.country-flag.ma {
+  background-image: url('https://flagcdn.com/w80/ma.png');
+}
+
+.country-flag.tr {
+  background-image: url('https://flagcdn.com/w80/tr.png');
+}
+
+.country-flag.gr {
+  background-image: url('https://flagcdn.com/w80/gr.png');
+}
+
+.country-flag.pt {
+  background-image: url('https://flagcdn.com/w80/pt.png');
+}
+
+.country-flag.pl {
+  background-image: url('https://flagcdn.com/w80/pl.png');
+}
+
+.country-flag.cz {
+  background-image: url('https://flagcdn.com/w80/cz.png');
+}
+
+.country-flag.hu {
+  background-image: url('https://flagcdn.com/w80/hu.png');
+}
+
+.country-flag.at {
+  background-image: url('https://flagcdn.com/w80/at.png');
+}
+
+.country-flag.be {
+  background-image: url('https://flagcdn.com/w80/be.png');
+}
+
+.country-flag.dk {
+  background-image: url('https://flagcdn.com/w80/dk.png');
+}
+
+.country-flag.fi {
+  background-image: url('https://flagcdn.com/w80/fi.png');
+}
+
+.country-flag.no {
+  background-image: url('https://flagcdn.com/w80/no.png');
+}
+
+.country-flag.se {
+  background-image: url('https://flagcdn.com/w80/se.png');
+}
+
+.country-flag.ie {
+  background-image: url('https://flagcdn.com/w80/ie.png');
 }
 
 /* Default flag for countries without specific styles */
@@ -373,7 +561,7 @@ app-analyticssidebar {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -383,10 +571,10 @@ app-analyticssidebar {
 .modal-content {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 1200px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -396,8 +584,15 @@ app-analyticssidebar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #E5E7EB;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
 }
 
 .modal-body {
@@ -410,7 +605,17 @@ app-analyticssidebar {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #6B7280;
+  color: #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.close-modal-btn:hover {
+  background-color: #F3F4F6;
 }
 
 .see-all {
@@ -430,20 +635,56 @@ app-analyticssidebar {
 
 .campaign-details-table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
+  background-color: white;
 }
 
-.campaign-details-table th,
-.campaign-details-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #E5E7EB;
+.campaign-details-table thead tr {
+  background-color: #00BCD4;
+  color: white;
+  font-size: 15px;
 }
 
 .campaign-details-table th {
+  padding: 12px 15px;
+  text-align: left;
   font-weight: 500;
-  color: #6B7280;
-  background-color: #F9FAFB;
+  color: white;
+  background-color: #00BCD4;
+}
+
+.campaign-details-table td {
+  padding: 10px 15px;
+  text-align: left;
+  border-top: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #1F2937;
+}
+
+.campaign-details-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.campaign-details-table tbody td:nth-child(odd) {
+  background-color: #e3f6fc;
+}
+
+.campaign-details-table .campaign-info {
+  display: flex;
+  align-items: center;
+}
+
+.campaign-details-table .campaign-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: white;
+  font-size: 14px;
 }
 
 /* Responsive */
@@ -542,4 +783,21 @@ app-analyticssidebar {
   .chart-container {
     height: 160px;
   }
+}
+
+/* No data message styling */
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.no-data-message p {
+  color: #666;
+  font-size: 16px;
+  text-align: center;
 }

@@ -21,7 +21,19 @@ export class OrdersService {
   }
 
   getTodayOrdersCount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/today-orders`);
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
+    
+    console.log('OrdersService - getTodayOrdersCount - Current User:', currentUser);
+    console.log('OrdersService - getTodayOrdersCount - Company ID:', companyId);
+    
+    // Hard-coded company ID for testing if none is available
+    const finalCompanyId = companyId || 'C00001'; // Default to a known company ID if none found
+    
+    const url = `${this.apiUrl}/today-orders?companyId=${finalCompanyId}`;
+    console.log('Calling API with URL:', url);
+    
+    return this.http.get<number>(url);
   }
 
   createOrder(order: Order): Observable<Order> {

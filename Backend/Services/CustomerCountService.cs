@@ -25,5 +25,37 @@ namespace Backend.Services
             var filter = Builders<Customer>.Filter.Eq(c => c.CompanyId, companyId);
             return await _customers.CountDocumentsAsync(filter);
         }
+
+        public async Task<long> GetTotalCustomersAsync(string? companyId = null)
+        {
+            if (string.IsNullOrEmpty(companyId))
+            {
+                return await _customers.CountDocumentsAsync(FilterDefinition<Customer>.Empty);
+            }
+            else
+            {
+                var filter = Builders<Customer>.Filter.Eq(c => c.CompanyId, companyId);
+                return await _customers.CountDocumentsAsync(filter);
+            }
+        }
+
+        public async Task<long> GetLastMonthCustomersAsync(string? companyId = null)
+        {
+            // Since Customer model doesn't have a DateCreated field,
+            // we'll return the total customer count for now
+            // In a real application, you would have a proper date field to filter by
+            
+            Console.WriteLine("GetLastMonthCustomersAsync - Note: Customer model doesn't have DateCreated field, returning total count");
+            
+            if (string.IsNullOrEmpty(companyId))
+            {
+                return await _customers.CountDocumentsAsync(FilterDefinition<Customer>.Empty);
+            }
+            else
+            {
+                var filter = Builders<Customer>.Filter.Eq(c => c.CompanyId, companyId);
+                return await _customers.CountDocumentsAsync(filter);
+            }
+        }
         }
 }
