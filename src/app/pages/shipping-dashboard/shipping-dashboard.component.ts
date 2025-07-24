@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 interface Shipment {
   shippingId: string;
@@ -16,7 +17,7 @@ interface Shipment {
   standalone:true,
   templateUrl: './shipping-dashboard.component.html',
   styleUrls: ['./shipping-dashboard.component.css'],
-    imports: [CommonModule, ReactiveFormsModule]
+    imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class ShippingDashboardComponent implements OnInit {
   totalShipments = 800;

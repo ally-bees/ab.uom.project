@@ -64,4 +64,14 @@ export class inventorySidebarComponent {
     //  Navigate to login page
     this.router.navigate(['/login']);
   }
+
+  // Method to navigate to Privacy Policy
+  navigateToPrivacyPolicy(): void {
+    this.router.navigate(['/privacy-policy']);
+  }
+
+  // Method to navigate to Terms of Service
+  navigateToTermsOfService(): void {
+    this.router.navigate(['/terms-of-service']);
+  }
 }
