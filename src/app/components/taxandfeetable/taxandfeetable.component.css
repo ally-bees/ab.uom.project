@@ -10,9 +10,13 @@
 }
 
 h2{
-  font-weight: 450;
-  font-size: 25px;
-  color: #285F83;
+  font-weight: 500;
+    font-size: 24px;
+    margin: 0;
+  color: #333;
+    text-align: left;
+    padding: 15px 20px;
+  border-bottom: 1px solid #eee;
 }
 
 .tax-summary-container {
