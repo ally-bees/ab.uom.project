@@ -21,8 +21,8 @@ export class AuthService {
     'Admin': '/admindashboard',
     'Business Owner': '/businessowner/businessownerdashboard',
     'Sales Manager': '/salesmanager',
-    'Marketing Manager': '/testmarketingmanager',
-    'Inventory Manager': '/testinventorymanager',
+    'Marketing Manager': '/marketingmanager',
+    'Inventory Manager': '/inventorymanager/inventoryDashboard',
   };
 
   constructor(

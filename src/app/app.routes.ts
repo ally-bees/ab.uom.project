@@ -118,8 +118,8 @@ export const routes: Routes = [
 
   // Inventory Manager with child routes
   {
-    path: 'testinventorymanager',
-    component: TestinventoryDashboardComponent,
+    path: 'inventorymanager',
+    component: InventoryMainpageComponent,
     canActivate: [inventoryManagerGuard],
     children: [
       { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
