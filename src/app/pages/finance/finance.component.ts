@@ -149,77 +149,89 @@ export class FinanceComponent implements OnInit, AfterViewInit {
   }
 
   // Fetches finance data from service, processes and updates chart and invoice list
-  fetchFinanceData(): void {
-    this.loading = true;
-    this.error = false;
+fetchFinanceData(): void {
+  this.loading = true;
+  this.error = false;
 
-    this.financeService.getFinanceData().subscribe(
-      data => {
-        // Apply date filtering
-        const filteredData = this.filterInvoicesFromData(data);
+  this.financeService.getFinanceData().subscribe(
+    data => {
+      const filteredData = this.filterInvoicesFromData(data);
 
-        // Map to accumulate income and expenses per month
-        const monthMap = new Map<string, { income: number; expenses: number }>();
+      const dynamicMap = new Map<string, { income: number; expenses: number }>();
 
-        // Iterate through filtered data and accumulate values
-        filteredData.forEach(entry => {
-          const date = new Date(entry.orderDate);
-          if (isNaN(date.getTime())) return;
+      const fromDate = this.fromDate ? new Date(this.fromDate) : null;
+      const toDate = this.toDate ? new Date(this.toDate) : null;
 
-          const key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      // 👇 Decide grouping strategy: daily if range is within same month, monthly otherwise
+      const groupByDay =
+        fromDate &&
+        toDate &&
+        (fromDate.toDateString() === toDate.toDateString() ||
+          (toDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24) <= 31);
 
-          if (!monthMap.has(key)) {
-            monthMap.set(key, { income: 0, expenses: 0 });
-          }
+      // Format key for grouping
+      const formatKey = (date: Date) =>
+        groupByDay
+          ? date.toISOString().split('T')[0] // e.g., '2025-07-24'
+          : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // e.g., '2025-07'
 
-          const current = monthMap.get(key)!;
-          if (entry.status?.toLowerCase() === 'income') {
-            current.income += entry.amount;
-          } else if (entry.status?.toLowerCase() === 'expense') {
-            current.expenses += entry.amount;
-          }
-        });
-
-        // Sort months and update chart labels
-        const sortedKeys = Array.from(monthMap.keys()).sort();
-
-        this.lineChartData.labels = sortedKeys.map(key => {
-          const [year, month] = key.split('-').map(Number);
-          return new Date(year, month - 1).toLocaleString('default', {
+      // Format label for chart
+      const labelFormat = (key: string): string => {
+        const parts = key.split('-');
+        if (parts.length === 2) {
+          // Monthly
+          return new Date(+parts[0], +parts[1] - 1).toLocaleString('default', {
             month: 'short',
             year: 'numeric'
           });
-        });
+        } else {
+          // Daily
+          return new Date(key).toLocaleDateString();
+        }
+      };
 
-        // Update chart dataset values
-        this.lineChartData.datasets[0].data = sortedKeys.map(
-          key => monthMap.get(key)!.income
-        );
-        this.lineChartData.datasets[1].data = sortedKeys.map(
-          key => monthMap.get(key)!.expenses
-        );
+      // Fill map with income/expense data
+      filteredData.forEach(entry => {
+        const date = new Date(entry.orderDate);
+        if (isNaN(date.getTime())) return;
 
-        // Sort invoices by date (descending)
-        this.filteredInvoices = filteredData.sort(
-          (a, b) =>
-            new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
-        );
+        const key = formatKey(date);
+        if (!dynamicMap.has(key)) {
+          dynamicMap.set(key, { income: 0, expenses: 0 });
+        }
 
-        this.loading = false;
+        const current = dynamicMap.get(key)!;
+        if (entry.status?.toLowerCase() === 'income') {
+          current.income += entry.amount;
+        } else if (entry.status?.toLowerCase() === 'expense') {
+          current.expenses += entry.amount;
+        }
+      });
 
-        // Ensure chart and view updates
-        this.cdr.detectChanges();
-        this.chart?.update();
-      },
-      error => {
-        // Handle error during data fetch
-        this.handleError(
-          '⚠️ Failed to fetch finance data. Please check your connection or try again later.',
-          error
-        );
-      }
-    );
-  }
+      const finalKeys = Array.from(dynamicMap.keys()).sort();
+
+      this.lineChartData.labels = finalKeys.map(labelFormat);
+      this.lineChartData.datasets[0].data = finalKeys.map(key => dynamicMap.get(key)!.income);
+      this.lineChartData.datasets[1].data = finalKeys.map(key => dynamicMap.get(key)!.expenses);
+
+      // Sort and store filtered invoices
+      this.filteredInvoices = filteredData.sort(
+        (a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+      );
+
+      this.loading = false;
+      this.cdr.detectChanges();
+      this.chart?.update();
+    },
+    error => {
+      this.handleError(
+        '⚠️ Failed to fetch finance data. Please check your connection or try again later.',
+        error
+      );
+    }
+  );
+}
+
 
   // Triggered when user changes the date range
   onDateChange(): void {

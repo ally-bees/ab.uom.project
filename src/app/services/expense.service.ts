@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Expense } from '../models/expense.model'; 
 import { AuthService } from './auth.service'; // Ensure correct path
 
@@ -10,21 +10,34 @@ import { AuthService } from './auth.service'; // Ensure correct path
 })
 export class ExpenseService {
   private apiUrl = 'http://localhost:5241/api/expenses';
+  private backendBaseUrl = 'http://localhost:5241';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  // ✅ Get expenses related to the logged-in user's company
-  getRecentExpenses(): Observable<Expense[]> {
-  const companyId = this.authService.getCurrentUser()?.CompanyId;
-
-  if (!companyId) {
-    return throwError(() => new Error('Company ID is missing from current user'));
+  getFullReceiptUrl(relativeUrl: string): string {
+    if (!relativeUrl) return '';
+    return relativeUrl.startsWith('http')
+      ? relativeUrl
+      : this.backendBaseUrl + (relativeUrl.startsWith('/') ? relativeUrl : '/' + relativeUrl);
   }
 
-  return this.http.get<Expense[]>(`${this.apiUrl}/company/${companyId}`).pipe(
-    catchError(this.handleError)
-  );
-}
+  getRecentExpenses(): Observable<Expense[]> {
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+
+    if (!companyId) {
+      return throwError(() => new Error('Company ID is missing from current user'));
+    }
+
+    return this.http.get<Expense[]>(`${this.apiUrl}/company/${companyId}`).pipe(
+      // Add fullReceiptUrl to each expense object here
+      map(expenses => expenses.map(expense => ({
+        ...expense,
+        fullReceiptUrl: this.getFullReceiptUrl(expense.receiptUrl ?? '') // or whatever property holds relative path
+      }))),
+      catchError(this.handleError)
+    );
+  }
+
 
 
   // ✅ Submit expense with CompanyId & HoneyCombId from AuthService

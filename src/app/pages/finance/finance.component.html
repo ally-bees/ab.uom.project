@@ -12,14 +12,18 @@
           </div> -->
 
           <!-- Date filter -->
-          <div class="date-filter">
-            <div class="date-filters">
-              <label>From:</label>
-              <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()" />
-              <label>To:</label>
-              <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
-            </div>
-          </div>
+          <!-- Date Filter (Updated to match Orders style) -->
+<div class="date-filter">
+  <div class="date-group">
+    <span>From :</span>
+    <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()" />
+  </div>
+  <div class="date-group">
+    <span>To :</span>
+    <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
+  </div>
+</div>
+
         </div>
       </div>
 
@@ -72,8 +76,9 @@
 
     <div class="report-button-container">
       <button class="print-report-btn" (click)="printReport()">
+         <i class="fa fa-print"></i>
         Print Report
-        <i class="print-icon"></i>
+        
       </button>
     </div>
   </div>

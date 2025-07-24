@@ -144,17 +144,28 @@
           <th>Position</th>
           <th>Type</th>
           <th>Amount</th>
+          <th>Receipt</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let expense of recentExpenses">
-          <td>{{ expense.date | date:'MM/dd/yyyy' }}</td>
-          <td>{{ expense.employeeName }}</td>
-          <td>{{ expense.position }}</td>
-          <td>{{ expense.expenseType }}</td>
-          <td>Rs. {{ expense.amount.toFixed(2) }}</td>
-        </tr>
-      </tbody>
+  <tr *ngFor="let expense of recentExpenses">
+    <td>{{ expense.date | date:'MM/dd/yyyy' }}</td>
+    <td>{{ expense.employeeName }}</td>
+    <td>{{ expense.position }}</td>
+    <td>{{ expense.expenseType }}</td>
+    <td>Rs. {{ expense.amount.toFixed(2) }}</td>
+    <td>
+  <ng-container *ngIf="expense.fullReceiptUrl; else noReceipt">
+    <a [href]="expense.fullReceiptUrl" target="_blank">Download Receipt</a>
+  </ng-container>
+  <ng-template #noReceipt>
+    <span>No Receipt</span>
+  </ng-template>
+</td>
+
+  </tr>
+</tbody>
+
     </table>
   </div>
 </div>

@@ -115,10 +115,21 @@
         <div class="modal-action">
           <input type="number" min="1" [(ngModel)]="modalAddQuantity" placeholder="Add Quantity" />
           <button (click)="confirmStockUpdate()" [disabled]="!modalAddQuantity || modalAddQuantity <= 0">Update</button>
+          
           <button (click)="closeStockModal()" class="modal-cancel">Cancel</button>
         </div>
         <div *ngIf="modalMessage" class="modal-message">{{ modalMessage }}</div>
+
+        <div class="print-section">
+        <button class="print-btn" (click)="printReport()">
+          <i class="fa fa-print"></i>
+          Print Report
+        </button>
+      </div>
       </div>
     </div>
+
+    
+
   
   
