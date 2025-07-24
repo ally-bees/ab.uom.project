@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
 export class inventorySidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
-      { id: 'inventory', label: 'inventory', icon: 'fa-chart-line', route: 'inventoryManager/inventory' },
-      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart', route: 'inventoryManager/order' },
-      { id: 'expense-form', label: 'Expense Form', icon: 'fa-file-invoice-dollar', route: 'inventoryManager/expense-form' }
+      { id: 'inventory', label: 'inventory', icon: 'fa-chart-line', route: 'inventorymanager/inventory' },
+      { id: 'orders', label: 'Orders', icon: 'fa-shopping-cart', route: 'inventorymanager/order' },
+      { id: 'expense-form', label: 'Expense Form', icon: 'fa-file-invoice-dollar', route: 'inventorymanager/expense-form' }
     ]}
   ];
   
