@@ -72,6 +72,8 @@
       <button type="submit" [disabled]="!form.valid">
         {{ editingAutomationId !== null ? 'Update' : 'Save' }} Automation
       </button>
+      <button type="button" class="clear-btn" (click)="cancel()">Clear Form</button>
+
     </form>
 
     <!-- Grouped Automations -->
@@ -85,7 +87,7 @@
             <strong>{{ automation.reportType }}</strong> | {{ automation.frequency }} at {{ automation.time }}
           </p>
           <div class="automation-actions">
-            <button (click)="editAutomation(automation)">Edit</button>
+            <button class="edit-btn" (click)="editAutomation(automation)">Edit</button>
             <button class="delete-btn" (click)="deleteAutomation(automation.id.toString())">Delete</button>
           </div>
         </div>

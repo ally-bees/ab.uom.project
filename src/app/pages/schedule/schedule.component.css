@@ -188,3 +188,36 @@ body {
   .automation-container .delete-btn:hover {
     text-decoration: underline;
   }
+
+  .clear-btn {
+  margin-top: 20px;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 12px 26px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.clear-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.edit-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+  background-color: #e0e0e0;
+}
