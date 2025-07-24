@@ -16,6 +16,8 @@ import { BusinessDashComponent } from './pages/businessowner/businessowner.compo
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { UserProfileComponent } from './userprofile/userprofile.component';
+import { LandingComponent } from './pages/landing/landing.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 import { SystemConfigComponent } from './adminpart/system-config/system-config.component';
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
