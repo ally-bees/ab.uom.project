@@ -6,6 +6,7 @@ import { SalesViewModel } from '../models/sale.model';
 import { product } from '../models/product.model';
 import { AuthService } from './auth.service';
 import { switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +80,16 @@ export class InventoryService {
           { responseType: 'text' }
         );
       })
+    );
+  }
+
+  getBestSellingProductsByCompany(limit: number = 10): Observable<product[]> {
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    if (!companyId) {
+      throw new Error('User company ID is not available.');
+    }
+    return this.http.get<product[]>(`${this.apiUrl}/bestselling?limit=51`).pipe(
+      map(products => products.filter(p => p.companyId === companyId).slice(0, limit))
     );
   }
 }

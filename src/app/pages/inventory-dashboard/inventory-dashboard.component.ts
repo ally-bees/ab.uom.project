@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
 import { TopSellingTableComponent } from '../../components/top-selling-table/top-selling-table.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-inventory-dashboard',
@@ -12,7 +13,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   imports: [CommonModule, FormsModule,TopSellingTableComponent],
   templateUrl: './inventory-dashboard.component.html',
   styleUrls: ['./inventory-dashboard.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InventoryDashboardComponent implements OnInit {
   products: product[] = [];
@@ -23,14 +24,16 @@ export class InventoryDashboardComponent implements OnInit {
   lowStockCount = 0;
   outOfStockCount = 0;
 
-  constructor(private inventoryService: InventoryService) {}
+  constructor(private inventoryService: InventoryService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    console.log('Current user company ID:', companyId);
     this.loadProducts();
   }
 
   loadProducts(): void {
-    this.inventoryService.getAllProducts().subscribe({
+    this.inventoryService.getInventoryByCompany().subscribe({
       next: (data: product[]) => {
         this.products = data;
         this.calculateStockCounts();
@@ -70,8 +73,13 @@ export class InventoryDashboardComponent implements OnInit {
   }
 
   loadBestSellingProducts(): void {
-    this.bestSellingProducts = [...this.products]
-      .sort((a, b) => a.stockQuantity - b.stockQuantity)
-      .slice(0, 10);
+    this.inventoryService.getBestSellingProductsByCompany(10).subscribe({
+      next: (products) => {
+        this.bestSellingProducts = products;
+      },
+      error: (err) => {
+        console.error('Error fetching best selling products for company', err);
+      }
+    });
   }
 }
