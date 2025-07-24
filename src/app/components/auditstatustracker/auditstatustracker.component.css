@@ -1,16 +1,17 @@
 h2 {
-  margin-bottom: 0;
-  left: 290px;
-  font-weight: 600;
-  font-size: 30px;
-  letter-spacing: 1%;
-  color: #285F83;
+  font-weight: 500;
+    font-size: 30px;
+    margin: 0;
+  color: #333;
+    text-align: left;
+    padding: 15px 20px;
+  border-bottom: 1px solid #eee;
 }
 
 .dropdown-content {
+   width: 150px;
   border-radius: 20px;
-  font-size: 8px;
-  width: 90px;
+  font-size: 15px;
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -29,16 +30,18 @@ h4 {
 }
 
 .dropbtn {
+  width: 150px;
   margin-top: 0px;
   background-color: #05BBC9;
   color: white;
   padding: 10px;
-  font-size: 10px;
+  font-size: 15px;
   border: none;
   border-radius: 20px;
 }
 
 .dropdown {
+   width: 150px;
   padding-top: 15px;
   padding-left: 15px;
   border-radius: 20px;
@@ -48,9 +51,9 @@ h4 {
 }
 
 .dropdown-content {
+  width: 150px;
   border-radius: 20px;
-  font-size: 8px;
-  width: 90px;
+  font-size: 15px;
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -58,6 +61,7 @@ h4 {
 }
 
 .dropdown-content a {
+   width: 150px;
   color: black;
   padding: 12px 16px;
   text-decoration: none;
