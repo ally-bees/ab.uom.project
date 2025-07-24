@@ -5,6 +5,8 @@ import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
 import Chart from 'chart.js/auto';
 import { Router } from '@angular/router';
+import { PrintReportService } from '../../services/printreport.service'; // ✅ Import the service
+import { MatSnackBar } from '@angular/material/snack-bar'; // ✅ Optional: For feedback
 
 @Component({
   selector: 'app-inventory',
@@ -32,7 +34,11 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   modalAddQuantity: number = 0;
   modalMessage: string = '';
 
-  constructor(private inventoryService: InventoryService, private router: Router) {}
+  constructor(private inventoryService: InventoryService, 
+    private printReportService: PrintReportService,
+  private snackBar: MatSnackBar,
+  private router: Router
+) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -162,4 +168,39 @@ export class InventoryComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  printReport(): void {
+  if (!this.products || this.products.length === 0) {
+    this.snackBar.open('No inventory data available to print.', 'Close', {
+      duration: 4000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    return;
+  }
+
+  const tableColumns = ['Product ID', 'Name', 'Category', 'Price', 'Quantity', 'Status'];
+  const tableData = this.filteredProducts().map(product => ({
+    'Product ID': product.productId,
+    'Name': product.name,
+    'Category': product.category,
+    'Price': `Rs. ${product.price.toFixed(2)}`,
+    'Quantity': product.stockQuantity,
+    'Status': this.getStockStatus(product)
+  }));
+
+  const reportPayload = {
+    reportType: 'Inventory Report',
+    exportFormat: 'PDF Document (.pdf)',
+    pageOrientation: 'Portrait',
+    tableColumns,
+    tableData
+  };
+
+  this.printReportService.setReportData(reportPayload); // Store the data
+
+  this.router.navigate(['/businessowner/printreport'], {
+    state: reportPayload
+  });
+}
+
 }

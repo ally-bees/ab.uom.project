@@ -59,7 +59,40 @@
       color: #999;
     }
   }
-  
+  .date-filter {
+  display: flex;
+  gap: 15px;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+}
+
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-grow: 1;
+}
+
+.date-group span {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.date-group input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .date-filter {
+    flex-direction: column;
+  }
+}
+
   .date-filter {
     display: flex;
     gap: 12px;

@@ -350,3 +350,25 @@ canvas {
   background: #00BCD4;
   color: #fff;
 }
+
+.print-report-btn {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &:hover {
+      background-color: #00a0b7;
+    }
+    
+    .print-icon {
+      font-size: 16px;
+    }
+  }
