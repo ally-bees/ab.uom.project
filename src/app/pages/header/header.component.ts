@@ -31,7 +31,10 @@ export interface UserDetails {
 })
 export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
-  profileImageSrc: string = 'assets/profile.jpg'; // Default fallback image
+  profileImageSrc: string = 'assets/profile.jpg'; // Default image
+  userName: string = '';
+  userRole: string = '';
+  isLoggedIn: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -41,20 +44,21 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Subscribe to profile image changes
     this.profileImageService.profileImage$.subscribe(imageUrl => {
       this.profileImageSrc = imageUrl;
     });
 
-    // Subscribe to the current user observable
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
-      
-      if (user && user.id) {
-        // Load user profile image
-        this.loadUserProfileImage(user.id);
+      this.isLoggedIn = !!user;
+
+      if (user) {
+        this.userName = user.username;
+        this.userRole = user.Role; // Use correct casing based on your model
+        if (user.id) {
+          this.loadUserProfileImage(user.id);
+        }
       } else {
-        // Reset to default if no user
         this.profileImageService.setDefaultProfileImage();
       }
     });
@@ -66,9 +70,9 @@ export class HeaderComponent implements OnInit {
         if (userDetails.profileImage) {
           let imageUrl: string;
           if (userDetails.profileImage.startsWith('http')) {
-            imageUrl = userDetails.profileImage; // External URL
+            imageUrl = userDetails.profileImage;
           } else {
-            imageUrl = `http://localhost:5241${userDetails.profileImage}`; // Local file
+            imageUrl = `http://localhost:5241${userDetails.profileImage}`;
           }
           this.profileImageService.updateProfileImage(imageUrl);
         } else {
@@ -82,12 +86,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  // Method to get the correct image source
   getProfileImageSrc(): string {
     return this.profileImageSrc;
   }
 
-  // Navigate to user profile when profile image is clicked
   navigateToProfile(): void {
     this.router.navigate(['/userprofile']);
   }

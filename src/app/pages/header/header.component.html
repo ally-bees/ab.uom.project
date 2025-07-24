@@ -1,13 +1,13 @@
-<!-- header.component.html -->
 <header class="instadash-header">
-    <div class="header-left">
-      <div class="logo">
-        <img src="assets/logo2.png" alt="InstaDash Logo">
-
-      </div>
+  <div class="header-left">
+    <div class="logo">
+      <img src="assets/logo2.png" alt="InstaDash Logo" />
     </div>
+  </div>
 
-    <div class="header-right">
+  <div class="header-right">
+    <!-- Not Logged In: show icons -->
+    <ng-container *ngIf="!isLoggedIn">
       <button class="icon-button primary">
         <i class="notification-icon"></i>
       </button>
@@ -19,8 +19,17 @@
       <button class="icon-button tertiary">
         <i class="grid-icon"></i>
       </button>
-      <div class="profile" (click)="navigateToProfile()">
-        <img [src]="getProfileImageSrc()" alt="Profile Picture" class="profile-image" title="Click to view profile">
-      </div>
+    </ng-container>
+
+    <!-- Logged In: show username and role -->
+    <div *ngIf="isLoggedIn" class="user-info">
+      <span class="role">{{ userRole }}</span>
+      <span class="username">({{ userName }})</span>
     </div>
-  </header>
+
+    <!-- Profile image -->
+    <div class="profile" (click)="navigateToProfile()">
+      <img [src]="getProfileImageSrc()" alt="Profile Picture" class="profile-image" title="Click to view profile" />
+    </div>
+  </div>
+</header>

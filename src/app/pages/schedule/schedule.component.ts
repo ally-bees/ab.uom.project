@@ -57,7 +57,7 @@ export class ScheduleComponent implements OnInit {
         dayOfMonth: ['']
       }),
       recipient: this.fb.group({
-        emails: ['', [Validators.required, Validators.email]],
+        emails: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
         subject: ['', Validators.required],
         message: [''],
         notifyOnSuccess: [false],
@@ -67,13 +67,19 @@ export class ScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser?.Role) {
-      this.allowedReportTypes = this.roleBasedReports[currentUser.Role] || [];
-    }
-
-    this.loadAutomations();
+  const currentUser = this.authService.getCurrentUser();
+  
+  if (currentUser?.Role) {
+    this.allowedReportTypes = this.roleBasedReports[currentUser.Role] || [];
   }
+
+  if (currentUser?.email) {
+    this.form.get('recipient')?.get('emails')?.setValue(currentUser.email);
+  }
+
+  this.loadAutomations();
+}
+
 
   loadAutomations(): void {
     const currentUser = this.authService.getCurrentUser();
@@ -98,43 +104,44 @@ export class ScheduleComponent implements OnInit {
     }, {} as { [key: string]: Automation[] });
   }
 
-  onSubmit(): void {
-    if (this.form.valid) {
-      const formValue = this.form.value;
+onSubmit(): void {
+  if (this.form.valid) {
+    const formValue = this.form.getRawValue(); // <-- includes disabled fields
 
-      const currentUser = this.authService.getCurrentUser();
-      if (!currentUser) {
-        console.error('No logged-in user found.');
-        return;
-      }
-
-      const automationData = {
-        companyId: currentUser.CompanyId,
-        honeyCombId: currentUser.HoneyCombId,
-        ...formValue.report,
-        ...formValue.schedule,
-        ...formValue.recipient,
-        dayOfWeek: formValue.schedule.dayOfWeek || null,
-        dayOfMonth: formValue.schedule.dayOfMonth
-          ? parseInt(formValue.schedule.dayOfMonth, 10)
-          : null
-      };
-
-      const request$ = this.editingAutomationId !== null
-        ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
-        : this.automationService.addAutomation(automationData);
-
-      request$.subscribe({
-        next: () => {
-          this.loadAutomations();
-          this.resetForm();
-        },
-        error: err => {
-          console.error('Automation error:', err);
-        }
-      });
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('No logged-in user found.');
+      return;
     }
+
+    const automationData = {
+      companyId: currentUser.CompanyId,
+      honeyCombId: currentUser.HoneyCombId,
+      ...formValue.report,
+      ...formValue.schedule,
+      ...formValue.recipient,
+      dayOfWeek: formValue.schedule.dayOfWeek || null,
+      dayOfMonth: formValue.schedule.dayOfMonth
+        ? parseInt(formValue.schedule.dayOfMonth, 10)
+        : null
+    };
+
+    const request$ = this.editingAutomationId !== null
+      ? this.automationService.updateAutomation(this.editingAutomationId.toString(), automationData)
+      : this.automationService.addAutomation(automationData);
+
+    request$.subscribe({
+      next: () => {
+        this.loadAutomations();
+        this.resetForm();
+      },
+      error: err => {
+        console.error('Automation error:', err);
+      }
+    });
   }
+}
+
 
   editAutomation(automation: Automation): void {
     this.editingAutomationId = automation.id.toString();
@@ -170,27 +177,31 @@ export class ScheduleComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.form.reset({
-      report: {
-        reportType: '',
-        format: 'pdf'
-      },
-      schedule: {
-        frequency: '',
-        time: '',
-        dayOfWeek: '',
-        dayOfMonth: ''
-      },
-      recipient: {
-        emails: '',
-        subject: '',
-        message: '',
-        notifyOnSuccess: false,
-        notifyOnFailure: false
-      }
-    });
-    this.editingAutomationId = null;
-  }
+  const currentUser = this.authService.getCurrentUser();
+  const userEmail = currentUser?.email || '';
+
+  this.form.reset({
+    report: {
+      reportType: '',
+      format: 'pdf'
+    },
+    schedule: {
+      frequency: '',
+      time: '',
+      dayOfWeek: '',
+      dayOfMonth: ''
+    },
+    recipient: {
+      emails: { value: userEmail, disabled: true },
+      subject: '',
+      message: '',
+      notifyOnSuccess: false,
+      notifyOnFailure: false
+    }
+  });
+  this.editingAutomationId = null;
+}
+
 
   cancel(): void {
     this.resetForm();

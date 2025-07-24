@@ -179,3 +179,17 @@
     object-fit: cover;
     border-radius: 50%;
   }
+ .user-info {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  color: #333;
+  font-weight: 500;
+  gap: 4px;
+}
+
+.user-info .role {
+  font-style: normal;
+  color: #00b8d4;
+}
+
