@@ -104,5 +104,17 @@ export class CourierService {
     let params = new HttpParams().set('companyId', companyId);
     return this.http.get<TopCountryResult[]>(`${this.baseUrl}/top-countries`, { params });
   }
+
+  // Create test data for a company (for testing purposes)
+  createTestData(companyId: string): Observable<any> {
+    let params = new HttpParams().set('companyId', companyId);
+    return this.http.post(`${this.baseUrl}/create-test-data`, {}, { params });
+  }
+
+  // Recreate test data for a company (deletes existing and creates new)
+  recreateTestData(companyId: string): Observable<any> {
+    let params = new HttpParams().set('companyId', companyId);
+    return this.http.post(`${this.baseUrl}/recreate-test-data`, {}, { params });
+  }
 }
 

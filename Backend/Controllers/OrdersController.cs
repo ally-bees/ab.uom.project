@@ -75,6 +75,17 @@ public async Task<ActionResult<List<Order>>> GetByCompanyId(string companyId)
             return Ok(orders_count);
         }
 
+        [HttpGet("yesterday-orders")]
+        public async Task<IActionResult> GetYesterdayOrdersCount([FromQuery] string? companyId = null)
+        {
+            Console.WriteLine($"OrdersController - GetYesterdayOrdersCount - Received companyId: {companyId ?? "null"}");
+            
+            var orders_count = await _orderService.GetYesterdayOrdersAsync(companyId);
+            Console.WriteLine($"OrdersController - GetYesterdayOrdersCount - Found {orders_count} orders for yesterday for companyId: {companyId ?? "all companies"}");
+            
+            return Ok(orders_count);
+        }
+
 
         [HttpPut("{orderId}")]
         public async Task<IActionResult> Update(string orderId, [FromBody] OrderCreateDTO dto)

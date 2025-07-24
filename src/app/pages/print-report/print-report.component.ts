@@ -31,6 +31,8 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
   
   // Properties for Courier report
   isCourierReport: boolean = false;
+  // Properties for Marketing Analytics report  
+  isMarketingReport: boolean = false;
   summaryData: any = null;
   chartInstance: any = null;
 
@@ -55,8 +57,9 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
       this.filterStartDate = this.startDate;
       this.filterEndDate = this.endDate;
       
-      // Check if this is a courier report
+      // Check if this is a courier report or marketing analytics report
       this.isCourierReport = this.reportType.toLowerCase().includes('courier');
+      this.isMarketingReport = this.reportType.toLowerCase().includes('marketing');
       
       // Get summary data if available
       if (state['summaryData']) {
@@ -70,6 +73,8 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       if (this.isCourierReport && this.summaryData) {
         this.initCourierChart();
+      } else if (this.isMarketingReport && this.summaryData) {
+        this.initMarketingChart();
       }
     }, 500);
   }
@@ -129,6 +134,63 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Initialize the marketing analytics chart
+   */
+  initMarketingChart(): void {
+    if (!this.summaryData) return;
+    
+    const canvas = document.getElementById('marketingChart') as HTMLCanvasElement;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Import Chart.js dynamically
+    import('chart.js').then(Chart => {
+      // Destroy existing chart if it exists
+      if (this.chartInstance) {
+        this.chartInstance.destroy();
+      }
+      
+      // Create a bar chart for marketing metrics
+      this.chartInstance = new Chart.Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Total Revenue', 'Today Revenue', 'Today Orders', 'Total Customers'],
+          datasets: [{
+            label: 'Marketing Metrics',
+            data: [
+              this.summaryData.totalRevenue || 0,
+              this.summaryData.todayRevenue || 0, 
+              this.summaryData.todayOrders || 0,
+              this.summaryData.totalCustomers || 0
+            ],
+            backgroundColor: this.summaryData.chartColors?.backgroundColor || ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0'],
+            borderColor: this.summaryData.chartColors?.borderColor || ['#81C784', '#64B5F6', '#FFB74D', '#BA68C8'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }).catch(err => {
+      console.error('Error loading Chart.js:', err);
+    });
+  }
+
   applyFilters(): void {
     if (!this.filterStartDate || !this.filterEndDate) {
       this.filteredData = [...this.tableData];
@@ -172,7 +234,7 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
   };
   
   // For courier reports, make sure the chart is rendered before generating PDF
-  if (this.isCourierReport && this.chartInstance) {
+  if ((this.isCourierReport || this.isMarketingReport) && this.chartInstance) {
     // Update the chart one more time just to be sure
     this.chartInstance.update();
     
@@ -218,6 +280,10 @@ export class PrintReportComponent implements OnInit, AfterViewInit {
           fromCancel: true
         }
       });
+    } else if (this.isMarketingReport) {
+      // For marketing analytics reports, navigate back to marketing analytics dashboard
+      console.log('Returning to marketing analytics dashboard');
+      this.router.navigate(['/businessowner/analytics']);
     } else {
       this.router.navigate(['/finance']);
     }

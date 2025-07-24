@@ -1,5 +1,6 @@
 using Backend.Models;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,6 +139,104 @@ namespace Backend.Services
             return sum;
         }
 
+        // Get last month sales Revenue for a company
+        public async Task<double> GetLastMonthSalesRevenueAsync(string? companyId = null)
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+            
+            // Calculate last month's date range
+            var today = DateTime.Today;
+            var firstDayOfThisMonth = new DateTime(today.Year, today.Month, 1);
+            var firstDayOfLastMonth = firstDayOfThisMonth.AddMonths(-1);
+            var lastDayOfLastMonth = firstDayOfThisMonth.AddDays(-1);
+            
+            Console.WriteLine($"GetLastMonthSalesRevenueAsync - Total sales records: {sales.Count}");
+            Console.WriteLine($"GetLastMonthSalesRevenueAsync - Last month range: {firstDayOfLastMonth.ToString("yyyy-MM-dd")} to {lastDayOfLastMonth.ToString("yyyy-MM-dd")}");
+            
+            // Filter by last month's date range
+            var lastMonthSales = sales.Where(s => 
+                s.SaleDate.Date >= firstDayOfLastMonth && 
+                s.SaleDate.Date <= lastDayOfLastMonth).ToList();
+            Console.WriteLine($"GetLastMonthSalesRevenueAsync - Sales from last month: {lastMonthSales.Count}");
+            
+            // Filter by company ID if provided
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                var beforeCount = lastMonthSales.Count;
+                lastMonthSales = lastMonthSales.Where(s => s.CompanyId == companyId).ToList();
+                var afterCount = lastMonthSales.Count;
+                
+                Console.WriteLine($"GetLastMonthSalesRevenueAsync - Filtered from {beforeCount} to {afterCount} records for company ID {companyId}");
+            }
+            
+            // Calculate sum
+            var sum = lastMonthSales.Sum(s => s.Amount);
+            Console.WriteLine($"GetLastMonthSalesRevenueAsync - Total sum: {sum}");
+            
+            return sum;
+        }
+
+        // Get yesterday's sales revenue for a company
+        public async Task<double> GetYesterdaySalesRevenueAsync(string? companyId = null)
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+            var yesterday = DateTime.Today.AddDays(-1);
+            
+            Console.WriteLine($"GetYesterdaySalesRevenueAsync - Total sales records: {sales.Count}");
+            Console.WriteLine($"GetYesterdaySalesRevenueAsync - Yesterday's date: {yesterday.ToString("yyyy-MM-dd")}");
+            
+            // Filter sales from yesterday
+            var yesterdaySales = sales.Where(s => s.SaleDate.Date == yesterday.Date).ToList();
+            Console.WriteLine($"GetYesterdaySalesRevenueAsync - Sales from yesterday: {yesterdaySales.Count}");
+            
+            // Filter by company ID if provided
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                var beforeCount = yesterdaySales.Count;
+                yesterdaySales = yesterdaySales.Where(s => s.CompanyId == companyId).ToList();
+                var afterCount = yesterdaySales.Count;
+                
+                Console.WriteLine($"GetYesterdaySalesRevenueAsync - Filtered from {beforeCount} to {afterCount} records for company ID {companyId}");
+            }
+            
+            // Calculate sum
+            var sum = yesterdaySales.Sum(s => s.Amount);
+            Console.WriteLine($"GetYesterdaySalesRevenueAsync - Total sum: {sum}");
+            
+            return sum;
+        }
+
+        // Get average order amount for a company
+        public async Task<double> GetAverageOrderAmountAsync(string? companyId = null)
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+            
+            Console.WriteLine($"GetAverageOrderAmountAsync - Total sales records: {sales.Count}");
+            Console.WriteLine($"GetAverageOrderAmountAsync - Looking for company ID: {companyId ?? "null"}");
+            
+            // Filter by company ID if provided
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                var beforeCount = sales.Count;
+                sales = sales.Where(s => s.CompanyId == companyId).ToList();
+                var afterCount = sales.Count;
+                
+                Console.WriteLine($"GetAverageOrderAmountAsync - Filtered from {beforeCount} to {afterCount} records for company ID {companyId}");
+            }
+            
+            // Calculate average
+            if (sales.Count == 0)
+            {
+                Console.WriteLine("GetAverageOrderAmountAsync - No sales found, returning 0");
+                return 0;
+            }
+            
+            var average = sales.Average(s => s.Amount);
+            Console.WriteLine($"GetAverageOrderAmountAsync - Average amount: {average}");
+            
+            return average;
+        }
+
         public async Task<List<double>> GetMonthlySalesAsync()
         {
             var sales = await _mongoDBService.GetAllSalesAsync();
@@ -215,6 +314,257 @@ namespace Backend.Services
         public async Task DeleteSaleAsync(string id)
         {
             await _mongoDBService.DeleteSaleAsync(id);
+        }
+
+        // Create test sales data for today (for testing purposes)
+        public async Task CreateTodayTestSalesAsync(string companyId)
+        {
+            var today = DateTime.Today;
+            var existingSalesToday = (await _mongoDBService.GetAllSalesAsync())
+                .Where(s => s.SaleDate.Date == today && s.CompanyId == companyId)
+                .ToList();
+
+            if (existingSalesToday.Count > 0)
+            {
+                Console.WriteLine($"Company {companyId} already has {existingSalesToday.Count} sales for today");
+                return;
+            }
+
+            var testSales = new List<Sale>
+            {
+                new Sale
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    SaleId = $"SALE_{companyId}_{today:yyyyMMdd}_001",
+                    OrderIds = new List<string> { $"ORD_{companyId}_{today:yyyyMMdd}_001" },
+                    Amount = 150.75,
+                    SaleDate = today.AddHours(9).AddMinutes(30), // 9:30 AM today
+                    CompanyId = companyId
+                },
+                new Sale
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    SaleId = $"SALE_{companyId}_{today:yyyyMMdd}_002",
+                    OrderIds = new List<string> { $"ORD_{companyId}_{today:yyyyMMdd}_002" },
+                    Amount = 89.99,
+                    SaleDate = today.AddHours(11).AddMinutes(15), // 11:15 AM today
+                    CompanyId = companyId
+                },
+                new Sale
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    SaleId = $"SALE_{companyId}_{today:yyyyMMdd}_003",
+                    OrderIds = new List<string> { $"ORD_{companyId}_{today:yyyyMMdd}_003" },
+                    Amount = 225.50,
+                    SaleDate = today.AddHours(14).AddMinutes(45), // 2:45 PM today
+                    CompanyId = companyId
+                },
+                new Sale
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    SaleId = $"SALE_{companyId}_{today:yyyyMMdd}_004",
+                    OrderIds = new List<string> { $"ORD_{companyId}_{today:yyyyMMdd}_004" },
+                    Amount = 75.25,
+                    SaleDate = today.AddHours(16).AddMinutes(20), // 4:20 PM today
+                    CompanyId = companyId
+                }
+            };
+
+            foreach (var sale in testSales)
+            {
+                await _mongoDBService.CreateSaleAsync(sale);
+            }
+
+            Console.WriteLine($"Created {testSales.Count} test sales for today for company {companyId}");
+            Console.WriteLine($"Total test sales amount: ${testSales.Sum(s => s.Amount):F2}");
+        }
+
+        // Get sales data by period for a specific company
+        public async Task<List<object>> GetSalesDataByPeriodAsync(string period, string? companyId = null)
+        {
+            var sales = await _mongoDBService.GetAllSalesAsync();
+            Console.WriteLine($"GetSalesDataByPeriodAsync - Total sales: {sales.Count}, Period: {period}, CompanyId: {companyId ?? "null"}");
+
+            // Filter by company ID if provided
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                var beforeCount = sales.Count;
+                sales = sales.Where(s => s.CompanyId == companyId).ToList();
+                Console.WriteLine($"GetSalesDataByPeriodAsync - Filtered from {beforeCount} to {sales.Count} records for company {companyId}");
+            }
+
+            var now = DateTime.UtcNow;
+            var result = new List<object>();
+
+            switch (period.ToLower())
+            {
+                case "month":
+                    // Current month - daily data (up to 31 days)
+                    var startOfMonth = new DateTime(now.Year, now.Month, 1);
+                    var daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
+                    
+                    for (int day = 1; day <= daysInMonth; day++)
+                    {
+                        var targetDate = new DateTime(now.Year, now.Month, day);
+                        var dailySales = sales.Where(s => s.SaleDate.Date == targetDate.Date).Sum(s => s.Amount);
+                        result.Add(new { 
+                            label = $"Day {day}", 
+                            date = targetDate.ToString("MMM dd"),
+                            value = dailySales 
+                        });
+                    }
+                    break;
+
+                case "threemonths":
+                    // Last 3 months - weekly data (12 weeks)
+                    var threeMonthsAgo = now.AddMonths(-3);
+                    for (int week = 0; week < 12; week++)
+                    {
+                        var weekStart = threeMonthsAgo.AddDays(week * 7);
+                        var weekEnd = weekStart.AddDays(6);
+                        var weeklySales = sales.Where(s => s.SaleDate.Date >= weekStart.Date && s.SaleDate.Date <= weekEnd.Date).Sum(s => s.Amount);
+                        result.Add(new { 
+                            label = $"Week {week + 1}", 
+                            date = $"{weekStart:MMM dd} - {weekEnd:MMM dd}",
+                            value = weeklySales 
+                        });
+                    }
+                    break;
+
+                case "sixmonths":
+                    // Last 6 months - monthly data
+                    for (int month = 5; month >= 0; month--)
+                    {
+                        var targetMonth = now.AddMonths(-month);
+                        var startOfTargetMonth = new DateTime(targetMonth.Year, targetMonth.Month, 1);
+                        var endOfTargetMonth = startOfTargetMonth.AddMonths(1).AddDays(-1);
+                        var monthlySales = sales.Where(s => s.SaleDate.Date >= startOfTargetMonth.Date && s.SaleDate.Date <= endOfTargetMonth.Date).Sum(s => s.Amount);
+                        result.Add(new { 
+                            label = targetMonth.ToString("MMM yyyy"), 
+                            date = targetMonth.ToString("MMM yyyy"),
+                            value = monthlySales 
+                        });
+                    }
+                    break;
+
+                case "year":
+                    // Current year - monthly data (12 months)
+                    for (int month = 1; month <= 12; month++)
+                    {
+                        var targetMonth = new DateTime(now.Year, month, 1);
+                        var monthStart = targetMonth;
+                        var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                        var monthlySales = sales.Where(s => s.SaleDate.Date >= monthStart.Date && s.SaleDate.Date <= monthEnd.Date).Sum(s => s.Amount);
+                        result.Add(new { 
+                            label = targetMonth.ToString("MMM"), 
+                            date = targetMonth.ToString("MMM yyyy"),
+                            value = monthlySales 
+                        });
+                    }
+                    break;
+
+                default:
+                    // Default to current month
+                    var defaultStartOfMonth = new DateTime(now.Year, now.Month, 1);
+                    var defaultDaysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
+                    
+                    for (int day = 1; day <= defaultDaysInMonth; day++)
+                    {
+                        var targetDate = new DateTime(now.Year, now.Month, day);
+                        var dailySales = sales.Where(s => s.SaleDate.Date == targetDate.Date).Sum(s => s.Amount);
+                        result.Add(new { 
+                            label = $"Day {day}", 
+                            date = targetDate.ToString("MMM dd"),
+                            value = dailySales 
+                        });
+                    }
+                    break;
+            }
+
+            Console.WriteLine($"GetSalesDataByPeriodAsync - Returning {result.Count} data points for period {period}");
+            return result;
+        }
+
+        // Create historical test sales data for a company (for testing chart functionality)
+        public async Task CreateHistoricalTestSalesAsync(string companyId)
+        {
+            var now = DateTime.UtcNow;
+            var existingHistoricalSales = (await _mongoDBService.GetAllSalesAsync())
+                .Where(s => s.CompanyId == companyId && s.SaleDate.Date < now.Date)
+                .ToList();
+
+            if (existingHistoricalSales.Count > 10) // If we already have some historical data
+            {
+                Console.WriteLine($"Company {companyId} already has {existingHistoricalSales.Count} historical sales");
+                return;
+            }
+
+            var historicalSales = new List<Sale>();
+
+            // Create sales data for the past 6 months
+            for (int month = 6; month >= 1; month--)
+            {
+                var targetMonth = now.AddMonths(-month);
+                var daysInMonth = DateTime.DaysInMonth(targetMonth.Year, targetMonth.Month);
+                
+                // Create 3-8 random sales per month
+                var salesPerMonth = new Random().Next(3, 9);
+                
+                for (int sale = 0; sale < salesPerMonth; sale++)
+                {
+                    var randomDay = new Random().Next(1, daysInMonth + 1);
+                    var saleDate = new DateTime(targetMonth.Year, targetMonth.Month, randomDay)
+                        .AddHours(new Random().Next(9, 18)) // Business hours
+                        .AddMinutes(new Random().Next(0, 60));
+                    
+                    var amount = new Random().NextDouble() * 800 + 100; // $100 - $900
+                    
+                    historicalSales.Add(new Sale
+                    {
+                        Id = ObjectId.GenerateNewId().ToString(),
+                        SaleId = $"SALE_{companyId}_{saleDate:yyyyMMdd}_{sale:D3}",
+                        OrderIds = new List<string> { $"ORD_{companyId}_{saleDate:yyyyMMdd}_{sale:D3}" },
+                        Amount = Math.Round(amount, 2),
+                        SaleDate = saleDate,
+                        CompanyId = companyId
+                    });
+                }
+            }
+
+            // Create some sales for the current month (excluding today which is handled separately)
+            var currentMonth = now;
+            var currentDaysInMonth = DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
+            var salesThisMonth = new Random().Next(5, 12);
+            
+            for (int sale = 0; sale < salesThisMonth; sale++)
+            {
+                var randomDay = new Random().Next(1, now.Day); // Only past days this month
+                if (randomDay == now.Day) continue; // Skip today
+                
+                var saleDate = new DateTime(currentMonth.Year, currentMonth.Month, randomDay)
+                    .AddHours(new Random().Next(9, 18))
+                    .AddMinutes(new Random().Next(0, 60));
+                
+                var amount = new Random().NextDouble() * 600 + 150; // $150 - $750
+                
+                historicalSales.Add(new Sale
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    SaleId = $"SALE_{companyId}_{saleDate:yyyyMMdd}_{sale:D3}",
+                    OrderIds = new List<string> { $"ORD_{companyId}_{saleDate:yyyyMMdd}_{sale:D3}" },
+                    Amount = Math.Round(amount, 2),
+                    SaleDate = saleDate,
+                    CompanyId = companyId
+                });
+            }
+
+            foreach (var sale in historicalSales)
+            {
+                await _mongoDBService.CreateSaleAsync(sale);
+            }
+
+            Console.WriteLine($"Created {historicalSales.Count} historical test sales for company {companyId}");
+            Console.WriteLine($"Date range: {historicalSales.Min(s => s.SaleDate):yyyy-MM-dd} to {historicalSales.Max(s => s.SaleDate):yyyy-MM-dd}");
         }
     }
 }

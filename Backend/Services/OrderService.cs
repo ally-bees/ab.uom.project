@@ -86,6 +86,40 @@ namespace Backend.Services
             return count;
         }
 
+        public async Task<double> GetYesterdayOrdersAsync(string? companyId = null)
+        {
+            var bsonOrders = await _ordersCollection.Find(_ => true).ToListAsync();
+
+            // Parse manually from raw BSON to get the correct orderDate string
+            var yesterday = DateTime.Today.AddDays(-1);
+            int count = 0;
+
+            foreach (var bsonOrder in bsonOrders)
+            {
+                var rawDoc = bsonOrder.ToBsonDocument();
+                var orderDateValue = rawDoc.GetValue("orderDate", null);
+                
+                // Check company ID if provided
+                bool companyMatches = true;
+                if (!string.IsNullOrEmpty(companyId))
+                {
+                    var orderCompanyId = rawDoc.GetValue("companyId", null)?.ToString();
+                    companyMatches = orderCompanyId == companyId;
+                }
+
+                if (companyMatches && orderDateValue != null && DateTime.TryParse(orderDateValue.ToString(), out var parsedDate))
+                {
+                    if (parsedDate.Date == yesterday)
+                        count++;
+                }
+            }
+
+            Console.WriteLine($"GetYesterdayOrdersAsync - Found {count} orders for yesterday {yesterday.ToString("yyyy-MM-dd")} " + 
+                             (companyId != null ? $"for company ID {companyId}" : "across all companies"));
+
+            return count;
+        }
+
 
 public async Task<Dictionary<string, int>> GetOrderCountsByStatusesAndCompanyAsync(List<string> statuses, string companyId)
 {

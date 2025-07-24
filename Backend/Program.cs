@@ -68,6 +68,7 @@ builder.Services.AddSingleton<InventoryService>();
 builder.Services.AddSingleton<ExpenseService>();
 builder.Services.AddSingleton<FinanceService>();
 builder.Services.AddSingleton<AutomationService>();
+builder.Services.AddSingleton<DeviceCategoryService>();
 builder.Services.AddSingleton<ReportGenerator>();
 builder.Services.AddSingleton<ReportJobService>();
 builder.Services.AddSingleton<SalesAccessService>();
