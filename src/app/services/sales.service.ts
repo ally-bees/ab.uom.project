@@ -37,11 +37,35 @@ export class SalesService {
   }
 
   getTotalSalesRevenue(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/Sales/total-revenue`);
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
+    
+    console.log('SalesService - getTotalSalesRevenue - Current User:', currentUser);
+    console.log('SalesService - getTotalSalesRevenue - Company ID:', companyId);
+    
+    // Hard-coded company ID for testing if none is available
+    const finalCompanyId = companyId || 'C00001'; // Default to a known company ID if none found
+    
+    const url = `${this.apiUrl}/Sales/total-revenue?companyId=${finalCompanyId}`;
+    console.log('Calling API with URL:', url);
+    
+    return this.http.get<number>(url);
   }
 
   getTodaySalesRevenue(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/Sales/today-cost`);
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
+    
+    console.log('SalesService - getTodaySalesRevenue - Current User:', currentUser);
+    console.log('SalesService - getTodaySalesRevenue - Company ID:', companyId);
+    
+    // Hard-coded company ID for testing if none is available
+    const finalCompanyId = companyId || 'C00001'; // Default to a known company ID if none found
+    
+    const url = `${this.apiUrl}/Sales/today-cost?companyId=${finalCompanyId}`;
+    console.log('Calling API with URL:', url);
+    
+    return this.http.get<number>(url);
   }
 
   getSalesByYear(year: number): Observable<Sale[]> {

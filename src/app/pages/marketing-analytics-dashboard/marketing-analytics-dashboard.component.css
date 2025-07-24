@@ -373,7 +373,7 @@ app-analyticssidebar {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -383,10 +383,10 @@ app-analyticssidebar {
 .modal-content {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 1200px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -396,8 +396,15 @@ app-analyticssidebar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #E5E7EB;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
 }
 
 .modal-body {
@@ -410,7 +417,17 @@ app-analyticssidebar {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #6B7280;
+  color: #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.close-modal-btn:hover {
+  background-color: #F3F4F6;
 }
 
 .see-all {
@@ -430,20 +447,56 @@ app-analyticssidebar {
 
 .campaign-details-table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
+  background-color: white;
 }
 
-.campaign-details-table th,
-.campaign-details-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #E5E7EB;
+.campaign-details-table thead tr {
+  background-color: #00BCD4;
+  color: white;
+  font-size: 15px;
 }
 
 .campaign-details-table th {
+  padding: 12px 15px;
+  text-align: left;
   font-weight: 500;
-  color: #6B7280;
-  background-color: #F9FAFB;
+  color: white;
+  background-color: #00BCD4;
+}
+
+.campaign-details-table td {
+  padding: 10px 15px;
+  text-align: left;
+  border-top: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #1F2937;
+}
+
+.campaign-details-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.campaign-details-table tbody td:nth-child(odd) {
+  background-color: #e3f6fc;
+}
+
+.campaign-details-table .campaign-info {
+  display: flex;
+  align-items: center;
+}
+
+.campaign-details-table .campaign-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: white;
+  font-size: 14px;
 }
 
 /* Responsive */
@@ -542,4 +595,21 @@ app-analyticssidebar {
   .chart-container {
     height: 160px;
   }
+}
+
+/* No data message styling */
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.no-data-message p {
+  color: #666;
+  font-size: 16px;
+  text-align: center;
 }

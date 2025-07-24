@@ -37,20 +37,31 @@ namespace Backend.Controllers
         }
 
         [HttpGet("total-revenue")]
-        public async Task<IActionResult> GetTotalRevenue()
+        public async Task<IActionResult> GetTotalRevenue([FromQuery] string? companyId = null)
         {
-            var totalRevenue = await _salesService.GetTotalSalesCostAsync();
+            Console.WriteLine($"SalesController - GetTotalRevenue - Received companyId: {companyId ?? "null"}");
+            
+            var sales = await _salesService.GetAllSalesAsync();
+            Console.WriteLine($"SalesController - GetTotalRevenue - Total number of sales records: {sales.Count}");
+            
+            var totalRevenue = await _salesService.GetTotalSalesCostAsync(companyId);
+            Console.WriteLine($"SalesController - GetTotalRevenue - Calculated total revenue: {totalRevenue} for companyId: {companyId ?? "null"}");
+            
             if(totalRevenue == 0)
                 return Ok(0);
             return Ok(totalRevenue);
         }
 
         [HttpGet("today-cost")]
-        public async Task<IActionResult> GetTodayRevenue()
+        public async Task<IActionResult> GetTodayRevenue([FromQuery] string? companyId = null)
         {
-            var todayRevenue = await _salesService.GetTodaySalesRevenueAsync();
-            if(todayRevenue == 0)
-                return Ok(0);
+            Console.WriteLine($"SalesController - GetTodayRevenue - Received companyId: {companyId ?? "null"}");
+            Console.WriteLine($"SalesController - GetTodayRevenue - Looking for sales on: {DateTime.Today.ToString("yyyy-MM-dd")}");
+            
+            var todayRevenue = await _salesService.GetTodaySalesRevenueAsync(companyId);
+            Console.WriteLine($"SalesController - GetTodayRevenue - Calculated today revenue: {todayRevenue} for companyId: {companyId ?? "null"}");
+            
+            // Return the exact amount, even if it's 0
             return Ok(todayRevenue);
         }
 

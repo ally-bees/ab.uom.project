@@ -71,20 +71,71 @@ namespace Backend.Services
             };
         }
 
-        // Get total sales Revenue
-        public async Task<double> GetTotalSalesCostAsync()
+        // Get total sales Revenue for a company
+        public async Task<double> GetTotalSalesCostAsync(string? companyId = null)
         {
             var sales = await _mongoDBService.GetAllSalesAsync();
-            return sales.Sum(s=> s.Amount);
+            
+            // Debug the sales data
+            Console.WriteLine($"GetTotalSalesCostAsync - Total sales records: {sales.Count}");
+            Console.WriteLine($"GetTotalSalesCostAsync - Looking for company ID: {companyId ?? "null"}");
+            
+            // Show some sample company IDs from the data
+            var sampleCompanyIds = sales.Take(5).Select(s => s.CompanyId).Distinct();
+            Console.WriteLine($"GetTotalSalesCostAsync - Sample company IDs in data: {string.Join(", ", sampleCompanyIds)}");
+            
+            // Filter by company ID if provided
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                var beforeCount = sales.Count;
+                sales = sales.Where(s => s.CompanyId == companyId).ToList();
+                var afterCount = sales.Count;
+                
+                Console.WriteLine($"GetTotalSalesCostAsync - Filtered from {beforeCount} to {afterCount} records for company ID {companyId}");
+            }
+            
+            // Calculate sum
+            var sum = sales.Sum(s => s.Amount);
+            Console.WriteLine($"GetTotalSalesCostAsync - Total sum: {sum}");
+            
+            return sum;
         }
 
-        // Get today sales Revenue
-        public async Task<double> GetTodaySalesRevenueAsync()
+        // Get today sales Revenue for a company
+        public async Task<double> GetTodaySalesRevenueAsync(string? companyId = null)
         {
             var sales = await _mongoDBService.GetAllSalesAsync();
-            return sales
-                .Where(s=> s.SaleDate.Date == DateTime.Today)
-                .Sum(s => s.Amount);
+            
+            Console.WriteLine($"GetTodaySalesRevenueAsync - Total sales records: {sales.Count}");
+            Console.WriteLine($"GetTodaySalesRevenueAsync - Today's date: {DateTime.Today.ToString("yyyy-MM-dd")}");
+            
+            // Filter by today's date - ONLY today's date, no fallback to other dates
+            var todaySales = sales.Where(s => s.SaleDate.Date == DateTime.Today).ToList();
+            Console.WriteLine($"GetTodaySalesRevenueAsync - Sales from today: {todaySales.Count}");
+            
+            // Check for debug purposes if we actually have data
+            if (todaySales.Count == 0)
+            {
+                Console.WriteLine("GetTodaySalesRevenueAsync - WARNING: No sales found for today's date.");
+                // Return 0 if there are no sales today
+                // This is intentional - we want the exact revenue of today's sales
+            }
+            
+            // Filter by company ID if provided
+            if (!string.IsNullOrEmpty(companyId))
+            {
+                var beforeCount = todaySales.Count;
+                todaySales = todaySales.Where(s => s.CompanyId == companyId).ToList();
+                var afterCount = todaySales.Count;
+                
+                Console.WriteLine($"GetTodaySalesRevenueAsync - Filtered from {beforeCount} to {afterCount} records for company ID {companyId}");
+            }
+            
+            // Calculate sum
+            var sum = todaySales.Sum(s => s.Amount);
+            Console.WriteLine($"GetTodaySalesRevenueAsync - Total sum: {sum}");
+            
+            return sum;
         }
 
         public async Task<List<double>> GetMonthlySalesAsync()

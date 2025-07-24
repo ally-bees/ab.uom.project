@@ -52,7 +52,7 @@ namespace Backend.Services
             return group.ToDictionary(x => x.Status, x => x.Count);
         }
 
-        public async Task<double> GetTodayOrdersAsync()
+        public async Task<double> GetTodayOrdersAsync(string? companyId = null)
         {
             var bsonOrders = await _ordersCollection.Find(_ => true).ToListAsync();
 
@@ -64,13 +64,24 @@ namespace Backend.Services
             {
                 var rawDoc = bsonOrder.ToBsonDocument();
                 var orderDateValue = rawDoc.GetValue("orderDate", null);
+                
+                // Check company ID if provided
+                bool companyMatches = true;
+                if (!string.IsNullOrEmpty(companyId))
+                {
+                    var orderCompanyId = rawDoc.GetValue("companyId", null)?.ToString();
+                    companyMatches = orderCompanyId == companyId;
+                }
 
-                if (orderDateValue != null && DateTime.TryParse(orderDateValue.ToString(), out var parsedDate))
+                if (companyMatches && orderDateValue != null && DateTime.TryParse(orderDateValue.ToString(), out var parsedDate))
                 {
                     if (parsedDate.Date == today)
                         count++;
                 }
             }
+
+            Console.WriteLine($"GetTodayOrdersAsync - Found {count} orders for today {today.ToString("yyyy-MM-dd")} " + 
+                             (companyId != null ? $"for company ID {companyId}" : "across all companies"));
 
             return count;
         }

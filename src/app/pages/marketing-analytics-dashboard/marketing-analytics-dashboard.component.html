@@ -7,26 +7,27 @@
         <div class="stat-label">Total Revenue</div>
         <div class="stat-value">${{ revenue | number:'1.2-2' }}</div>
         <div class="stat-metric">
-          <!--<span class="trend-up">↑ {{ revenueGrowth }}%</span>
-          <span class="stat-period">Week of {{ weekDate }}</span>-->
+          <span class="stat-period">All-time company sales</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Today Revenue</div>
-        <div class="stat-value">${{ todayRevenue | number:'1.2-2' }}</div>
+        <div class="stat-value" *ngIf="todayRevenueAvailable">${{ todayRevenue | number:'1.2-2' }}</div>
+        <div class="stat-value" *ngIf="!todayRevenueAvailable">$0.00</div>
         <div class="stat-metric">
-          <!--<span class="trend-down">↓ {{ todayRevenueChange }}%</span>
-          <div class="stat-period">{{ todayOrders }} Orders</div>-->
+          <span class="stat-period" *ngIf="todayRevenueAvailable">{{ currentDate | date:'mediumDate' }}</span>
+          <span class="stat-period" *ngIf="!todayRevenueAvailable">No sales today</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Today Orders</div>
-        <div class="stat-value">{{ todaySessions }}</div>
+        <div class="stat-value" *ngIf="todayOrdersAvailable">{{ todaySessions }}</div>
+        <div class="stat-value" *ngIf="!todayOrdersAvailable">0</div>
         <div class="stat-metric">
-          <!--<span class="trend-up">↑ {{ todaySessionsChange }}%</span>
-          <div class="stat-period">{{ todayVisitors }} Visitors</div>-->
+          <span class="stat-period" *ngIf="todayOrdersAvailable">{{ currentDate | date:'mediumDate' }}</span>
+          <span class="stat-period" *ngIf="!todayOrdersAvailable">No orders today</span>
         </div>
       </div>
 
@@ -88,35 +89,40 @@
       <div class="chart-card campaign-performance">
         <div class="card-header">
           <h2>Campaign Performance</h2>
-          <div class="see-all" (click)="showAllCampaignsModal()">See All</div>
+          <div class="see-all" *ngIf="campaigns && campaigns.length > 3" (click)="showAllCampaignsModal()">See All</div>
         </div>
-        <table class="campaign-table">
-          <thead>
-            <tr>
-              <th>Campaign</th>
-              <th>Impressions</th>
-              <th>Clicks</th>
-              <th>CPC</th>
-              <th>Spend</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let campaign of campaigns.slice(0, 3)">
-              <td>
-                <div class="campaign-info">
-                  <div class="campaign-icon" [ngStyle]="{ 'background-color': campaign.color }">
-                    <span>{{ campaign.icon }}</span>
+        <div *ngIf="campaigns && campaigns.length > 0">
+          <table class="campaign-table">
+            <thead>
+              <tr>
+                <th>Campaign</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>CPC</th>
+                <th>Spend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let campaign of campaigns | slice:0:3">
+                <td>
+                  <div class="campaign-info">
+                    <div class="campaign-icon" [ngStyle]="{ 'background-color': campaign.color }">
+                      <span>{{ campaign.icon }}</span>
+                    </div>
+                    <span>{{ campaign.name }}</span>
                   </div>
-                  <span>{{ campaign.name }}</span>
-                </div>
-              </td>
-              <td>{{ campaign.impressions }}</td>
-              <td>{{ campaign.clicks }}%</td>
-              <td>${{ campaign.cpc }}</td>
-              <td>${{ campaign.spend }}</td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+                <td>{{ campaign.impressions }}</td>
+                <td>{{ campaign.clicks }}%</td>
+                <td>${{ campaign.cpc }}</td>
+                <td>${{ campaign.spend }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-message" *ngIf="!campaigns || campaigns.length === 0">
+          <p>Loading campaign data...</p>
+        </div>
       </div>
 
       <div class="chart-card top-countries">
@@ -141,7 +147,7 @@
           <button class="close-modal-btn" (click)="showAllCampaigns = false">×</button>
         </div>
         <div class="modal-body">
-          <div class="table-container">
+          <div class="table-container" *ngIf="campaigns && campaigns.length > 0">
             <table class="campaign-details-table">
               <thead>
                 <tr>
@@ -150,6 +156,7 @@
                   <th>Clicks</th>
                   <th>CPC</th>
                   <th>Spend</th>
+                  <th>Company ID</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,9 +173,13 @@
                   <td>{{ campaign.clicks }}%</td>
                   <td>${{ campaign.cpc }}</td>
                   <td>${{ campaign.spend }}</td>
+                  <td>{{ campaign.companyId || 'N/A' }}</td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div class="no-data-message" *ngIf="!campaigns || campaigns.length === 0">
+            <p>Loading campaign data...</p>
           </div>
         </div>
       </div>

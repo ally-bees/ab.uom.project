@@ -15,6 +15,7 @@ import { Inject } from '@angular/core';
 import { MarketingCampaignService, CampaignPerformance } from '../../services/campaign.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MarketingDashboardService } from '../../services/marketing-dashboard.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-marketing-analytics-dashboard',
@@ -28,15 +29,18 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
   @ViewChild('salesFunnelChart') salesFunnelChart!: ElementRef;
 
   // Statistics
-  revenue: number = 0;
-  revenueGrowth: number = 8.5;
+  revenue: number = 0; // Will be filled with real data from the API
+  revenueGrowth: number = 8.5; 
   weekDate: string = 'Jul 14, 20';
+  currentDate: Date = new Date(); // Today's date for display
 
-  todayRevenue: number = 2868.99;
+  todayRevenue: number = 0; // Will be filled with real data from the API
+  todayRevenueAvailable: boolean = false; // Whether there are any sales today
   todayRevenueChange: number = 5.59;
   todayOrders: number = 143;
 
-  todaySessions: number = 120;
+  todaySessions: number = 0;
+  todayOrdersAvailable: boolean = false; // Whether there are any orders today
   todaySessionsChange: number = 3.12;
   todayVisitors: number = 524;
 
@@ -67,6 +71,7 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
   tabletPercentage: number = 0.82;
 
   campaigns: CampaignPerformance[] = [];
+  campaignsAvailable: boolean = false;
 
   topCountries = [
     { name: '', code: '', percentage: 0 },
@@ -93,17 +98,50 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
     private courierService: CourierService,
     private orderService: OrdersService,
     private marketingCampaignService: MarketingCampaignService,
-    private marketingService: MarketingDashboardService
+    private marketingService: MarketingDashboardService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    console.log('ngOnInit - Starting initialization');
+    
+    // Set initial placeholder values
+    this.revenue = 1;      // Temporary placeholder
+    this.todayRevenue = 1; // Temporary placeholder
+    
+    // Check if user authentication is loaded
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      console.log('User already authenticated, loading data immediately');
+      this.loadAllDashboardData();
+    } else {
+      console.log('Waiting for user authentication before loading data');
+      // Subscribe to auth changes to ensure we have the user data before loading campaign data
+      this.authService.currentUser$.subscribe(user => {
+        if (user) {
+          console.log('User authenticated, loading data', user);
+          this.loadAllDashboardData();
+        }
+      });
+    }
+  }
+  
+  loadAllDashboardData(): void {
+    // Load all the data
     this.loadInitialData();
     this.loadChartData();
-    this.loadCampaignData(); // Add this
+    this.loadCampaignData();
 
+    // Get customer count for current company
     this.marketingService.getCustomerCount().subscribe({
-      next: count => this.customerCount = count,
-      error: () => this.customerCount = 0
+      next: count => {
+        this.customerCount = count;
+        console.log('Customer count loaded for company:', count);
+      },
+      error: (err) => {
+        console.error('Error fetching customer count:', err);
+        this.customerCount = 0;
+      }
     });
   }
 
@@ -121,27 +159,48 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
   }
 
   private loadInitialData(): void {
-    // Load non-chart data
+    // Get user details and company ID from auth service
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
+    
+    console.log('Current user from auth service:', currentUser);
+    console.log('Company ID from auth service:', companyId);
+    
+    // If there's no company ID, try to reload the user info
+    if (!companyId) {
+      console.warn('No company ID available from auth service, checking local storage...');
+    }
+    
+    // Load non-chart data - Total revenue using company ID filter
     this.salesService.getTotalSalesRevenue().subscribe({
       next: (data) => {
         this.revenue = data;
-        console.log('Total revenue loaded:', data);
+        console.log('Total revenue loaded for company:', data);
       },
-      error: (error) => console.error("Error fetching total sales revenue:", error)
+      error: (error) => {
+        console.error("Error fetching total sales revenue:", error);
+        this.revenue = 0; // Fallback value
+      }
     });
 
+    // Today's revenue using company ID filter - EXACT today's sales only
     this.salesService.getTodaySalesRevenue().subscribe({
       next: (data) => {
         this.todayRevenue = data;
-        console.log('Today revenue loaded:', data);
+        this.todayRevenueAvailable = data > 0;
+        console.log('Today revenue loaded for company:', data);
       },
-      error: (error) => console.error("Error fetching today's sales revenue:", error)
+      error: (error) => {
+        console.error("Error fetching today's sales revenue:", error);
+        this.todayRevenue = 0; // Fallback value
+        this.todayRevenueAvailable = false;
+      }
     });
 
-    // Replace 'yourCompanyId' with the actual company ID from localStorage
-    const companyId = localStorage.getItem('companyId') || '';
-    if (companyId) {
-      this.courierService.getTopCountries(companyId).subscribe({
+    // Get current user's company ID from auth service
+    const userCompanyId = this.authService.getCurrentUser()?.CompanyId || '';
+    if (userCompanyId) {
+      this.courierService.getTopCountries(userCompanyId).subscribe({
         next: (data) => {
           this.topCountries = data.map((item) => ({
             name: item.name,
@@ -170,12 +229,18 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
       ];
     }
 
+    // Get today's orders count for current company
     this.orderService.getTodayOrdersCount().subscribe({
       next: (data) => {
         this.todaySessions = data;
-        console.log('Today sessions loaded:', data);
+        this.todayOrdersAvailable = data > 0;
+        console.log('Today orders count loaded for company:', data);
       },
-      error: (error) => console.error("Error fetching today's orders count:", error)
+      error: (error) => {
+        console.error("Error fetching today's orders count:", error);
+        this.todaySessions = 0;
+        this.todayOrdersAvailable = false;
+      }
     });
   }
 
@@ -239,18 +304,120 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
 
   // Add this method
   loadCampaignData(): void {
-    this.marketingCampaignService.getCampaignPerformance().subscribe((campaigns: CampaignPerformance[]) => {
-      this.campaigns = campaigns;
-      
-      // Add default icon/color if not provided
-      this.campaigns = this.campaigns.map(campaign => ({
-        ...campaign,
-        icon: campaign.icon || campaign.name.charAt(0),
-        color: campaign.color || this.getRandomColor()
-      }));
-      
-      console.log('Campaign data loaded:', this.campaigns);
+    console.log('Starting to load campaign data');
+    const currentUser = this.authService.getCurrentUser();
+    console.log('Current user in component:', currentUser);
+    
+    // Get the current user's company ID
+    const companyId = currentUser?.CompanyId;
+    console.log('Using company ID for campaign data:', companyId);
+    
+    if (!companyId) {
+      console.warn('No company ID available for user. Using sample data.');
+      this.addSampleCampaignData();
+      return;
+    }
+    
+    this.marketingCampaignService.getCampaignPerformanceByCompanyId(companyId).subscribe({
+      next: (campaigns: CampaignPerformance[]) => {
+        console.log('Raw campaign data received for company ' + companyId + ':', campaigns);
+        this.campaigns = campaigns;
+        
+        // Add default icon/color if not provided, preserve companyId
+        this.campaigns = this.campaigns.map(campaign => ({
+          ...campaign,
+          icon: campaign.icon || campaign.name.charAt(0),
+          color: campaign.color || this.getRandomColor(),
+          companyId: campaign.companyId || companyId // Ensure companyId is preserved
+        }));
+        
+        console.log('Campaign data processed:', this.campaigns);
+        this.campaignsAvailable = this.campaigns.length > 0;
+        
+        // If no campaigns available, add a placeholder for better UI experience
+        if (!this.campaignsAvailable) {
+          console.log('No campaigns available for company ' + companyId + ', adding sample data');
+          this.addSampleCampaignData();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading campaign data:', error);
+        this.campaignsAvailable = false;
+        this.addSampleCampaignData(); // Add sample data on error
+      }
     });
+  }
+  
+  // Add sample campaign data when no data is available
+  addSampleCampaignData(): void {
+    // Get current user's company ID for the sample data
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId || 'SAMPLE_COMPANY';
+    
+    this.campaigns = [
+      {
+        name: 'TikTok Engagement',
+        impressions: '287K',
+        clicks: '13.0',
+        cpc: '12.12',
+        spend: '845,123.12',
+        icon: 'T',
+        color: '#ff0050',
+        companyId: companyId
+      },
+      {
+        name: 'Facebook Promotion',
+        impressions: '156K',
+        clicks: '8.2',
+        cpc: '5.45',
+        spend: '65,432.21',
+        icon: 'F',
+        color: '#1877f2',
+        companyId: companyId
+      },
+      {
+        name: 'Google Ads',
+        impressions: '412K',
+        clicks: '15.3',
+        cpc: '7.89',
+        spend: '120,876.43',
+        icon: 'G',
+        color: '#4285f4',
+        companyId: companyId
+      },
+      {
+        name: 'Instagram Stories',
+        impressions: '198K',
+        clicks: '11.0',
+        cpc: '8.23',
+        spend: '89,543.67',
+        icon: 'I',
+        color: '#E4405F',
+        companyId: companyId
+      },
+      {
+        name: 'LinkedIn B2B',
+        impressions: '98K',
+        clicks: '9.0',
+        cpc: '15.67',
+        spend: '156,789.34',
+        icon: 'L',
+        color: '#0077B5',
+        companyId: companyId
+      },
+      {
+        name: 'Twitter Promoted',
+        impressions: '234K',
+        clicks: '7.0',
+        cpc: '6.78',
+        spend: '42,156.89',
+        icon: 'T',
+        color: '#1DA1F2',
+        companyId: companyId
+      }
+    ];
+    this.campaignsAvailable = true;
+    console.log('Sample campaign data added for company:', companyId, this.campaigns);
   }
 
   initSalesFunnelChart(): void {
@@ -374,7 +541,56 @@ export class MarketingAnalyticsDashboardComponent implements OnInit, AfterViewIn
 
   // Add "See All" functionality
   showAllCampaignsModal(): void {
-    this.showAllCampaigns = true;
+    console.log('Opening campaign modal, refreshing data...');
+    
+    // Get current user's company ID
+    const currentUser = this.authService.getCurrentUser();
+    const companyId = currentUser?.CompanyId;
+    
+    if (companyId) {
+      console.log('Loading all campaigns for company:', companyId);
+      
+      // Fetch ALL campaigns for the current user's company (using the new method)
+      this.marketingCampaignService.getAllCampaignsByCompanyId(companyId).subscribe({
+        next: (campaigns: CampaignPerformance[]) => {
+          console.log('All campaigns loaded for modal:', campaigns);
+          
+          // Update campaigns with proper icons, colors, and preserve companyId
+          this.campaigns = campaigns.map(campaign => ({
+            ...campaign,
+            icon: campaign.icon || campaign.name.charAt(0),
+            color: campaign.color || this.getRandomColor(),
+            companyId: campaign.companyId || companyId // Ensure companyId is preserved
+          }));
+          
+          this.campaignsAvailable = this.campaigns.length > 0;
+          
+          // If no campaigns available, add sample data
+          if (!this.campaignsAvailable) {
+            console.log('No campaigns found for company, adding sample data');
+            this.addSampleCampaignData();
+          }
+          
+          // Show the modal
+          this.showAllCampaigns = true;
+        },
+        error: (error) => {
+          console.error('Error loading campaigns for modal:', error);
+          // Still show modal with existing data or sample data
+          if (!this.campaignsAvailable) {
+            this.addSampleCampaignData();
+          }
+          this.showAllCampaigns = true;
+        }
+      });
+    } else {
+      console.warn('No company ID available, showing existing campaigns');
+      // If no company ID, just show existing data or sample data
+      if (!this.campaignsAvailable) {
+        this.addSampleCampaignData();
+      }
+      this.showAllCampaigns = true;
+    }
   }
   
   closeAllCampaignsModal(event: MouseEvent): void {
