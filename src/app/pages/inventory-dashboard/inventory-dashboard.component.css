@@ -90,49 +90,71 @@
 
 /* Horizontal Summary Cards */
 .summary-cards-horizontal {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 0;
+  margin-top: 15px;
 }
 
 .summary-card {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  color: #4a4f52;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 1rem;
   text-align: center;
-  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  border-left: 6px solid #bbdefb;
+  margin-bottom: 30px;
 }
-
+.summary-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
 .summary-card h3 {
-  margin: 0;
-  font-size: 25px;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 0rem;
+  color: #555;
 }
-
 .summary-card .count {
-  font-size: 50px;
+  font-size: 2.2rem;
   font-weight: bold;
-  margin: 10px 0px 15px 0px;
+  margin: 5px 0px;
 }
-
 .summary-card .label {
   font-size: 14px;
   color: #4a4f52;
 }
-
 .in-stock-box {
-  background-color: #94baff;
+  background: linear-gradient(135deg, #f9fdff 0%, #d1eaff 100%);
+  border-left: 6px solid #bbdefb;
 }
-
 .low-stock-box {
-  background-color: #fff59b;
+  background: linear-gradient(135deg, #fffcf6 0%, #ffeaca 100%);
+  border-left: 6px solid #ffe0b2;
 }
-
 .out-of-stock-box {
-  background-color: #ffa3ab;
+  background: linear-gradient(135deg, #fff9fa 0%, #ffd6db 100%);
+  border-left: 6px solid #ffa3ab;
+}
+.in-stock-box .count {
+  color: #0095c7;
+}
+.low-stock-box .count {
+  color: #ec8836;
+}
+.out-of-stock-box .count {
+  color: #e53935;
+}
+.in-stock-box h3 {
+  color: #006688;
+}
+.low-stock-box h3 {
+  color: #9e5b25;
+}
+.out-of-stock-box h3 {
+  color: #8e2422;
 }
 
 /* Table Section */
@@ -171,7 +193,7 @@
 }
 
 .product-list {
-  max-height: 600px; 
+  max-height: 700px; 
   overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 8px;

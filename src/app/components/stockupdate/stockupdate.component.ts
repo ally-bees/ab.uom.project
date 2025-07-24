@@ -3,6 +3,7 @@ import { InventoryService } from '../../services/inventory.service';
 import { product } from '../../models/product.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stockupdate',
@@ -17,7 +18,10 @@ export class StockupdateComponent implements OnInit {
   message: string = '';
   loading: boolean = false;
 
-  constructor(private inventoryService: InventoryService) {}
+  constructor(
+    private inventoryService: InventoryService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.inventoryService.getInventoryByCompany().subscribe({
@@ -52,5 +56,9 @@ export class StockupdateComponent implements OnInit {
         setTimeout(() => this.message = '', 2500);
       }
     });
+  }
+
+  goBack(): void {
+    this.router.navigate(['../']);
   }
 }
