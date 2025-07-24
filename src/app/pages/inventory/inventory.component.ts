@@ -37,7 +37,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   }
 
   loadProducts(): void {
-    this.inventoryService.getAllProducts().subscribe({
+    this.inventoryService.getInventoryByCompany().subscribe({
       next: (data: product[]) => {
         this.products = data;
         this.calculateStockCounts();
@@ -75,11 +75,22 @@ export class InventoryComponent implements OnInit, AfterViewInit {
 
   filteredProducts(): product[] {
     const term = this.searchTerm.toLowerCase();
-    if (!term) return this.products; // If no search term, return all products
-    return this.products.filter(product =>
-      product.name.toLowerCase().includes(term) ||
-      product.category.toLowerCase().includes(term)
-    );
+    let filtered = this.products;
+    if (term) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(term) ||
+        product.category.toLowerCase().includes(term)
+      );
+    }
+    // Sort: Out of Stock first, then Low Stock, then In Stock
+    return filtered.sort((a, b) => {
+      const getStatusOrder = (p: product) => {
+        if (p.stockQuantity === 0) return 0; // Out of Stock
+        if (p.stockQuantity <= 20) return 1; // Low Stock
+        return 2; // In Stock
+      };
+      return getStatusOrder(a) - getStatusOrder(b);
+    });
   }
 
   initializeChart(): void {
