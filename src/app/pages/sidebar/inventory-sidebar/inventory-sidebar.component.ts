@@ -33,6 +33,11 @@ export class inventorySidebarComponent {
       this.router.navigate([route]);
     }
   }
+
+  goToDashboard(): void {
+    this.activeMenuItem = 'dashboard';
+    this.router.navigate(['inventorymanager/inventoryDashboard']);
+  }
   
   scheduleReport(): void {
     // Logic for schedule report

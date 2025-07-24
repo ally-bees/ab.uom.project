@@ -135,3 +135,27 @@
       }
     }
   }
+
+.dashboard-btn {
+  background-color: #ffffff;
+  color: #00bcd4;
+  border: 1px solid #00bcd4;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+}
+.dashboard-btn i {
+  margin-right: 8px;
+}
+.dashboard-btn:hover {
+  background-color: #00bcd4;
+  color: #ffffff;
+}
