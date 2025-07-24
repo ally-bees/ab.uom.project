@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
 import Chart from 'chart.js/auto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inventory',
@@ -26,7 +27,12 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   lowStockCount = 0;
   outOfStockCount = 0;
 
-  constructor(private inventoryService: InventoryService) {}
+  showStockModal = false;
+  selectedProduct: product | null = null;
+  modalAddQuantity: number = 0;
+  modalMessage: string = '';
+
+  constructor(private inventoryService: InventoryService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -116,6 +122,43 @@ export class InventoryComponent implements OnInit, AfterViewInit {
         plugins: {
           legend: { display: false }
         }
+      }
+    });
+  }
+
+  goToStockUpdate() {
+    this.router.navigate(['/businessowner/stockupdate']);
+  }
+
+  openStockModal(product: product) {
+    this.selectedProduct = product;
+    this.modalAddQuantity = 0;
+    this.modalMessage = '';
+    this.showStockModal = true;
+  }
+
+  closeStockModal() {
+    this.showStockModal = false;
+    this.selectedProduct = null;
+    this.modalAddQuantity = 0;
+    this.modalMessage = '';
+  }
+
+  confirmStockUpdate() {
+    if (!this.selectedProduct || !this.modalAddQuantity || this.modalAddQuantity <= 0) {
+      this.modalMessage = 'Please enter a valid quantity.';
+      return;
+    }
+    const productId = this.selectedProduct.productId;
+    this.inventoryService.updateProductStock(productId, this.modalAddQuantity).subscribe({
+      next: () => {
+        this.modalMessage = 'Stock updated successfully!';
+        // Update the product in the table
+        this.selectedProduct!.stockQuantity += this.modalAddQuantity;
+        setTimeout(() => this.closeStockModal(), 1200);
+      },
+      error: () => {
+        this.modalMessage = 'Failed to update stock.';
       }
     });
   }
