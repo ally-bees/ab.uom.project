@@ -72,6 +72,8 @@ builder.Services.AddSingleton<DeviceCategoryService>();
 builder.Services.AddSingleton<ReportGenerator>();
 builder.Services.AddSingleton<ReportJobService>();
 builder.Services.AddSingleton<SalesAccessService>();
+builder.Services.AddSingleton<CampaignService>();
+builder.Services.AddSingleton<CustomerService>();
 
 // === Auth & User Services ===
 builder.Services.AddSingleton<UserService>();
@@ -82,6 +84,7 @@ builder.Services.AddSingleton<IUserDetailsService, UserDetailsService>();
 builder.Services.AddScoped<HoneycombService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
+
 
 // === System Services ===
 builder.Services.AddSingleton<ISystemConfigurationService, SystemConfigurationService>();

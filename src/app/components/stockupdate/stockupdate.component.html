@@ -1,0 +1,34 @@
+<div class="stock-update-container">
+  <h2>Update Product Stock</h2>
+  <p class="description">You can easily update your product's stock level. Just enter the number of units you want to add and click 'Update Stock'. The system will instantly reflect the new total available.</p>
+
+  <div *ngIf="message" class="toast-alert">{{ message }}</div>
+  <div *ngIf="loading">Updating stock...</div>
+
+  <div class="product-list">
+    <table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Current Stock</th>
+          <th>Add Quantity</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.name }}</td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.stockQuantity }}</td>
+          <td>
+            <input type="number" min="1" [(ngModel)]="addQuantities[product.productId]" [disabled]="loading" />
+          </td>
+          <td>
+            <button (click)="updateStock(product.productId)" [disabled]="loading || !addQuantities[product.productId] || addQuantities[product.productId] <= 0">Update Stock</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

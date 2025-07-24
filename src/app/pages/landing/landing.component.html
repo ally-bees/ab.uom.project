@@ -1,0 +1,125 @@
+<!-- Header/Navbar -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="assets/logo2.png" alt="InstaDash Logo" class="logo-img" />
+  </div>
+  <ul class="nav-menu">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#support">Support</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-btn login" (click)="goToLogin()"><span class="material-icons nav-icon">login</span> Login</button>
+    <button class="nav-btn signup" (click)="goToSignup()"><span class="material-icons nav-icon-signup" style="color: #000;">person_add</span> Sign Up</button>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <h1>Make Business Decisions with Confidence</h1>
+    <p class="subheadline">Unlock your e-commerce insights with InstaDash, your smart dashboard for HoneyComb.</p>
+    <div class="hero-cta">
+      <button class="cta-btn login" (click)="goToLogin()"><span class="material-icons cta-icon">login</span> Login to Dashboard</button>
+      <button class="cta-btn signup" (click)="goToSignup()"><span class="material-icons cta-icon-signup">person_add</span> Sign Up with HoneyComb ID</button>
+    </div>
+    <p class="note">Note: Only HoneyComb-registered businesses can sign up.</p>
+  </div>
+  <!-- Removed hero-image img, now using background-image in CSS -->
+</section>
+
+<!-- About & Features Section -->
+<section class="about-features" id="features">
+  <div class="features-img-col">
+    <img src="assets/features.png" alt="Features" class="features-img" />
+  </div>
+  <div class="about-features-text">
+    <div class="about">
+      <h2 style="color: #00616b; font-size: 2.5rem; font-weight: 700;">About InstaDash</h2>
+      <p>InstaDash is a purpose-built Reporting and Analytics Module for the HoneyComb e-commerce ecosystem. Whether you're managing products or tracking sales, it gives you the clarity you need to make faster decisions.</p>
+    </div>
+    <div class="features">
+      <ul>
+        <li><span class="material-icons feature-icon">insights</span> Real-time sales & inventory dashboards</li>
+        <li><span class="material-icons feature-icon">bar_chart</span> Clean chart visualizations (bar, line, pie)</li>
+        <li><span class="material-icons feature-icon">filter_alt</span> Advanced filtering & search</li>
+        <li><span class="material-icons feature-icon">vpn_key</span> Secure login with HoneyComb ID</li>
+        <li><span class="material-icons feature-icon">supervisor_account</span> Role-based access (Owner, Admin, Manager, Auditor)</li>
+        <li><span class="material-icons feature-icon">print</span> Time-filtered export & print options</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Modules Section -->
+<section class="modules" id="modules" style="align-items: center;text-align: center;">
+  <h2 style="color: #fff; font-size: 2.5rem; font-weight: 700;">Modules We Cover</h2>
+  <div class="modules-list">
+    <div class="module">
+      <img src="assets/sales.jpg" alt="Sales Reports" class="module-img" />
+      <h4>Sales Reports</h4>
+      <p>Monitor trends, volumes, and monthly performance. Drill down into daily sales, identify best-selling products, and compare periods to optimize your business strategy.</p>
+    </div>
+    <div class="module">
+      <img src="assets/inventory.jpg" alt="Inventory Management" class="module-img" />
+      <h4>Inventory Management</h4>
+      <p>Track stock status in real time, receive low stock alerts, and analyze product movement. Prevent stockouts and overstocking with predictive insights and reorder suggestions.</p>
+    </div>
+    <div class="module">
+      <img src="assets/customer.jpg" alt="Customer Insights" class="module-img" />
+      <h4>Customer Insights</h4>
+      <p>Understand customer behavior patterns, identify frequent buyers, and track loyalty. Segment your audience for targeted marketing and improve retention with actionable analytics.</p>
+    </div>
+    <div class="module">
+      <img src="assets/audit.jpg" alt="Audit Logs" class="module-img" />
+      <h4>Audit Logs</h4>
+      <p>Admins can monitor system usage for transparency. Track user actions, changes, and access history to ensure compliance and accountability across your organization.</p>
+    </div>
+    <div class="module">
+      <img src="assets/courier.jpg" alt="Courier Data" class="module-img" />
+      <h4>Courier Data</h4>
+      <p>Analyze delivery status, delays, and courier performance summaries. Identify bottlenecks, improve delivery times, and enhance customer satisfaction with real-time logistics data.</p>
+    </div>
+    <div class="module">
+      <img src="assets/expenses.png" alt="Expense Tracking" class="module-img" />
+      <h4>Expense Tracking</h4>
+      <p>Record, categorize, and analyze business expenses. Generate expense reports, monitor spending trends, and keep your finances under control with detailed breakdowns.</p>
+    </div>
+    <div class="module">
+      <img src="assets/marketing.jpg" alt="Marketing Analytics" class="module-img" />
+      <h4>Marketing Analytics</h4>
+      <p>Track campaign performance, conversion rates, and ROI. Visualize marketing funnels and optimize your strategies for better reach and engagement.</p>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Support Section -->
+<section class="support" id="support">
+  <div class="support-content">
+    <img src="assets/livechat.jpg" alt="Support Chat" class="support-img" />
+    <div>
+      <h2 style="color: #00616b; font-size: 2.5rem; font-weight: 700;">Customer Support & Chat System</h2>
+      <p>Need Help Instantly?</p>
+      <p>Our built-in chat system lets you talk to customer support without leaving your dashboard. Whether you need help reading a report or fixing an issue, support is just one message away.</p>
+      <ul class="support-features">
+        <li><span class="material-icons support-icon">support_agent</span> 24/7 live support for all your business needs</li>
+        <li><span class="material-icons support-icon">flash_on</span> Instant responses to your queries—no waiting in line</li>
+        <li><span class="material-icons support-icon">attach_file</span> Share files, screenshots, and images directly in chat</li>
+        <li><span class="material-icons support-icon">school</span> Get expert guidance on using InstaDash features and analytics</li>
+        <li><span class="material-icons support-icon">translate</span> Multilingual support for diverse business teams</li>
+        <li><span class="material-icons support-icon">security</span> Secure, private, and confidential communication</li>
+      </ul>
+      <p>Experience seamless support—so you can focus on growing your business, not troubleshooting software.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <img src="assets/logo3.png" alt="InstaDash Logo" class="footer-logo" />
+    <span class="footer-text">&copy; 2025 InstaDash. All rights reserved.</span>
+  </div>
+</footer>

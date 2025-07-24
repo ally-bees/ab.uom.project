@@ -1,17 +1,78 @@
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    line-height: 1.6;
-  }
-  
-  h1, h2 {
-    margin-top: 20px;
-  }
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f7fafd;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  .privacy-list {
-    list-style-type: disc;
-    margin-left: 20px;
-    margin-bottom: 20px;
+.container {
+  width: 100%;
+  margin: 0;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2.5rem 2rem 2rem 2rem;
+  line-height: 1.7;
+  color: #222;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #27bcc7;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+h2, h3 {
+  color: #4bb6be;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-left: 0;
+  margin-bottom: 1.1rem;
+  color: #444;
+  font-size: 1.05rem;
+}
+
+strong {
+  color: #20979f;
+}
+
+a {
+  color: #27bcc7;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #20979f;
+}
+
+.privacy-list {
+  margin: 0 0 1.5rem 1.5rem;
+  padding: 0;
+  list-style: disc inside;
+  color: #444;
+  font-size: 1.05rem;
+}
+
+.privacy-list li {
+  margin-bottom: 0.4rem;
+}
+
+@media (max-width: 800px) {
+  .container {
+    padding: 1.2rem 0.5rem;
   }
+  h1 {
+    font-size: 1.5rem;
+  }
+}
   

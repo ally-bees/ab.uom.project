@@ -35,7 +35,8 @@ import { SalesHeatmapComponent } from './components/sales-heatmap/sales-heatmap.
 import { TopSellingComponent } from './components/top-selling/top-selling.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
-
+import { SalestableComponent } from './pages/salestable/salestable.component';
+import { StockupdateComponent } from './components/stockupdate/stockupdate.component';
 import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
 import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
 import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
@@ -57,11 +58,10 @@ import { CustomersupportComponent } from './pages/customersupport/customersuppor
 import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
 import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
 import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
-import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 
 export const routes: Routes = [
   // Default route
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', component: LandingComponent },
 
   // Auth routes
   { path: 'login', component: LoginComponent },
@@ -88,6 +88,7 @@ export const routes: Routes = [
       { path: 'salesdashboard', component: SalesDashboardComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'order', component: OrderSummaryComponent },
+      {path: 'salesOverveiw', component:SalestableComponent},
       { 
         path: 'customerinsight',
         component: customerinsightComponent,
@@ -116,8 +117,8 @@ export const routes: Routes = [
 
   // Inventory Manager with child routes
   {
-    path: 'testinventorymanager',
-    component: TestinventoryDashboardComponent,
+    path: 'inventorymanager',
+    component: InventoryMainpageComponent,
     canActivate: [inventoryManagerGuard],
     children: [
       { path: '', redirectTo: 'inventoryDashboard', pathMatch: 'full' },
@@ -183,7 +184,8 @@ export const routes: Routes = [
         ]
       },
       { path: 'auditdashboard', component: AuditdashboardComponent}, 
-      { path: 'auditpage', component: AuditpageComponent }
+      { path: 'auditpage', component: AuditpageComponent },
+      { path: 'stockupdate', component: StockupdateComponent }
       // Add more pages for the business owner here
     ]
   },
@@ -210,5 +212,5 @@ export const routes: Routes = [
   { path: 'terms-of-service', component: TermsOfServiceComponent },
 
   // Catch-all redirect
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: '' },
 ];

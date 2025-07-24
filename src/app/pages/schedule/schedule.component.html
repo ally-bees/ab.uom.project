@@ -13,11 +13,14 @@
           </option>
         </select>
 
-        <label for="format">Export Format:</label>
-        <select id="format" formControlName="format">
-          <option value="pdf">PDF</option>
-        </select>
-      </div>
+        <!-- Fixed Export Format = PDF -->
+<label for="format">Export Format:</label> 
+        <div class="format-display">
+          <span class="format-value">PDF</span>
+        </div>
+        <!-- Hidden form control to maintain form structure -->
+        <input type="hidden" formControlName="format" value="pdf">
+      </div>   
 
       <!-- Schedule Configuration -->
       <div formGroupName="schedule">
@@ -64,26 +67,29 @@
 
         <label for="message">Message:</label>
         <textarea id="message" formControlName="message" placeholder="Message body"></textarea>
-
-        <!-- <label><input type="checkbox" formControlName="notifyOnSuccess"> Notify on Success</label>
-        <label><input type="checkbox" formControlName="notifyOnFailure"> Notify on Failure</label> -->
       </div>
 
       <button type="submit" [disabled]="!form.valid">
         {{ editingAutomationId !== null ? 'Update' : 'Save' }} Automation
       </button>
+      <button type="button" class="clear-btn" (click)="cancel()">Clear Form</button>
+
     </form>
 
-    <!-- Active Automations -->
-    <div *ngIf="activeAutomations.length > 0" style="margin-top:40px;">
+    <!-- Grouped Automations -->
+    <div *ngIf="groupedAutomations | keyvalue as honeyCombGroups" style="margin-top:40px;">
       <h2 data-step="4">Active Automations</h2>
-      <div *ngFor="let automation of activeAutomations" style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
-        <p style="margin:0;">
-          <strong>{{ automation.reportType }}</strong> | {{ automation.frequency }} at {{ automation.time }}
-        </p>
-        <div class="automation-actions">
-          <button (click)="editAutomation(automation)">Edit</button>
-          <button class="delete-btn" (click)="deleteAutomation(automation.id.toString())">Delete</button>
+      <div *ngFor="let group of honeyCombGroups">
+        <!-- <h3>{{ group.key }}</h3> -->
+        <div *ngFor="let automation of group.value"
+             style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+          <p style="margin:0;">
+            <strong>{{ automation.reportType }}</strong> | {{ automation.frequency }} at {{ automation.time }}
+          </p>
+          <div class="automation-actions">
+            <button class="edit-btn" (click)="editAutomation(automation)">Edit</button>
+            <button class="delete-btn" (click)="deleteAutomation(automation.id.toString())">Delete</button>
+          </div>
         </div>
       </div>
     </div>

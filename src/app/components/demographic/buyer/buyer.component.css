@@ -2,7 +2,7 @@
 h1{
     color: rgb(79, 78, 78);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .box{
@@ -32,7 +32,7 @@ h2{
 }
 
 .para{
-    margin-top: 10px;
+    margin-top: 5px;
     margin-left: 20px;
 }
 

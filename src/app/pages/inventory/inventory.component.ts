@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { product } from '../../models/product.model';
 import { InventoryService } from '../../services/inventory.service';
 import Chart from 'chart.js/auto';
+import { Router } from '@angular/router';
+import { PrintReportService } from '../../services/printreport.service'; // ✅ Import the service
+import { MatSnackBar } from '@angular/material/snack-bar'; // ✅ Optional: For feedback
 
 @Component({
   selector: 'app-inventory',
@@ -26,7 +29,16 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   lowStockCount = 0;
   outOfStockCount = 0;
 
-  constructor(private inventoryService: InventoryService) {}
+  showStockModal = false;
+  selectedProduct: product | null = null;
+  modalAddQuantity: number = 0;
+  modalMessage: string = '';
+
+  constructor(private inventoryService: InventoryService, 
+    private printReportService: PrintReportService,
+  private snackBar: MatSnackBar,
+  private router: Router
+) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -37,7 +49,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   }
 
   loadProducts(): void {
-    this.inventoryService.getAllProducts().subscribe({
+    this.inventoryService.getInventoryByCompany().subscribe({
       next: (data: product[]) => {
         this.products = data;
         this.calculateStockCounts();
@@ -75,11 +87,22 @@ export class InventoryComponent implements OnInit, AfterViewInit {
 
   filteredProducts(): product[] {
     const term = this.searchTerm.toLowerCase();
-    if (!term) return this.products; // If no search term, return all products
-    return this.products.filter(product =>
-      product.name.toLowerCase().includes(term) ||
-      product.category.toLowerCase().includes(term)
-    );
+    let filtered = this.products;
+    if (term) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(term) ||
+        product.category.toLowerCase().includes(term)
+      );
+    }
+    // Sort: Out of Stock first, then Low Stock, then In Stock
+    return filtered.sort((a, b) => {
+      const getStatusOrder = (p: product) => {
+        if (p.stockQuantity === 0) return 0; // Out of Stock
+        if (p.stockQuantity <= 20) return 1; // Low Stock
+        return 2; // In Stock
+      };
+      return getStatusOrder(a) - getStatusOrder(b);
+    });
   }
 
   initializeChart(): void {
@@ -108,4 +131,76 @@ export class InventoryComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  goToStockUpdate() {
+    this.router.navigate(['/businessowner/stockupdate']);
+  }
+
+  openStockModal(product: product) {
+    this.selectedProduct = product;
+    this.modalAddQuantity = 0;
+    this.modalMessage = '';
+    this.showStockModal = true;
+  }
+
+  closeStockModal() {
+    this.showStockModal = false;
+    this.selectedProduct = null;
+    this.modalAddQuantity = 0;
+    this.modalMessage = '';
+  }
+
+  confirmStockUpdate() {
+    if (!this.selectedProduct || !this.modalAddQuantity || this.modalAddQuantity <= 0) {
+      this.modalMessage = 'Please enter a valid quantity.';
+      return;
+    }
+    const productId = this.selectedProduct.productId;
+    this.inventoryService.updateProductStock(productId, this.modalAddQuantity).subscribe({
+      next: () => {
+        this.modalMessage = 'Stock updated successfully!';
+        // Update the product in the table
+        this.selectedProduct!.stockQuantity += this.modalAddQuantity;
+        setTimeout(() => this.closeStockModal(), 1200);
+      },
+      error: () => {
+        this.modalMessage = 'Failed to update stock.';
+      }
+    });
+  }
+  printReport(): void {
+  if (!this.products || this.products.length === 0) {
+    this.snackBar.open('No inventory data available to print.', 'Close', {
+      duration: 4000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    return;
+  }
+
+  const tableColumns = ['Product ID', 'Name', 'Category', 'Price', 'Quantity', 'Status'];
+  const tableData = this.filteredProducts().map(product => ({
+    'Product ID': product.productId,
+    'Name': product.name,
+    'Category': product.category,
+    'Price': `Rs. ${product.price.toFixed(2)}`,
+    'Quantity': product.stockQuantity,
+    'Status': this.getStockStatus(product)
+  }));
+
+  const reportPayload = {
+    reportType: 'Inventory Report',
+    exportFormat: 'PDF Document (.pdf)',
+    pageOrientation: 'Portrait',
+    tableColumns,
+    tableData
+  };
+
+  this.printReportService.setReportData(reportPayload); // Store the data
+
+  this.router.navigate(['/businessowner/printreport'], {
+    state: reportPayload
+  });
+}
+
 }

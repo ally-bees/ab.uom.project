@@ -47,6 +47,11 @@
       
     </div>
   
+    <!-- Update Stocks Button -->
+    <div style="text-align: right; margin-top: 16px;">
+      <button (click)="goToStockUpdate()" class="update-stocks-btn">Update Stocks</button>
+    </div>
+  
     <div class="table-box">
         <h4>Current Inventory Overview</h4>
         <!-- Search Input -->
@@ -68,8 +73,9 @@
               <th>Name</th>
               <th>Category</th>
               <th>Price</th>
-              <th>Stock Quantity</th>
+              <th>Quantity</th>
               <th>Status</th>
+              <th>Update Stock</th>
             </tr>
           </thead>
           <tbody>
@@ -77,12 +83,17 @@
               <td>{{ product.productId }}</td>
               <td>{{ product.name }}</td>
               <td>{{ product.category }}</td>
-              <td>{{ product.price | currency }}</td>
-              <td>{{ product.stockQuantity }}</td>
+              <td>{{ product.price | currency:'Rs.'}}</td>
+              <td style="text-align:center;">
+                {{ product.stockQuantity }}
+              </td>
               <td>
                 <span [ngClass]="['stock-status', getStockStatusClass(product)]">
                   {{ getStockStatus(product) }}
                 </span>
+              </td>
+              <td  style="text-align:center;">
+                <button class="row-update-btn" (click)="openStockModal(product)">Update</button>
               </td>
             </tr>
           </tbody>
@@ -91,4 +102,34 @@
     </div>
     </div>
     
+    <!-- Stock Update Modal -->
+    <div class="modal-backdrop" *ngIf="showStockModal">
+      <div class="stock-modal">
+        <h3>Update Stock for {{ selectedProduct?.name }}</h3>
+        <div class="modal-details">
+          <p><strong>Product ID:</strong> {{ selectedProduct?.productId }}</p>
+          <p><strong>Category:</strong> {{ selectedProduct?.category }}</p>
+          <p><strong>Current Stock:</strong> {{ selectedProduct?.stockQuantity }}</p>
+          <p><strong>Price:</strong> {{ selectedProduct?.price | currency }}</p>
+        </div>
+        <div class="modal-action">
+          <input type="number" min="1" [(ngModel)]="modalAddQuantity" placeholder="Add Quantity" />
+          <button (click)="confirmStockUpdate()" [disabled]="!modalAddQuantity || modalAddQuantity <= 0">Update</button>
+          
+          <button (click)="closeStockModal()" class="modal-cancel">Cancel</button>
+        </div>
+        <div *ngIf="modalMessage" class="modal-message">{{ modalMessage }}</div>
+
+        <div class="print-section">
+        <button class="print-btn" (click)="printReport()">
+          <i class="fa fa-print"></i>
+          Print Report
+        </button>
+      </div>
+      </div>
+    </div>
+
+    
+
+  
   

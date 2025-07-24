@@ -1,11 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Backend.Services;
 using Backend.Models;
+using Backend.Services; 
 
-
-namespace Backend.Controller
+namespace Backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -49,5 +49,11 @@ namespace Backend.Controller
             return Ok(summary);
         }
 
+        [HttpGet("audit-stats")]
+        public async Task<IActionResult> GetAuditStatistics()
+        {
+            var stats = await _auditservice.GetAuditStatisticsByYearAsync();
+            return Ok(stats);
+        }
     }
-}
+}        

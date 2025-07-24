@@ -1,10 +1,12 @@
 using Backend.Models;
+using Backend.Models.DTOs;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks;   
+using Backend.Models.DTOs;
 
 namespace Backend.Services
 {
@@ -294,8 +296,45 @@ namespace Backend.Services
             return monthlyTotals.ToList();
         }
 
+        // Aggregate sales, orders, and inventory for a date range and company
+        public async Task<List<SalesAggregatedDto>> GetAggregatedSalesDataAsync(DateTime startDate, DateTime endDate, string companyId)
+        {
+            var sales = (await _mongoDBService.GetAllSalesAsync()).Where(s => s.CompanyId == companyId).ToList();
+            var orders = (await _mongoDBService.GetAllOrdersAsync()).Where(o => o.CompanyId == companyId).ToList();
+            var inventory = (await _mongoDBService.GetAllInventoryAsync()).Where(p => p.CompanyId == companyId).ToList();
 
+            var filteredSales = sales.Where(s => s.SaleDate >= startDate && s.SaleDate <= endDate).ToList();
 
+            var result = new List<SalesAggregatedDto>();
+
+            foreach (var sale in filteredSales)
+            {
+                foreach (var orderId in sale.OrderIds)
+                {
+                    var order = orders.FirstOrDefault(o => o.OrderId == orderId);
+                    if (order != null && order.OrderDetails != null)
+                    {
+                        foreach (var detail in order.OrderDetails)
+                        {
+                            var prod = inventory.FirstOrDefault(p => p.ProductId == detail.ProductId);
+                            result.Add(new SalesAggregatedDto
+                            {
+                                SaleId = sale.SaleId,
+                                SalesDate = sale.SaleDate,
+                                OrderId = order.OrderId,
+                                ProductId = detail.ProductId,
+                                ProductName = prod?.Name ?? string.Empty,
+                                Category = prod?.Category ?? string.Empty,
+                                Quantity = detail.Quantity,
+                                Price = detail.Price,
+                                CompanyId = sale.CompanyId ?? string.Empty
+                            });
+                        }
+                    }
+                }
+            }
+            return result;
+        }
 
 
         // Create a sale

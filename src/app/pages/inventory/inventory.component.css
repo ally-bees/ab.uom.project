@@ -227,3 +227,148 @@ canvas {
   background-color: #ffa3ab;
   color: rgb(116, 0, 0);
 }
+
+.update-stocks-btn {
+  padding: 10px 24px;
+  background-color: #00BCD4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.update-stocks-btn:hover {
+  background-color: #0097A7;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stock-modal {
+  background: rgba(255,255,255,0.85);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+  padding: 32px 36px 24px 36px;
+  min-width: 340px;
+  max-width: 95vw;
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #222;
+  animation: fadeInModal 0.2s;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stock-modal h3 {
+  margin-top: 0;
+  color: #00BCD4;
+  margin-bottom: 18px;
+}
+
+.modal-details p {
+  margin: 4px 0;
+  font-size: 1rem;
+}
+
+.modal-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.modal-action input[type="number"] {
+  width: 90px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-action button {
+  padding: 8px 18px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #00BCD4;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-action button:disabled {
+  background: #b2ebf2;
+  cursor: not-allowed;
+}
+
+.modal-action .modal-cancel {
+  background: #eee;
+  color: #333;
+  border: 1px solid #bbb;
+}
+
+.modal-action .modal-cancel:hover {
+  background: #e0e0e0;
+}
+
+.modal-message {
+  margin-top: 12px;
+  color: #00BCD4;
+  font-weight: 500;
+  text-align: center;
+}
+
+.row-update-btn {
+  background: #fff;
+  color: #00BCD4;
+  border: 1px solid #00BCD4;
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.row-update-btn:hover {
+  background: #00BCD4;
+  color: #fff;
+}
+
+.print-report-btn {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &:hover {
+      background-color: #00a0b7;
+    }
+    
+    .print-icon {
+      font-size: 16px;
+    }
+  }

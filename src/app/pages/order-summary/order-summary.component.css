@@ -239,21 +239,59 @@
 }
 
 .print-btn {
-  background-color: #00BCD4; /* Matching teal color */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &:hover {
+      background-color: #00a0b7;
+    }
+    
+    .print-icon {
+      font-size: 16px;
+    }
+  }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.6);
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  z-index: 999;
 }
 
-.print-btn:hover {
-  background-color: #0097A7; /* Darker teal */
+.modal-content {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
+.close {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 
 /* Print Dialog */
 .print-overlay {
@@ -396,4 +434,20 @@
   .date-filter {
     flex-direction: column;
   }
+}
+
+.total-orders {
+  color: #228c28;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.pending-orders {
+  color: #ff9800;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.completed-orders {
+  color: #2196f3;
+  font-weight: bold;
+  font-size: 1.3rem;
 }

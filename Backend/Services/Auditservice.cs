@@ -121,10 +121,10 @@ namespace Backend.Services
                 };
             }
     
-        public async Task<Dictionary<int,double>> GetlastthreetaxAsync(){
-            
-            var result = new Dictionary<int,double>();
-            var currentYear=DateTime.Now.Year;
+        public async Task<Dictionary<int, double>> GetlastthreetaxAsync()
+        {
+            var result = new Dictionary<int, double>();
+            var currentYear = DateTime.Now.Year;
 
             var allDocs = await _CollectionAudit.Find(_ => true).ToListAsync();
 
@@ -144,7 +144,48 @@ namespace Backend.Services
             }
             return result;
         }
-    }
-    
-}
 
+        public async Task<Dictionary<int, Dictionary<string, object>>> GetAuditStatisticsByYearAsync()
+        {
+            var result = new Dictionary<int, Dictionary<string, object>>();
+            
+            // Get all audit records with tax information
+            var allAudits = await _CollectionAudit
+                .Find(FilterDefinition<Table>.Empty)
+                .ToListAsync();
+
+            // Process valid audits with date and tax
+            var validAudits = allAudits
+                .Where(a => !string.IsNullOrWhiteSpace(a.Date) && DateTime.TryParse(a.Date, out _))
+                .Select(a => new { 
+                    Date = DateTime.Parse(a.Date),
+                    Tax = a.Tax ?? 0
+                })
+                .ToList();
+
+            // Group by year and calculate statistics
+            var auditsByYear = validAudits
+                .GroupBy(a => a.Date.Year)
+                .OrderByDescending(g => g.Key);
+
+            foreach (var yearGroup in auditsByYear)
+            {
+                var yearAudits = yearGroup.ToList();
+                var dates = yearGroup.Select(x => x.Date).OrderBy(d => d).ToList();
+                var totalTax = yearGroup.Sum(x => x.Tax);
+                
+                var yearStats = new Dictionary<string, object>
+                {
+                    { "firstAudit", dates.First().ToString("yyyy-MM-ddTHH:mm:ss") },
+                    { "lastAudit", dates.Last().ToString("yyyy-MM-ddTHH:mm:ss") },
+                    { "count", yearAudits.Count },
+                    { "totalTax", totalTax }
+                };
+
+                result[yearGroup.Key] = yearStats;
+            }
+
+            return result;
+        }
+    }
+}

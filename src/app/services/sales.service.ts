@@ -291,4 +291,15 @@ export class SalesService {
     }
     return this.http.get<SalesViewModel>(url);
   }
+
+  // Fetch aggregated sales data for a date range and company
+  getAggregatedSales(startDate: string, endDate: string, companyId?: string): Observable<any[]> {
+    if (!companyId) {
+      companyId = this.authService.getCurrentUser()?.CompanyId;
+    }
+    if (!companyId) {
+      throw new Error('User company ID is not available.');
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/SalesDashboard/aggregated-sales?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&companyId=${encodeURIComponent(companyId)}`);
+  }
 }

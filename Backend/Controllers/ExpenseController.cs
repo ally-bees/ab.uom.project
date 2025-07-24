@@ -174,18 +174,22 @@ public async Task<ActionResult<List<Expense>>> GetByCompanyId(string companyId)
 }
 
 
-        [HttpGet("receipts/{fileName}")]
-        public async Task<IActionResult> GetReceipt(string fileName)
-        {
-            var filePath = await _expenseService.GetReceiptPathAsync(fileName);
-            
-            if (!System.IO.File.Exists(filePath))
-                return NotFound();
-                
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, "application/pdf");
-        }
+       [HttpGet("receipts/{fileName}")]
+public async Task<IActionResult> GetReceipt(string fileName)
+{
+    // Decode URL-encoded fileName to get the correct file path
+    var decodedFileName = Uri.UnescapeDataString(fileName);
+
+    var filePath = await _expenseService.GetReceiptPathAsync(decodedFileName);
+
+    if (!System.IO.File.Exists(filePath))
+        return NotFound();
+
+    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+    return File(fileBytes, "application/pdf", decodedFileName);
+}
     }
+
 
     public class ExpenseDTO
     {

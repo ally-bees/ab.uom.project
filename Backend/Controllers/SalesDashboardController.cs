@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
+using Backend.Models.DTOs;
 
 namespace Backend.Controllers
 {
@@ -148,6 +149,22 @@ public async Task<IActionResult> GetDashboardData()
             }).ToList();
 
             return Ok(result);
+        }
+
+        // Aggregated sales, orders, and inventory for a date range and company
+        [HttpGet("aggregated-sales")]
+        public async Task<IActionResult> GetAggregatedSales([FromQuery] string startDate, [FromQuery] string endDate, [FromQuery] string companyId)
+        {
+            if (string.IsNullOrWhiteSpace(companyId))
+            {
+                return BadRequest("companyId is required.");
+            }
+            if (!DateTime.TryParse(startDate, out var start) || !DateTime.TryParse(endDate, out var end))
+            {
+                return BadRequest("Invalid date format.");
+            }
+            var data = await _salesService.GetAggregatedSalesDataAsync(start, end, companyId);
+            return Ok(data);
         }
 
         [HttpGet("company/{companyId}")]
