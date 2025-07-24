@@ -1,33 +1,40 @@
+// buyer.component.ts
 import { Component, OnInit } from '@angular/core';
-import { buyerService,TopCustomer  } from './buyer.service';
+import { BuyerService, TopCustomer } from './buyer.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-buyer',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './buyer.component.html',
-  styleUrl: './buyer.component.css',
-  providers: [buyerService] 
+  styleUrls: ['./buyer.component.css']
 })
 export class BuyerComponent implements OnInit {
-
   topCustomer: TopCustomer | null = null;
-  errorMessage = '';
+  errorMessage: string = '';
+  isLoading: boolean = true;
 
-  constructor(private buyerservice:buyerService){
-    
-  }
+  constructor(private buyerService: BuyerService) {}
+
   ngOnInit(): void {
-    this.buyerservice.getbuyRecords().subscribe({
-      next: (data) => {
+    this.loadTopCustomer();
+  }
+
+  loadTopCustomer(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    this.buyerService.getTopCustomer().subscribe({
+      next: (data: TopCustomer) => {
         this.topCustomer = data;
+        this.isLoading = false;
       },
-      error: (error) => {
-        this.errorMessage = error.error || 'Failed to load top customer.';
+      error: (error: Error) => {
+        console.error('Error loading top customer:', error);
+        this.errorMessage = error.message;
+        this.isLoading = false;
       }
     });
   }
-
-  
-  }
-
+}

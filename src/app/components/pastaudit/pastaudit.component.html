@@ -1,51 +1,32 @@
 <div class="contents">
-    <div class="past">
-        <h2>Past Audit</h2>
+    <div *ngIf="loading" class="loading">
+    <p>Loading audit data...</p>
+</div>
+
+<div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+</div>
+
+<ng-container *ngIf="!loading && !error">
+    <div *ngFor="let yearData of auditYears" class="past">
+        <h2>{{ yearData.year }} Audit</h2>
         <div class="detail">
             <div class="content">
-                <h3>Audit</h3>
-                <p>Monthly Report(Nov 2024)</p>
-                <p>26 Dec 2024 - 13.22</p>
+                <h3>Audit Period</h3>
+                <p>From: {{ formatDate(yearData.firstAudit) }}</p>
+                <p>To: {{ formatDate(yearData.lastAudit) }}</p>
             </div>
             <hr>
             <div class="content">
-                <h3>Audit</h3>
-                <p>Monthly Report(Nov 2024)</p>
-                <p>26 Dec 2024 - 13.22</p>
+                <h3>Statistics</h3>
+                <p>Total Audits: {{ yearData.count }}</p>
+                <p>Total Tax: ${{ yearData.totalTax | number:'1.2-2' }}</p>
             </div>
         </div>
     </div>
-    
-    <div class="past">
-        <h2>Present Audit</h2>
-        <div class="detail">
-            <div class="content">
-                <h3>Audit</h3>
-                <p>Monthly Report(Nov 2024)</p>
-                <p>26 Dec 2024 - 13.22</p>
-            </div>
-            <hr>
-            <div class="content">
-                <h3>Audit</h3>
-                <p>Monthly Report(Nov 2024)</p>
-                <p>26 Dec 2024 - 13.22</p>
-            </div>
-        </div>
+
+    <div *ngIf="auditYears.length === 0" class="no-data">
+        <p>No audit data available.</p>
     </div>
-    <div class="past">
-        <h2>Future Audit</h2>
-        <div class="detail">
-            <div class="content">
-                <h3>Audit</h3>
-                <p>Monthly Report(loading...)</p>
-                <p> __ __ ____ - __.__</p>
-            </div>
-            <hr>
-            <div class="content">
-                <h3>Audit</h3>
-                <p>Monthly Report(loading...)</p>
-                <p> __ __ ____ - __.__</p>
-            </div>
-        </div>
-    </div>
+</ng-container>
 </div>
