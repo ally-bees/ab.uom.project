@@ -136,7 +136,8 @@ export const routes: Routes = [
           { path: 'social-connect', component: SocialmessagepanelComponent },
           { path: 'Messaging-app', component: ChatpanelComponent }
         ]
-      }
+      },
+      { path: 'stockupdate', component: StockupdateComponent }
     ]
   },
 

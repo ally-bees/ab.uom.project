@@ -6,6 +6,7 @@ import { InventoryService } from '../../services/inventory.service';
 import { TopSellingTableComponent } from '../../components/top-selling-table/top-selling-table.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inventory-dashboard',
@@ -24,7 +25,7 @@ export class InventoryDashboardComponent implements OnInit {
   lowStockCount = 0;
   outOfStockCount = 0;
 
-  constructor(private inventoryService: InventoryService, private authService: AuthService) {}
+  constructor(private inventoryService: InventoryService, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     const companyId = this.authService.getCurrentUser()?.CompanyId;
@@ -81,5 +82,9 @@ export class InventoryDashboardComponent implements OnInit {
         console.error('Error fetching best selling products for company', err);
       }
     });
+  }
+
+  goToUpdateStock(): void {
+    this.router.navigate(['/inventorymanager/stockupdate']);
   }
 }
