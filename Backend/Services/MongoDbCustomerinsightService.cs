@@ -24,25 +24,71 @@ namespace Backend.Services
 
         public async Task<(string Name, string Location)> GetTopCustomerByOrderCountAsync()
         {
-            // Step 1: Group Orders by CustomerId, Count Orders, Sort Descending, Get Top 1
-            var group = await _CollectionOrdet.Aggregate()
-                .Group(o => o.CustomerId, g => new { CustomerId = g.Key, OrderCount = g.Count() })
-                .SortByDescending(g => g.OrderCount)
-                .Limit(1)
-                .FirstOrDefaultAsync();
+            try
+            {
+                Console.WriteLine("Starting GetTopCustomerByOrderCountAsync...");
 
-            if (group == null || string.IsNullOrEmpty(group.CustomerId))
-                return ("", "");
+                // First, check if we have any customers and orders
+                var customerCount = await _CollectionCus.CountDocumentsAsync(FilterDefinition<Customerr>.Empty);
+                var orderCount = await _CollectionOrdet.CountDocumentsAsync(FilterDefinition<Order>.Empty);
 
-            // Step 2: Fetch Customer by Id
-            var customer = await _CollectionCus
-                .Find(c => c.Customer_id == group.CustomerId)
-                .FirstOrDefaultAsync();
+                Console.WriteLine($"Found {customerCount} customers and {orderCount} orders");
 
-            if (customer == null)
-                return ("", "");
+                if (customerCount == 0 || orderCount == 0)
+                {
+                    Console.WriteLine("No customers or orders found in the database");
+                    return ("No data available", "No location data");
+                }
 
-            return (customer.Name ?? "", customer.Location ?? "");
+                // Find the customer with the highest total order amount
+                var pipeline = new BsonDocument[]
+                {
+                    new BsonDocument("$lookup", new BsonDocument
+                    {
+                        { "from", "orders" },
+                        { "localField", "customer_id" },
+                        { "foreignField", "customerId" },
+                        { "as", "orders" }
+                    }),
+                    new BsonDocument("$unwind", "$orders"),
+                    new BsonDocument("$group", new BsonDocument
+                    {
+                        { "_id", "$customer_id" },
+                        { "totalAmount", new BsonDocument("$sum", "$orders.totalAmount") }
+                    }),
+                    new BsonDocument("$sort", new BsonDocument("totalAmount", -1)),
+                    new BsonDocument("$limit", 1)
+                };
+
+                var topCustomer = await _CollectionCus.Aggregate<BsonDocument>(pipeline).FirstOrDefaultAsync();
+
+                if (topCustomer == null || !topCustomer.Contains("_id") || topCustomer["_id"].IsBsonNull)
+                {
+                    Console.WriteLine("No customers found");
+                    return ("No customer data available", "No location data");
+                }
+
+                var topCustomerId = topCustomer["_id"].AsString;
+
+                // Find the customer for this order
+                var customer = await _CollectionCus
+                    .Find(c => c.Customer_id == topCustomerId)
+                    .FirstOrDefaultAsync();
+
+                if (customer == null)
+                {
+                    Console.WriteLine($"Customer with ID {topCustomerId} not found");
+                    return ("Customer not found", "Location not available");
+                }
+
+                // Return the customer's name and location with null checks
+                return (customer.Name ?? "Unknown", customer.Location ?? "Unknown location");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetTopCustomerByOrderCountAsync: {ex.Message}");
+                return ("Error retrieving data", "");
+            }
         }
 
         public async Task<(string ProductId, string Name)> GetTopProductByOrderCountAsync()

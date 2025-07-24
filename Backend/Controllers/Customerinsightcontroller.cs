@@ -19,12 +19,32 @@ namespace Backend.Controller
         [HttpGet("top-customer")]
         public async Task<IActionResult> GetTopCustomer()
         {
-            var (name, location) = await _mongoDbCustomerinsightService.GetTopCustomerByOrderCountAsync();
+            try
+            {
+                var (name, location) = await _mongoDbCustomerinsightService.GetTopCustomerByOrderCountAsync();
 
-            if (string.IsNullOrEmpty(name))
-                return NotFound("No customer found.");
+                // Return a default response with 200 OK status instead of 404
+                if (name == "No orders" || name == "No customer data" || name == "Customer not found")
+                {
+                    return Ok(new { 
+                        Name = "No customer data available", 
+                        Location = "No location data" 
+                    });
+                }
 
-            return Ok(new { Name = name, Location = location });
+                return Ok(new { 
+                    Name = name, 
+                    Location = location 
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetTopCustomer: {ex.Message}");
+                return StatusCode(500, new { 
+                    Name = "Error retrieving customer data", 
+                    Location = "" 
+                });
+            }
         }
 
 
