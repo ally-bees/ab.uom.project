@@ -77,8 +77,9 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Check for date parameters in the URL (when returning from report page)
+    // Check for parameters in the URL (when returning from report page)
     this.route.queryParams.subscribe(params => {
+      // Restore date range if provided in URL parameters
       if (params['fromDate'] && params['toDate']) {
         console.log('Restoring date range from URL parameters:', params);
         this.fromDate = params['fromDate'];
@@ -93,10 +94,26 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
         this.toDate = today.toISOString().split('T')[0];
       }
       
+      // Restore search term if provided in URL parameters
+      if (params['searchTerm']) {
+        console.log('Restoring search term from URL parameters:', params['searchTerm']);
+        this.searchTerm = params['searchTerm'];
+      }
+      
       // Fetch data with selected date range
       this.fetchSummary();
       this.fetchRecentDeliveries();
       this.fetchAllCouriers();
+      
+      // If search term is present, perform search after data is loaded
+      const fromCancel = params['fromCancel'] === 'true';
+      if (this.searchTerm) {
+        // Use setTimeout to ensure data is loaded first
+        setTimeout(() => {
+          // Only show the search popup if we're not coming back from cancel
+          this.searchDeliveries(!fromCancel);
+        }, 500);
+      }
     });
   }
 
@@ -457,6 +474,8 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
       pageOrientation: 'Portrait',
       tableColumns,
       tableData,
+      // Store the current search term to restore it when returning to this page
+      searchTerm: this.searchTerm,
       // Additional metadata to customize the report
       companyName: 'Alliance Bees',
       // Add summary data for the pie chart display
@@ -481,13 +500,19 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     this.printReportService.setReportData(reportPayload);
     
     // Navigate to the print-report page (same as finance)
+    // Pass the current search term and date filters as query params to store them
     this.router.navigate(['/businessowner/printreport'], {
-      state: reportPayload
+      state: reportPayload,
+      queryParams: {
+        fromDate: this.fromDate,
+        toDate: this.toDate,
+        searchTerm: this.searchTerm
+      }
     });
   }
 
   // Search deliveries - show popup with results
-  searchDeliveries(): void {
+  searchDeliveries(showPopup: boolean = true): void {
     if (!this.searchTerm.trim()) {
       this.showSearchResults = false;
       return;
@@ -499,7 +524,8 @@ export class CourierDashboardComponent implements OnInit, AfterViewInit {
     this.courierService.searchCouriers(this.searchTerm, this.companyId).subscribe({
       next: (results) => {
         this.searchResults = results;
-        this.showSearchResults = true;
+        // Only show the search results popup if showPopup is true
+        this.showSearchResults = showPopup;
         this.isLoading = false;
         
         // Make sure the pie chart is still visible and updated

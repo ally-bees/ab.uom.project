@@ -37,21 +37,65 @@ namespace Backend.Controllers
         }
 
         [HttpGet("total-revenue")]
-        public async Task<IActionResult> GetTotalRevenue()
+        public async Task<IActionResult> GetTotalRevenue([FromQuery] string? companyId = null)
         {
-            var totalRevenue = await _salesService.GetTotalSalesCostAsync();
+            Console.WriteLine($"SalesController - GetTotalRevenue - Received companyId: {companyId ?? "null"}");
+            
+            var sales = await _salesService.GetAllSalesAsync();
+            Console.WriteLine($"SalesController - GetTotalRevenue - Total number of sales records: {sales.Count}");
+            
+            var totalRevenue = await _salesService.GetTotalSalesCostAsync(companyId);
+            Console.WriteLine($"SalesController - GetTotalRevenue - Calculated total revenue: {totalRevenue} for companyId: {companyId ?? "null"}");
+            
             if(totalRevenue == 0)
                 return Ok(0);
             return Ok(totalRevenue);
         }
 
         [HttpGet("today-cost")]
-        public async Task<IActionResult> GetTodayRevenue()
+        public async Task<IActionResult> GetTodayRevenue([FromQuery] string? companyId = null)
         {
-            var todayRevenue = await _salesService.GetTodaySalesRevenueAsync();
-            if(todayRevenue == 0)
-                return Ok(0);
+            Console.WriteLine($"SalesController - GetTodayRevenue - Received companyId: {companyId ?? "null"}");
+            Console.WriteLine($"SalesController - GetTodayRevenue - Looking for sales on: {DateTime.Today.ToString("yyyy-MM-dd")}");
+            
+            var todayRevenue = await _salesService.GetTodaySalesRevenueAsync(companyId);
+            Console.WriteLine($"SalesController - GetTodayRevenue - Calculated today revenue: {todayRevenue} for companyId: {companyId ?? "null"}");
+            
+            // Return the exact amount, even if it's 0
             return Ok(todayRevenue);
+        }
+
+        [HttpGet("last-month-revenue")]
+        public async Task<IActionResult> GetLastMonthRevenue([FromQuery] string? companyId = null)
+        {
+            Console.WriteLine($"SalesController - GetLastMonthRevenue - Received companyId: {companyId ?? "null"}");
+            
+            var lastMonthRevenue = await _salesService.GetLastMonthSalesRevenueAsync(companyId);
+            Console.WriteLine($"SalesController - GetLastMonthRevenue - Calculated last month revenue: {lastMonthRevenue} for companyId: {companyId ?? "null"}");
+            
+            return Ok(lastMonthRevenue);
+        }
+
+        [HttpGet("yesterday-revenue")]
+        public async Task<IActionResult> GetYesterdayRevenue([FromQuery] string? companyId = null)
+        {
+            Console.WriteLine($"SalesController - GetYesterdayRevenue - Received companyId: {companyId ?? "null"}");
+            
+            var yesterdayRevenue = await _salesService.GetYesterdaySalesRevenueAsync(companyId);
+            Console.WriteLine($"SalesController - GetYesterdayRevenue - Calculated yesterday revenue: {yesterdayRevenue} for companyId: {companyId ?? "null"}");
+            
+            return Ok(yesterdayRevenue);
+        }
+
+        [HttpGet("average-order-amount")]
+        public async Task<IActionResult> GetAverageOrderAmount([FromQuery] string? companyId = null)
+        {
+            Console.WriteLine($"SalesController - GetAverageOrderAmount - Received companyId: {companyId ?? "null"}");
+            
+            var averageAmount = await _salesService.GetAverageOrderAmountAsync(companyId);
+            Console.WriteLine($"SalesController - GetAverageOrderAmount - Calculated average order amount: {averageAmount} for companyId: {companyId ?? "null"}");
+            
+            return Ok(averageAmount);
         }
 
         // Removed vendorId-based filter since it's no longer part of the data
@@ -95,7 +139,7 @@ namespace Backend.Controllers
                 var monthlySales = await _salesService.GetMonthlySalesAsync();
                 return Ok(monthlySales);
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 // Log exception if needed
                 return StatusCode(500, "An error occurred while retrieving monthly sales data.");
@@ -110,7 +154,7 @@ namespace Backend.Controllers
                 var monthlySales = await _salesService.GetYearlySalesAsync(DateTime.Now.Year);
                 return Ok(monthlySales);
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 // Log exception if needed
                 return StatusCode(500, "An error occurred while retrieving monthly sales data.");
@@ -146,6 +190,37 @@ namespace Backend.Controllers
 
             await _salesService.DeleteSaleAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("create-today-test-data")]
+        public async Task<IActionResult> CreateTodayTestData([FromQuery] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+                return BadRequest("CompanyId is required");
+
+            await _salesService.CreateTodayTestSalesAsync(companyId);
+            return Ok(new { message = $"Today's test sales data created for company {companyId}" });
+        }
+
+        [HttpGet("period-data")]
+        public async Task<IActionResult> GetSalesDataByPeriod([FromQuery] string period, [FromQuery] string? companyId = null)
+        {
+            Console.WriteLine($"SalesController - GetSalesDataByPeriod - Period: {period}, CompanyId: {companyId ?? "null"}");
+            
+            var salesData = await _salesService.GetSalesDataByPeriodAsync(period, companyId);
+            Console.WriteLine($"SalesController - GetSalesDataByPeriod - Returning {salesData.Count} data points");
+            
+            return Ok(salesData);
+        }
+
+        [HttpPost("create-historical-test-data")]
+        public async Task<IActionResult> CreateHistoricalTestData([FromQuery] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+                return BadRequest("CompanyId is required");
+
+            await _salesService.CreateHistoricalTestSalesAsync(companyId);
+            return Ok(new { message = $"Historical test sales data created for company {companyId}" });
         }
     }
 }

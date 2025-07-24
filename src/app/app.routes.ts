@@ -16,6 +16,8 @@ import { BusinessDashComponent } from './pages/businessowner/businessowner.compo
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { UserProfileComponent } from './userprofile/userprofile.component';
+import { LandingComponent } from './pages/landing/landing.component';
+import { MarketingDashboardComponent } from './pages/marketing-dashboard/marketing-dashboard.component';
 import { SystemConfigComponent } from './adminpart/system-config/system-config.component';
 import { AuditLogsComponent } from './adminpart/audit-logs/audit-logs.component';
 import { UserManagementComponent } from './adminpart/user-management/user-management.component';
@@ -58,7 +60,6 @@ import { CustomersupportComponent } from './pages/customersupport/customersuppor
 import { AimessagepanelComponent } from './components/aimessagepanel/aimessagepanel.component';
 import { SocialmessagepanelComponent } from './components/socialmessagepanel/socialmessagepanel.component';
 import { ChatpanelComponent } from './components/chatpanel/chatpanel.component';
-import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
   // Default route
@@ -203,6 +204,11 @@ export const routes: Routes = [
   { path: 'top-selling', component: TopSellingComponent, canActivate: [authGuard] },
   { path: 'stats', component: StatsCardComponent, canActivate: [authGuard] },
   { path: 'top', component: TopSellingTableComponent, canActivate: [authGuard] },
+  { path: 'marketing', component: MarketingDashboardComponent },
+
+  // Audit related routes (if needed)
+  { path: 'auditpage', component: AuditpageComponent },
+  { path: 'auditdashboard', component: AuditdashboardComponent },
 
   // Policies
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
