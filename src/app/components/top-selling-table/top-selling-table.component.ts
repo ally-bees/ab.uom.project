@@ -24,12 +24,12 @@ export class TopSellingTableComponent implements OnInit {
   }
 
   loadTopSellingProducts(): void {
-    this.inventoryService.getBestSellingProducts(this.productLimit).subscribe({
+    this.inventoryService.getBestSellingProductsByCompany(this.productLimit).subscribe({
       next: (products) => {
         this.topSellingProducts = products;
       },
       error: (err) => {
-        console.error('Error fetching top-selling products', err);
+        console.error('Error fetching top-selling products for company', err);
       }
     });
   }

@@ -36,7 +36,7 @@ import { TopSellingComponent } from './components/top-selling/top-selling.compon
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { TopSellingTableComponent } from './components/top-selling-table/top-selling-table.component';
 import { SalestableComponent } from './pages/salestable/salestable.component';
-
+import { StockupdateComponent } from './components/stockupdate/stockupdate.component';
 import { ForgetPasswordComponent } from './adminpart/forget-password/forget-password.component';
 import { PrivacyPolicyComponent } from './adminpart/privacy-policy/privacy-policy.component';
 import { TermsOfServiceComponent } from './adminpart/terms-of-service/terms-of-service.component';
@@ -185,7 +185,8 @@ export const routes: Routes = [
         ]
       },
       { path: 'auditdashboard', component: AuditdashboardComponent}, 
-      { path: 'auditpage', component: AuditpageComponent }
+      { path: 'auditpage', component: AuditpageComponent },
+      { path: 'stockupdate', component: StockupdateComponent }
       // Add more pages for the business owner here
     ]
   },

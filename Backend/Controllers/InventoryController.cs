@@ -77,6 +77,19 @@ namespace Backend.Controllers
             return Ok(filteredInventory);
         }
 
+        [HttpPatch("company/{companyId}/product/{productId}/stock")]
+        public async Task<IActionResult> UpdateStockQuantity(string companyId, string productId, [FromBody] int newStockQuantity)
+        {
+            var inventory = await _inventoryService.GetAllAsync();
+            var product = inventory.FirstOrDefault(i => i.ProductId == productId && i.CompanyId == companyId);
+            if (product == null)
+                return NotFound();
+
+            product.StockQuantity = newStockQuantity;
+            await _inventoryService.UpdateAsync(product.Id, product);
+            return NoContent();
+        }
+
 
     }
 }
