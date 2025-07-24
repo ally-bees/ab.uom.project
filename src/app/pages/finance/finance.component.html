@@ -1,32 +1,28 @@
 <div class="finance-container">
   <!-- Main content area -->
   <div class="finance-content">
+    
+    <!-- Finance Summary Section -->
     <div class="finance-section">
       <div class="section-header">
         <h2>Finance Summary</h2>
+
+        <!-- Filters -->
         <div class="filters">
-          <!-- Search box -->
-          <!-- <div class="search-box">
-            <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" />
-            <button class="search-btn">Search</button>
-          </div> -->
-
-          <!-- Date filter -->
-          <!-- Date Filter (Updated to match Orders style) -->
-<div class="date-filter">
-  <div class="date-group">
-    <span>From :</span>
-    <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()" />
-  </div>
-  <div class="date-group">
-    <span>To :</span>
-    <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
-  </div>
-</div>
-
+          <div class="date-filter">
+            <div class="date-group">
+              <span>From :</span>
+              <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()" />
+            </div>
+            <div class="date-group">
+              <span>To :</span>
+              <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
+            </div>
+          </div>
         </div>
       </div>
 
+      <!-- Chart -->
       <div class="chart-container">
         <canvas baseChart
           [data]="lineChartData"
@@ -35,6 +31,7 @@
         </canvas>
       </div>
 
+      <!-- Legend -->
       <div class="legend-container">
         <div class="legend-item">
           <div class="color-box" style="background-color: #007bff;"></div>
@@ -47,11 +44,13 @@
       </div>
     </div>
 
+    <!-- Recent Transactions Section -->
     <div class="finance-section">
       <div class="section-header">
         <h2>Recent Months Summary</h2>
       </div>
 
+      <!-- Data Table -->
       <div class="table-container">
         <table class="data-table">
           <thead>
@@ -62,24 +61,40 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let invoice of filteredInvoices">
+            <tr *ngFor="let invoice of paginatedInvoices">
               <td>{{ invoice.orderDate | date:'dd/MM/yyyy' }}</td>
               <td>Rs. {{ invoice.amount | number:'1.0-2' }}</td>
               <td>
-                <span class="status-badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
+                <span class="status-badge" [ngClass]="invoice.status.toLowerCase()">
+                  {{ invoice.status }}
+                </span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls">
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+  &lt; 
+</button>
+
+<span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+<button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+  &gt;
+</button>
+
+      </div>
     </div>
 
+    <!-- Report Button -->
     <div class="report-button-container">
       <button class="print-report-btn" (click)="printReport()">
-         <i class="fa fa-print"></i>
-        Print Report
-        
+        <i class="fa fa-print"></i> Print Report
       </button>
     </div>
+
   </div>
 </div>

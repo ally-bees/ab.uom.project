@@ -442,3 +442,36 @@
   border-radius: 4px;
   font-size: 14px;
 }
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  button {
+    padding: 8px 16px;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+
+    &:disabled {
+      background-color:white;
+      color: #666;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+}

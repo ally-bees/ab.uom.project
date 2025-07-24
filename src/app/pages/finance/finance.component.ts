@@ -11,7 +11,6 @@ import { FinanceService } from '../../services/finance.service';
 import { PrintReportService } from '../../services/printreport.service';
 import { Invoice } from '../../models/invoice.model';
 
-// Component decorator defining selector, standalone usage, and required modules
 @Component({
   selector: 'app-finance',
   standalone: true,
@@ -21,21 +20,33 @@ import { Invoice } from '../../models/invoice.model';
 })
 export class FinanceComponent implements OnInit, AfterViewInit {
 
-  // Access to the chart directive instance
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
-  // Date range for filtering
   fromDate: string | undefined;
   toDate: string | undefined;
-
-  // Filtered invoices list
   filteredInvoices: Invoice[] = [];
 
-  // UI state flags
   loading = false;
   error = false;
 
-  // Line chart data configuration
+  currentPage = 1;
+  itemsPerPage = 10;
+
+  get paginatedInvoices(): Invoice[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredInvoices.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredInvoices.length / this.itemsPerPage);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
   lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
     datasets: [
@@ -64,7 +75,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     ]
   };
 
-  // Line chart options for appearance and behavior
   lineChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
     elements: { line: { tension: 0.5 } },
@@ -85,7 +95,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     }
   };
 
-  // Dependency injection for services
   constructor(
     private printReportService: PrintReportService,
     private financeService: FinanceService,
@@ -94,21 +103,23 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar
   ) {}
 
-  // Lifecycle hook: initializes default state and fetches finance data
   ngOnInit(): void {
-    this.fromDate = undefined;
-    this.toDate = undefined;
-    this.fetchFinanceData();
+    const today = new Date();
+this.toDate = this.formatDate(today);
+
+const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+this.fromDate = this.formatDate(startOfMonth);
+
+this.fetchFinanceData();
+
   }
 
-  // Lifecycle hook: triggers chart update after view initialization
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.chart?.update();
     }, 0);
   }
 
-  // Formats a Date object into YYYY-MM-DD string format
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -116,7 +127,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     return `${year}-${month}-${day}`;
   }
 
-  // Filters the invoice list based on selected date range
   filterInvoicesFromData(data: Invoice[]): Invoice[] {
     if (!this.fromDate && !this.toDate) return data;
 
@@ -131,7 +141,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // Handles API call failures and shows error messages
   private handleError(message: string, error: any): void {
     console.error(message, error);
     this.loading = false;
@@ -139,7 +148,6 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     this.showSnackBar(message);
   }
 
-  // Displays a snackbar with a custom message
   private showSnackBar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000,
@@ -148,132 +156,119 @@ export class FinanceComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // Fetches finance data from service, processes and updates chart and invoice list
-fetchFinanceData(): void {
-  this.loading = true;
-  this.error = false;
+  fetchFinanceData(): void {
+    this.loading = true;
+    this.error = false;
 
-  this.financeService.getFinanceData().subscribe(
-    data => {
-      const filteredData = this.filterInvoicesFromData(data);
+    this.financeService.getFinanceData().subscribe(
+      data => {
+        const filteredData = this.filterInvoicesFromData(data);
+        const dynamicMap = new Map<string, { income: number; expenses: number }>();
 
-      const dynamicMap = new Map<string, { income: number; expenses: number }>();
+        const fromDate = this.fromDate ? new Date(this.fromDate) : null;
+        const toDate = this.toDate ? new Date(this.toDate) : null;
 
-      const fromDate = this.fromDate ? new Date(this.fromDate) : null;
-      const toDate = this.toDate ? new Date(this.toDate) : null;
+        const groupByDay =
+          fromDate &&
+          toDate &&
+          (fromDate.toDateString() === toDate.toDateString() ||
+            (toDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24) <= 31);
 
-      // 👇 Decide grouping strategy: daily if range is within same month, monthly otherwise
-      const groupByDay =
-        fromDate &&
-        toDate &&
-        (fromDate.toDateString() === toDate.toDateString() ||
-          (toDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24) <= 31);
+        const formatKey = (date: Date) =>
+          groupByDay
+            ? date.toISOString().split('T')[0]
+            : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
-      // Format key for grouping
-      const formatKey = (date: Date) =>
-        groupByDay
-          ? date.toISOString().split('T')[0] // e.g., '2025-07-24'
-          : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // e.g., '2025-07'
+        const labelFormat = (key: string): string => {
+          const parts = key.split('-');
+          if (parts.length === 2) {
+            return new Date(+parts[0], +parts[1] - 1).toLocaleString('default', {
+              month: 'short',
+              year: 'numeric'
+            });
+          } else {
+            return new Date(key).toLocaleDateString();
+          }
+        };
 
-      // Format label for chart
-      const labelFormat = (key: string): string => {
-        const parts = key.split('-');
-        if (parts.length === 2) {
-          // Monthly
-          return new Date(+parts[0], +parts[1] - 1).toLocaleString('default', {
-            month: 'short',
-            year: 'numeric'
-          });
-        } else {
-          // Daily
-          return new Date(key).toLocaleDateString();
-        }
-      };
+        filteredData.forEach(entry => {
+          const date = new Date(entry.orderDate);
+          if (isNaN(date.getTime())) return;
 
-      // Fill map with income/expense data
-      filteredData.forEach(entry => {
-        const date = new Date(entry.orderDate);
-        if (isNaN(date.getTime())) return;
+          const key = formatKey(date);
+          if (!dynamicMap.has(key)) {
+            dynamicMap.set(key, { income: 0, expenses: 0 });
+          }
 
-        const key = formatKey(date);
-        if (!dynamicMap.has(key)) {
-          dynamicMap.set(key, { income: 0, expenses: 0 });
-        }
+          const current = dynamicMap.get(key)!;
+          if (entry.status?.toLowerCase() === 'income') {
+            current.income += entry.amount;
+          } else if (entry.status?.toLowerCase() === 'expense') {
+            current.expenses += entry.amount;
+          }
+        });
 
-        const current = dynamicMap.get(key)!;
-        if (entry.status?.toLowerCase() === 'income') {
-          current.income += entry.amount;
-        } else if (entry.status?.toLowerCase() === 'expense') {
-          current.expenses += entry.amount;
-        }
-      });
+        const finalKeys = Array.from(dynamicMap.keys()).sort();
 
-      const finalKeys = Array.from(dynamicMap.keys()).sort();
+        this.lineChartData.labels = finalKeys.map(labelFormat);
+        this.lineChartData.datasets[0].data = finalKeys.map(key => dynamicMap.get(key)!.income);
+        this.lineChartData.datasets[1].data = finalKeys.map(key => dynamicMap.get(key)!.expenses);
 
-      this.lineChartData.labels = finalKeys.map(labelFormat);
-      this.lineChartData.datasets[0].data = finalKeys.map(key => dynamicMap.get(key)!.income);
-      this.lineChartData.datasets[1].data = finalKeys.map(key => dynamicMap.get(key)!.expenses);
+        this.filteredInvoices = filteredData.sort(
+          (a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+        );
 
-      // Sort and store filtered invoices
-      this.filteredInvoices = filteredData.sort(
-        (a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
-      );
+        this.currentPage = 1; // Reset to first page on new fetch
+        this.loading = false;
+        this.cdr.detectChanges();
+        this.chart?.update();
+      },
+      error => {
+        this.handleError(
+          '⚠️ Failed to fetch finance data. Please check your connection or try again later.',
+          error
+        );
+      }
+    );
+  }
 
-      this.loading = false;
-      this.cdr.detectChanges();
-      this.chart?.update();
-    },
-    error => {
-      this.handleError(
-        '⚠️ Failed to fetch finance data. Please check your connection or try again later.',
-        error
-      );
-    }
-  );
-}
-
-
-  // Triggered when user changes the date range
   onDateChange(): void {
     this.fetchFinanceData();
   }
 
-  // Navigates to print report page
   printReport(): void {
-    console.log('Filtered Invoices:', this.filteredInvoices); // 🔍 Check this
-  if (!this.filteredInvoices || this.filteredInvoices.length === 0) {
-    alert('No data available to print.');
-    return;
+    console.log('Filtered Invoices:', this.filteredInvoices);
+    if (!this.filteredInvoices || this.filteredInvoices.length === 0) {
+      alert('No data available to print.');
+      return;
+    }
+
+    const tableColumns = ['Finance ID', 'Amount', 'Status', 'Order Date'];
+
+    const tableData = this.filteredInvoices.map(invoice => ({
+      'Finance ID': invoice.financeId,
+      'Sales IDs': invoice.salesId?.join(', '),
+      'Campal IDs': invoice.campalId?.join(', '),
+      'Amount': invoice.amount.toFixed(2),
+      'Status': invoice.status,
+      'Order Date': invoice.orderDate
+    }));
+
+    const reportPayload = {
+      reportType: 'Finance Report',
+      exportFormat: 'PDF Document (.pdf)',
+      startDate: this.fromDate,
+      endDate: this.toDate,
+      pageOrientation: 'Portrait',
+      tableColumns,
+      tableData
+    };
+
+    this.router.navigate(['/businessowner/printreport'], {
+      state: reportPayload
+    });
+
+    this.printReportService.setReportData(reportPayload);
   }
-  const tableColumns = ['Finance ID', 'Amount', 'Status', 'Order Date'];
-
-  const tableData = this.filteredInvoices.map(invoice => ({
-    'Finance ID': invoice.financeId,
-    'Sales IDs': invoice.salesId?.join(', '),
-    'Campal IDs': invoice.campalId?.join(', '),
-    'Amount': invoice.amount.toFixed(2),
-    'Status': invoice.status,
-    'Order Date': invoice.orderDate // Should be already formatted
-  }));
-
-  console.log('Table Data to Pass:', tableData);
-
-  const reportPayload = {
-    reportType: 'Finance Report',
-    exportFormat: 'PDF Document (.pdf)',
-    startDate: this.fromDate,
-    endDate: this.toDate,
-    pageOrientation: 'Portrait',
-    tableColumns,
-    tableData
-  };
-
-  this.router.navigate(['/businessowner/printreport'], {
-    state: reportPayload
-  });
-  this.printReportService.setReportData(reportPayload); // ✅ store the data
-  // Optionally, you can remove the second navigation if not needed
-  // this.router.navigate(['/businessowner/printreport']);
-}
 
 }
