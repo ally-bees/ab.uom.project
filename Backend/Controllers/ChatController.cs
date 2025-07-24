@@ -34,13 +34,21 @@ namespace Backend.Controllers
             if (message == null || string.IsNullOrWhiteSpace(message.Text))
                 return BadRequest("Invalid message");
 
-            // Save to database first
+            // Set timestamp
+            message.Timestamp = DateTime.UtcNow;
+            
+            // Save to database first - this will generate an ID if needed
             await _chatService.SendMessageAsync(message);
 
-            // Broadcast to all clients via SignalR
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
+            // Get the message with the generated ID from the database
+            var savedMessage = await _chatService.GetMessageByIdAsync(message.Id);
+            if (savedMessage == null)
+                return StatusCode(500, "Failed to save message");
 
-            return Ok();
+            // Broadcast the saved message (with ID) to all clients via SignalR
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", savedMessage);
+
+            return Ok(savedMessage);
         }
 
         [HttpDelete("delete/{id}")]

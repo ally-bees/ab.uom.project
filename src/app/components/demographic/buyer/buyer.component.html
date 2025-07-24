@@ -1,14 +1,23 @@
 <div class="container">
     <h1>Top Buyer</h1>
-    <div class="box" >
+    <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
+    <div class="box" *ngIf="topCustomer; else loading">
         <img src="../../../assets/images/tb.png" alt="img">
         <div class="content">
-            <h2>Patricia Thompson{{topCustomer?.name}}</h2>
+            <h2>{{ topCustomer.name || 'No buyer data available' }}</h2>
             <div class="para">
-               <!-- <p>No of orders - {{buyerrecord?.orders}}</p>-->
-                <p>Location - Houston {{topCustomer?.location}}</p>
-                <p>Orders-Count: 17</p>
-            </div>     
-        </div>        
+                <p>{{ topCustomer.location || 'Location not specified' }}</p>
+            </div>
+        </div>
     </div>
+    <ng-template #loading>
+        <div class="loading-message" *ngIf="isLoading">
+            <p>Loading buyer data...</p>
+        </div>
+        <div class="no-data" *ngIf="!isLoading && !topCustomer && !errorMessage">
+            <p>No buyer data available</p>
+        </div>
+    </ng-template>
 </div>
