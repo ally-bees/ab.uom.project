@@ -18,21 +18,17 @@
       </div>
 
       <div class="stats-chart-wrapper">
-        <div class="order-stats">
-          <div class="stat-item">
-            <span class="label">Total Orders</span>
-            <span class="value">: {{ totalOrders }}</span>
+        <div class="order-summary-cards" style="flex: 0 0 350px; max-width: 350px;">
+          <div class="order-summary-card total-orders">
+            <h3>Total Orders - {{ totalOrders }}</h3>
           </div>
-          <div class="stat-item">
-            <span class="label">Pending Orders</span>
-            <span class="value">: {{ pendingOrders }}</span>
+          <div class="order-summary-card pending-orders">
+            <h3>Pending Orders - {{ pendingOrders }}</h3>
           </div>
-          <div class="stat-item">
-            <span class="label">Completed Orders</span>
-            <span class="value">: {{ completedOrders }}</span>
+          <div class="order-summary-card completed-orders">
+            <h3>Completed Orders - {{ completedOrders }}</h3>
           </div>
         </div>
-
         <div class="chart-container">
           <div class="chart-placeholder">
             <canvas id="orderStatusPieChart" width="400" height="400"></canvas>
@@ -46,10 +42,6 @@
               <span class="color-box green"></span>
               <span>Completed Orders</span>
             </div>
-            <!-- <div class="legend-item">
-              <span class="color-box blue"></span>
-              <span>New Orders</span>
-            </div> -->
           </div>
         </div>
       </div>
