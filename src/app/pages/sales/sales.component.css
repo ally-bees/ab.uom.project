@@ -493,3 +493,26 @@
     padding: 0;
   }
 }
+
+.view-table-btn {
+  background: #217bc0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(33,123,192,0.08);
+  margin: 10px 370px;
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.view-table-btn:hover {
+  background: #fff;
+  color: #217bc0;
+  border: 1.5px solid #217bc0;
+}

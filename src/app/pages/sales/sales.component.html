@@ -62,6 +62,9 @@
             [type]="'line'"
           ></canvas>
         </div>
+        <button class="view-table-btn" (click)="goToSalesTable()">
+          <i class="fa fa-table"></i> View Sortable Sales Overview
+        </button>
       </div>
       <!-- Charts Container -->
       <div class="charts-container">
@@ -131,14 +134,7 @@
         </div>
       </div>
 
-      <!-- AG Grid Table -->
-      <!-- Removed the table and replaced with a navigation button -->
-      <div class="table-box" style="text-align:center; margin: 24px 0;">
-        <button class="view-table-btn" (click)="goToSalesTable()">
-          <i class="fa fa-table"></i> View Sortable Sales Overview
-        </button>
-      </div>
-
+     
       <div class="print-section">
         <button class="print-btn" (click)="printReport()">
           <i class="fa fa-print"></i>

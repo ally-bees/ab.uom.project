@@ -107,7 +107,8 @@ export class SalestableComponent implements OnInit {
         sale.productId
       ].some(field => (field || '').toLowerCase().includes(search));
       return matchesDate && matchesSearch;
-    });
+    })
+    .sort((a, b) => b.salesDate.localeCompare(a.salesDate)); // Sort by date descending
     this.page = 1;
   }
 

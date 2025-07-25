@@ -188,3 +188,31 @@ input:checked + .slider:before {
   font-weight: 600;
   margin-top: 1.2em;
 }
+.go-update-btn {
+  background: #217bc0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(33,123,192,0.08);
+  width: fit-content;
+  margin-top: 10px;
+}
+.go-update-btn:hover {
+  background: #ffffff;
+  color: #217bc0;
+  border: 1px solid #217bc0;
+  border-radius: 6px;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(33,123,192,0.08);
+  width: fit-content;
+  margin-top: 10px;
+}
