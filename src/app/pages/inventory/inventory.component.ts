@@ -7,13 +7,16 @@ import Chart from 'chart.js/auto';
 import { Router } from '@angular/router';
 import { PrintReportService } from '../../services/printreport.service'; // ✅ Import the service
 import { MatSnackBar } from '@angular/material/snack-bar'; // ✅ Optional: For feedback
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    NgForOf,
+    NgIf
   ],
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.css']
@@ -33,6 +36,10 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   selectedProduct: product | null = null;
   modalAddQuantity: number = 0;
   modalMessage: string = '';
+  expandedCard: 'inStock' | 'lowStock' | 'outOfStock' | null = null;
+
+  showItemsModal = false;
+  itemsModalType: 'inStock' | 'lowStock' | 'outOfStock' | null = null;
 
   constructor(private inventoryService: InventoryService, 
     private printReportService: PrintReportService,
@@ -118,7 +125,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
         labels: ['In Stock', 'Low Stock', 'Out of Stock'],
         datasets: [{
           data: [this.inStockCount, this.lowStockCount, this.outOfStockCount],
-          backgroundColor: ['#559bfe', '#fee767', '#ff5967'],
+          backgroundColor: ['#1f65c7', '#faba25', '#b53741'],
           borderWidth: 1
         }]
       },
@@ -202,5 +209,40 @@ export class InventoryComponent implements OnInit, AfterViewInit {
     state: reportPayload
   });
 }
+
+  toggleView(card: 'inStock' | 'lowStock' | 'outOfStock') {
+    this.expandedCard = this.expandedCard === card ? null : card;
+  }
+
+  get inStockProducts() {
+    return this.products.filter(p => p.stockQuantity > 20);
+  }
+  get lowStockProducts() {
+    return this.products.filter(p => p.stockQuantity > 0 && p.stockQuantity <= 20);
+  }
+  get outOfStockProducts() {
+    return this.products.filter(p => p.stockQuantity === 0);
+  }
+
+  openItemsModal(type: 'inStock' | 'lowStock' | 'outOfStock') {
+    this.itemsModalType = type;
+    this.showItemsModal = true;
+  }
+  closeItemsModal() {
+    this.showItemsModal = false;
+    this.itemsModalType = null;
+  }
+  getModalItems() {
+    if (this.itemsModalType === 'inStock') return this.inStockProducts;
+    if (this.itemsModalType === 'lowStock') return this.lowStockProducts;
+    if (this.itemsModalType === 'outOfStock') return this.outOfStockProducts;
+    return [];
+  }
+  getModalTitle() {
+    if (this.itemsModalType === 'inStock') return 'In Stock Items';
+    if (this.itemsModalType === 'lowStock') return 'Low Stock Items';
+    if (this.itemsModalType === 'outOfStock') return 'Out of Stock Items';
+    return '';
+  }
 
 }

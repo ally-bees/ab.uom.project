@@ -29,31 +29,35 @@
       <!-- Right: Summary Cards -->
       <div class="summary-cards">
         <div class="summary-card in-stock-box">
-          <h3>In Stock</h3>
-          <div class="count">{{ inStockCount }}</div>
-          <div class="label">items</div>
+          <h3>In Stock - {{ inStockCount }}</h3>
+          <div class="summary-card-row">
+            <div class="count" style="display:none">{{ inStockCount }}</div>
+          </div>
+          <button class="row-update-btn" (click)="openItemsModal('inStock')">View Items</button>
         </div>
         <div class="summary-card low-stock-box">
-          <h3>Low Stock</h3>
-          <div class="count">{{ lowStockCount }}</div>
-          <div class="label">items</div>
+          <h3>Low Stock - {{ lowStockCount }}</h3>
+          <div class="summary-card-row">
+            <div class="count" style="display:none">{{ lowStockCount }}</div>
+          </div>
+          <button class="row-update-btn" (click)="openItemsModal('lowStock')">View Items</button>
         </div>
         <div class="summary-card out-of-stock-box">
-          <h3>Out of Stock</h3>
-          <div class="count">{{ outOfStockCount }}</div>
-          <div class="label">items</div>
+          <h3>Out of Stock - {{ outOfStockCount }}</h3>
+          <div class="summary-card-row">
+            <div class="count" style="display:none">{{ outOfStockCount }}</div>
+          </div>
+          <button class="row-update-btn" (click)="openItemsModal('outOfStock')">View Items</button>
         </div>
       </div>
       
     </div>
   
-    <!-- Update Stocks Button -->
-    <div style="text-align: right; margin-top: 16px;">
-      <button (click)="goToStockUpdate()" class="update-stocks-btn">Update Stocks</button>
-    </div>
+    
   
     <div class="table-box">
         <h4>Current Inventory Overview</h4>
+        <div class="table-description" style="color: #747474;">All products are here so you can see all the products in the inventory and update the stock</div>  
         <!-- Search Input -->
     <div class="search-container">
         <input
@@ -93,19 +97,28 @@
                 </span>
               </td>
               <td  style="text-align:center;">
-                <button class="row-update-btn" (click)="openStockModal(product)">Update</button>
+                <button class="row-update-btn1" (click)="openStockModal(product)">Update</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+      
     </div>
+    <div class="print-section-container"><div class="print-section">
+      <button class="print-btn" (click)="printReport()">
+        <i class="fa fa-print print-icon"></i>
+        Print Report
+      </button>
+      </div>
+    </div>
+    
     </div>
     
     <!-- Stock Update Modal -->
     <div class="modal-backdrop" *ngIf="showStockModal">
       <div class="stock-modal">
-        <h3>Update Stock for {{ selectedProduct?.name }}</h3>
+        <h3  style="color: black; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px;">Update Stock for {{ selectedProduct?.name }}</h3>
         <div class="modal-details">
           <p><strong>Product ID:</strong> {{ selectedProduct?.productId }}</p>
           <p><strong>Category:</strong> {{ selectedProduct?.category }}</p>
@@ -119,17 +132,26 @@
           <button (click)="closeStockModal()" class="modal-cancel">Cancel</button>
         </div>
         <div *ngIf="modalMessage" class="modal-message">{{ modalMessage }}</div>
-
-        <div class="print-section">
-        <button class="print-btn" (click)="printReport()">
-          <i class="fa fa-print"></i>
-          Print Report
-        </button>
-      </div>
       </div>
     </div>
 
-    
+    <!-- Items Modal Popup -->
+    <div class="modal-backdrop" *ngIf="showItemsModal">
+      <div class="stock-modal">
+        <h3 style="color: black; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px;">{{ getModalTitle() }}</h3>
+        <div class="summary-items-list">
+          <div *ngIf="getModalItems().length === 0" class="empty-list">No items found.</div>
+          <ul *ngIf="getModalItems().length > 0">
+            <li *ngFor="let p of getModalItems()">
+              {{ p.productId }} - {{ p.name }}
+            </li>
+          </ul>
+        </div>
+        <div style="text-align:center; margin-top: 18px;">
+          <button class="modal-cancel" (click)="closeItemsModal()">Close</button>
+        </div>
+      </div>
+    </div>
 
   
   
