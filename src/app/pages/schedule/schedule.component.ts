@@ -24,7 +24,7 @@ export class ScheduleComponent implements OnInit {
       { label: 'Sales Report', value: 'sales' },
       { label: 'Inventory Report', value: 'inventory' },
       { label: 'Financial Report', value: 'financial' },
-      { label: 'Analytics Report', value: 'analytics' }
+      { label: 'Campaign Report', value: 'analytics' }
     ],
     'Inventory Manager': [
       { label: 'Inventory Report', value: 'inventory' }
