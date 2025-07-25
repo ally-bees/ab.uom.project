@@ -15,8 +15,10 @@ import { Router } from '@angular/router';
 export class StockupdateComponent implements OnInit {
   products: product[] = [];
   addQuantities: { [productId: string]: number } = {};
+  reduceQuantities: { [productId: string]: number } = {};
   message: string = '';
   loading: boolean = false;
+  searchTerm: string = '';
 
   constructor(
     private inventoryService: InventoryService,
@@ -56,6 +58,34 @@ export class StockupdateComponent implements OnInit {
         setTimeout(() => this.message = '', 2500);
       }
     });
+  }
+
+  reduceStock(productId: string): void {
+    const quantity = this.reduceQuantities[productId];
+    if (!quantity || quantity <= 0) return;
+    this.loading = true;
+    this.message = '';
+    this.inventoryService.reduceStock(productId, quantity).subscribe({
+      next: (res) => {
+        this.message = 'Stock reduced successfully!';
+        this.reduceQuantities[productId] = 0;
+        this.ngOnInit();
+        this.loading = false;
+      },
+      error: (err) => {
+        this.message = 'Failed to reduce stock.';
+        this.loading = false;
+      }
+    });
+  }
+
+  filteredProducts(): product[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) return this.products;
+    return this.products.filter(p =>
+      p.productId.toLowerCase().includes(term) ||
+      p.name.toLowerCase().includes(term)
+    );
   }
 
   goBack(): void {

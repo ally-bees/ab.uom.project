@@ -143,6 +143,29 @@ button:hover:not(:disabled) {
   text-decoration: underline;
 }
 
+.search-bar {
+  margin-bottom: 10px;
+  left: 10px;
+}
+.search-bar input[type="text"] {
+  width: 500px;
+  max-width: 100%;
+  padding: 10px 16px;
+  border: 1.5px solid #b0bec5;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  background: #f7fafd;
+  color: #222;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  box-shadow: 0 1px 4px rgba(39, 188, 199, 0.04);
+}
+.search-bar input[type="text"]:focus {
+  border-color: #27bcc7;
+  box-shadow: 0 2px 8px rgba(39, 188, 199, 0.10);
+  background: #fff;
+}
+
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translateY(-20px); }
   10% { opacity: 1; transform: translateY(0); }
