@@ -83,6 +83,24 @@ export class InventoryService {
     );
   }
 
+  reduceStock(productId: string, reduceQuantity: number): Observable<any> {
+    const companyId = this.authService.getCurrentUser()?.CompanyId;
+    if (!companyId) {
+      throw new Error('User company ID is not available.');
+    }
+    // First, get the current product to know its stock
+    return this.getProductById(productId).pipe(
+      switchMap(product => {
+        const newStockQuantity = product.stockQuantity - reduceQuantity;
+        return this.http.patch(
+          `${this.apiUrl}/company/${companyId}/product/${productId}/stock`,
+          newStockQuantity,
+          { responseType: 'text' }
+        );
+      })
+    );
+  }
+
   getBestSellingProductsByCompany(limit: number = 10): Observable<product[]> {
     const companyId = this.authService.getCurrentUser()?.CompanyId;
     if (!companyId) {

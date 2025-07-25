@@ -35,6 +35,7 @@
     <!-- Left: Low/Out of Stock -->
     <div class="table-box">
       <h4>Items Below Stock Threshold</h4>
+      <div class="table-description" style="color: #e94f4f;">These products are running low or out of stock. Consider restocking soon!</div>
       <div class="search-container">
         <input
           type="text"
@@ -69,6 +70,8 @@
 
     <!-- Right: Best Selling (Replaced with <app-top-selling-table>) -->
     <div class="table-box">
+      <h4>Top Selling Products</h4>
+      <div class="table-description">Make sure top-selling products are in stock or have a good stock level!</div>
       <app-top-selling-table [bestSellingProducts]="bestSellingProducts"></app-top-selling-table>
     </div>
 

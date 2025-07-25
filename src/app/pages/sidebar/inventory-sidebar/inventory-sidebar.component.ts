@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './inventory-sidebar.component.html',
   styleUrls: ['./inventory-sidebar.component.scss']
 })
-export class inventorySidebarComponent {
+export class InventorySidebarComponent {
   menuItems = [
     { id: 'reports', label: 'Reports And Analysis', icon: 'fa-chart-bar', expanded: true, children: [
       { id: 'inventory', label: 'inventory', icon: 'fa-chart-line', route: 'inventorymanager/inventory' },
@@ -35,8 +35,7 @@ export class inventorySidebarComponent {
   }
 
   goToDashboard(): void {
-    this.activeMenuItem = 'dashboard';
-    this.router.navigate(['inventorymanager/inventoryDashboard']);
+    this.router.navigate(['/inventorymanager/inventoryDashboard']);
   }
   
   scheduleReport(): void {

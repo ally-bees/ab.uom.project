@@ -167,9 +167,15 @@
 }
 
 .table-box h4 {
-  margin: 0 0 5px 0;
-  color: #757474;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #001b1d;
+  margin: 0 0 10px 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding-left: 2px;
 }
+
 
 .table-description {
   margin-top: 0px;
@@ -181,6 +187,7 @@
 .search-container {
   margin-bottom: 15px;
   display: flex;
+  margin-top: 10px;
   justify-content: center;
 }
 
