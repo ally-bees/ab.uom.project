@@ -16,7 +16,7 @@
             </div>
             <div class="date-group">
               <span>To :</span>
-              <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" />
+              <input type="date" [(ngModel)]="toDate" (change)="onDateChange()" [max]="maxDate" [min]="fromDate"/>
             </div>
           </div>
         </div>

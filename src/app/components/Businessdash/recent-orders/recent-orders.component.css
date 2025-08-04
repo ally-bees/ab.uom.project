@@ -4,64 +4,84 @@
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    
-    .recent-orders-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      
-      h2 {
-        margin: 0;
-        color: #333;
-      }
-      
-      .see-all {
-        color: #777;
-        text-decoration: none;
-        font-size: 14px;
-        cursor: pointer;
-        
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-    
-    .orders-table {
-      width: 100%;
-      overflow-x: auto;
-      
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        
-        th, td {
-          padding: 12px 15px;
-          text-align: left;
-          border-bottom: 1px solid #eee;
-        }
-        
-        th {
-          color: #777;
-          font-weight: normal;
-        }
-        
-        .delivered {
-          color: #4caf50;
-        }
-        
-        .canceled {
-          color: #f44336;
-        }
-        
-        .pending {
-          color: #ff9800;
-        }
-        
-        .processing {
-          color: #2196f3;
-        }
-      }
-    }
-  }
+}
+
+.recent-orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.recent-orders-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.recent-orders-header .see-all {
+    color: #777;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.recent-orders-header .see-all:hover {
+    text-decoration: underline;
+}
+
+.orders-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.orders-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-table table th,
+.orders-table table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.orders-table table th {
+    background-color: #00BCD4;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.orders-table table tr {
+    background-color: #e3f2fd;
+}
+
+.orders-table table tr:nth-child(even) {
+    background-color: #f3f3f3;
+}
+
+.orders-table table tr:hover {
+    background-color: rgba(0, 188, 212, 0.1);
+}
+
+.orders-table table .delivered {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.orders-table table .canceled {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.orders-table table .pending {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.orders-table table .processing {
+    color: #2196f3;
+    font-weight: bold;
+}
