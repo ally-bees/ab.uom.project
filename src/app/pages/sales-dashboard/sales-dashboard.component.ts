@@ -10,6 +10,7 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { AuthService } from '../../services/auth.service';
 import { SalesAccessService } from '../../services/sales-access.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class SalesDashboardComponent implements OnInit {
   constructor(
     private salesService: SalesService,
     private authService: AuthService,
-    private salesAccessService: SalesAccessService
+    private salesAccessService: SalesAccessService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -98,5 +100,9 @@ export class SalesDashboardComponent implements OnInit {
       this.userSalesAccessValue = newValue;
       this.loadCompanySalesComparison(); // Refresh the bar graph
     });
+  }
+
+  goToSalesReport() {
+    this.router.navigate(['/salesmanager/sales']);
   }
 }
