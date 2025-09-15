@@ -24,6 +24,7 @@ export class FinanceComponent implements OnInit, AfterViewInit {
 
   fromDate: string | undefined;
   toDate: string | undefined;
+  maxDate: string = this.formatDate(new Date());
   filteredInvoices: Invoice[] = [];
 
   loading = false;
