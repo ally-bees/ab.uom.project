@@ -35,6 +35,7 @@
               type="date"
               [(ngModel)]="fromDate"
               (change)="onDateChange()"
+              [max]="toDate"
             />
           </div>
 
@@ -45,6 +46,8 @@
               type="date"
               [(ngModel)]="toDate"
               (change)="onDateChange()"
+              [min]="fromDate"
+              [max]="today"
             />
           </div>
         </div>

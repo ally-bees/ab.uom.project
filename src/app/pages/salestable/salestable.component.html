@@ -25,6 +25,7 @@
           type="date"
           [(ngModel)]="fromDate"
           (change)="onDateChange()"
+          [max]="toDate"
         />
       </div>
       <div class="date-group">
@@ -34,6 +35,8 @@
           type="date"
           [(ngModel)]="toDate"
           (change)="onDateChange()"
+          [min]="fromDate"
+          [max]="today"
         />
       </div>
     </div>

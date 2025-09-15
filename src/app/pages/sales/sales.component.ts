@@ -88,6 +88,7 @@ export class SalesComponent implements OnInit {
   fromDate: string = '';
   toDate: string = '';
   searchQuery: string = '';
+  today: string = '';
 
   // ---------------- Chart Data Definitions ---------------- //
 
@@ -202,6 +203,7 @@ export class SalesComponent implements OnInit {
   // Initialize with last 7 days by default
   ngOnInit(): void {
     const today = new Date();
+    this.today = today.toISOString().split('T')[0];
     const from = new Date();
     from.setDate(today.getDate() - 30); // Use 7 for a week
 

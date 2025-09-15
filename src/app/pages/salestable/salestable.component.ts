@@ -36,6 +36,7 @@ export class SalestableComponent implements OnInit {
   searchQuery: string = '';
   fromDate: string = '';
   toDate: string = '';
+  today: string = new Date().toISOString().split('T')[0];
 
   columnDefs: ColDef<Sale>[] = [
     { field: 'saleId', headerName: 'Sale ID', sortable: true },
