@@ -50,8 +50,6 @@ export class SalestableComponent implements OnInit {
     } },
     { field: 'orderId', headerName: 'Order ID', sortable: true },
     { field: 'productId', headerName: 'Product ID', sortable: true },
-    { field: 'productName', headerName: 'Product Name', sortable: true, flex: 2 }, // Give more space
-    { field: 'category', headerName: 'Category', sortable: true },
     { field: 'quantity', headerName: 'Quantity', sortable: true },
     { field: 'price', headerName: 'Price', sortable: true, valueFormatter: (params: any) => Number(params.value).toFixed(2) }
   ];
@@ -103,8 +101,6 @@ export class SalestableComponent implements OnInit {
       const matchesSearch = !search || [
         sale.saleId,
         sale.orderId,
-        sale.productName,
-        sale.category,
         sale.productId
       ].some(field => (field || '').toLowerCase().includes(search));
       return matchesDate && matchesSearch;
