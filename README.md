@@ -10,10 +10,36 @@
 - **Additional Features**: AI for future predictions, interactive chart visualizations
 
 ## Features
+
+Below is a more detailed description of the product capabilities, the interactive charting system, and the AI-powered prediction features.
+
 - Sales, orders, and product insights
+	- Time-series trends: daily, weekly, monthly and custom-range sales trends with breakdowns by shop, product category, and payment type.
+	- Orders funnel: new orders, processed, shipped, delivered and returned counts with conversion and drop-off rates.
+	- Product analytics: top-selling products, slow movers, stock alerts and SKU-level revenue and margin reporting. Drill down from category to SKU level with side-by-side comparisons.
+
 - Courier and customer data visualization
-- AI-based future predictions for decision-making
-- Interactive charting (line, pie, gauge)
+	- Courier performance: delivery times, on-time rate, failed-delivery reasons, and courier-wise earnings and charges. Filter by courier partner, zone, or time-window.
+	- Customer insights: segmentation (new vs returning, high-value vs occasional), recency-frequency-monetary (RFM) scoring, churn risk and cohort analysis.
+	- Geo & location views: map overlays for customer density and courier coverage; heatmaps for order volume by location.
+
+- Interactive charting system (line, pie, gauge)
+	- Line charts: interactive time-series for sales and orders with zoom, pan and range selection. Hover to see exact values and click to lock a datapoint for side-by-side comparisons.
+	- Pie charts: distribution views for categories such as payment method, product category, or courier share. Click slices to filter dashboards and update all linked charts (cross-filtering).
+	- Gauge charts: single-value KPIs (daily revenue, conversion rate, fulfillment SLA) with configurable thresholds and color bands to show Good/Warning/Critical states.
+	- Linking & dashboards: charts are linked — applying a filter in one control (date, shop, courier, product) updates all visualizations on the dashboard.
+	- Export & share: export charts as PNG/SVG and export underlying data as CSV. Save dashboard views and share short links or scheduled PDF reports.
+	- Accessibility & performance: charts lazy-load and paginate large datasets; keyboard navigation and ARIA labels provided for screen readers.
+
+- AI-based future predictions and forecasting
+	- What it predicts: short- and medium-term sales forecasts (7/30/90 days), demand spikes, expected returns, and inventory replenishment recommendations.
+	- Data sources & features: model input includes historical sales, promotions, product attributes, holidays/events, courier lead-times, and external signals when available (e.g., seasonality and external campaign dates).
+	- Model behavior & explainability: predictions surface point estimates and confidence intervals. Each forecast includes an explanation panel listing top contributing features (promotion impact, recent trend, seasonal factor) so users can interpret results.
+	- UI controls: toggle predictions on/off, change forecast horizon (7/30/90 days), and simulate scenarios (e.g., "+10% promo", "new courier with faster delivery") to see projected impact.
+	- Fallback & offline behavior: when the prediction service is unavailable, the UI shows cached forecasts (if present) and a simple rule-based baseline (e.g., moving-average forecast) with a clear banner that the full model is offline.
+	- Retraining & feedback loop: admin workflows allow retraining schedules and manual feedback (accept/reject forecasts). Feedback is stored to improve future model runs.
+
+These features are implemented across the Angular frontend and the .NET backend; the backend aggregates data from MongoDB, computes derived metrics, and exposes endpoints for chart data and predictions. The README's Backend Setup section below has configuration examples for prediction endpoints and secrets.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.14.
 
@@ -50,21 +76,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 2. Add your real credentials (see example below)
 3. Never commit this file to Git
 
-### appsettings.Local.json Example:
-```json
-{
-  "MongoDBSettings": {
-    "ConnectionString": "your-real-mongo-connection-string"
-  },
-  "JwtSettings": {
-    "Key": "your-real-jwt-secret-key"
-  },
-  "EmailSettings": {
-    "SenderEmail": "your-email@gmail.com",
-    "Password": "your-gmail-app-password"
-  }
-}
-```
 
 ## Gmail Setup
 1. Enable 2-Factor Authentication
