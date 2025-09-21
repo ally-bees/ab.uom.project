@@ -97,3 +97,4 @@ appsettings.Local.json
 # Others
 *.db
 *.DS_Store
+.vercel
