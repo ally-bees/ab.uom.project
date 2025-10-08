@@ -3,6 +3,11 @@
 ## Project Description
 **ab.uom.project** is a **report analysis system** designed for the **HoneyCom e-commerce platform**, providing insights into sales, orders, products, couriers, and customers for business owners with multiple shops. The system uses **AI-powered future predictions** and visualizes data through interactive charts (line, pie, and gauge) to enhance data-driven decision-making.
 
+## 🔹 Live Demo & Repository:
+ 🌐 Live URL: [https://instadash-pi.vercel.app](https://instadash-pi.vercel.app)
+ 💻 GitHub Repository: [https://github.com/ally-bees/ab.uom.project.git](https://github.com/ally-bees/ab.uom.project.git)
+
+
 ### Technologies Used:
 - **Frontend**: Angular
 - **Backend**: .NET
